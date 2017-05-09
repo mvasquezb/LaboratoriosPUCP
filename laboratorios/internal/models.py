@@ -10,7 +10,7 @@ class Essay(models.Model):
         return self.title_text
 
 class Test(models.Model):
-    essay = models.ManyToManyRel(Essay)
+    essay = models.ManyToManyField(Essay)
     title_text = models.CharField(max_length=200)
     pub_date = models.DateTimeField('date published')
     #1..M with Parameters
