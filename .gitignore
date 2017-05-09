@@ -16,3 +16,6 @@ settings.py
 .idea/
 
 __pycache__/
+node_modules/
+# Folder only used for collectstatic
+laboratorios/static
