@@ -56,9 +56,15 @@ ROOT_URLCONF = 'laboratorios.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django_jinja.backend.Jinja2',
-        'DIRS': [],
+        'DIRS': [
+            # For common templates
+            os.path.join(BASE_DIR, 'templates'),
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
+            "match_regex": r"^(?!admin/).*",
+            'match_extension': '.html',
+            'app_dirname': 'templates',
             'context_processors': [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
@@ -121,6 +127,8 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-STATICFILES_DIRS = (os.path.join(BASE_DIR, 'common'),)
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]
