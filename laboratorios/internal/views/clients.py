@@ -3,8 +3,10 @@ from django.http import HttpResponse
 from internal import models
 
 
-def index(request):
-    return HttpResponse("Lista de clientes")
+def index(request, template = 'internal/clients/list.html',extra_context=None):
+    clientes = models.Client.objects.all()
+    context = {'clientes':clientes}
+    return render (request,template,context)
 
 
 def create(request):
