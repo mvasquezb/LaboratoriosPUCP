@@ -8,6 +8,8 @@
 <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/metisMenu/2.7.0/metisMenu.min.css">
 {% endblock base_css %}
 
+{% block body_class %}{{ super() }} fixed-sidebar{% endblock body_class %}
+
 {% block base_content %}
 <div id="wrapper">
 
