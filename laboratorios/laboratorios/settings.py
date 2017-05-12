@@ -62,6 +62,7 @@ TEMPLATES = [
         ],
         'APP_DIRS': True,
         'OPTIONS': {
+            "match_regex": r"^(?!admin/).*",
             'match_extension': '.html',
             'match_regex': r'^(?!admin/).*',
             'app_dirname': 'templates',
