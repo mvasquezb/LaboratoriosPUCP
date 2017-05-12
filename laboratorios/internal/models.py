@@ -11,7 +11,7 @@ class Sale(models.Model):
 	ammount = models.FloatField()
 
 	def __str__(self):
-		return "Monto venta: " + str(self.ammount)
+		return "Monto venta " + str(self.pk) + ": " + str(self.ammount)
 
 
 class Product(models.Model):
