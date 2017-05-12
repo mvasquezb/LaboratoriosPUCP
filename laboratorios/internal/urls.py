@@ -23,4 +23,10 @@ urlpatterns = [
     url('^list',
         views.main.lista_ventas,
         name='lista_ventas'),
+    url('^products/$',
+        views.products.index,
+        name='product.index'),
+    url('^products/create$',
+        views.products.create,
+        name='product.create'),
 ]
