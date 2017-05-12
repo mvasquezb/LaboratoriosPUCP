@@ -1,18 +1,18 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from internal import models
-from internal.models import Client
+
 
 def index(request):
-    dict = {}
-    template = 'internal/clients.html'
-    return render(request, template, dict)
+    return HttpResponse("Lista de clientes")
 
 
-def create_new_client(request):
+def create(request):
     if request.method == 'POST':
         name = request.POST.get('fname')
-        client = models.Client.objects.create(name=name)
-    else:
-        pass
-    return HttpResponse("Cliente creado con exito")
+        if name:
+            client = models.Client.objects.create(name=name)
+
+    context = {}
+    template = 'internal/clients.html'
+    return render(request, template, context)

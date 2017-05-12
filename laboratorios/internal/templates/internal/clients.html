@@ -9,7 +9,7 @@
 <div class="row border-bottom white-bg dashboard-header">
     <div class="col-md-3">
         <h2><strong>Crear Nuevo Cliente</strong></h2>
-        <form action="{{ url('internal:clients_create') }}" method="post">
+        <form action="{{ url('internal:client.create') }}" method="post">
             {% csrf_token %}
             Ingrese Nombre de Cliente: <input type="text" name="fname">
             <br>
