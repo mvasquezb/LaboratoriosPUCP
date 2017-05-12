@@ -8,4 +8,7 @@ urlpatterns = [
     url('^$',
         views.main.index,
         name='index'),
+    url('^list',
+        views.main.lista_ventas,
+        name='lista_ventas'),
 ]

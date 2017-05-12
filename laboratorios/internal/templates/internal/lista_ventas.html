@@ -1,0 +1,32 @@
+{% extends 'internal/base_internal.html' %}
+
+{% block title %}{{ super() }} | Inicio{% endblock title %}
+
+{% block custom_css %}{% endblock custom_css %}
+
+{% block page_content %}
+
+<P> ---------------- VENTAS ---------- </P>
+
+
+    <ul>
+        {% for v in ventas %}
+            <p>{{ v }}</p>
+        {% endfor %}
+    </ul>
+
+{% endblock page_content %}
+
+{% block custom_js %}
+<script>
+setTimeout(function() {
+  toastr.options = {
+    closeButton: true,
+    progressBar: true,
+    showMethod: 'slideDown',
+    timeOut: 4000000
+  };
+  toastr.success('Responsive Admin Theme', 'Welcome to INSPINIA');
+}, 1300);
+</script>
+{% endblock custom_js %}

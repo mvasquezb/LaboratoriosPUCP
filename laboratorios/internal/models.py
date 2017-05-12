@@ -10,9 +10,11 @@ class Client(models.Model):
 class Sale(models.Model):
 	ammount = models.FloatField()
 
+	def __str__(self):
+		return "Monto venta: " + str(self.ammount)
+
 
 class Product(models.Model):
 	description = models.CharField(max_length=100)
 	unit_cost = models.FloatField()
 
-	
