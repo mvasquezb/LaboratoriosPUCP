@@ -20,3 +20,6 @@ class Sale(models.Model):
 class Product(models.Model):
     description = models.CharField(max_length=100)
     unit_cost = models.FloatField()
+
+    def __str__(self):
+        return self.description + ' - ' + str(self.unit_cost)
