@@ -24,7 +24,7 @@ urlpatterns = [
         views.main.lista_ventas,
         name='lista_ventas'),
     url('^products/$',
-        views.products.index,
+        views.main.lista_productos,
         name='product.index'),
     url('^products/create$',
         views.products.create,
