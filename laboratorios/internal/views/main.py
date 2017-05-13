@@ -1,15 +1,9 @@
+from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse
-from django.shortcuts import render
-
-from ..models import Sale
-__all__ = (
-    'index',
-)
+from internal.models import Product, Sale
 
 
-def index(request,
-          template='internal/index.html',
-          extra_context=None):
+def index(request, template='internal/index.html', extra_context=None):
     context = {}
     if extra_context is not None:
         context.update(extra_context)
@@ -19,11 +13,21 @@ def index(request,
 def editar_ventas(request,
           template='internal/editar_ventas.html',
           extra_context=None):
-    venta_shida = Sale.objects.get(id = 1)
+    venta_shida = get_object_or_404(Sale, id = 1)
     if(venta_shida):
         venta_shida.ammount = 3.1416;
         venta_shida.save()
     context = {'venta_shida': venta_shida}
+    return render(request, template, context)
+
+
+def lista_productos(request,
+          template='internal/lista_productos.html',
+          extra_context=None):
+    productos= Product.objects.all()
+    context = {'productos':productos}
+    if extra_context is not None:
+        context.update (extra_context)
     return render(request, template, context)
 
 
