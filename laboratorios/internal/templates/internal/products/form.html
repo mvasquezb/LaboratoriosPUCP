@@ -1,0 +1,54 @@
+{% extends 'internal/base_internal.html' %}
+
+{% block title %}{{ super() }} | Inicio{% endblock title %}
+
+{% block custom_css %}{% endblock custom_css %}
+
+{% block page_content %}
+
+<div class="row border-bottom white-bg dashboard-header">
+    <div class="col-md-12">
+      <h1>Actualizar producto</h1>
+      <form action="/internal/products/{{ action }}/" method="post">
+          {% csrf_token %}
+          Descripcion:
+          <input class="input" name=description value="{{ description }}"><br />
+          Precio Unitario:
+          <input class="input" name=unit_cost value="{{ unit_cost }}"><br />
+          <input class="btn-primary" type=submit value="{{ button }}">
+      </form>
+
+    </div>
+</div>
+<div class="clearfix"></div>
+{% endblock page_content %}
+
+{% block custom_js %}
+<script>
+setTimeout(function() {
+  toastr.options = {
+    closeButton: true,
+    progressBar: true,
+    showMethod: 'slideDown',
+    timeOut: 4000000
+  };
+  toastr.success('Responsive Admin Theme', 'Welcome to INSPINIA');
+}, 1300);
+</script>
+{% endblock custom_js %}
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>cl</title>
+</head>
+<body>
+
+
+</body>
+</html>
