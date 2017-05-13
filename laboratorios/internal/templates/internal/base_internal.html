@@ -45,15 +45,21 @@
           </a>
         </li>
         <li>
-          <a href="layouts.html">
+          <a href="{{ url('internal:lista_ventas') }}">
             <i class="fa fa-diamond"></i>
             <span class="nav-label">Ventas</span>
           </a>
         </li>
         <li>
-          <a href="">
+          <a href="{{ url('internal:product.index') }}">
             <i class="fa fa-bar-chart-o"></i>
             <span class="nav-label">Productos</span>
+          </a>
+        </li>
+        <li>
+          <a href="{{ url('internal:sumita', number_1=2, number_2=5) }}">
+            <i class="fa fa-bar-chart-o"></i>
+            <span class="nav-label">Suma</span>
           </a>
         </li>{#
         <li>
