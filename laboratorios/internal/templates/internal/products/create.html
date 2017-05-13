@@ -1,0 +1,42 @@
+{% extends 'internal/base_internal.html' %}
+
+{% block title %}{{ super() }} | Inicio{% endblock title %}
+
+{% block custom_css %}{% endblock custom_css %}
+
+{% block page_content %}
+
+<div class="row border-bottom white-bg dashboard-header">
+    <div class="col-md-3">
+        <h2><strong>Crear Nuevo Producto</strong></h2>
+        <form action="{{ url('internal:product.create') }}" method="post">
+            {% csrf_token %}
+            Ingrese Descripcion del Producto: <input type="text" name="fdescrip">
+            <br>
+            <br>
+			Ingrese el costo unitario del Producto: <input type="text" name="fcosto">
+			<br>
+            <br>
+            <input type="submit" value="Registrar">
+        </form>
+        <br>
+        <br>
+        <br>
+    </div>
+</div>
+<div class="clearfix"></div>
+{% endblock page_content %}
+
+{% block custom_js %}
+<script>
+setTimeout(function() {
+  toastr.options = {
+    closeButton: true,
+    progressBar: true,
+    showMethod: 'slideDown',
+    timeOut: 4000000
+  };
+  toastr.success('Responsive Admin Theme', 'Welcome to INSPINIA');
+}, 1300);
+</script>
+{% endblock custom_js %}
