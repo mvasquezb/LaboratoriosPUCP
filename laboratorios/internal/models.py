@@ -8,15 +8,17 @@ class Client(models.Model):
     def __str__(self):
         return self.name
 
+
 class Sale(models.Model):
     ammount = models.FloatField()
+
     def __str__(self):
-        return self.description
+        return "Monto venta " + str(self.pk) + ": " + str(self.ammount)
 
 
 class Product(models.Model):
     description = models.CharField(max_length=100)
     unit_cost = models.FloatField()
-    def __str__(self):
-        return self.description
 
+    def __str__(self):
+        return "Descripcion: " + str(self.description) + " Precio: " + str(self.unit_cost)
