@@ -1,5 +1,8 @@
 from django.conf.urls import url
 from . import views
+##
+## Insert reference to __init__.py for each view
+##
 
 urlpatterns = [
     #
@@ -41,4 +44,7 @@ urlpatterns = [
     url('^products/update/(?P<id>\d+)',
         views.products.update,
         name="product.update"),
+    url('^sales/create$',
+        views.sales.create,
+        name='sale.create'),
 ]
