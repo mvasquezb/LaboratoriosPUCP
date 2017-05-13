@@ -62,7 +62,6 @@ TEMPLATES = [
         ],
         'APP_DIRS': True,
         'OPTIONS': {
-            "match_regex": r"^(?!admin/).*",
             'match_extension': '.html',
             'match_regex': r'^(?!admin/).*',
             'app_dirname': 'templates',
@@ -76,6 +75,7 @@ TEMPLATES = [
     },
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
