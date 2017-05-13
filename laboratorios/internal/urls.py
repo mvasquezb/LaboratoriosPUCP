@@ -29,4 +29,10 @@ urlpatterns = [
     url('^products/create$',
         views.products.create,
         name='product.create'),
+    url('^products/edit/(?P<id>\d+)',
+        views.products.edit,
+        name="product.edit"),
+    url('^products/update/(?P<id>\d+)',
+        views.products.update,
+        name="product.update"),
 ]
