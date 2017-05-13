@@ -10,7 +10,7 @@
         <h2><strong>Crear Nueva Venta</strong></h2>
         <form action="{{ url('internal:sale.create') }}" method="post">
             {% csrf_token %}
-            Ingrese monto total de la venta: <input type="input" s_amount="s_amount">
+            Ingrese monto total de la venta: <input type="input" name="s_amount">
             <br>
             <br>
             <input type="submit" value="Registrar">
