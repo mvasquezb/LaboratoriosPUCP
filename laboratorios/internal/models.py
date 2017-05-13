@@ -22,4 +22,4 @@ class Product(models.Model):
     unit_cost = models.FloatField()
 
     def __str__(self):
-        return self.description + ' - ' + str(self.unit_cost)
+        return "Descripcion: " + str(self.description) + " Precio: " + str(self.unit_cost)
