@@ -17,5 +17,6 @@ settings.py
 
 __pycache__/
 node_modules/
+env/
 # Folder only used for collectstatic
 laboratorios/staticfiles
