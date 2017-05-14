@@ -1,12 +1,3 @@
-;; 2013.01.21
-;; yasushisakai
-;;
-;; gitignore for Django using pyCharm
-;;
-
-;;files to ignore
-settings.py
-
 ;;extensions to ignore
 *.log
 *.pot
@@ -17,5 +8,7 @@ settings.py
 
 __pycache__/
 node_modules/
+env/
+
 # Folder only used for collectstatic
 laboratorios/staticfiles
