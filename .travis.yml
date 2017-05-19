@@ -10,8 +10,8 @@ install:
   - pip install -q coveralls
 before_script:
   - psql -U postgres -c "create database travisci"
-script:
   - cd laboratorios
+script:
   - coverage run --source=python manage.py test
 after_success:
   - coveralls
