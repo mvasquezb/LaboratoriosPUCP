@@ -95,8 +95,12 @@ WSGI_APPLICATION = 'laboratorios.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'labicpucp',
+        'USER': 'inf245',
+        'PASSWORD': 'inf24520171',
+        'HOST': 'localhost',
+        'PORT': '',
     }
 }
 
