@@ -8,6 +8,7 @@ class Test(models.Model):
     def __str__(self):
         return self.name
 
+
 class Access(models.Model):
     description = models.CharField(max_length=100)
 
@@ -19,12 +20,15 @@ class Access(models.Model):
 class Role(models.Model):
     description = models.CharField(max_length=100,blank=True)
     access = models.ManyToManyField(Access,through="RoleByAccess")
+
     def __str__(self):
         return self.description
+
 
 class RoleByAccess(models.Model):
     role = models.ForeignKey(Role)
     access = models.ForeignKey(Access)
+
 
 class User(models.Model):
     username = models.CharField(max_length=100,null=False)
@@ -35,6 +39,7 @@ class User(models.Model):
     def __str__(self):
         return "%s %s" %(self.username,self.userDescription)
 
+
 class UserByRole(models.Model):
     user = models.ForeignKey(User)
     role = models.ForeignKey(Role)
@@ -42,8 +47,8 @@ class UserByRole(models.Model):
     def __str__(self):
         return "%s %s" %(self.user,self.role)
 
-    ###Modelo de clientes
 
+###Modelo de clientes
 class Client(models.Model):
     name = models.CharField(max_length=100)
     idDoc = models.IntegerField()
@@ -57,24 +62,32 @@ class SampleType(models.Model):
 
     def __str__(self):
         return str(self.description)
+
+
 class TestType(models.Model):
     description = models.CharField(max_length=100)
-
 
 
 class Request(models.Model):
     description = models.CharField(max_length=100)
     client = models.ForeignKey(Client,on_delete=models.CASCADE)
+    status = models.IntegerField(default=0)
+
     def __str__(self):
         return self.description
+
+
 class Sample(models.Model):
     request = models.ForeignKey(Request,on_delete=models.CASCADE)
     sampleType = models.ForeignKey(SampleType)
     description = models.CharField(max_length=30)
+
+
 class TestFill(models.Model):
     sample = models.ForeignKey(Sample, on_delete=models.CASCADE)
     request = models.ForeignKey(Request,on_delete=models.CASCADE)
     testType = models.ForeignKey(TestType)
     description = models.CharField(max_length=100)
+
     def __str__(self):
         return str(self.description)
