@@ -73,7 +73,7 @@ class Sample(models.Model):
     description = models.CharField(max_length=30)
 class TestFill(models.Model):
     sample = models.ForeignKey(Sample, on_delete=models.CASCADE)
-    request = models.ForeignKey(Request, on_delete=models.CASCADE)
+    request = models.ForeignKey(Request,on_delete=models.CASCADE)
     testType = models.ForeignKey(TestType)
     description = models.CharField(max_length=100)
     def __str__(self):
