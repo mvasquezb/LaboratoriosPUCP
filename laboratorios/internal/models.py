@@ -33,7 +33,7 @@ class User(models.Model):
     role = models.ManyToManyField(Role,through="UserByRole")
 
     def __str__(self):
-        return "%s %s" %(self.username,self.description)
+        return "%s %s" %(self.username,self.userDescription)
 
 class UserByRole(models.Model):
     user = models.ForeignKey(User)
