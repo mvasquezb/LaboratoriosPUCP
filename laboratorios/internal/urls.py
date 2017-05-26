@@ -1,5 +1,8 @@
 from django.conf.urls import url
+
 from . import views
+
+
 
 urlpatterns = [
     #
@@ -10,4 +13,5 @@ urlpatterns = [
         name='index'),
     url('^request/create$', views.request.create, name='request.create'),
     url('^request/store$', views.request.store, name='request.store'),
+
 ]
