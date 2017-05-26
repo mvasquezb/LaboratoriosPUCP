@@ -15,6 +15,16 @@
     <th>Capacidad</th>
     <th>Activo</th>
   </tr>
+  <tr><th><br></th></tr>
+  {% for q in lista_labs %}
+  <tr>
+    <th>{{q.labname}}</th>
+    <th>{{q.typeLab}}</th>
+    <th>{{q.numUser}}</th>
+    <th>{{q.capacity}}</th>
+    <th>{{q.active}}</th>
+  </tr>
+  {% endfor %}
 </table>
 
 {% endblock page_content %}
