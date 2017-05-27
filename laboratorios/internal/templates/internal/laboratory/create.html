@@ -1,0 +1,61 @@
+{% extends 'internal/base_internal.html' %}
+
+{% block title %}{{ super() }} | Inicio{% endblock title %}
+
+{% block custom_css %}{% endblock custom_css %}
+
+{% block page_content %}
+
+<table style="width:80%">
+      <form action="{{ url('internal:labs.create') }}" method="post">
+  <p>
+    {% csrf_token %}
+    <tr>
+      <th width="1px">Nombre:</th>
+      <th align="left"><input type="text"  name="textname" autofocus required  /></th>
+    </tr>
+    <tr><th><br></th></tr>
+    <tr>
+    <th>Numero de Usuarios:</th>
+      <th><input type="number" min="0" name="numberUsers"  value="0" /></th>
+    </tr>
+    <tr><th><br></th></tr>
+    <tr>
+    <th>Capacidad:</th>
+      <th><input type="number" min="0"  name="text_capacity" value="0" /></th>
+    </tr>
+        <tr><th><br></th></tr>
+        <tr>
+    <th>Tipo de laboratorio:</th>
+    <th>
+    <select name="comboBox_type">
+      {% for lab_type in types %}
+      <option> {{ lab_type.name }} </option>
+      {% endfor %}
+    </select>
+    </th>
+        </tr>
+        <tr><th><br></th></tr>
+    <tr><th><input type="submit" value="Registrar" /></th> </tr>
+
+  </p>
+
+
+</form>
+</table>
+
+{% endblock page_content %}
+
+{% block custom_js %}
+<script>
+setTimeout(function() {
+  toastr.options = {
+    closeButton: true,
+    progressBar: true,
+    showMethod: 'slideDown',
+    timeOut: 4000
+  };
+  toastr.success('Sistema de Gestión de Laboratorios IC-PUCP', 'Bienvenido');
+}, 1300);
+</script>
+{% endblock custom_js %}

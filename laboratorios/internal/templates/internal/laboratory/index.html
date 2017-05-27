@@ -1,0 +1,57 @@
+{% extends 'internal/base_internal.html' %}
+
+{% block title %}{{ super() }} | Inicio{% endblock title %}
+
+{% block custom_css %}{% endblock custom_css %}
+
+{% block page_content %}
+
+<h1> Lista de laboratorios </h1>
+<div class="row">
+  <div class="col-md-12">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Tipo</th>
+          <th>Cantidad de usuarios</th>
+          <th>Capacidad</th>
+          <th>Activo</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for lab in lab_list %}
+          <tr>
+            <th>{{ lab.name }}</th>
+            <th>{{ lab.type }}</th>
+            <th>{{ lab.users_number }}</th>
+            <th>{{ lab.capacity }}</th>
+            <th>
+              {% if lab.active %}
+                Activo
+              {% else %}
+                Inactivo
+              {% endif %}
+            </th>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% endblock page_content %}
+
+{% block custom_js %}
+<script>
+setTimeout(function() {
+  toastr.options = {
+    closeButton: true,
+    progressBar: true,
+    showMethod: 'slideDown',
+    timeOut: 4000
+  };
+  toastr.success('Sistema de Gestión de Laboratorios IC-PUCP', 'Bienvenido');
+}, 1300);
+</script>
+{% endblock custom_js %}

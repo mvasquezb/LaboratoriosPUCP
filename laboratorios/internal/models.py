@@ -98,6 +98,9 @@ class LaboratoryType(models.Model):
     name = models.CharField(max_length=100)
     active = models.BooleanField()
 
+    def __str__(self):
+        return self.name
+
 
 class Laboratory(models.Model):
     name = models.CharField(max_length=100)
