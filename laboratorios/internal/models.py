@@ -11,7 +11,6 @@ class Test(models.Model):
 
 class Access(models.Model):
     description = models.CharField(max_length=100)
-
     def __str__(self):
         return self.description
 
@@ -20,7 +19,6 @@ class Access(models.Model):
 class Role(models.Model):
     description = models.CharField(max_length=100, blank=True)
     access = models.ManyToManyField(Access, through="RoleByAccess")
-
     def __str__(self):
         return self.description
 
@@ -46,15 +44,11 @@ class UserByRole(models.Model):
 
     def __str__(self):
         return "%s %s" % (self.user, self.role)
-
-
 # Modelo de clientes
 class Client(models.Model):
     name = models.CharField(max_length=100)
     idDoc = models.IntegerField()
     username = models.OneToOneField(User, on_delete=models.CASCADE)
-
-
 # Modelo para pruebas
 class SampleType(models.Model):
     description = models.CharField(max_length=100)
