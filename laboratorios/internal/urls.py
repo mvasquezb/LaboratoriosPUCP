@@ -1,5 +1,7 @@
 from django.conf.urls import url
+
 from . import views
+
 
 urlpatterns = [
     #
@@ -8,15 +10,40 @@ urlpatterns = [
     url('^$',
         views.main.index,
         name='index'),
+    #
+    # Laboratory
+    #
     url('^laboratory/?$',
-        views.labs.index,
-        name='labs.index'),
+        views.laboratory.index,
+        name='laboratory.index'),
     url('^laboratory/create/?$',
-        views.labs.create,
-        name='labs.create'),
-    url('^role/$', views.role.role_list,name='roles_list'),
-    url('^role/create$', views.role.role_create,name='role_create'),
-    url('^role/edit/(?P<pk>\d+)%', views.role.role_update,name='role_edit'),
-    url('^role/delete/(?P<pk>\d+)%', views.role.role_delete,name='role_delete'),
-
+        views.laboratory.create,
+        name='laboratory.create'),
+    #
+    # Role
+    #
+    url('^role/$',
+        views.role.index,
+        name='role.index'),
+    url('^role/create$',
+        views.role.create,
+        name='role.create'),
+    url('^role/edit/(?P<pk>\d+)$',
+        views.role.edit,
+        name='role.edit'),
+    url('^role/delete/(?P<pk>\d+)$',
+        views.role.delete,
+        name='role.delete'),
+    #
+    # ServiceRequest
+    #
+    url('^request/create$',
+        views.request.create,
+        name='request.create'),
+    url('^request/store$',
+        views.request.store,
+        name='request.store'),
+    url('^request$',
+        views.request.index,
+        name='request.index'),
 ]

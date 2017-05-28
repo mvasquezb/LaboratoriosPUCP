@@ -10,13 +10,13 @@
 <ul>
     {% for a in object_list %}
     <li>{{ a.description }}
-    <a href="{{ url('internal:role_edit', pk=a.id) }}">{{ a.id }}</a>
-    <a href="{{ url('internal:role_delete', pk=a.id) }}">delete</a>
+    <a href="{{ url('internal:role.edit', pk=a.id) }}">{{ a.id }}</a>
+    <a href="{{ url('internal:role.delete', pk=a.id) }}">delete</a>
     </li>
     {% endfor %}
 </ul>
 
-<a href="{{ url('internal:role_create') }}">New</a>
+<a href="{{ url('internal:role.create') }}">New</a>
 
 
 {% endblock page_content %}
