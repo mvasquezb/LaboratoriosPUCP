@@ -55,8 +55,10 @@ class Client(models.Model):
 
 
 class TestType(models.Model):
+    name = models.CharField(max_length=100)
     description = models.CharField(max_length=100)
     active = models.BooleanField()
+    assay_type = models.ForeignKey(AssayType, on_delete=models.CASCADE)
 
 
 class Request(models.Model):
@@ -189,3 +191,17 @@ class Laboratory(models.Model):
     capacity = models.IntegerField()
     active = models.BooleanField()
     type = models.ForeignKey(LaboratoryType, on_delete=models.CASCADE)
+
+### TipoEnsayo
+class AssayType(models.Model):
+    name=models.CharField(max_length=100)
+    description=models.CharField(max_length=100)
+    active=models.BooleanField()
+    lab_type=models.ForeignKey(LaboratoryType, on_delete=models.CASCADE)
+
+## Tipo Muestra
+class SampleType(models.Model):
+    name=models.CharField(max_length=100)
+    description=models.CharField(max_length=100)
+    active=models.BooleanField()
+    lab_type = models.ForeignKey(LaboratoryType, on_delete=models.CASCADE)
