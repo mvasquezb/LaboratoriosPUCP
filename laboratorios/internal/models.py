@@ -2,7 +2,6 @@ from django.db import models
 from django.contrib.auth.models import User as AuthUser
 
 
-# MODELO DE PRUEBA, NO SE RELACIONA
 class Test(models.Model):
     name = models.CharField(max_length=100)
     request = models.ForeignKey("Request", on_delete=models.CASCADE)
@@ -47,16 +46,10 @@ class UserByRole(models.Model):
         return "{} | {}".format(self.user, self.role)
 
 
-# Modelo de clientes
 class Client(models.Model):
     name = models.CharField(max_length=100)
     idDoc = models.IntegerField()
     username = models.OneToOneField(User, on_delete=models.CASCADE)
-
-
-class TestType(models.Model):
-    description = models.CharField(max_length=100)
-    active = models.BooleanField()
 
 
 class Request(models.Model):
@@ -189,3 +182,6 @@ class Laboratory(models.Model):
     capacity = models.IntegerField()
     active = models.BooleanField()
     type = models.ForeignKey(LaboratoryType, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.name
