@@ -14,7 +14,7 @@ def index(request,
 def create(request,
            template='internal/laboratory/create.html',
            extra_context=None):
-    if request.method == 'POST':
+    if  request.method == 'POST':
         name = str(request.POST.get('textname'))
         numberUsers = int(request.POST.get('numberUsers'))
         capacity2 = int(request.POST.get('text_capacity'))
