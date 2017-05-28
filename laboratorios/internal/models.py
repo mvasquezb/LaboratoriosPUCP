@@ -53,6 +53,19 @@ class Client(models.Model):
     idDoc = models.IntegerField()
     username = models.OneToOneField(User, on_delete=models.CASCADE)
 
+class LaboratoryType(models.Model):
+    name = models.CharField(max_length=100)
+    active = models.BooleanField()
+
+    def __str__(self):
+        return self.name
+
+### TipoEnsayo
+class AssayType(models.Model):
+    name=models.CharField(max_length=100)
+    description=models.CharField(max_length=100)
+    active=models.BooleanField()
+    lab_type=models.ForeignKey(LaboratoryType, on_delete=models.CASCADE)
 
 class TestType(models.Model):
     name = models.CharField(max_length=100)
@@ -176,28 +189,12 @@ class ParameterFill(models.Model):
         self.test_fill = test_insert
         self.parameter_template = param_insert
 
-
-class LaboratoryType(models.Model):
-    name = models.CharField(max_length=100)
-    active = models.BooleanField()
-
-    def __str__(self):
-        return self.name
-
-
 class Laboratory(models.Model):
     name = models.CharField(max_length=100)
     users_number = models.IntegerField()
     capacity = models.IntegerField()
     active = models.BooleanField()
     type = models.ForeignKey(LaboratoryType, on_delete=models.CASCADE)
-
-### TipoEnsayo
-class AssayType(models.Model):
-    name=models.CharField(max_length=100)
-    description=models.CharField(max_length=100)
-    active=models.BooleanField()
-    lab_type=models.ForeignKey(LaboratoryType, on_delete=models.CASCADE)
 
 ## Tipo Muestra
 class SampleType(models.Model):

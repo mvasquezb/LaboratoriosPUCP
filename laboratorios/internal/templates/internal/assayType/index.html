@@ -1,0 +1,26 @@
+{% extends 'internal/base_internal.html' %}
+
+{% block title %}{{ super() }} | Inicio{% endblock title %}
+
+{% block custom_css %}{% endblock custom_css %}
+
+{% block page_content %}
+
+<h1> Lista de Tipos de Ensayos </h1>
+
+
+{% endblock page_content %}
+
+{% block custom_js %}
+<script>
+setTimeout(function() {
+  toastr.options = {
+    closeButton: true,
+    progressBar: true,
+    showMethod: 'slideDown',
+    timeOut: 4000
+  };
+  toastr.success('Sistema de Gestión de Laboratorios IC-PUCP', 'Bienvenido');
+}, 1300);
+</script>
+{% endblock custom_js %}

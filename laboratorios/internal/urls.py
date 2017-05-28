@@ -20,6 +20,12 @@ urlpatterns = [
         views.laboratory.create,
         name='laboratory.create'),
     #
+    #Assay Type
+    #
+    url('^assayType/?$',
+        views.assayType.index,
+        name='assayType.index'),
+    #
     # Role
     #
     url('^role/$',
