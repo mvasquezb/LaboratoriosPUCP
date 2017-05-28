@@ -1,0 +1,22 @@
+{% extends 'internal/base_internal.html' %}
+
+{% block title %}{{ super() }} | Inicio{% endblock title %}
+
+{% block custom_css %}{% endblock custom_css %}
+
+{% block page_content %}
+
+<h1>Roles</h1>
+<ul>
+    {% for a in object_list %}
+    <li>{{ a.description }}
+    <a href="{{ url('internal:role_edit', pk=a.id) }}">{{ a.id }}</a>
+    <a href="{{ url('internal:role_delete', pk=a.id) }}">delete</a>
+    </li>
+    {% endfor %}
+</ul>
+
+<a href="{{ url('internal:role_create') }}">New</a>
+
+
+{% endblock page_content %}

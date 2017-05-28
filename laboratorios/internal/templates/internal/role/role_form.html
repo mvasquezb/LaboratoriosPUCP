@@ -1,0 +1,15 @@
+{% extends 'internal/base_internal.html' %}
+
+{% block title %}{{ super() }} | Inicio{% endblock title %}
+
+{% block custom_css %}{% endblock custom_css %}
+
+{% block page_content %}
+
+<form method="post">{% csrf_token %}
+    {{ form.as_p() }}
+    <input type="submit" value="Submit" />
+</form>
+
+
+{% endblock page_content %}
