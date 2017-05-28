@@ -36,3 +36,4 @@ def role_delete(request, pk, template_name='internal/role/role_confirm_delete.ht
         role.delete()
         return redirect('role_list')
     return render(request, template_name, {'object': role})
+
