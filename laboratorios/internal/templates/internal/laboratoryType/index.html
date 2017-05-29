@@ -1,0 +1,90 @@
+{% extends 'internal/base_internal.html' %}
+
+{% block title %}{{ super() }} | Inicio{% endblock title %}
+
+{% block custom_css %}{% endblock custom_css %}
+
+{% block page_content %}
+
+<div>
+  <div class="row wrapper border-bottom white-bg page-heading">
+    <h1>Tipos de Laboratorio</h1>
+    <div class="ibox float-e-margins">
+      <div class="ibox-title">
+        <h5>Filtros</h5>
+      </div>
+      <div class="ibox-content">
+        <div class="row">
+          <div class="col-md-5">
+            <p>Tipo de ensayo</p>
+            <select class="input-sm form-control input-s-sm inline">
+              <option onclick="list_filter_function()">Option 1</option>
+              <option onclick="list_filter_function()">Option 3</option>
+              <option onclick="list_filter_function()">Option 4</option>
+            </select>
+            <p>Tipo de muestra</p>
+            <select class="input-sm form-control input-s-sm inline">
+              <option onclick="list_filter_function()">Option 1</option>
+              <option onclick="list_filter_function()">Option 2</option>
+              <option onclick="list_filter_function()">Option 3</option>
+              <option onclick="list_filter_function()">Option 4</option>
+            </select>
+          </div>
+          <div class="col-sm-2">
+            <div class="input-group"><input type="text" placeholder="Search" class="input-sm form-control"> <span class="input-group-btn">
+              <button type="button" class="btn btn-sm btn-primary"> Ir!</button> </span></div>
+          </div>
+        </div>
+    <div class="wrapper wrapper-content animated fadeIn">
+      <div class="row">
+        <div>
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Id</th>
+                <th>Nombre </th>
+                <th>Descripcion </th>
+                <th>Activo</th>
+                <th>Editar</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for labType in labType_list %}
+                <tr>
+                  <th>{{ labType.pk }}</th>
+                  <th>{{ labType.name }}</th>
+                  <th>{{ labType.description }}</th>
+                  <th>
+                    {% if labType.active %}
+                      Activo
+                    {% else %}
+                      Inactivo
+                    {% endif %}
+                  </th>
+                  <th><a href="#"><i onclick="edit_row()" class="fa fa-pencil-square-o"></i></th>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+    </div>
+  </div>
+  </div>
+</div>
+
+
+{% endblock page_content %}
+
+{% block custom_js %}
+<script>
+setTimeout(function() {
+  toastr.options = {
+    closeButton: true,
+    progressBar: true,
+    showMethod: 'slideDown',
+    timeOut: 4000
+  };
+  toastr.success('Sistema de Gestión de Laboratorios IC-PUCP', 'Bienvenido');
+}, 1300);
+</script>
+{% endblock custom_js %}
