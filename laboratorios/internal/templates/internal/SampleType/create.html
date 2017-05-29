@@ -1,0 +1,73 @@
+{% extends 'internal/base_internal.html' %}
+
+{% block title %}{{ super() }} | Inicio{% endblock title %}
+
+{% block custom_css %}{% endblock custom_css %}
+
+{% block page_content %}
+<div class="row border-bottom white-bg dashboard-header">
+  <div>
+    <h2><strong>Registrar Tipos de Muestra</strong></h2>
+  </div>
+  <div>
+    <div >
+      <div class="ibox float-e-margins">
+         <div class="ibox-title">
+           <h5>Datos generales <small>(*)Todos los campos son obligatorios</small></h5>
+         </div>
+        <div class="ibox-content">
+          <table>
+          <form action="{{ url('internal:laboratoryType.create') }}" method="post">
+            <div class="col-md-4">
+               {% csrf_token %}
+              <tr>
+                <th>Nombre:</th>
+                <th align="left"><input type="text"  name="textname" autofocus required  /></th>
+              </tr>
+              <tr><th><br></th></tr>
+              <tr>
+                <th>Descripción:</th>
+                <th><input type="text"  class="form-control"/></th>
+              </tr>
+            </div>
+            <div class="form-group">
+              <label>Tipo de Laboratorio</label><br>
+              <select name="comboBox_type" style="height: 35px">
+                {% for lab_type in types %}
+                  <option>{{ lab_type.name }}</option>
+                {% endfor %}
+              </select>
+              <br><span>Seleccione el tipo de Laboratorio al cual pertenecerá</span>
+            </div>
+          </form>
+        </table>
+        </div>
+      </div>
+      <div class="ibox-content form-group">
+        <div class="col-md-offset-5">
+          <button id="cancel" class="btn btn-w-m btn-white" type="submit">Cancel</button>
+          <button type="submit" id="createButton" class="btn btn-w-m btn-success"> Registrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+{% endblock page_content %}
+
+{% block custom_js %}
+<script>
+setTimeout(function() {
+  toastr.options = {
+    closeButton: true,
+    progressBar: true,
+    showMethod: 'slideDown',
+    timeOut: 4000
+  };
+  toastr.success('Sistema de Gestión de Laboratorios IC-PUCP', 'Bienvenido');
+}, 1300);
+
+
+</script>
+{% endblock custom_js %}

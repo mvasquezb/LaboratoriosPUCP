@@ -16,5 +16,7 @@ def index(request,
 def create(request,
            template='internal/laboratoryType/create.html',
            extra_context=None):
-    context={}
+    essaytypes = EssayType.objects.all ()
+    sampletypes = SampleType.objects.all ()
+    context = {'essayType_list': essaytypes, 'sampleType_list': sampletypes}
     return render(request, template, context)

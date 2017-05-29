@@ -8,29 +8,19 @@
 
 
 <div class="row wrapper border-bottom white-bg page-heading">
-  <h1>Tipos de Laboratorio</h1>
+  <h1>Tipos de Muestra</h1>
   <div>
     <fieldset>
      <legend><h3><strong>Filtros</strong></h3></legend>
         <!--<div style="float:left;"> -->
       <div>
         <div class="form-group">
-          <label class="col-md-2 control-label">Tipo de Ensayo: </label>
+          <label class="col-md-2 control-label">Tipo de Laboratorios: </label>
           <select id="typeListEssay">
             <option style="display:none;" selected> -- Selecciona una opcion -- </option>
             <option onclick="list_filter_function()">-- Borrar filtro --</option>
-            {% for essaytype in essayType_list %}
-              <option>{{ essaytype.name }}</option>
-            {% endfor %}
-          </select>
-        </div>
-        <div class="form-group">
-          <label class="col-md-2 control-label">Tipo de Muestra: </label>
-          <select id="typeListSample">
-            <option style="display:none;" selected> -- Selecciona una opcion -- </option>
-            <option onclick="list_filter_function()">-- Borrar filtro --</option>
-            {% for sampletype in sampleType_list %}
-              <option>{{ sampletype.name }}</option>
+            {% for labtype in labType_list %}
+              <option>{{ labtype.name }}</option>
             {% endfor %}
           </select>
         </div>
