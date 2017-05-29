@@ -33,3 +33,4 @@ def create(request,
         typelabs = LaboratoryType.objects.all()
         context = {'types': typelabs}
         return render(request, template, context)
+

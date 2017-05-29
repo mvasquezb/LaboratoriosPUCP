@@ -6,43 +6,152 @@
 
 {% block page_content %}
 
-<table style="width:80%">
-      <form action="{{ url('internal:laboratory.create') }}" method="post">
-  <p>
-    {% csrf_token %}
-    <tr>
-      <th width="1px">Nombre:</th>
-      <th align="left"><input type="text"  name="textname" autofocus required  /></th>
-    </tr>
-    <tr><th><br></th></tr>
-    <tr>
-    <th>Numero de Usuarios:</th>
-      <th><input type="number" min="0" name="numberUsers"  value="0" /></th>
-    </tr>
-    <tr><th><br></th></tr>
-    <tr>
-    <th>Capacidad:</th>
-      <th><input type="number" min="0"  name="text_capacity" value="0" /></th>
-    </tr>
-        <tr><th><br></th></tr>
-        <tr>
-    <th>Tipo de laboratorio:</th>
-    <th>
-    <select name="comboBox_type">
-      {% for lab_type in types %}
-      <option> {{ lab_type.name }} </option>
-      {% endfor %}
-    </select>
-    </th>
-        </tr>
-        <tr><th><br></th></tr>
-    <tr><th><input type="submit" value="Registrar" /></th> </tr>
+<div class="row border-bottom white-bg dashboard-header">
+    <div class="col-md-3">
+        <h2><strong>Crear Laboratorio</strong></h2>
+    </div>
+</div>
 
-  </p>
+<div class="col-md-offset-3" style="width: 450px">
+  <div class="ibox float-e-margins">
+    <div class="ibox-title">
+      <h5>Datos Generales </h5>
+    </div>
+    <div class="ibox-content">
+      <form class="horizontal-form">
+        <div class="form-group">
+          <label>Nombre</label>
+          <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Nombre de Laboratorio">
+          <span>Ejemplo : Laboratorio de Corrosión</span>
+        </div>
+        <div class="form-group">
+          <label>Tipo de Laboratorio</label><br>
+          <select name="comboBox_type">
+            {% for lab_type in types %}
+              <option>{{ lab_type.name }}</option>
+            {% endfor %}
+          </select>
+          <br><span>Seleccione el tipo de Laboratorio al cual pertenecerá</span>
+        </div>
+        <div class="form-group">
+          <label>Cantidad de Usuarios</label>
+          <input type="number" class="form-control" min="10" max="20" id="exampleInputFile">
+          <span>Cantidad máxima de usuarios permitidos en este laboratorio</span>
+        </div>
+        <button type="button" id="createButton" class="btn btn-w-m btn-success">Registrar</button>
+      </form>
+    </div>
+  </div>
+</div>
 
+<div class="col-md-offset-1">
+  <div class="ibox float-e-margins">
+    <div class="form-inline">
+      <div class="form-group">
+        <div class="ibox-title">
+          <h5>Personal disponible para este Laboratorio </h5>
+        </div>
+        <div class="ibox-content">
+          <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Nombre de Personal">
+          <button type="button" id="createButton" class="btn btn-w-m btn-success"> Buscar</button>
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Nombre</th>        
+                <th>Apellidos</th>
+                <th>Fecha Inicio</th>
+                <th>Agregar a Laboratorio</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">1</th>
+                <td>Mark</td>
+                <td>Otto</td>
+                <td>12/12/12</td>
+                <td><a href="#"><i onclick="" class="fa fa-arrow-right"></i></a></td>
+              </tr>
+              <tr>
+                <th scope="row">2</th>
+                <td>Mark</td>
+                <td>Otto</td>
+                <td>12/12/12</td>
+                <td><a href="#"><i onclick="" class="fa fa-arrow-right"></i></a></td>
+              </tr>
+              <tr>
+                <th scope="row">3</th>
+                <td>Mark</td>
+                <td>Otto</td>
+                <td>12/12/12</td>
+                <td><a href="#"><i onclick="" class="fa fa-arrow-right"></i></a></td>
+              </tr>
+              <tr>
+                <th scope="row">4</th>
+                <td>Mark</td>
+                <td>Otto</td>
+                <td>12/12/12</td>
+                <td><a href="#"><i onclick="" class="fa fa-arrow-right"></i></a></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
 
-</form>
-</table>
+      <div class="form-group">
+        <div class="ibox-title">
+          <h5>Lista de personal añadido a este Laboratorio </h5>
+        </div>      
+        <div class="ibox-content">
+          <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Nombre de Personal">
+          <button type="button" id="createButton" class="btn btn-w-m btn-success"> Buscar</button>
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Nombre</th>        
+                <th>Apellidos</th>
+                <th>Fecha Inicio</th>
+                <th>Quitar de Laboratorio</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">1</th>
+                <td>Mark</td>
+                <td>Otto</td>
+                <td>12/12/12</td>
+                <td><a href="#"><i onclick="" class="fa fa-arrow-left"></i></a></td>
+              </tr>
+              <tr>
+                <th scope="row">2</th>
+                <td>Mark</td>
+                <td>Otto</td>
+                <td>12/12/12</td>
+                <td><a href="#"><i onclick="" class="fa fa-arrow-left"></i></a></td>
+              </tr>
+              <tr>
+                <th scope="row">3</th>
+                <td>Mark</td>
+                <td>Otto</td>
+                <td>12/12/12</td>
+                <td><a href="#"><i onclick="" class="fa fa-arrow-left"></i></a></td>
+              </tr>
+              <tr>
+                <th scope="row">4</th>
+                <td>Mark</td>
+                <td>Otto</td>
+                <td>12/12/12</td>
+                <td><a href="#"><i onclick="" class="fa fa-arrow-left"></i></a></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
 
 {% endblock page_content %}
 
