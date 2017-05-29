@@ -6,7 +6,7 @@ from django.shortcuts import (
     HttpResponseRedirect
 )
 
-from internal.models import Request
+from internal.models import *
 
 
 def index(request):

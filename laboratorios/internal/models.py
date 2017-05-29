@@ -86,7 +86,7 @@ class EssayTemplate(models.Model):
     description = models.CharField(max_length=100)
 
     def __str__(self):
-        return str(self.cod)
+        return str(self.code)
 
     def get_test(self, index):
         test_list = TestTemplate.objects.filter(essay_template=self)
@@ -109,6 +109,7 @@ class EssayFill(models.Model):
         for i in range(1, test_number + 1):
             obj_test = TestFill()
             obj_test.create(self.essay_template.get_test(i), self)
+            obj_test.save()
 
 
 class TestTemplate(models.Model):
@@ -131,6 +132,7 @@ class TestFill(models.Model):
     test_template = models.ForeignKey(TestTemplate)
     essay_fill = models.ForeignKey(EssayFill)
     description = models.CharField(max_length=100, default='descripcion')
+    chosen = models.IntegerField(default=1)
 
     def __str__(self):
         return self.description

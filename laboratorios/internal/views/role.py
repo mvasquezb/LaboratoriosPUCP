@@ -1,6 +1,6 @@
 from django.shortcuts import render,redirect, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
-from internal.models import Role
+from internal.models  import Role
 from internal.views.forms import RoleForm
 
 

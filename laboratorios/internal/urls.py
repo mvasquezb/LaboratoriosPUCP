@@ -46,4 +46,16 @@ urlpatterns = [
     url('^request$',
         views.request.index,
         name='request.index'),
+#
+    # Test
+    #
+    url('^test/create$',
+        views.test.create,
+        name='test.create'),
+    url('^test/store$',
+        views.test.store,
+        name='test.store'),
+    url('^test$',
+        views.test.index,
+        name='test.index'),
 ]

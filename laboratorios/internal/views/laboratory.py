@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
-from internal.models import *
+from internal.models import Laboratory
 
 
 def index(request,

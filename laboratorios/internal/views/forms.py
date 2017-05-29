@@ -1,5 +1,5 @@
 from django.forms import ModelForm
-from internal.models import Role
+from internal.models  import Role
 
 
 class RoleForm(ModelForm):
