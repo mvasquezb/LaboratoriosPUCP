@@ -37,13 +37,13 @@ urlpatterns = [
     #
     # ServiceRequest
     #
-    url('^request/create$',
-        views.request.create,
-        name='request.create'),
-    url('^request/store$',
-        views.request.store,
-        name='request.store'),
-    url('^request$',
-        views.request.index,
-        name='request.index'),
+    url('^servicerequest/create$',
+        views.servicerequest.create,
+        name='servicerequest.create'),
+    url('^servicerequest/store$',
+        views.servicerequest.store,
+        name='servicerequest.store'),
+    url('^servicerequest$',
+        views.servicerequest.index,
+        name='servicerequest.index'),
 ]
