@@ -15,7 +15,6 @@ def index(request):
 
 def create(request):
     context = {}
-
     return render(request, 'internal/request/create.html', context)
 
 
