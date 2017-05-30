@@ -26,7 +26,7 @@ def show(request,
          template='internal/essayfill/show.html',
          extra_context=None):
     service = get_object_or_404(Service, pk=service_id)
-    essay = get_object_or_404(Service.essays, pk=essay_id)
+    essay = get_object_or_404(service.essays, pk=essay_id)
     context = {
         'service': service,
         'essay': essay,
