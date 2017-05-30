@@ -37,15 +37,15 @@ urlpatterns = [
     #
     # ServiceRequest
     #
-    url('^request/create$',
-        views.request.create,
-        name='request.create'),
-    url('^request/store$',
-        views.request.store,
-        name='request.store'),
-    url('^request$',
-        views.request.index,
-        name='request.index'),
+    url('^servicerequest/create$',
+        views.servicerequest.create,
+        name='servicerequest.create'),
+    url('^servicerequest/store$',
+        views.servicerequest.store,
+        name='servicerequest.store'),
+    url('^servicerequest$',
+        views.servicerequest.index,
+        name='servicerequest.index'),
     #
     # User
     #
@@ -61,4 +61,22 @@ urlpatterns = [
     url('^user/delete/(?P<pk>\d+)$',
         views.user.delete,
         name='user.delete'),
+    #
+    # Test
+    #
+    url('^test/create$',
+        views.test.create,
+        name='test.create'),
+    url('^test/store$',
+        views.test.store,
+        name='test.store'),
+    url('^test$',
+        views.test.index,
+        name='test.index'),
+    url('^test/edit/(?P<pk>\d+)$',
+        views.test.edit,
+        name='test.edit'),
+    url('^test/delete/(?P<pk>\d+)$',
+        views.test.edit,
+        name='test.delete'),
 ]
