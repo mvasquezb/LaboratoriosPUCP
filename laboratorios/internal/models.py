@@ -187,3 +187,8 @@ class Laboratory(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Service(models.Model):
+    request = models.ForeignKey(Request, on_delete=models.CASCADE)
+    essays = models.ManyToManyField(EssayFill)
