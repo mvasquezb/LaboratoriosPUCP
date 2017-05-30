@@ -63,5 +63,8 @@ urlpatterns = [
     #
     url('^service/index/?$',
         views.service.index,
-        name='service.index')
+        name='service.index'),
+    url('^service/(?P<pk>\d+)/?$',
+        views.service.show,
+        name='service.show'),
 ]
