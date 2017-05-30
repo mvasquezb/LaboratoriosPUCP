@@ -1,0 +1,67 @@
+{% extends 'internal/base_internal.html' %}
+
+{% block title %}{{ super() }} | Servicios{% endblock title %}
+
+{% block custom_css %}
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.15/css/jquery.dataTables.min.css">
+{% endblock custom_css %}
+
+{% block page_content %}
+<div class="row border-bottom white-bg dashboard-header">
+  <div class="col-md-6">
+    <h2><strong>Servicios</strong></h2>
+  </div>
+</div>
+<div class="wrapper wrapper-content animated fadeInRight">
+  <div class="col-md-12">
+    <div class="ibox float-e-margins">
+      <div class="ibox-content">
+        <div class="table-responsive">
+          <table class="footable table table-stripped toggle-arrow-tiny footable-loaded tablet breakpoint service-datatable">
+            <thead>
+              <tr>
+                <th class="footable-visible footable-sortable">Código</th>
+                <th class="footable-visible footable-sortable">Servicio</th>
+                <th class="footable-visible footable-sortable">Cliente</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for service in service_list %}
+                <tr class="service-row" data-url="{{ url('internal:service.show', pk=service.id) }}">
+                  <td>{{ service.id }}</td>
+                  <td>{{ service.request.description }}</td>
+                  <td>{{ service.request.client }}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock page_content %}
+
+{% block custom_js %}
+<script src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
+<script src="{{ static('js/datatable-config.js') }}"></script>
+
+<script>
+$('.service-datatable').DataTable({
+  responsive: true,
+  dom: '<"html5buttons"B>lTfgit',
+  buttons: [
+    {extend: 'copy'},
+    {extend: 'csv'},
+    {extend: 'excel', title: 'Servicios'},
+    {extend: 'pdf', title: 'Servicios'},
+  ]
+});
+</script>
+<script>
+$('.service-row').on('dblclick', function (e) {
+  var $row = $(e.target);
+  window.location.assign($row.data('url'));
+});
+</script>
+{% endblock custom_js %}
