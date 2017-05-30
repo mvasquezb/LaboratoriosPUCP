@@ -28,6 +28,9 @@ urlpatterns = [
     url ('^laboratoryType/create/?$',
          views.laboratoryType.create,
          name='laboratoryType.create'),
+    url ('^laboratoryType/edit/?$',
+         views.laboratoryType.edit,
+         name='laboratoryType.edit'),
     #
     #Assay Type
     #
@@ -61,4 +64,16 @@ urlpatterns = [
     url('^request$',
         views.request.index,
         name='request.index'),
+    #
+    # sampleType
+    #
+    url ('^sampleType/?$',
+         views.sampleType.index,
+         name='sampleType.index'),
+    url ('^sampleType/create/?$',
+         views.sampleType.create,
+         name='sampleType.create'),
+    url ('^sampleType/edit/?$',
+         views.sampleType.edit,
+         name='sampleType.edit'),
 ]

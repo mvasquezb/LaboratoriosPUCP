@@ -9,10 +9,9 @@
 
 <div class="row wrapper border-bottom white-bg page-heading">
   <h1>Tipos de Muestra</h1>
-  <div>
+  <div class="form-group">
     <fieldset>
      <legend><h3><strong>Filtros</strong></h3></legend>
-        <!--<div style="float:left;"> -->
       <div>
         <div class="form-group">
           <label class="col-md-2 control-label">Tipo de Laboratorios: </label>
@@ -39,28 +38,30 @@
   <div class="wrapper wrapper-content animated fadeIn">
       <div class="row">
         <div>
-          <table class="table">
+          <table class="table table-striped table-hover dataTables-example" >
             <thead>
               <tr>
                 <th>Id</th>
                 <th>Nombre </th>
                 <th>Descripcion </th>
+                <th>Tipo de Laboratorio </th>
                 <th>Activo</th>
                 <th>Editar</th>
               </tr>
             </thead>
             <tbody>
-              {% for labType in labType_list %}
+              {% for sampleType in sampleType_list %}
                 <tr>
-                  <th>{{ labType.pk }}</th>
-                  <th>{{ labType.name }}</th>
-                  <th>{{ labType.description }}</th>
+                  <th>{{ sampleType.pk }}</th>
+                  <th>{{ sampleType.name }}</th>
+                  <th>{{ sampleType.description }}</th>
+                  <th>{{ sampleType.lab_type }}</th>
                   <th>
-                    {% if labType.active %}
-                      Activo
-                    {% else %}
-                      Inactivo
-                    {% endif %}
+                      {% if sampleType.active %}
+                        Activo
+                      {% else %}
+                        Inactivo
+                      {% endif %}
                   </th>
                   <th><a href="#"><i onclick="edit_row()" class="fa fa-pencil-square-o"></i></th>
                 </tr>

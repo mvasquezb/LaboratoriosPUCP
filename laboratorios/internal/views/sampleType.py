@@ -4,28 +4,27 @@ from ..models import *
 
 
 def index(request,
-          template='internal/laboratoryType/index.html',
+          template='internal/sampleType/index.html',
           extra_context=None):
     labtypes = LaboratoryType.objects.all()
-    essaytypes= EssayType.objects.all()
     sampletypes=SampleType.objects.all()
-    context = {'labType_list': labtypes,'essayType_list':essaytypes,'sampleType_list':sampletypes}
+    context = {'labType_list': labtypes,'sampleType_list':sampletypes}
     return render(request, template, context)
 
 
 def create(request,
-           template='internal/laboratoryType/create.html',
+           template='internal/sampleType/create.html',
            extra_context=None):
-    essaytypes = EssayType.objects.all ()
+    labtypes = LaboratoryType.objects.all ()
     sampletypes = SampleType.objects.all ()
-    context = {'essayType_list': essaytypes, 'sampleType_list': sampletypes}
+    context = {'labType_list': labtypes, 'sampleType_list': sampletypes}
     return render(request, template, context)
 
 
 def edit(request,
-           template='internal/laboratoryType/edit.html',
+           template='internal/sampleType/edit.html',
            extra_context=None):
-    essaytypes = EssayType.objects.all ()
+    labtypes = LaboratoryType.objects.all ()
     sampletypes = SampleType.objects.all ()
-    context = {'essayType_list': essaytypes, 'sampleType_list': sampletypes}
+    context = {'labType_list': labtypes, 'sampleType_list': sampletypes}
     return render(request, template, context)

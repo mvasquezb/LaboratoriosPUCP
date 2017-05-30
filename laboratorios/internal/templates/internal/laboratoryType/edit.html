@@ -27,7 +27,7 @@
               <tr><th><br></th></tr>
               <tr>
                 <th>Descripción:</th>
-                <th><input type="text"  class="form-control input-md"/></th>
+                <th><input type="text"  class="form-control"/></th>
               </tr>
             </div>
           </form>
@@ -56,8 +56,7 @@
                       <tr>
                         <th>Id</th>
                         <th>Nombre </th>
-                        <th>Descripción </th>
-                        <th>Seleccionar</th>
+                        <th>Descripcion </th>
                       </tr>
                     </thead>
                     <tbody>
@@ -66,7 +65,6 @@
                           <th>{{ essaytype.pk }}</th>
                           <th>{{ essaytype.name }}</th>
                           <th>{{ essaytype.description }}</th>
-                          <th><div class="i-checks"><input type="checkbox" value=""> <i></i></div></th>
                         </tr>
                       {% endfor %}
                     </tbody>
@@ -78,8 +76,7 @@
                       <tr>
                         <th>Id</th>
                         <th>Nombre </th>
-                        <th>Descripción </th>
-                        <th>Seleccionar</th>
+                        <th>Descripcion </th>
                       </tr>
                     </thead>
                     <tbody>
@@ -88,7 +85,6 @@
                           <th>{{ sampletype.pk }}</th>
                           <th>{{ sampletype.name }}</th>
                           <th>{{ sampletype.description }}</th>
-                          <th><div class="i-checks"><input type="checkbox" value=""> <i></i></div></th>
                         </tr>
                       {% endfor %}
                     </tbody>
