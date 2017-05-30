@@ -79,8 +79,8 @@ $('.service-datatable').DataTable({
 });
 </script>
 <script>
-$('.service-row').on('dblclick', function (e) {
-  var $row = $(e.target);
+$('.essay-row').on('dblclick', function (e) {
+  var $row = $(e.currentTarget);
   window.location.assign($row.data('url'));
 });
 </script>

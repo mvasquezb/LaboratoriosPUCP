@@ -20,7 +20,7 @@
     <div class="ibox float-e-margins">
       <div class="ibox-content">
         <div class="table-responsive">
-          <table class="footable table table-stripped toggle-arrow-tiny footable-loaded tablet breakpoint service-datatable">
+          <table class="footable table table-stripped toggle-arrow-tiny footable-loaded tablet breakpoint essay-datatable">
             <thead>
               <tr>
                 <th class="footable-visible footable-sortable">Código</th>
@@ -29,11 +29,12 @@
               </tr>
             </thead>
             <tbody>
-              {% for service in service_list %}
-                <tr class="service-row" data-url="{{ url('internal:service.show', pk=service.id) }}">
-                  <td>{{ service.id }}</td>
-                  <td>{{ service.request.description }}</td>
-                  <td>{{ service.request.client }}</td>
+              {% for essay in essay_list %}
+                <tr class="essay-row"
+                    data-url="{{ url('internal:essayfill.show', service_id=service.id, essay_id=essay.id) }}">
+                  <td>{{ essay.id }}</td>
+                  <td>{{ essay.request.description }}</td>
+                  <td>{{ essay.request.client }}</td>
                 </tr>
               {% endfor %}
             </tbody>
@@ -50,7 +51,7 @@
 <script src="{{ static('js/datatable-config.js') }}"></script>
 
 <script>
-$('.service-datatable').DataTable({
+$('.essay-datatable').DataTable({
   responsive: true,
   dom: '<"html5buttons"B>lTfgit',
   buttons: [
@@ -62,7 +63,7 @@ $('.service-datatable').DataTable({
 });
 </script>
 <script>
-$('.service-row').on('dblclick', function (e) {
+$('.essay-row').on('dblclick', function (e) {
   var $row = $(e.currentTarget);
   window.location.assign($row.data('url'));
 });
