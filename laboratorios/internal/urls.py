@@ -46,4 +46,19 @@ urlpatterns = [
     url('^request$',
         views.request.index,
         name='request.index'),
+    #
+    # User
+    #
+    url('^user/$',
+        views.user.index,
+        name='user.index'),
+    url('^user/create$',
+        views.user.create,
+        name='user.create'),
+    url('^user/edit/(?P<pk>\d+)$',
+        views.user.edit,
+        name='user.edit'),
+    url('^user/delete/(?P<pk>\d+)$',
+        views.user.delete,
+        name='user.delete'),
 ]

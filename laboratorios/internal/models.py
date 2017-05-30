@@ -32,8 +32,31 @@ class RoleByAccess(models.Model):
     access = models.ForeignKey(Access)
 
 
+class LaboratoryType(models.Model):
+    name = models.CharField(max_length=100)
+    active = models.BooleanField()
+
+    def __str__(self):
+        return self.name
+
+
+class Laboratory(models.Model):
+    name = models.CharField(max_length=100)
+    users_number = models.IntegerField()
+    capacity = models.IntegerField()
+    active = models.BooleanField()
+    type = models.ForeignKey(LaboratoryType, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.name
+
+
 class User(AuthUser):
     role = models.ManyToManyField(Role, through="UserByRole")
+    surname =  models.CharField(max_length=100, null=True)
+    address =  models.CharField(max_length=100, null=True)
+    laboratories = models.ManyToManyField(Laboratory)
+    phone = models.CharField(max_length=100, null=True)
 
     def __str__(self):
         return self.get_full_name() or self.username
@@ -173,19 +196,3 @@ class ParameterFill(models.Model):
             return
         self.test_fill = test_insert
         self.parameter_template = param_insert
-
-
-class LaboratoryType(models.Model):
-    name = models.CharField(max_length=100)
-    active = models.BooleanField()
-
-    def __str__(self):
-        return self.name
-
-
-class Laboratory(models.Model):
-    name = models.CharField(max_length=100)
-    users_number = models.IntegerField()
-    capacity = models.IntegerField()
-    active = models.BooleanField()
-    type = models.ForeignKey(LaboratoryType, on_delete=models.CASCADE)
