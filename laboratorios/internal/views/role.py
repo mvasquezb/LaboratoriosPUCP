@@ -4,6 +4,8 @@ from internal.models  import Role
 from internal.views.forms import RoleForm
 
 
+
+
 def index(request,
           template='internal/role/index.html'):
     roles = Role.objects.all()
@@ -16,8 +18,11 @@ def index(request,
 def create(request,
            template='internal/role/create.html'):
     form = RoleForm(request.POST or None)
+    print(form.errors)
     if form.is_valid():
-        form.save()
+        role = form.save(commit=False)
+        role.save()
+        form.save_m2m()
         return redirect('internal:role.index')
     return render(request, template, {'form': form})
 

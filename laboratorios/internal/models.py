@@ -4,7 +4,7 @@ from django.contrib.auth.models import User as AuthUser
 
 class Test(models.Model):
     name = models.CharField(max_length=100)
-    request = models.ForeignKey("Request", on_delete=models.CASCADE)
+    request = models.ForeignKey("ServiceRequest", on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
@@ -12,7 +12,6 @@ class Test(models.Model):
 
 class Access(models.Model):
     description = models.CharField(max_length=100)
-
     def __str__(self):
         return self.description
 
@@ -20,39 +19,32 @@ class Access(models.Model):
 # Modelo para usuarios
 class Role(models.Model):
     description = models.CharField(max_length=100, blank=True)
-    access = models.ManyToManyField(Access, through="RoleByAccess")
+    access = models.ManyToManyField(Access)
 
     def __str__(self):
         return self.description
 
-
-class RoleByAccess(models.Model):
-    role = models.ForeignKey(Role)
-    access = models.ForeignKey(Access)
-
-
 class User(AuthUser):
-    role = models.ManyToManyField(Role, through="UserByRole")
+    role = models.ManyToManyField(Role)
 
     def __str__(self):
         return self.get_full_name() or self.username
 
-
-class UserByRole(models.Model):
-    user = models.ForeignKey(User)
-    role = models.ForeignKey(Role)
-
-    def __str__(self):
-        return "{} | {}".format(self.user, self.role)
 
 
 class Client(models.Model):
     name = models.CharField(max_length=100)
     idDoc = models.IntegerField()
     username = models.OneToOneField(User, on_delete=models.CASCADE)
+    phoneNumber = models.CharField(max_length=10)
 
 
-class Request(models.Model):
+class TestType(models.Model):
+    description = models.CharField(max_length=100)
+    active = models.BooleanField()
+
+
+class ServiceRequest(models.Model):
     description = models.CharField(max_length=100)
     client = models.ForeignKey(Client, on_delete=models.CASCADE)
     status = models.IntegerField(default=0)
@@ -67,7 +59,7 @@ class SampleTemplate(models.Model):
 
 
 class SampleFill(models.Model):
-    request_fill = models.ForeignKey(Request, on_delete=models.CASCADE)
+    request_fill = models.ForeignKey(ServiceRequest, on_delete=models.CASCADE)
     sample_template = models.ForeignKey(SampleTemplate)
     description = models.CharField(max_length=30)
 
