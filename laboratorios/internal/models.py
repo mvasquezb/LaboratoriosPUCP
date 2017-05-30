@@ -51,11 +51,17 @@ class Client(models.Model):
     idDoc = models.IntegerField()
     username = models.OneToOneField(User, on_delete=models.CASCADE)
 
+    def __str__(self):
+        return self.name
+
 
 class Request(models.Model):
     description = models.CharField(max_length=100)
     client = models.ForeignKey(Client, on_delete=models.CASCADE)
     status = models.IntegerField(default=0)
+
+    def __str__(self):
+        return self.description + ' | ' + str(self.client)
 
 
 # Modelo para muestras
