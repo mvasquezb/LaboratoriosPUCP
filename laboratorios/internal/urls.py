@@ -58,4 +58,10 @@ urlpatterns = [
     url('^test$',
         views.test.index,
         name='test.index'),
+    url('^test/edit/(?P<pk>\d+)$',
+        views.test.edit,
+        name='test.edit'),
+    url('^test/delete/(?P<pk>\d+)$',
+        views.test.edit,
+        name='test.delete'),
 ]

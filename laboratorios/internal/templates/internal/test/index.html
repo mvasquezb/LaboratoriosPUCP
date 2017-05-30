@@ -22,10 +22,11 @@
                         </tr>
                     </thead>
                     <tbody>
-                    {% for test in tests %}
+                    {% for test in object_list %}
                         <tr>
                             <td>{{ test.id }}</td>
-                            <td>{{ test.description }}</td>
+                            <td><a href="{{ url('internal:test.edit', pk=test.id) }}"><div>{{ test.description }}</div></a></td>
+                            <td href="{{ url('internal:test.delete', pk=test.id) }}">Delete</td>
                         </tr>
                     {% endfor %}
                     </tbody>
