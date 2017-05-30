@@ -67,4 +67,13 @@ urlpatterns = [
     url('^service/(?P<pk>\d+)/?$',
         views.service.show,
         name='service.show'),
+    #
+    # EssayFill
+    #
+    url('^service/(?P<service_id>\d+)/essay/?$',
+        views.essayfill.index,
+        name='essayfill.index'),
+    url('^service/(?P<service_id>\d+)/essay/(?P<essay_id>\d+)/?$',
+        views.essayfill.show,
+        name='essayfill.show'),
 ]
