@@ -10,4 +10,14 @@ class RoleForm(ModelForm):
 class UserForm(ModelForm):
     class Meta:
         model = User
-        fields = ['first_name', 'last_name', 'surname', 'username', 'address', 'phone', 'email', 'laboratories']
+        fields = [
+            'first_name',
+            'last_name',
+            'surname',
+            'username',
+            'address',
+            'phone',
+            'email',
+            'laboratories',
+            'password'
+        ]
