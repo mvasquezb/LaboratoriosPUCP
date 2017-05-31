@@ -14,9 +14,15 @@
   <div class="col-md-6">
     <h2>
       <strong>
-        Detalle del Servicio: {{ service.request.description }}
+        Servicio: {{ service.request.description }}
       </strong>
     </h2>
+    <ul class="breadcrumb">
+      <li><a href="{{ url('internal:index') }}">Inicio</a></li>
+      <li class="active">
+        <a href="{{ url('internal:service.index') }}">Servicios</a>
+      </li>
+    </ul>
   </div>
 </div>
 <div class="wrapper wrapper-content animated fadeInRight">
