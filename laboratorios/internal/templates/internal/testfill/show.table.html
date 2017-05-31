@@ -1,0 +1,31 @@
+<div class="wrapper wrapper-content animated fadeInRight">
+  <div class="col-md-12">
+    <div class="ibox float-e-margins">
+      <div class="ibox-title">
+        <h2>Parámetros de la prueba: {{ test.test_template.title }}</h2>
+      </div>
+      <div class="ibox-content">
+        <div class="table-responsive">
+          <table class="table table-striped parameter-table">
+            <thead>
+              <tr>
+                <th>Nombre</th>
+                <th>Unidad</th>
+                <th>Valor</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for parameter in test.parameterfill_set.all() %}
+                <tr>
+                  <th>{{ parameter.parameter_template.name }}</th>
+                  <th>{{ parameter.parameter_template.unit }}</th>
+                  <th>{{ parameter.value }}</th>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

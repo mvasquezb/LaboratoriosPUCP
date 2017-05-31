@@ -137,9 +137,7 @@ class TestFill(models.Model):
         return self.description
 
     def create(self, test_insert=None, essay_insert=None):
-        if test_insert is None:
-            return
-        if essay_insert is None:
+        if test_insert is None or essay_insert is None:
             return
         self.essay_fill = essay_insert
         self.test_template = test_insert

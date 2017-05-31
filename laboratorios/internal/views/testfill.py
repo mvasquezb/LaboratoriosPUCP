@@ -2,6 +2,9 @@ from django.shortcuts import (
     render,
     get_object_or_404
 )
+from django.http import JsonResponse
+from django.template.loader import render_to_string
+
 from internal.models import *
 
 
@@ -41,4 +44,11 @@ def show(request,
     }
     if extra_context is not None:
         context.update(extra_context)
+    if request.is_ajax() or request.GET.get('type') == 'json':
+        template = 'internal/testfill/show.table.html'
+        rendered = render_to_string(template, context, request)
+        return JsonResponse({
+            'success': True,
+            'render': rendered,
+        }, json_dumps_params={'ensure_ascii': False})
     return render(request, template, context)
