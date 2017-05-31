@@ -46,9 +46,22 @@ urlpatterns = [
     url('^servicerequest$',
         views.servicerequest.index,
         name='servicerequest.index'),
-
-
-
+    #
+    # User
+    #
+    url('^user/$',
+        views.user.index,
+        name='user.index'),
+    url('^user/create$',
+        views.user.create,
+        name='user.create'),
+    url('^user/edit/(?P<pk>\d+)$',
+        views.user.edit,
+        name='user.edit'),
+    url('^user/delete/(?P<pk>\d+)$',
+        views.user.delete,
+        name='user.delete'),
+    #
     # Test
     #
     url('^test/create$',
@@ -66,7 +79,20 @@ urlpatterns = [
     url('^test/delete/(?P<pk>\d+)$',
         views.test.edit,
         name='test.delete'),
-
-
+    #
+    #Access
+    #
+    url('^access$',
+        views.access.index,
+        name='access.index'),
+    url('^access/create$',
+        views.access.create,
+        name='access.create'),
+    url('^access/edit/(?P<pk>\d+)$',
+        views.access.edit,
+        name='access.edit'),
+    url('^access/delete/(?P<pk>\d+)$',
+        views.access.delete,
+        name='access.delete'),
 
 ]

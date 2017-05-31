@@ -1,0 +1,18 @@
+{% extends 'internal/base_internal.html' %}
+
+{% block title %}{{ super() }} | Inicio{% endblock title %}
+
+{% block custom_css %}{% endblock custom_css %}
+
+{% block page_content %}
+<div class="row border-bottom white-bg dashboard-header">
+    <div class="col-md-3">
+        <h2><strong>Crear Nuevo Acceso</strong></h2>
+        <form action="{{ url('internal:role.create') }}" method="post">
+          {% csrf_token %}
+          {{ form.as_p() }}
+          <input type="submit" value="Registrar">
+        </form>
+    </div>
+</div>
+{% endblock page_content %}

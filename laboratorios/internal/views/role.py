@@ -34,7 +34,7 @@ def edit(request,
     form = RoleForm(request.POST or None, instance=role)
     if form.is_valid():
         form.save()
-        return redirect('internal:server_list')
+        return redirect('internal:role.index')
     return render(request, template, {'form': form})
 
 
@@ -43,4 +43,4 @@ def delete(request, pk, template='internal/role/delete.html'):
     if request.method == 'POST':
         role.delete()
         return redirect('internal:role.index')
-    return render(request, template, {'role': role})
+    return render(request, template, {'object': role})
