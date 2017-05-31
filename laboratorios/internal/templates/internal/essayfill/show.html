@@ -30,7 +30,7 @@
   <div class="col-md-12">
     <div class="ibox float-e-margins">
       <div class="ibox-title">
-        <h5>Pruebas en este ensayo</h5>
+        <h3>Pruebas en este ensayo</h3>
       </div>
       <div class="ibox-content">
         <div class="table-responsive">
@@ -48,7 +48,8 @@
                     data-url="{{ url('internal:testfill.show',
                       service_id=service.id,
                       essay_id=test.id,
-                      test_id=test.id) }}">
+                      test_id=test.id) }}"
+                    data-test="{{ test.id }}">
                   <td>{{ test.id }}</td>
                   <td>{{ test.test_template.title }}</td>
                   <td>{{ test.description }}</td>
@@ -85,6 +86,17 @@ $('.test-datatable').DataTable({
 $('.test-row').on('dblclick', function (e) {
   var $row = $(e.currentTarget);
   var url = $row.data('url');
+  var testToLoad = $row.data('test');
+  var loadedTest = $('.parameter-table').data('test');
+
+  loadTestParameters(url, testToLoad, loadedTest);
+});
+
+function loadTestParameters(url, testToLoad, loadedTest) {
+  if (testToLoad == loadedTest) {
+    return;
+  }
+
   $.get({
     url: url,
     data: {
@@ -96,9 +108,15 @@ $('.test-row').on('dblclick', function (e) {
     }
     $('#test-description-container').html(response.render);
   }).fail(function (response) {
-    alert('error');
+    toastr.options = {
+      closeButton: true,
+      progressBar: true,
+      showMethod: 'slideDown',
+      timeOut: 3000
+    };
+    toastr.error('Ocurrió un error al cargar los datos sobre esta prueba.', 'Error al cargar datos');
   });
   // window.location.assign($row.data('url'));
-});
+}
 </script>
 {% endblock custom_js %}

@@ -2,11 +2,11 @@
   <div class="col-md-12">
     <div class="ibox float-e-margins">
       <div class="ibox-title">
-        <h2>Parámetros de la prueba: {{ test.test_template.title }}</h2>
+        <h3>Parámetros de la prueba: {{ test.test_template.title }}</h3>
       </div>
       <div class="ibox-content">
         <div class="table-responsive">
-          <table class="table table-striped parameter-table">
+          <table class="table table-striped parameter-table" data-test="{{ test.id }}">
             <thead>
               <tr>
                 <th>Nombre</th>
