@@ -8,11 +8,11 @@
 
 <div class="row border-bottom white-bg dashboard-header">
     <div class="col-md-3">
-        <h2><strong>Crear Laboratorio</strong></h2>
+        <h2><strong>Editar Laboratorio</strong></h2>
     </div>
 </div>
 
-<form action="{{ url('internal:laboratory.create') }}" method="post">
+<form action="{{ url('internal:laboratory.edit', id_lab=lab.pk) }}" method="post">
   {% csrf_token %}
   <div class="col-md-offset-2" style="width: 700px">
     <div class="ibox float-e-margins">
@@ -25,12 +25,12 @@
             
               <div class="form-group">
                 <label>Nombre de Laboratorio (*)</label>
-                <input type="text" name="textname" required placeholder="Ingrese Nombre de Laboratorio" class="form-control">                
+                <input type="text" name="textname" required placeholder="Ingrese Nombre de Laboratorio" class="form-control" value="{{ lab.name }}">
                 <span>Ejemplo: Laboratorio de Corrosión</span>
               </div>
               <div class="form-group">
                 <label>Cantidad de Usuarios (*)</label>
-                <input type="number" name="numberUsers" required min="5" max="15" class="form-control">
+                <input type="number" name="numberUsers" required min="5" max="15" class="form-control" value="{{ lab.users_number }}">
                 <span>Cantidad mínima es cinco (5), cantidad máxima es quince (15)</span>
               </div>
             
@@ -41,7 +41,12 @@
                 <label>Tipo de Laboratorio (*)</label>
                 <select class="form-control m-b" name="comboBox_type">
                   {% for lab_type in types %}
-                    <option>{{ lab_type.name }}</option>
+                    {% if lab.type.name  == lab_type.name %}
+                      <option selected>{{ lab_type.name }}</option>
+                    {% else %}
+                      <option>{{ lab_type.name }}</option>
+                    {% endif %}
+                    }
                   {% endfor %}
                 </select>
                 <span>Seleccione un tipo de laboratorio</span>
@@ -129,8 +134,8 @@
     <div class="ibox float-e-margins">
       <div class="ibox-content form-group form-inline">
         <div class="col-md-offset-5">        
-          <button type="submit" id="createButton" class="btn btn-w-m btn-success"> Registrar</button>
-          <button type="button" id="cancelButton" class="btn btn-w-m btn-white"> Cancelar</button>
+          <button type="submit" id="createButton" name="createButton" class="btn btn-w-m btn-success"> Guardar Cambios</button>
+          <button type="button" id="cancelButton" name="cancelButton" class="btn btn-w-m btn-white"> Cancelar</button>
         </div>
       </div>
     </div>

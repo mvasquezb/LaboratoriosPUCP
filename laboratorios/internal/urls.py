@@ -19,6 +19,12 @@ urlpatterns = [
     url('^laboratory/create/?$',
         views.laboratory.create,
         name='laboratory.create'),
+    url('^laboratory/delete/?$',
+        views.laboratory.delete,
+        name='laboratory.delete'),
+    url('^laboratory/edit/(?P<id_lab>\d+)/$',
+        views.laboratory.edit,
+        name='laboratory.edit'),
     #
     #Assay Type
     #
