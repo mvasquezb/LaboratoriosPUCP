@@ -117,7 +117,27 @@
 <script src="{{ static('vendors/jquery-slimscroll/jquery.slimscroll.min.js') }}"></script>
 <script src="{{ static('vendors/pace-progress/pace.min.js') }}"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/js-cookie/2.1.4/js.cookie.min.js"></script>
 
 <!-- Theme script -->
 <script src="{{ static('js/inspinia.js') }}"></script>
+
+<script>
+/*
+ * Ajax setup
+ *
+ */
+// var csrftoken = Cookies.get('csrftoken');
+// function csrfSafeMethod(method) {
+//   // these HTTP methods do not require CSRF protection
+//   return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+// }
+// $.ajaxSetup({
+//   beforeSend: function(xhr, settings) {
+//     if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+//       xhr.setRequestHeader("X-CSRFToken", csrftoken);
+//     }
+//   }
+// });
+</script>
 {% endblock base_js %}
