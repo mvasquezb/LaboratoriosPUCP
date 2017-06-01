@@ -92,9 +92,18 @@ class EssayTemplate(models.Model):
         return test_list[index - 1]
 
 
+class EssayFillStatus(models.Model):
+    slug = models.CharField(max_length=20)
+    name = models.CharField(max_length=20)
+
+    def __str__(self):
+        return self.name
+
+
 class EssayFill(models.Model):
     essay_template = models.ForeignKey(EssayTemplate)
     description = models.CharField(max_length=100, default='essay testing')
+    status = models.ForeignKey(EssayFillStatus, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.description
