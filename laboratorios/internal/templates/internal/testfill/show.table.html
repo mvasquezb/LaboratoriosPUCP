@@ -6,25 +6,36 @@
       </div>
       <div class="ibox-content">
         <div class="table-responsive">
-          <table class="table table-striped parameter-table" data-test="{{ test.id }}">
-            <thead>
-              <tr>
-                <th>Nombre</th>
-                <th>Unidad</th>
-                <th>Valor</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for parameter in test.parameterfill_set.all() %}
+          <form action="{{ url('internal:testfill.update',
+                      service_id=service.id,
+                      essay_id=test.id,
+                      test_id=test.id) }}" id="test-form" class="form-horizontal" method="POST">
+            <table class="table table-striped parameter-table" data-test="{{ test.id }}">
+              <thead>
                 <tr>
-                  <th>{{ parameter.parameter_template.name }}</th>
-                  <th>{{ parameter.parameter_template.unit }}</th>
-                  <th>{{ parameter.value }}</th>
+                  <th>Nombre</th>
+                  <th>Unidad</th>
+                  <th>Valor</th>
                 </tr>
-              {% endfor %}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {% csrf_token %}
+                {{ parameter_forms.management_form }}
+                {% for parameter in parameter_forms %}
+                  {% for hidden in parameter.hidden_fields() %}
+                    {{ hidden }}
+                  {% endfor %}
+                  <tr>
+                    <th>{{ parameter.instance.parameter_template.name }}</th>
+                    <th>{{ parameter.instance.parameter_template.unit }}</th>
+                    <th>{{ parameter.value }}</th>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </form>
         </div>
+        <input class="btn btn-success" type="submit" form="test-form" value="Guardar">
       </div>
     </div>
   </div>
