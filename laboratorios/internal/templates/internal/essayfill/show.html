@@ -83,6 +83,13 @@ $('.test-datatable').DataTable({
 });
 </script>
 <script>
+toastr.options = {
+  closeButton: true,
+  progressBar: true,
+  showMethod: 'slideDown',
+  timeOut: 3000
+};
+
 $('.test-row').on('dblclick', function (e) {
   var $row = $(e.currentTarget);
   var url = $row.data('url');
@@ -108,15 +115,29 @@ function loadTestParameters(url, testToLoad, loadedTest) {
     }
     $('#test-description-container').html(response.render);
   }).fail(function (response) {
-    toastr.options = {
-      closeButton: true,
-      progressBar: true,
-      showMethod: 'slideDown',
-      timeOut: 3000
-    };
+    toastr.clear();
     toastr.error('Ocurrió un error al cargar los datos sobre esta prueba.', 'Error al cargar datos');
   });
   // window.location.assign($row.data('url'));
 }
+
+$(document).on('submit', '#test-form', function (e) {
+  e.preventDefault();
+  var form = e.target;
+  $.ajax({
+    url: form.action,
+    method: form.method,
+    data: $(form).serialize(),
+  }).fail(function () {
+    toastr.error('Ocurrió un error con su solicitud.', 'Error en la actualización de datos');
+  }).done(function (response) {
+    toastr.clear();
+    if (!response.success) {
+      toastr.error('Ocurrió un error con su solicitud.', 'Error en la actualización de datos');
+      return;
+    }
+    toastr.success('Se actualizaron los datos correctamente.');
+  });
+});
 </script>
 {% endblock custom_js %}

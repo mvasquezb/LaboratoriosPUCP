@@ -1,9 +1,11 @@
 from django.shortcuts import (
     render,
+    redirect,
     get_object_or_404
 )
 from django.http import JsonResponse
 from django.template.loader import render_to_string
+from django.views.decorators.http import require_http_methods
 
 from internal.models import *
 from . import forms
@@ -59,13 +61,29 @@ def show(request,
     return render(request, template, context)
 
 
+@require_http_methods(['POST'])
 def update(request,
            service_id,
            essay_id,
            test_id):
-    print(request.POST)
+    response = {
+        'success': False,
+    }
     parameter_forms = forms.ParameterFillFormset(request.POST)
     if parameter_forms.is_valid():
-        parameters = parameter_forms.save()
-        print(parameters)
-    return render(request, 'internal/testfill/show.html', {})
+        parameter_forms.save()
+        response['success'] = True
+    else:
+        response['error'] = str(parameter_forms.errors)
+
+    if request.is_ajax():
+        return JsonResponse(
+            response,
+            json_dumps_params={'ensure_ascii': False}
+        )
+    return redirect(
+        'internal:testfill.show',
+        service_id=service_id,
+        essay_id=essay_id,
+        test_id=test_id
+    )
