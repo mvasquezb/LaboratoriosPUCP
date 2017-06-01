@@ -95,4 +95,23 @@ urlpatterns = [
         views.access.delete,
         name='access.delete'),
 
+
+    #
+    #Client
+    #
+    url('^client/$',
+        views.client.index,
+        name='client.index'),
+    url('^client/create$',
+        views.client.create,
+        name='client.create'),
+    url('^client/edit/(?P<pk>\d+)$',
+        views.client.edit,
+        name='client.edit'),
+    url('^client/delete/(?P<pk>\d+)$',
+        views.client.delete,
+        name='client.delete'),
+
+
+
 ]
