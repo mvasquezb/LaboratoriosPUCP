@@ -85,4 +85,7 @@ urlpatterns = [
     url('^service/(?P<service_id>\d+)/essay/(?P<essay_id>\d+)/test/(?P<test_id>\d+)/?$',
         views.testfill.show,
         name='testfill.show'),
+    url('^service/(?P<service_id>\d+)/essay/(?P<essay_id>\d+)/test/(?P<test_id>\d+)/update/?$',
+        views.testfill.update,
+        name='testfill.update'),
 ]

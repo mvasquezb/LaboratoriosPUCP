@@ -6,6 +6,7 @@ from django.http import JsonResponse
 from django.template.loader import render_to_string
 
 from internal.models import *
+from . import forms
 
 
 def index(request,
@@ -36,11 +37,15 @@ def show(request,
     service = get_object_or_404(Service, pk=service_id)
     essay = get_object_or_404(service.essays, pk=essay_id)
     test = get_object_or_404(essay.testfill_set, pk=test_id)
+    parameter_forms = forms.ParameterFillFormset(
+        queryset=test.parameterfill_set.all()
+    )
 
     context = {
         'service': service,
         'essay': essay,
         'test': test,
+        'parameter_forms': parameter_forms,
     }
     if extra_context is not None:
         context.update(extra_context)
@@ -52,3 +57,15 @@ def show(request,
             'render': rendered,
         }, json_dumps_params={'ensure_ascii': False})
     return render(request, template, context)
+
+
+def update(request,
+           service_id,
+           essay_id,
+           test_id):
+    print(request.POST)
+    parameter_forms = forms.ParameterFillFormset(request.POST)
+    if parameter_forms.is_valid():
+        parameters = parameter_forms.save()
+        print(parameters)
+    return render(request, 'internal/testfill/show.html', {})
