@@ -33,8 +33,8 @@
                 <tr class="essay-row"
                     data-url="{{ url('internal:essayfill.show', service_id=service.id, essay_id=essay.id) }}">
                   <td>{{ essay.id }}</td>
-                  <td>{{ essay.request.description }}</td>
-                  <td>{{ essay.request.client }}</td>
+                  <td>{{ essay.description }}</td>
+                  <td>{{ essay }}</td>
                 </tr>
               {% endfor %}
             </tbody>

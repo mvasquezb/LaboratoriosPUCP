@@ -1,18 +1,28 @@
 {% extends 'internal/base_internal.html' %}
 
-{% block title %}{{ super() }} | Ensayos{% endblock title %}
+{% block title %}{{ super() }} | Pruebas{% endblock title %}
 
 {% block custom_css %}
 <link rel="stylesheet" href="https://cdn.datatables.net/1.10.15/css/jquery.dataTables.min.css">
 <style>
-.service-row:hover { cursor: pointer; }
+.test-row:hover { cursor: pointer; }
 </style>
 {% endblock custom_css %}
 
 {% block page_content %}
 <div class="row border-bottom white-bg dashboard-header">
   <div class="col-md-6">
-    <h2><strong>Ensayos</strong></h2>
+    <h2><strong>Pruebas</strong></h2>
+    <ul class="breadcrumb">
+      <li><a href="{{ url('internal:index') }}">Inicio</a></li>
+      <li><a href="{{ url('internal:service.index') }}">Servicios</a></li>
+      <li>
+        <a href="{{ url('internal:essayfill.index', service_id=service.id) }}">Ensayos</a>
+      </li>
+      <li class="active">
+        <a href="{{ url('internal:testfill.index', service_id=service.id, essay_id=essay.id) }}">Pruebas</a>
+      </li>
+    </ul>
   </div>
 </div>
 <div class="wrapper wrapper-content animated fadeInRight">
@@ -20,20 +30,24 @@
     <div class="ibox float-e-margins">
       <div class="ibox-content">
         <div class="table-responsive">
-          <table class="footable table table-stripped toggle-arrow-tiny footable-loaded tablet breakpoint service-datatable">
+          <table class="table table-striped toggle-arrow-tiny footable-loaded tablet breakpoint test-datatable">
             <thead>
               <tr>
-                <th class="footable-visible footable-sortable">Código</th>
-                <th class="footable-visible footable-sortable">Descripción</th>
-                <th class="footable-visible footable-sortable">Cliente</th>
+                <th>Código</th>
+                <th>Descripción</th>
+                <th>Cliente</th>
               </tr>
             </thead>
             <tbody>
-              {% for service in service_list %}
-                <tr class="service-row" data-url="{{ url('internal:service.show', pk=service.id) }}">
-                  <td>{{ service.id }}</td>
-                  <td>{{ service.request.description }}</td>
-                  <td>{{ service.request.client }}</td>
+              {% for test in test_list %}
+                <tr class="test-row"
+                    data-url="{{ url('internal:testfill.show',
+                      service_id=service.id,
+                      essay_id=essay.id,
+                      test_id=test.id) }}">
+                  <td>{{ test.id }}</td>
+                  <td>{{ test.description }}</td>
+                  <td>{{ test }}</td>
                 </tr>
               {% endfor %}
             </tbody>
@@ -50,7 +64,7 @@
 <script src="{{ static('js/datatable-config.js') }}"></script>
 
 <script>
-$('.service-datatable').DataTable({
+$('.test-datatable').DataTable({
   responsive: true,
   dom: '<"html5buttons"B>lTfgit',
   buttons: [
@@ -62,7 +76,7 @@ $('.service-datatable').DataTable({
 });
 </script>
 <script>
-$('.service-row').on('dblclick', function (e) {
+$('.test-row').on('dblclick', function (e) {
   var $row = $(e.currentTarget);
   window.location.assign($row.data('url'));
 });

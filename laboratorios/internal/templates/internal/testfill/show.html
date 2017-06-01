@@ -2,13 +2,6 @@
 
 {% block title %}{{ super() }} | Pruebas{% endblock title %}
 
-{% block custom_css %}
-<link rel="stylesheet" href="https://cdn.datatables.net/1.10.15/css/jquery.dataTables.min.css">
-<style>
-.service-row:hover { cursor: pointer; }
-</style>
-{% endblock custom_css %}
-
 {% block page_content %}
 <div class="row border-bottom white-bg dashboard-header">
   <div class="col-md-6">
@@ -49,27 +42,3 @@
 </div>
 {% include 'internal/testfill/show.table.html' %}
 {% endblock page_content %}
-
-{% block custom_js %}
-<script src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
-<script src="{{ static('js/datatable-config.js') }}"></script>
-
-<script>
-$('.service-datatable').DataTable({
-  responsive: true,
-  dom: '<"html5buttons"B>lTfgit',
-  buttons: [
-    {extend: 'copy'},
-    {extend: 'csv'},
-    {extend: 'excel', title: 'Servicios'},
-    {extend: 'pdf', title: 'Servicios'},
-  ]
-});
-</script>
-<script>
-$('.service-row').on('dblclick', function (e) {
-  var $row = $(e.currentTarget);
-  window.location.assign($row.data('url'));
-});
-</script>
-{% endblock custom_js %}
