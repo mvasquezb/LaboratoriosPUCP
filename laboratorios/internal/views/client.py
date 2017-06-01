@@ -9,7 +9,7 @@ from internal.models import *
 from internal.views.forms import ClientForm
 
 def index(request):
-    return render(request, 'internal/client/index.html', {'client': Client.objects.all()})
+    return render(request, 'internal/client/index.html', {'clients': Client.objects.all()})
 
 
 def create(request,

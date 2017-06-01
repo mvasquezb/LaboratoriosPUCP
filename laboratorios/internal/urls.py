@@ -112,6 +112,4 @@ urlpatterns = [
         views.client.delete,
         name='client.delete'),
 
-
-
 ]

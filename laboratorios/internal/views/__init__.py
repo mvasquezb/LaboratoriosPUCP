@@ -5,3 +5,5 @@ from .user import *
 from .servicerequest import *
 from .test import *
 from .access import *
+from .client import *
+

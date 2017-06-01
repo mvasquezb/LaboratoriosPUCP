@@ -4,6 +4,7 @@ from django.forms import ModelForm,Textarea,CheckboxSelectMultiple,TextInput
 from django.forms import ModelMultipleChoiceField
 
 
+
 class RoleForm(ModelForm):
     class Meta:
         model = Role
@@ -40,3 +41,13 @@ class AccessForm(ModelForm):
         widgets = {
             'description': TextInput()
         }
+
+class ClientForm(ModelForm):
+    class Meta:
+        model = Client
+        fields = [
+            'name',
+            'idDoc',
+            'username',
+            'phoneNumber'
+        ]
