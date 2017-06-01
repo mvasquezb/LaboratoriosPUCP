@@ -1,8 +1,16 @@
-from django.forms import ModelForm
-from internal.models  import Role
+from django import forms
+
+from internal import models
 
 
-class RoleForm(ModelForm):
+class RoleForm(forms.ModelForm):
     class Meta:
-        model = Role
+        model = models.Role
         fields = ['description', 'access']
+
+
+ParameterFillFormset = forms.modelformset_factory(
+    models.ParameterFill,
+    fields=('value',),
+    extra=0
+)
