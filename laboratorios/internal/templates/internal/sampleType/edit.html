@@ -16,12 +16,12 @@
          </div>
         <div class="ibox-content">
           <table>
-          <form action="{{ url('internal:sampleType.create') }}" method="post">
+          <form action="{{ url('internal:sampleType.edit',sample.pk) }}" method="post">
             {% csrf_token %}
             <div class="row">
               <div class="col-md-3 form-group">
                 <label class="control-label inline">Nombre<small>(*)</small></label>
-                <div class="inline"><input type="text"  name="textname" autofocus required /></div>
+                <div class="inline"><input type="text" value="{{sample.name}}" name="textname" autofocus required /></div>
               </div>
               <div class="col-md-3 form-group">
                 <label class="control-label inline">Tipo de Laboratorio</label>
@@ -29,9 +29,12 @@
                    <select  name="labType_combobox" class="form-control">
                      <option  selected> Selecciona una opcion </option>
                      {% for lab_type in labType_list %}
-                        <option>{{ lab_type.name }}</option>
+                        {% if sample.lab_type.name==lab_type.name %}
+                          <option selected>{{ lab_type.name }}</option>
+                        {% else %}
+                          <option>{{ lab_type.name }}</option>
+                        {% endif %}
                      {% endfor %}
-
                    </select>
                 </div>
               </div>
@@ -39,13 +42,13 @@
             <div>
               <div class="form-group">
                 <label class="control-label">Descripción</label>
-                <input name="description" type="text"  class="form-control"/>
+                <input name="description" value="{{sample.description}}" type="text"  class="form-control"/>
               </div>
             </div>
             <div class="ibox-content form-group">
               <div class="col-md-offset-4">
                 <button name="b_cancel" class="btn btn-w-m btn-white" type="submit" formnovalidate>Cancel</button>
-                <button type="submit" name="b_submit" class="btn btn-w-m btn-success"> Registrar</button>
+                <button type="submit" name="b_submit" class="btn btn-w-m btn-success"> Editar</button>
               </div>
             </div>
           </form>

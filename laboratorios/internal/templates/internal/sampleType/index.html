@@ -73,7 +73,7 @@
                         Inactivo
                       {% endif %}
                   </td>
-                  <td><a href="#"><i onclick="edit_row()" class="fa fa-pencil-square-o"></i></a></td>
+                  <td><a href="{{ url('internal:sampleType.edit',sampleType.pk)}}"><i name="{{sampleType.pk}}" class="fa fa-pencil-square-o"></i></a></td>
                   <td><input type="checkbox" name="{{sampleType.pk}}" class="i-checks"></td>
                 </tr>
               {% endfor %}
