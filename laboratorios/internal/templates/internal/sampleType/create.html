@@ -1,0 +1,75 @@
+{% extends 'internal/base_internal.html' %}
+
+{% block title %}{{ super() }} | Inicio{% endblock title %}
+
+{% block custom_css %}{% endblock custom_css %}
+
+{% block page_content %}
+<div class="row border-bottom white-bg dashboard-header">
+  <div>
+    <h2><strong>Registrar Tipos de Muestra</strong></h2>
+  </div>
+  <div >
+      <div class="ibox float-e-margins">
+        <div class="ibox-title">
+           <h5>Datos generales<small>(*)campos obligatorios</small></h5>
+         </div>
+        <div class="ibox-content">
+          <table>
+          <form action="{{ url('internal:sampleType.create') }}" method="post">
+            {% csrf_token %}
+            <div class="row">
+              <div class="col-md-3 form-group">
+                <label class="control-label inline">Nombre<small>(*)</small></label>
+                <div class="inline"><input type="text"  name="textname" autofocus required /></div>
+              </div>
+              <div class="col-md-3 form-group">
+                <label class="control-label inline">Tipo de Laboratorio</label>
+                <div class="inline">
+                   <select  name="labType_combobox" class="form-control">
+                     <option  selected> Selecciona una opcion </option>
+                     {% for lab_type in labType_list %}
+                        <option>{{ lab_type.name }}</option>
+                     {% endfor %}
+
+                   </select>
+                </div>
+              </div>
+            </div>
+            <div>
+              <div class="form-group">
+                <label class="control-label">Descripción</label>
+                <input name="description" type="text"  class="form-control"/>
+              </div>
+            </div>
+            <div class="ibox-content form-group">
+              <div class="col-md-offset-4">
+                <button name="b_cancel" class="btn btn-w-m btn-white" type="submit" formnovalidate>Cancel</button>
+                <button type="submit" name="b_submit" class="btn btn-w-m btn-success"> Registrar</button>
+              </div>
+            </div>
+          </form>
+        </table>
+        </div>
+      </div>
+  </div>
+</div>
+
+
+{% endblock page_content %}
+
+{% block custom_js %}
+<script>
+setTimeout(function() {
+  toastr.options = {
+    closeButton: true,
+    progressBar: true,
+    showMethod: 'slideDown',
+    timeOut: 4000
+  };
+  toastr.success('Sistema de Gestión de Laboratorios IC-PUCP', 'Bienvenido');
+}, 1300);
+
+
+</script>
+{% endblock custom_js %}

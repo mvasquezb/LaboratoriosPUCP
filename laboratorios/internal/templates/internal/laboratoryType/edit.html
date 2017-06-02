@@ -1,0 +1,125 @@
+{% extends 'internal/base_internal.html' %}
+
+{% block title %}{{ super() }} | Inicio{% endblock title %}
+
+{% block custom_css %}{% endblock custom_css %}
+
+{% block page_content %}
+<div class="row border-bottom white-bg dashboard-header">
+  <div>
+    <h2><strong>Registrar Tipos de laboratorios</strong></h2>
+  </div>
+  <div>
+    <div >
+      <div class="ibox float-e-margins">
+         <div class="ibox-title">
+           <h5>Datos generales <small>(*)Todos los campos son obligatorios</small></h5>
+         </div>
+        <div class="ibox-content">
+          <table>
+          <form action="{{ url('internal:laboratoryType.create') }}" method="post">
+            <div class="col-md-4">
+               {% csrf_token %}
+              <tr>
+                <th>Nombre:</th>
+                <th align="left"><input type="text"  name="textname" autofocus required  /></th>
+              </tr>
+              <tr><th><br></th></tr>
+              <tr>
+                <th>Descripción:</th>
+                <th><input type="text"  class="form-control"/></th>
+              </tr>
+            </div>
+          </form>
+        </table>
+        </div>
+      </div>
+      <div class="ibox float-e-margins">
+        <div>
+          <div class="panel blank-panel">
+            <div class="panel-heading">
+              <div class="panel-title m-b-md">
+                <h4>Seleccionar Tipos relacionados</h4>
+              </div>
+              <div class="panel-options">
+                <ul class="nav nav-tabs">
+                  <li class="active"><a data-toggle="tab" href="#tab-1">Tipos de ensayo</a></li>
+                  <li class=""><a data-toggle="tab" href="#tab-2">Tipos de muestra</a></li>
+                </ul>
+              </div>
+            </div>
+            <div class="panel-body">
+              <div class="tab-content">
+                <div id="tab-1" class="tab-pane active">
+                  <table class="table table-striped">
+                    <thead>
+                      <tr>
+                        <th>Id</th>
+                        <th>Nombre </th>
+                        <th>Descripcion </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for essaytype in essayType_list %}
+                        <tr>
+                          <th>{{ essaytype.pk }}</th>
+                          <th>{{ essaytype.name }}</th>
+                          <th>{{ essaytype.description }}</th>
+                        </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+                <div id="tab-2" class="tab-pane">
+                  <table class="table table-striped">
+                    <thead>
+                      <tr>
+                        <th>Id</th>
+                        <th>Nombre </th>
+                        <th>Descripcion </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for sampletype in sampleType_list %}
+                        <tr>
+                          <th>{{ sampletype.pk }}</th>
+                          <th>{{ sampletype.name }}</th>
+                          <th>{{ sampletype.description }}</th>
+                        </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="ibox-content form-group">
+        <div class="col-md-offset-5">
+          <button id="cancel" class="btn btn-w-m btn-white" type="submit">Cancel</button>
+          <button type="submit" id="createButton" class="btn btn-w-m btn-success"> Registrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+{% endblock page_content %}
+
+{% block custom_js %}
+<script>
+setTimeout(function() {
+  toastr.options = {
+    closeButton: true,
+    progressBar: true,
+    showMethod: 'slideDown',
+    timeOut: 4000
+  };
+  toastr.success('Sistema de Gestión de Laboratorios IC-PUCP', 'Bienvenido');
+}, 1300);
+
+
+</script>
+{% endblock custom_js %}

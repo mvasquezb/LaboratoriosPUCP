@@ -29,6 +29,21 @@ urlpatterns = [
         views.laboratory.assignMonitor,
         name='laboratory.assignMonitor'),
     #
+    # LaboratoryType
+    #
+    url('^laboratoryType/?$',
+         views.laboratoryType.index,
+         name='laboratoryType.index'),
+    url('^laboratoryType/create/?$',
+         views.laboratoryType.create,
+         name='laboratoryType.create'),
+    url('^laboratoryType/edit/?$',
+         views.laboratoryType.edit,
+         name='laboratoryType.edit'),
+    url('^laboratoryType/delete/?$',
+         views.laboratoryType.delete,
+         name='laboratoryType.delete'),
+    #
     #Assay Type
     #
     url('^essayType/?$',
@@ -85,4 +100,19 @@ urlpatterns = [
     url('^request$',
         views.request.index,
         name='request.index'),
+    #
+    # sampleType
+    #
+    url('^sampleType/?$',
+         views.sampleType.index,
+         name='sampleType.index'),
+    url('^sampleType/create/?$',
+         views.sampleType.create,
+         name='sampleType.create'),
+    url('^sampleType/edit/?$',
+         views.sampleType.edit,
+         name='sampleType.edit'),
+    url('^sampleType/delete/?$',
+         views.sampleType.delete,
+         name='sampleType.delete'),
 ]

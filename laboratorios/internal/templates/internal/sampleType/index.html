@@ -1,0 +1,234 @@
+{% extends 'internal/base_internal.html' %}
+
+{% block title %}{{ super() }} | Inicio{% endblock title %}
+
+{% block custom_css %}{% endblock custom_css %}
+
+{% block page_content %}
+
+
+<div class="row wrapper border-bottom white-bg page-heading">
+  <h2><strong>Tipos de Muestra</strong></h2>
+  <tr>
+    <th><br/></th>
+  </tr>
+  <div class="form-group">
+    <fieldset>
+     <legend><h3><strong>Filtros</strong></h3></legend>
+      <div class="form-inline">
+        <div class="form-group">
+          <label class="control-label">Tipo de Laboratorios</label>
+          <select  id="typeListLab" class="form-control">
+            <option style="display:none;" selected>Selecciona una opción</option>
+            <option onclick="list_filter_function()">-- Todos --</option>
+            {% for labtype in labType_list %}
+              <option onclick="list_filter_function()">{{ labtype.name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="form-group" >
+        <label>Nombre</label>
+        <div class="input-group"><input type="text" placeholder="Search" id="text_search" onkeyup="text_search_function()" class="input-sm form-control">
+          <span class="input-group-btn">
+            <button type="button" onclick="text_search_function()" class="btn btn-sm btn-success"> Buscar</button>
+          </span>
+        </div>
+      </div>
+      </div>
+   </fieldset>
+  </div>
+  <div class="ibox-content">
+    <div class="col-lg-12">
+      <div class="text-right">
+        <a class="btn btn-primary" href="{{ url('internal:sampleType.create') }}">Crear Tipo Muestra</a>
+      </div>
+    </div>
+  </div>
+  <div class="wrapper wrapper-content animated fadeIn">
+      <div class="row">
+        <div>
+          <table id="tableSample" class="table table-striped table-hover dataTables-example" >
+            <thead>
+              <tr>
+                <th>Id</th>
+                <th>Nombre </th>
+                <th>Descripcion </th>
+                <th>Tipo de Laboratorio </th>
+                <th>Activo</th>
+                <th>Editar</th>
+                <th>Eliminar</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for sampleType in sampleType_list %}
+                <tr>
+                  <td>{{ sampleType.pk }}</td>
+                  <td>{{ sampleType.name }}</td>
+                  <td>{{ sampleType.description }}</td>
+                  <td>{{ sampleType.lab_type }}</td>
+                  <td>
+                      {% if sampleType.active %}
+                        Activo
+                      {% else %}
+                        Inactivo
+                      {% endif %}
+                  </td>
+                  <td><a href="#"><i onclick="edit_row()" class="fa fa-pencil-square-o"></i></a></td>
+                  <td><input type="checkbox" name="{{sampleType.pk}}" class="i-checks"></td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+    </div>
+  </div>
+  <div class="form-group">
+     <span class="input-group-btn">
+       <button type="submit" id="deleteButton" class="btn btn-w-m btn-danger">Eliminar</button>
+     </span>
+    </div>
+
+</div>
+
+
+{% endblock page_content %}
+
+{% block custom_js %}
+<script>
+var fill_Toastr = function(pMsg, pTypeMsg,pTitle){
+        toastr.options = {
+          closeButton: true,
+          progressBar: true,
+          showMethod: 'slideDown',
+          positionClass: "toast-bottom-right",
+          timeOut: 4000
+          };
+
+          switch(pTypeMsg){
+            case "success":
+            toastr.success(pMsg, '',pTitle);
+            break;
+
+            case "error":
+            toastr.error(pMsg, '',pTitle);
+            break;
+          }
+    }
+
+    function delete_rows() {
+
+      var array = [];
+      var i;
+      //esto es para obtener los ids de los checkboxes seleccionados
+      $("input[type=checkbox]:checked").each(function(){
+      array.push($(this).attr("name")) ;});
+      var boxes = document.getElementsByClassName('i-checks');
+      var leng = boxes.length;
+      var initialLength = leng;
+      var flag = 0;
+      for (var i = 0; i < leng;) {
+      box = boxes[i];
+      i++;
+        if (box.checked) {
+            rowTag = box.parentNode.parentNode;
+            tableTag = box.parentNode.parentNode.parentNode;
+            tableTag.removeChild(rowTag);
+            i=0;
+            leng=leng-1;
+            flag = 1;
+            fill_Toastr('Se elimino con exito el tipo de ensayo Z'+' ', "success",'');
+        }
+        if (i==initialLength){
+            fill_Toastr('No seleccionó ningun tipo de ensayo a eliminar', "error",'Error');
+        }
+      }
+
+      if(flag == 1){
+        $.get("{{ url('internal:sampleType.delete')}}",
+          {'array': array});
+      }
+    }
+  document.getElementById("deleteButton").addEventListener("click", delete_rows);
+
+</script>
+<script>
+      function text_search_function() {
+        var boxes = document.getElementsByClassName('i-checks');
+        for (var i = 0; i < boxes.length;i++)
+        {
+            box = boxes[i];
+            box.checked = false;
+        }
+        var input, filter, table, tr, td, i;
+        input = document.getElementById("text_search");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("tableSample");
+        tr = table.getElementsByTagName("tr");
+        for (i = 0; i < tr.length; i++) {
+          td = tr[i].getElementsByTagName("td")[1];
+          if (td) {
+            if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                tr[i].style.display = "";
+            } else {
+                tr[i].style.display = "none";
+            }
+          }
+        }
+      }
+</script>
+<script>
+  var fill_Toastr = function(pMsg, pTypeMsg,pTitle){
+      toastr.options = {
+        closeButton: true,
+        progressBar: true,
+        showMethod: 'slideDown',
+        positionClass: "toast-bottom-right",
+        timeOut: 4000
+        };
+        switch(pTypeMsg){
+          case "success":
+          toastr.success(pMsg, '',pTitle);
+          break;
+          case "error":
+          toastr.error(pMsg, '',pTitle);
+          break;
+        }
+  }
+  function list_filter_function() {
+      var boxes = document.getElementsByClassName('i-checks');
+      for (var i = 0; i < boxes.length;i++)
+      {
+        box = boxes[i];
+        box.checked = false;
+      }
+    var input, filter, table, tr, td, i;
+    input = document.getElementById("typeListLab");
+    filter = input[input.selectedIndex].value;
+    table = document.getElementById("tableSample");
+    tr = table.getElementsByTagName("tr");
+    if (input.selectedIndex > -1)
+    {
+      if(filter == "-- Todos --")
+      {
+        for (i = 0; i < tr.length; i++) {
+          tr[i].style.display = "";
+        }
+      }
+      else
+      {
+        filter = filter.toUpperCase();
+        for (i = 0; i < tr.length; i++) {
+          td = tr[i].getElementsByTagName("td")[3];
+          if (td) {
+            if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                tr[i].style.display = "";
+            } else {
+                tr[i].style.display = "none";
+            }
+          }
+        }
+      }
+    }
+  }
+</script>
+{% endblock custom_js %}
