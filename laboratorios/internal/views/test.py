@@ -7,11 +7,61 @@ from django.shortcuts import (
 )
 
 from internal.models import TestTemplate
-from internal.views.forms import TestForm
-
+from internal.views.forms import *
+from django.views.generic.list import ListView
+from django.views.generic.edit import CreateView
+from django.urls import *
+from django.db import transaction
+from django.forms import inlineformset_factory
 
 # def index(request):
 #     return render(request, 'internal/test/index.html', {'tests': TestTemplate.objects.all()})
+
+
+
+class TestList(ListView):
+    model = TestTemplate
+
+class TestParameterCreate(CreateView):
+    model = TestTemplate
+    template_name = 'internal/test/create.html'
+    fields = ['id', 'name']
+
+    success_url = reverse_lazy('internal:test.index')
+
+
+    def get_context_data(self, **kwargs):
+        data = super(TestParameterCreate, self).get_context_data(**kwargs)
+        if self.request.POST:
+            data['parameters'] = ParameterFormSet(self.request.POST)
+        else:
+            data['parameters'] = ParameterFormSet()
+        return data
+
+
+    def form_valid(self, form):
+        context = self.get_context_data()
+        parameters = context['parameters']
+        with transaction.atomic():
+            self.object = form.save()
+
+            if parameters.is_valid():
+                parameters.instance = self.object
+                parameters.save()
+        return super(TestParameterCreate, self).form_valid(form)
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 def index(request,
           template='internal/test/index.html'):
@@ -22,12 +72,14 @@ def index(request,
     return render(request, template, data)
 
 
-def create(request, template='internal/test/create.html'):
-    form = TestForm(request.POST or None)
-    if form.is_valid():
-        form.save()
-        return redirect('internal:test.index')
-    return render(request, template, {'form': form})
+
+
+# def create(request, template='internal/test/create.html'):
+#     test = TestForm(request.POST or None, instance=test)
+#     if form.is_valid():
+#         form.save()
+#         return redirect('internal:test.index')
+#     return render(request, template, {'form': form})
 
 
 def edit(request,

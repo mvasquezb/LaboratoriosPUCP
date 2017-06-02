@@ -21,7 +21,7 @@ class Migration(migrations.Migration):
             name='Access',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('description', models.CharField(max_length=100)),
+                ('name', models.CharField(max_length=100)),
             ],
         ),
         migrations.CreateModel(
@@ -37,7 +37,7 @@ class Migration(migrations.Migration):
             name='EssayFill',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('description', models.CharField(default='essay testing', max_length=100)),
+                ('name', models.CharField(default='essay testing', max_length=100)),
             ],
         ),
         migrations.CreateModel(
@@ -46,7 +46,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('code', models.IntegerField(default=0)),
                 ('test_number', models.IntegerField(default=0)),
-                ('description', models.CharField(max_length=100)),
+                ('name', models.CharField(max_length=100)),
             ],
         ),
         migrations.CreateModel(
@@ -86,7 +86,7 @@ class Migration(migrations.Migration):
             name='Role',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('description', models.CharField(blank=True, max_length=100)),
+                ('name', models.CharField(blank=True, max_length=100)),
                 ('access', models.ManyToManyField(to='internal.Access')),
             ],
         ),
@@ -102,21 +102,21 @@ class Migration(migrations.Migration):
             name='SampleFill',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('description', models.CharField(max_length=30)),
+                ('name', models.CharField(max_length=30)),
             ],
         ),
         migrations.CreateModel(
             name='SampleTemplate',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('description', models.CharField(max_length=100)),
+                ('name', models.CharField(max_length=100)),
             ],
         ),
         migrations.CreateModel(
             name='ServiceRequest',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('description', models.CharField(max_length=100)),
+                ('name', models.CharField(max_length=100)),
                 ('status', models.IntegerField(default=0)),
                 ('client', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='internal.Client')),
             ],
@@ -133,7 +133,7 @@ class Migration(migrations.Migration):
             name='TestFill',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('description', models.CharField(default='descripcion', max_length=100)),
+                ('name', models.CharField(default='descripcion', max_length=100)),
                 ('chosen', models.IntegerField(default=1)),
                 ('essay_fill', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='internal.EssayFill')),
             ],
@@ -142,7 +142,7 @@ class Migration(migrations.Migration):
             name='TestTemplate',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('description', models.CharField(max_length=100)),
+                ('name', models.CharField(max_length=100)),
                 ('title', models.CharField(max_length=100)),
                 ('parameters_number', models.IntegerField(default=0)),
                 ('essay_template', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='internal.EssayTemplate')),
@@ -152,7 +152,7 @@ class Migration(migrations.Migration):
             name='TestType',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('description', models.CharField(max_length=100)),
+                ('name', models.CharField(max_length=100)),
                 ('active', models.BooleanField()),
             ],
         ),

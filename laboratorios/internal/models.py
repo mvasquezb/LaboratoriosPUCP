@@ -127,10 +127,10 @@ class EssayFill(models.Model):
 
 
 class TestTemplate(models.Model):
-    description = models.CharField(max_length=100)
+    name = models.CharField(verbose_name='Nombre de la prueba', max_length=100)
     title = models.CharField(max_length=100)
     parameters_number = models.IntegerField(default=0)
-    essay_template = models.ForeignKey(EssayTemplate)
+    essay_template = models.ForeignKey(EssayTemplate, null=True)
 
     def __str__(self):
         return self.title
@@ -169,8 +169,8 @@ class TestFill(models.Model):
 
 class ParameterTemplate(models.Model):
     test_template = models.ForeignKey(TestTemplate)
-    name = models.CharField(max_length=100)
-    unit = models.CharField(max_length=100)
+    name = models.CharField(verbose_name='Nombre', max_length=100)
+    unit = models.CharField(verbose_name='Unidad',max_length=100)
 
     def __str__(self):
         return self.name

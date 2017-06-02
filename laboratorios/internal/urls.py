@@ -64,8 +64,8 @@ urlpatterns = [
     #
     # Test
     #
-    url('^test/create$',
-        views.test.create,
+    url('^test/create/$',
+        views.test.TestParameterCreate.as_view(),
         name='test.create'),
     url('^test/store$',
         views.test.store,
