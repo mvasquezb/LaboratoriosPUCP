@@ -101,23 +101,35 @@ urlpatterns = [
         views.employee.delete,
         name='employee.delete'),
     #
-    # Test
+    # Service
     #
-    url('^test/create$',
-        views.test.create,
-        name='test.create'),
-    url('^test/store$',
-        views.test.store,
-        name='test.store'),
-    url('^test$',
-        views.test.index,
-        name='test.index'),
-    url('^test/edit/(?P<pk>\d+)$',
-        views.test.edit,
-        name='test.edit'),
-    url('^test/delete/(?P<pk>\d+)$',
-        views.test.edit,
-        name='test.delete'),
+    url('^service/index/?$',
+        views.service.index,
+        name='service.index'),
+    url('^service/(?P<pk>\d+)/?$',
+        views.service.show,
+        name='service.show'),
+    #
+    # EssayFill
+    #
+    url('^service/(?P<service_id>\d+)/essay/?$',
+        views.essayfill.index,
+        name='essayfill.index'),
+    url('^service/(?P<service_id>\d+)/essay/(?P<essay_id>\d+)/?$',
+        views.essayfill.show,
+        name='essayfill.show'),
+    #
+    # TestFill
+    #
+    url('^service/(?P<service_id>\d+)/essay/(?P<essay_id>\d+)/test/?$',
+        views.testfill.index,
+        name='testfill.index'),
+    url('^service/(?P<service_id>\d+)/essay/(?P<essay_id>\d+)/test/(?P<test_id>\d+)/?$',
+        views.testfill.show,
+        name='testfill.show'),
+    url('^service/(?P<service_id>\d+)/essay/(?P<essay_id>\d+)/test/(?P<test_id>\d+)/update/?$',
+        views.testfill.update,
+        name='testfill.update'),
     #
     # Access
     #
@@ -133,8 +145,6 @@ urlpatterns = [
     url('^access/delete/(?P<pk>\d+)$',
         views.access.delete,
         name='access.delete'),
-
-
     #
     # Client
     #
@@ -150,5 +160,4 @@ urlpatterns = [
     url('^client/delete/(?P<pk>\d+)$',
         views.client.delete,
         name='client.delete'),
-
 ]

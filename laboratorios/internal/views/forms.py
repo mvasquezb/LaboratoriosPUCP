@@ -1,22 +1,28 @@
-from django.forms import ModelForm
-from internal.models import *
-from django.forms import ModelForm, Textarea, CheckboxSelectMultiple, TextInput
-from django.forms import ModelMultipleChoiceField
+from django import forms
+
+from internal import models
 
 
-class RoleForm(ModelForm):
+class RoleForm(forms.ModelForm):
     class Meta:
-        model = Role
+        model = models.Role
         fields = ['description', 'access']
-        widgets = {
-            'description': TextInput(),
-            'access': CheckboxSelectMultiple()
-        }
+        # widgets = {
+        #     'description': TextInput(),
+        #     'access': CheckboxSelectMultiple()
+        # }
 
 
-class EmployeeForm(ModelForm):
+ParameterFillFormset = forms.modelformset_factory(
+    models.ParameterFill,
+    fields=('value',),
+    extra=0
+)
+
+
+class EmployeeForm(forms.ModelForm):
     class Meta:
-        model = Employee
+        model = models.Employee
         fields = [
             'first_name',
             'last_name',
@@ -29,21 +35,21 @@ class EmployeeForm(ModelForm):
         ]
 
 
-class TestForm(ModelForm):
+class TestForm(forms.ModelForm):
     class Meta:
-        model = TestTemplate
+        model = models.TestTemplate
         fields = ['id', 'description']
 
 
-class AccessForm(ModelForm):
+class AccessForm(forms.ModelForm):
     class Meta:
-        model = Access
+        model = models.Access
         fields = ['description']
 
 
-class ClientForm(ModelForm):
+class ClientForm(forms.ModelForm):
     class Meta:
-        model = Client
+        model = models.Client
         fields = [
             'name',
             'idDoc',

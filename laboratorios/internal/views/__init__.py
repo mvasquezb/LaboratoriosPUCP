@@ -3,8 +3,10 @@ from .laboratory import *
 from .role import *
 from .employee import *
 from .servicerequest import *
-from .test import *
+from .service import *
+from .essayfill import *
 from .access import *
 from .client import *
 from .essayTemplate import *
 from .testTemplate import *
+from .testfill import *

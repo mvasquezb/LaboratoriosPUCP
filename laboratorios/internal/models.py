@@ -72,11 +72,17 @@ class Client(models.Model):
     user = models.OneToOneField(ExternalUser, on_delete=models.CASCADE)
     phone = models.CharField(max_length=20)
 
+    def __str__(self):
+        return self.name
+
 
 class ServiceRequest(models.Model):
     description = models.CharField(max_length=100)
     client = models.ForeignKey(Client, on_delete=models.CASCADE)
     status = models.IntegerField(default=0)
+
+    def __str__(self):
+        return self.description + ' | ' + str(self.client)
 
 
 # Modelo para muestras
@@ -117,9 +123,18 @@ class EssayTemplate(models.Model):
         return test_list[index - 1]
 
 
+class EssayFillStatus(models.Model):
+    slug = models.CharField(max_length=20)
+    name = models.CharField(max_length=20)
+
+    def __str__(self):
+        return self.name
+
+
 class EssayFill(models.Model):
     essay_template = models.ForeignKey(EssayTemplate)
-    description = models.CharField(max_length=100, default='essay testing')
+    description = models.CharField(max_length=100)
+    status = models.ForeignKey(EssayFillStatus, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.description
@@ -157,16 +172,14 @@ class TestFill(models.Model):
     # requestFill = models.ForeignKey(Request,on_delete=models.CASCADE)
     test_template = models.ForeignKey(TestTemplate)
     essay_fill = models.ForeignKey(EssayFill)
-    description = models.CharField(max_length=100, default='descripcion')
+    description = models.CharField(max_length=100)
     chosen = models.IntegerField(default=1)
 
     def __str__(self):
         return self.description
 
     def create(self, test_insert=None, essay_insert=None):
-        if test_insert is None:
-            return
-        if essay_insert is None:
+        if test_insert is None or essay_insert is None:
             return
         self.essay_fill = essay_insert
         self.test_template = test_insert
@@ -191,13 +204,18 @@ class ParameterTemplate(models.Model):
 class ParameterFill(models.Model):
     parameter_template = models.ForeignKey(ParameterTemplate)
     test_fill = models.ForeignKey(TestFill)
-    value = models.CharField(max_length=100, default='Empty field')
+    value = models.CharField(max_length=100, null=True, blank=True)
 
     def __str__(self):
-        return self.value + ' | ' + str(self.parameter_template)
+        return self.value + ' | ' if self.value else '' + str(self.parameter_template)
 
     def create(self, test_insert=None, param_insert=None):
         if param_insert is None or test_insert is None:
             return
         self.test_fill = test_insert
         self.parameter_template = param_insert
+
+
+class Service(models.Model):
+    request = models.ForeignKey(ServiceRequest, on_delete=models.CASCADE)
+    essays = models.ManyToManyField(EssayFill)
