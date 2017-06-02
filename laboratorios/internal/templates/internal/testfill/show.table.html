@@ -2,7 +2,7 @@
   <div class="col-md-12">
     <div class="ibox float-e-margins">
       <div class="ibox-title">
-        <h3>Parámetros de la prueba: {{ test.test_template.title }}</h3>
+        <h3>Parámetros de la prueba: {{ test.test_template.name }}</h3>
       </div>
       <div class="ibox-content">
         <div class="table-responsive">
@@ -35,7 +35,9 @@
             </table>
           </form>
         </div>
-        <input class="btn btn-success" type="submit" form="test-form" value="Guardar">
+        {% if parameter_forms.forms %}
+          <input class="btn btn-success" type="submit" form="test-form" value="Guardar">
+        {% endif %}
       </div>
     </div>
   </div>

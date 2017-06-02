@@ -1,0 +1,64 @@
+{% extends 'internal/base_internal.html' %}
+
+{% block title %}{{ super() }} | Inicio{% endblock title %}
+
+{% block custom_css %}{% endblock custom_css %}
+
+{% block page_content %}
+<style>
+input.submitted.ng-invalid{
+  border-color:#f00;
+}
+</style>
+
+<div class="row border-bottom white-bg dashboard-header">
+    <div class="col-md-3">
+        <h2><strong>Crear Tipo Prubea</strong></h2>
+    </div>
+</div>
+<div class="col-md-offset-3 " style="width: 650px">
+  <div class="ibox float-e-margins">
+    <div class="ibox-content">
+      <form class="horizontal-form" action="{{ url('internal:testTemplate.edit',test.pk) }}" method="post">
+            {% csrf_token %}
+        <div class="form-group" >
+          <label>Tipo de Prueba (*)</label>
+          <input type="text"  class="form-control" name="text_test_name" id="text_type" placeholder="Tipo de ensayo" value="{{test.name}}" required>
+          <span>Ejemplo : Tipo de Prueba 1</span>
+        </div>
+        <div class="form-group">
+          <label>Descripción </label>
+          <input type="text" class="form-control" name="text_test_description" id="text_description" placeholder="Ingrese una breve descripción" value="{{test.description}}">
+          <span>Ejemplo : Tipo de Prueba 1</span>
+        </div>
+        <div class="form-group">
+          <label>Tipo de Ensayo (*)</label><br>
+          <select name="comboBox_type">
+            {% for type in essay_types %}
+              {% if type.active == True %}
+                {% if test.essay_template.name == type.name %}
+                  <option selected>{{ type.name }}</option>
+                {% else %}
+                  <option>{{ type.name }}</option>
+                {% endif %}
+              {% endif %}
+            {% endfor %}
+          </select>
+          <br><span>Seleccione el tipo de Laboratorio al cual pertenecerá</span>
+        </div>
+        <p>(*) Datos obligatorios</p>
+        <div class="ibox-content form-group">
+        <div class="col-md-offset-3">
+          <button name="b_cancel"id="cancel" class="btn btn-w-m btn-white" formnovalidate>Cancelar</button>
+          <button name="b_submit" type="submit" id="createButton" class="btn btn-w-m btn-success"> Registrar</button>
+        </div>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock page_content %}
+
+{% block custom_js %}
+
+{% endblock custom_js %}
