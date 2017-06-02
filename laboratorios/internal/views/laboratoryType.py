@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect
 from ..models import *
 
+NOT_OPTION_SELECTED="Selecciona una opcion"
 
 def index(request,
           template='internal/laboratoryType/index.html',
@@ -24,8 +25,8 @@ def validation_name(name):
 def create(request,
            template='internal/laboratoryType/create.html',
            extra_context=None):
-    essaytypes = EssayType.objects.all ()
-    sampletypes = SampleType.objects.all ()
+    essaytypes = EssayType.objects.all()
+    sampletypes = SampleType.objects.all()
     if request.method == 'POST':
         index='internal/laboratoryType/index.html'
         labtypes = LaboratoryType.objects.all ()
@@ -64,13 +65,27 @@ def create2(request):
     context = {'essayType_list': essaytypes, 'sampleType_list': sampletypes}
     return render(request, template, context)
 
-def edit(request,
-           template='internal/laboratoryType/edit.html',
-           extra_context=None):
-    essaytypes = EssayType.objects.all()
-    sampletypes = SampleType.objects.all()
-    context = {'essayType_list': essaytypes, 'sampleType_list': sampletypes}
-    return render(request, template, context)
+def edit(request,id):
+    if request.method == 'POST':
+        if "b_cancel" in request.POST:
+            return redirect ('internal:laboratoryType.index')
+        if "b_submit" in request.POST:
+            oldlabtype = LaboratoryType.objects.get(pk=id)
+            name = str (request.POST.get ('textname'))
+            description = str (request.POST.get ('description'))
+            if validation_name (name):
+                oldlabtype.name=name
+                oldlabtype.description=description
+                oldlabtype.active=True
+                oldlabtype.save()
+            return redirect('internal:laboratoryType.index')
+    else:
+        labtype = LaboratoryType.objects.get(pk=id)
+        essaytypes = EssayType.objects.all ()
+        sampletypes = SampleType.objects.all ()
+        context = {'labtype': labtype,'essayType_list': essaytypes, 'sampleType_list': sampletypes}
+        template = 'internal/laboratoryType/edit.html'
+        return render (request, template, context)
 
 
 def delete(request,
