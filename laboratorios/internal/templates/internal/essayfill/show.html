@@ -1,0 +1,143 @@
+{% extends 'internal/base_internal.html' %}
+
+{% block title %}{{ super() }} | Ensayos{% endblock title %}
+
+{% block custom_css %}
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.15/css/jquery.dataTables.min.css">
+<style>
+.test-row:hover { cursor: pointer; }
+</style>
+{% endblock custom_css %}
+
+{% block page_content %}
+<div class="row border-bottom white-bg dashboard-header">
+  <div class="col-md-6">
+    <h2>
+      <strong>
+        Ensayo: {{ essay.description }}
+      </strong>
+    </h2>
+    <ul class="breadcrumb">
+      <li><a href="{{ url('internal:index') }}">Inicio</a></li>
+      <li><a href="{{ url('internal:service.index') }}">Servicios</a></li>
+      <li class="active">
+        <a href="{{ url('internal:essayfill.index', service_id=service.id) }}">Ensayos</a>
+      </li>
+    </ul>
+  </div>
+</div>
+<div class="wrapper wrapper-content animated fadeInRight">
+  <div class="col-md-12">
+    <div class="ibox float-e-margins">
+      <div class="ibox-title">
+        <h3>Pruebas en este ensayo</h3>
+      </div>
+      <div class="ibox-content">
+        <div class="table-responsive">
+          <table class="footable table table-striped toggle-arrow-tiny footable-loaded tablet breakpoint test-datatable">
+            <thead>
+              <tr>
+                <th class="footable-visible footable-sortable">Código</th>
+                <th class="footable-visible footable-sortable">Título</th>
+                <th class="footable-visible footable-sortable">Descripción</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for test in essay.testfill_set.all() %}
+                <tr class="test-row"
+                    data-url="{{ url('internal:testfill.show',
+                      service_id=service.id,
+                      essay_id=test.id,
+                      test_id=test.id) }}"
+                    data-test="{{ test.id }}">
+                  <td>{{ test.id }}</td>
+                  <td>{{ test.test_template.title }}</td>
+                  <td>{{ test.description }}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="test-description-container"></div>
+{% endblock page_content %}
+
+{% block custom_js %}
+<script src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
+<script src="{{ static('js/datatable-config.js') }}"></script>
+
+<script>
+$('.test-datatable').DataTable({
+  responsive: true,
+  dom: '<"html5buttons"B>lTfgit',
+  buttons: [
+    {extend: 'copy'},
+    {extend: 'csv'},
+    {extend: 'excel', title: 'Servicios'},
+    {extend: 'pdf', title: 'Servicios'},
+  ]
+});
+</script>
+<script>
+toastr.options = {
+  closeButton: true,
+  progressBar: true,
+  showMethod: 'slideDown',
+  timeOut: 3000
+};
+
+$('.test-row').on('dblclick', function (e) {
+  var $row = $(e.currentTarget);
+  var url = $row.data('url');
+  var testToLoad = $row.data('test');
+  var loadedTest = $('.parameter-table').data('test');
+
+  loadTestParameters(url, testToLoad, loadedTest);
+});
+
+function loadTestParameters(url, testToLoad, loadedTest) {
+  if (testToLoad == loadedTest) {
+    return;
+  }
+
+  $.get({
+    url: url,
+    data: {
+      type: 'json',
+    },
+  }).done(function (response) {
+    if (!response.success) {
+      return;
+    }
+    $('#test-description-container').html(response.render);
+  }).fail(function (response) {
+    toastr.clear();
+    toastr.error('Ocurrió un error al cargar los datos sobre esta prueba.', 'Error al cargar datos');
+  });
+  // window.location.assign($row.data('url'));
+}
+
+$(document).on('submit', '#test-form', function (e) {
+  e.preventDefault();
+  var form = e.target;
+  $.ajax({
+    url: form.action,
+    method: form.method,
+    data: $(form).serialize(),
+  }).fail(function () {
+    toastr.error('Ocurrió un error con su solicitud.', 'Error en la actualización de datos');
+  }).done(function (response) {
+    toastr.clear();
+    if (!response.success) {
+      toastr.error('Ocurrió un error con su solicitud.', 'Error en la actualización de datos');
+      return;
+    }
+    toastr.success('Se actualizaron los datos correctamente.');
+  });
+});
+</script>
+{% endblock custom_js %}

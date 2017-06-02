@@ -22,8 +22,13 @@
             <img alt="image" class="img-circle" src="img/profile_small.jpg" />
             </span>
             <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-            <span class="clear"> <span class="block m-t-xs"> <strong class="font-bold">David Williams</strong>
-            </span> <span class="text-muted text-xs block">Art Director <b class="caret"></b></span> </span> </a>
+              <span class="clear">
+                <span class="block m-t-xs">
+                  <strong class="font-bold">David Williams</strong>
+                </span>
+                <span class="text-muted text-xs block">Art Director <b class="caret"></b></span>
+              </span>
+            </a>
             <ul class="dropdown-menu animated fadeInRight m-t-xs">
               <li><a href="profile.html">Profile</a></li>
               <li><a href="contacts.html">Contacts</a></li>
@@ -86,6 +91,13 @@
               </ul>
           </ul>
         </li>
+        <li>
+          <a href="{{ url('internal:service.index') }}">
+            <i class="fa fa-th-large"></i>
+            <span class="nav-label">Servicios</span>
+            {# <span class="fa arrow"></span> #}
+          </a>
+        </li>
       </ul>
     </div>
   </nav>
@@ -143,6 +155,30 @@
 <script src="{{ static('vendors/jquery-slimscroll/jquery.slimscroll.min.js') }}"></script>
 <script src="{{ static('vendors/pace-progress/pace.min.js') }}"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+<<<<<<< HEAD
+=======
+<script src="//cdnjs.cloudflare.com/ajax/libs/js-cookie/2.1.4/js.cookie.min.js"></script>
+
+>>>>>>> aad7e6e8e7b9c6599fb41a11cac665d8eb0a82b8
 <!-- Theme script -->
 <script src="{{ static('js/inspinia.js') }}"></script>
+
+<script>
+/*
+ * Ajax setup
+ *
+ */
+// var csrftoken = Cookies.get('csrftoken');
+// function csrfSafeMethod(method) {
+//   // these HTTP methods do not require CSRF protection
+//   return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+// }
+// $.ajaxSetup({
+//   beforeSend: function(xhr, settings) {
+//     if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+//       xhr.setRequestHeader("X-CSRFToken", csrftoken);
+//     }
+//   }
+// });
+</script>
 {% endblock base_js %}

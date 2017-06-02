@@ -1,0 +1,26 @@
+[
+{
+  "model": "internal.essayfillstatus",
+  "pk": 1,
+  "fields": {
+    "slug": "pending",
+    "name": "En espera"
+  }
+},
+{
+  "model": "internal.essayfillstatus",
+  "pk": 2,
+  "fields": {
+    "slug": "in-progress",
+    "name": "En progreso"
+  }
+},
+{
+  "model": "internal.essayfillstatus",
+  "pk": 3,
+  "fields": {
+    "slug": "complete",
+    "name": "Completado"
+  }
+}
+]

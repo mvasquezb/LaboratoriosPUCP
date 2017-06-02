@@ -84,11 +84,17 @@ class TestType(models.Model):
     def __str__(self):
         return self.name
 
+    def __str__(self):
+        return self.name
+
 
 class ServiceRequest(models.Model):
     description = models.CharField(max_length=100)
     client = models.ForeignKey(Client, on_delete=models.CASCADE)
     status = models.IntegerField(default=0)
+
+    def __str__(self):
+        return self.description + ' | ' + str(self.client)
 
 
 # Modelo para muestras
@@ -123,9 +129,18 @@ class EssayTemplate(models.Model):
         return test_list[index - 1]
 
 
+class EssayFillStatus(models.Model):
+    slug = models.CharField(max_length=20)
+    name = models.CharField(max_length=20)
+
+    def __str__(self):
+        return self.name
+
+
 class EssayFill(models.Model):
     essay_template = models.ForeignKey(EssayTemplate)
     description = models.CharField(max_length=100, default='essay testing')
+    status = models.ForeignKey(EssayFillStatus, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.description
@@ -184,9 +199,7 @@ class TestFill(models.Model):
         return self.description
 
     def create(self, test_insert=None, essay_insert=None):
-        if test_insert is None:
-            return
-        if essay_insert is None:
+        if test_insert is None or essay_insert is None:
             return
         self.essay_fill = essay_insert
         self.test_template = test_insert
@@ -230,3 +243,8 @@ class SampleType(models.Model):
     description=models.CharField(max_length=100)
     active=models.BooleanField()
     lab_type = models.ForeignKey(LaboratoryType, on_delete=models.CASCADE)
+
+
+class Service(models.Model):
+    request = models.ForeignKey(Request, on_delete=models.CASCADE)
+    essays = models.ManyToManyField(EssayFill)

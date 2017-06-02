@@ -167,5 +167,34 @@ urlpatterns = [
     url('^essayTemplate/delete/(?P<pk>\d+)$',
         views.essayTemplate.delete,
         name='essayTemplate.delete'),
-
+    #
+    # Service
+    #
+    url('^service/index/?$',
+        views.service.index,
+        name='service.index'),
+    url('^service/(?P<pk>\d+)/?$',
+        views.service.show,
+        name='service.show'),
+    #
+    # EssayFill
+    #
+    url('^service/(?P<service_id>\d+)/essay/?$',
+        views.essayfill.index,
+        name='essayfill.index'),
+    url('^service/(?P<service_id>\d+)/essay/(?P<essay_id>\d+)/?$',
+        views.essayfill.show,
+        name='essayfill.show'),
+    #
+    # TestFill
+    #
+    url('^service/(?P<service_id>\d+)/essay/(?P<essay_id>\d+)/test/?$',
+        views.testfill.index,
+        name='testfill.index'),
+    url('^service/(?P<service_id>\d+)/essay/(?P<essay_id>\d+)/test/(?P<test_id>\d+)/?$',
+        views.testfill.show,
+        name='testfill.show'),
+    url('^service/(?P<service_id>\d+)/essay/(?P<essay_id>\d+)/test/(?P<test_id>\d+)/update/?$',
+        views.testfill.update,
+        name='testfill.update'),
 ]

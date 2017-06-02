@@ -1,0 +1,42 @@
+<div class="wrapper wrapper-content animated fadeInRight">
+  <div class="col-md-12">
+    <div class="ibox float-e-margins">
+      <div class="ibox-title">
+        <h3>Parámetros de la prueba: {{ test.test_template.title }}</h3>
+      </div>
+      <div class="ibox-content">
+        <div class="table-responsive">
+          <form action="{{ url('internal:testfill.update',
+                      service_id=service.id,
+                      essay_id=test.id,
+                      test_id=test.id) }}" id="test-form" class="form-horizontal" method="POST">
+            <table class="table table-striped parameter-table" data-test="{{ test.id }}">
+              <thead>
+                <tr>
+                  <th>Nombre</th>
+                  <th>Unidad</th>
+                  <th>Valor</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% csrf_token %}
+                {{ parameter_forms.management_form }}
+                {% for parameter in parameter_forms %}
+                  {% for hidden in parameter.hidden_fields() %}
+                    {{ hidden }}
+                  {% endfor %}
+                  <tr>
+                    <th>{{ parameter.instance.parameter_template.name }}</th>
+                    <th>{{ parameter.instance.parameter_template.unit }}</th>
+                    <th>{{ parameter.value }}</th>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </form>
+        </div>
+        <input class="btn btn-success" type="submit" form="test-form" value="Guardar">
+      </div>
+    </div>
+  </div>
+</div>

@@ -5,15 +5,21 @@ from django.forms import ModelMultipleChoiceField
 from django.forms import inlineformset_factory
 from django import forms
 
+from internal import models
 
-class RoleForm(ModelForm):
-    class Meta:
-        model = Role
-        fields = ["description", 'access']
-        widgets = {
-            "description": TextInput(),
-            'access': CheckboxSelectMultiple()
-        }
+
+class RoleForm(forms.ModelForm):
+    class Meta:        
+        model = models.Role
+        fields = ['description', 'access']
+
+
+ParameterFillFormset = forms.modelformset_factory(
+    models.ParameterFill,
+    fields=('value',),
+    extra=0
+)
+
 
 class UserForm(ModelForm):
     class Meta:
@@ -128,4 +134,3 @@ class EssayTemplateForm(ModelForm):
         #                 # we add newly selected books
         #                 instance.books.add(test)
         #     return instance
-
