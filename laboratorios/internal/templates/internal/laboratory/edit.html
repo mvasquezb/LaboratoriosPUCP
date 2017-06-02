@@ -2,19 +2,17 @@
 
 {% block title %}{{ super() }} | Inicio{% endblock title %}
 
-{% block custom_css %}
-
-{% endblock custom_css %}
+{% block custom_css %}{% endblock custom_css %}
 
 {% block page_content %}
 
 <div class="row border-bottom white-bg dashboard-header">
     <div class="col-md-3">
-        <h2><strong>Crear Laboratorio</strong></h2>
+        <h2><strong>Editar Laboratorio</strong></h2>
     </div>
 </div>
 
-<form action="{{ url('internal:laboratory.create') }}" method="post">
+<form action="{{ url('internal:laboratory.edit', id_lab=lab.pk) }}" method="post">
   {% csrf_token %}
   <div class="col-md-offset-2" style="width: 700px">
     <div class="ibox float-e-margins">
@@ -27,12 +25,12 @@
 
               <div class="form-group">
                 <label>Nombre de Laboratorio (*)</label>
-                <input type="text" name="textname" required placeholder="Ingrese Nombre de Laboratorio" class="form-control">
+                <input type="text" name="textname" required placeholder="Ingrese Nombre de Laboratorio" class="form-control" value="{{ lab.name }}">
                 <span>Ejemplo: Laboratorio de Corrosión</span>
               </div>
               <div class="form-group">
                 <label>Cantidad de Usuarios (*)</label>
-                <input type="number" name="numberUsers" required min="5" max="15" class="form-control">
+                <input type="number" name="numberUsers" required min="5" max="15" class="form-control" value="{{ lab.users_number }}">
                 <span>Cantidad mínima es cinco (5), cantidad máxima es quince (15)</span>
               </div>
 
@@ -43,13 +41,18 @@
                 <label>Tipo de Laboratorio (*)</label>
                 <select class="form-control m-b" name="comboBox_type">
                   {% for lab_type in types %}
-                    {% if lab_type.active == True %}
-                      <option>{{ lab_type.name }}</option>
+                    {% if lab.type.active == True %}
+                      {% if lab.type.name  == lab_type.name %}
+                        <option selected>{{ lab_type.name  }}</option>
+                      {% else %}
+                        <option>{{ lab_type.name  }}</option>
+                      {% endif %}
                     {% endif %}
                   {% endfor %}
                 </select>
                 <span>Seleccione un tipo de laboratorio</span>
               </div>
+
           </div>
         </div>
         <p><strong>(*)</strong> campos obligatorios</p>
@@ -81,31 +84,6 @@
                 </tr>
               </thead>
               <tbody id="in_put">
-                  <tr>
-                    <th class="1_1" scope="row">1</th>
-                    <td class="2_1">First Name1</td>
-                    <td class="3_1">Last Name1</td>
-                    <td class="4_1">12/12/12</td>
-                    <td><i onclick="move_items(1)" class="5_1 fa fa-arrow-right"></i></td>
-                  </tr>
-
-                  <tr>
-                    <th class="1_2" scope="row">2</th>
-                    <td class="2_2">First Name2</td>
-                    <td class="3_2">Last Name2</td>
-                    <td class="4_2">12/12/12</td>
-                    <td><i onclick="move_items(2)" class="5_2 fa fa-arrow-right"></i></td>
-                  </tr>
-
-                  <tr>
-                    <th class="1_3" scope="row">2</th>
-                    <td class="2_3">First Name2</td>
-                    <td class="3_3">Last Name2</td>
-                    <td class="4_3">12/12/12</td>
-                    <td><i onclick="move_items(3)" class="5_3 fa fa-arrow-right"></i></td>
-                  </tr>
-
-
                 {% for user in users : %}
                   <tr class="0_{{ user.pk }}">
                     <th class="1_{{ user.pk }}" scope="row">{{ user.pk }}</th>
@@ -157,8 +135,8 @@
     <div class="ibox float-e-margins">
       <div class="ibox-content form-group form-inline">
         <div class="col-md-offset-5">
-          <button type="submit" id="createButton" class="btn btn-w-m btn-success"> Registrar</button>
-          <button type="button" id="cancelButton" class="btn btn-w-m btn-white"> Cancelar</button>
+          <button type="submit" id="createButton" name="createButton" class="btn btn-w-m btn-success"> Guardar Cambios</button>
+          <button type="button" id="cancelButton" name="cancelButton" class="btn btn-w-m btn-white"> Cancelar</button>
         </div>
       </div>
     </div>

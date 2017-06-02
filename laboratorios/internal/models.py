@@ -32,16 +32,31 @@ class RoleByAccess(models.Model):
     access = models.ForeignKey(Access)
 
 
-class User(AuthUser):
-    role = models.ManyToManyField(Role, through="UserByRole")
+class LaboratoryType(models.Model):
+    name = models.CharField(max_length=100)
+    active = models.BooleanField()
 
     def __str__(self):
-        return self.get_full_name() or self.username
+        return self.name
 
+class Laboratory(models.Model):
+    name = models.CharField(max_length=100)
+    users_number = models.IntegerField()
+    capacity = models.IntegerField()
+    active = models.BooleanField()
+    type = models.ForeignKey(LaboratoryType, on_delete=models.CASCADE)
+    monitor = models.ForeignKey('User', on_delete=models.CASCADE, null=True)
+
+class User(AuthUser):
+    role = models.ManyToManyField(Role, through="UserByRole")
+    laboratories = models.ManyToManyField(Laboratory)
+    def __str__(self):
+        return self.get_full_name() or self.username
 
 class UserByRole(models.Model):
     user = models.ForeignKey(User)
     role = models.ForeignKey(Role)
+
 
     def __str__(self):
         return "{} | {}".format(self.user, self.role)
@@ -53,25 +68,22 @@ class Client(models.Model):
     idDoc = models.IntegerField()
     username = models.OneToOneField(User, on_delete=models.CASCADE)
 
-class LaboratoryType(models.Model):
-    name = models.CharField(max_length=100)
-    active = models.BooleanField()
-
-    def __str__(self):
-        return self.name
-
 ### TipoEnsayo
-class AssayType(models.Model):
+class EssayType(models.Model):
     name=models.CharField(max_length=100)
     description=models.CharField(max_length=100)
     active=models.BooleanField()
-    lab_type=models.ForeignKey(LaboratoryType, on_delete=models.CASCADE)
+    lab_type=models.ForeignKey(LaboratoryType, on_delete=models.CASCADE,null=True)
+    def __str__(self):
+        return self.name
 
 class TestType(models.Model):
     name = models.CharField(max_length=100)
     description = models.CharField(max_length=100)
     active = models.BooleanField()
-    assay_type = models.ForeignKey(AssayType, on_delete=models.CASCADE)
+    essay_type = models.ForeignKey(EssayType,on_delete=models.CASCADE)
+    def __str__(self):
+        return self.name
 
 
 class Request(models.Model):
@@ -189,12 +201,6 @@ class ParameterFill(models.Model):
         self.test_fill = test_insert
         self.parameter_template = param_insert
 
-class Laboratory(models.Model):
-    name = models.CharField(max_length=100)
-    users_number = models.IntegerField()
-    capacity = models.IntegerField()
-    active = models.BooleanField()
-    type = models.ForeignKey(LaboratoryType, on_delete=models.CASCADE)
 
 ## Tipo Muestra
 class SampleType(models.Model):
