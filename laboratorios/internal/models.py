@@ -246,5 +246,5 @@ class SampleType(models.Model):
 
 
 class Service(models.Model):
-    request = models.ForeignKey(Request, on_delete=models.CASCADE)
+    request = models.ForeignKey(ServiceRequest, on_delete=models.CASCADE)
     essays = models.ManyToManyField(EssayFill)
