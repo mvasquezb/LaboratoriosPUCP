@@ -1,7 +1,7 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from django.http import HttpResponse, HttpResponseRedirect
 from ..models import *
-
+import time
 
 def index(request,
           template='internal/laboratoryType/index.html',
@@ -24,6 +24,27 @@ def create(request,
            extra_context=None):
     essaytypes = EssayType.objects.all ()
     sampletypes = SampleType.objects.all ()
+    if request.method == 'GET'and request.is_ajax():
+        x = dict(request.GET)
+        lab_type = LaboratoryType.objects.create(
+            name=x['name'][0],
+            description="",
+            active=True
+        )
+        for i in x['array[]']:
+            cutName = i[1:]
+            print(cutName)
+            if i[0]=='S':
+                sample = SampleType.objects.get(name=cutName)
+                if sample:
+                    sample.lab_type = lab_type
+                    sample.save()
+            else:
+                essay = EssayType.objects.get(name=cutName)
+                if essay:
+                    essay.lab_type = lab_type
+                    essay.save()
+        return redirect('internal:laboratoryType.create')
     if request.method == 'POST':
         index='internal/laboratoryType/index.html'
         labtypes = LaboratoryType.objects.all ()
@@ -31,29 +52,15 @@ def create(request,
         if "b_cancel" in request.POST:
             return render(request, index, context)
         if "b_submit" in request.POST:
+            time.sleep(1)
             name = str(request.POST.get ('textname'))
             description = str(request.POST.get ('description'))
-            if validation_name(name):
-                lab_type = LaboratoryType.objects.create (
-                    name=name,
-                    description=description,
-                    active=True
-                )
-                x = dict(request.POST)
-                for i in x['array[]']:
-                    sample=LaboratoryType.objects.get(name=i)
-                    essay=EssayType.objects.get(name=i)
-                    if sample:
-                        sample.lab_type=lab_type
-                        sample.save()
-                    if essay:
-                        essay.lab_type = lab_type
-                        essay.save()
-                return render (request, index, context)
+            lab_type = LaboratoryType.objects.get(name=name)
+            lab_type.description = description
+
 
     context = {'essayType_list': essaytypes, 'sampleType_list': sampletypes}
     return render(request, template, context)
-
 
 def edit(request,
            template='internal/laboratoryType/edit.html',

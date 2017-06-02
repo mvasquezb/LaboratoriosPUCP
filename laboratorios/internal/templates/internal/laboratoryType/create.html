@@ -21,7 +21,7 @@
                {% csrf_token %}
               <tr>
                 <th><label class="control-label col-sm-2">Nombre </label></th>
-                <th><input type="text" name="textname" autofocus required  /></th>
+                <th><input type="text" name="textname" id="labName" autofocus required  /></th>
               </tr>
               <tr><th><br></th></tr>
               <tr>
@@ -62,7 +62,7 @@
                           <th>{{ essaytype.pk }}</th>
                           <th>{{ essaytype.name }}</th>
                           <th>{{ essaytype.description }}</th>
-                          <th><div class="i-checks"><input type="checkbox" value=""> <i></i></div></th>
+                          <th><div ><input type="checkbox" value="" name="E{{ essaytype.name }}" class="i-checks"> <i></i></div></th>
                         </tr>
                       {% endfor %}
                     </tbody>
@@ -84,7 +84,7 @@
                           <th>{{ sampletype.pk }}</th>
                           <th>{{ sampletype.name }}</th>
                           <th>{{ sampletype.description }}</th>
-                          <th><div class="i-checks"><input name="samplecheck"type="checkbox" value=""> <i></i></div></th>
+                          <th><div ><input name="S{{ sampletype.name }}" class="i-checks" name="samplecheck"type="checkbox" value=""> <i></i></div></th>
                         </tr>
                       {% endfor %}
                     </tbody>
@@ -96,7 +96,7 @@
       <div class="ibox-content form-group ">
         <div class="col-md-offset-5">
           <button name="b_cancel" class="btn btn-w-m btn-white" type="submit" formnovalidate>Cancel</button>
-          <button type="submit" id= createButton name="b_submit" class="btn btn-w-m btn-success"> Registrar</button>
+          <button type="submit" id= "createButton" name="b_submit" class="btn btn-w-m btn-success"> Registrar</button>
         </div>
       </div>
     </form>
@@ -131,9 +131,16 @@ var fill_Toastr = function(pMsg, pTypeMsg,pTitle){
     function add_rows() {
       var array = [];
       var i;
+      var nameObject = document.getElementById("labName");
+      //var nameArray = [];
+      //nameArray.push(nameObject.value)
       //esto es para obtener los ids de los checkboxes seleccionados
       $("input[type=checkbox]:checked").each(function(){
       array.push($(this).attr("name")) ;});
+
+      $.get("{{ url('internal:laboratoryType.create')}}",
+          {'array': array, 'name':nameObject.value});
+
       var boxes = document.getElementsByClassName('i-checks');
       var leng = boxes.length;
       var initialLength = leng;
@@ -154,8 +161,8 @@ var fill_Toastr = function(pMsg, pTypeMsg,pTitle){
         }
       }
 
-      if(flag == 1){
-        $.get("{{ url('internal:laboratoryType.create')}}",
+      if(flag == 3){
+        $.get("{{ url('internal:laboratoryType.create2')}}",
           {'array': array});
       }
     }
