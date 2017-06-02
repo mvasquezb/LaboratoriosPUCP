@@ -1,8 +1,7 @@
 from django.forms import ModelForm
-from internal.models  import *
-from django.forms import ModelForm,Textarea,CheckboxSelectMultiple,TextInput
+from internal.models import *
+from django.forms import ModelForm, Textarea, CheckboxSelectMultiple, TextInput
 from django.forms import ModelMultipleChoiceField
-
 
 
 class RoleForm(ModelForm):
@@ -14,13 +13,13 @@ class RoleForm(ModelForm):
             'access': CheckboxSelectMultiple()
         }
 
-class UserForm(ModelForm):
+
+class EmployeeForm(ModelForm):
     class Meta:
-        model = User
+        model = Employee
         fields = [
             'first_name',
             'last_name',
-            'surname',
             'username',
             'address',
             'phone',
@@ -29,18 +28,18 @@ class UserForm(ModelForm):
             'password'
         ]
 
+
 class TestForm(ModelForm):
     class Meta:
         model = TestTemplate
         fields = ['id', 'description']
 
+
 class AccessForm(ModelForm):
     class Meta:
         model = Access
         fields = ['description']
-        widgets = {
-            'description': TextInput()
-        }
+
 
 class ClientForm(ModelForm):
     class Meta:
@@ -48,6 +47,6 @@ class ClientForm(ModelForm):
         fields = [
             'name',
             'idDoc',
-            'username',
-            'phoneNumber'
+            'user',
+            'phone'
         ]

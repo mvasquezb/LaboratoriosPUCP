@@ -19,7 +19,7 @@ input.submitted.ng-invalid{
 <div class="col-md-offset-3 " style="width: 650px">
   <div class="ibox float-e-margins">
     <div class="ibox-content">
-      <form class="horizontal-form" action="{{ url('internal:testType.edit',test.pk) }}" method="post">
+      <form class="horizontal-form" action="{{ url('internal:testTemplate.edit',test.pk) }}" method="post">
             {% csrf_token %}
         <div class="form-group" >
           <label>Tipo de Prueba (*)</label>
@@ -36,7 +36,7 @@ input.submitted.ng-invalid{
           <select name="comboBox_type">
             {% for type in essay_types %}
               {% if type.active == True %}
-                {% if test.essay_type.name==type.name %}
+                {% if test.essay_template.name == type.name %}
                   <option selected>{{ type.name }}</option>
                 {% else %}
                   <option>{{ type.name }}</option>

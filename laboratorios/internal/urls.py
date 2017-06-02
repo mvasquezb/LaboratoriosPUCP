@@ -29,35 +29,35 @@ urlpatterns = [
         views.laboratory.assignMonitor,
         name='laboratory.assignMonitor'),
     #
-    #Assay Type
+    # Essay Template
     #
-    url('^essayType/?$',
-        views.essayType.index,
-        name='essayType.index'),
-    url('^essayType/create?$',
-        views.essayType.create,
-        name='essayType.create'),
-    url('^essayType/edit/(?P<id>\d+)/$',
-        views.essayType.edit,
-        name='essayType.edit'),
-    url('^essayType/delete/?$',
-        views.essayType.delete,
-        name='essayType.delete'),
+    url('^essayTemplate/?$',
+        views.essayTemplate.index,
+        name='essayTemplate.index'),
+    url('^essayTemplate/create/?$',
+        views.essayTemplate.create,
+        name='essayTemplate.create'),
+    url('^essayTemplate/edit/(?P<id>\d+)/$',
+        views.essayTemplate.edit,
+        name='essayTemplate.edit'),
+    url('^essayTemplate/delete/?$',
+        views.essayTemplate.delete,
+        name='essayTemplate.delete'),
     #
-    #Test Type
+    # Test Template
     #
-    url('^testType/?$',
-        views.testType.index,
-        name='testType.index'),
-    url('^testType/create?$',
-        views.testType.create,
-        name='testType.create'),
-    url('^testType/edit/(?P<id>\d+)/$',
-        views.testType.edit,
-        name='testType.edit'),
-    url('^testType/delete/?$',
-        views.testType.delete,
-        name='testType.delete'),
+    url('^testTemplate/?$',
+        views.testTemplate.index,
+        name='testTemplate.index'),
+    url('^testTemplate/create/?$',
+        views.testTemplate.create,
+        name='testTemplate.create'),
+    url('^testTemplate/edit/(?P<id>\d+)/$',
+        views.testTemplate.edit,
+        name='testTemplate.edit'),
+    url('^testTemplate/delete/?$',
+        views.testTemplate.delete,
+        name='testTemplate.delete'),
     #
     # Role
     #
@@ -86,20 +86,20 @@ urlpatterns = [
         views.servicerequest.index,
         name='servicerequest.index'),
     #
-    # User
+    # Employee
     #
-    url('^user/$',
-        views.user.index,
-        name='user.index'),
-    url('^user/create$',
-        views.user.create,
-        name='user.create'),
-    url('^user/edit/(?P<pk>\d+)$',
-        views.user.edit,
-        name='user.edit'),
-    url('^user/delete/(?P<pk>\d+)$',
-        views.user.delete,
-        name='user.delete'),
+    url('^employee/$',
+        views.employee.index,
+        name='employee.index'),
+    url('^employee/create$',
+        views.employee.create,
+        name='employee.create'),
+    url('^employee/edit/(?P<pk>\d+)$',
+        views.employee.edit,
+        name='employee.edit'),
+    url('^employee/delete/(?P<pk>\d+)$',
+        views.employee.delete,
+        name='employee.delete'),
     #
     # Test
     #
@@ -119,7 +119,7 @@ urlpatterns = [
         views.test.edit,
         name='test.delete'),
     #
-    #Access
+    # Access
     #
     url('^access$',
         views.access.index,
@@ -136,7 +136,7 @@ urlpatterns = [
 
 
     #
-    #Client
+    # Client
     #
     url('^client/$',
         views.client.index,

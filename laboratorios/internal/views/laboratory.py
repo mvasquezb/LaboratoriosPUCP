@@ -36,7 +36,7 @@ def create(request,
         return redirect('internal:laboratory.index')
     else:
         typelabs = LaboratoryType.objects.all()
-        users = User.objects.all()
+        users = Employee.objects.all()
         context = {'types': typelabs, 'users': users}
         return render(request, template, context)
 
@@ -83,6 +83,7 @@ def getMonitorId(MonitorStr):
         returnId = returnId * 10 + int(character)
     return returnId
 
+
 def assignMonitor(request, id):
     if request.method == 'POST':
         if "b_cancel" in request.POST:
@@ -91,14 +92,14 @@ def assignMonitor(request, id):
             modifyingLaboratory = Laboratory.objects.get(pk=id)
             newMonitorStr = str(request.POST.get('comboBox_users'))
             newMonitorId = getMonitorId(newMonitorStr)
-            newMonitor = User.objects.get(pk = newMonitorId)
+            newMonitor = Employee.objects.get(pk=newMonitorId)
             modifyingLaboratory.monitor = newMonitor
             modifyingLaboratory.save()
             return redirect('internal:laboratory.index')
         return redirect('internal:laboratory.index')
     else:
         labo = Laboratory.objects.get(pk=id)
-        userList = User.objects.all()
+        userList = Employee.objects.all()
         context = {'laboratory': labo, 'users': userList}
         template = 'internal/laboratory/assignmonitor.html'
         return render(request, template, context)

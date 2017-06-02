@@ -6,9 +6,7 @@
 
 {% block page_content %}
 <style>
-input.submitted.ng-invalid{
-  border-color:#f00;
-}
+input.submitted.invalid{ border-color: #f00; }
 </style>
 
 <div class="row border-bottom white-bg dashboard-header">
@@ -20,7 +18,7 @@ input.submitted.ng-invalid{
 <div class="col-md-offset-3 " style="width: 650px">
   <div class="ibox float-e-margins">
     <div class="ibox-content">
-      <form class="horizontal-form" action="{{ url('internal:essayType.edit',essay.pk) }}" method="post">
+      <form class="horizontal-form" action="{{ url('internal:essayTemplate.edit',essay.pk) }}" method="post">
             {% csrf_token %}
         <div class="form-group" >
           <label>Tipo de ensayo (*)</label>

@@ -12,26 +12,22 @@ class Test(models.Model):
 
 class Access(models.Model):
     description = models.CharField(max_length=100)
+
     def __str__(self):
         return self.description
 
 
 class Role(models.Model):
-    description = models.CharField(max_length=100, blank=True)
+    description = models.CharField(max_length=100)
     access = models.ManyToManyField(Access)
 
     def __str__(self):
         return self.description
 
 
-class RoleByAccess(models.Model):
-    role = models.ForeignKey(Role)
-    access = models.ForeignKey(Access)
-
-
 class LaboratoryType(models.Model):
     name = models.CharField(max_length=100)
-    active = models.BooleanField()
+    active = models.BooleanField(default=True)
 
     def __str__(self):
         return self.name
@@ -43,17 +39,27 @@ class Laboratory(models.Model):
     capacity = models.IntegerField()
     active = models.BooleanField()
     type = models.ForeignKey(LaboratoryType, on_delete=models.CASCADE)
-    monitor = models.ForeignKey('User', on_delete=models.CASCADE, null=True)
+    monitor = models.ForeignKey(
+        'Employee',
+        on_delete=models.CASCADE,
+        null=True
+    )
 
     def __str__(self):
         return self.name
 
 
-class User(AuthUser):
+class Employee(AuthUser):
     role = models.ManyToManyField(Role)
-    surname =  models.CharField(max_length=100, null=True)
-    address =  models.CharField(max_length=100, null=True)
+    address = models.CharField(max_length=100, null=True)
     laboratories = models.ManyToManyField(Laboratory)
+    phone = models.CharField(max_length=20, null=True)
+
+    def __str__(self):
+        return self.get_full_name() or self.username
+
+
+class ExternalUser(AuthUser):
     phone = models.CharField(max_length=100, null=True)
 
     def __str__(self):
@@ -63,26 +69,8 @@ class User(AuthUser):
 class Client(models.Model):
     name = models.CharField(max_length=100)
     idDoc = models.IntegerField()
-    username = models.OneToOneField(User, on_delete=models.CASCADE)
-    phoneNumber = models.CharField(max_length=10)
-
-### TipoEnsayo
-class EssayType(models.Model):
-    name=models.CharField(max_length=100)
-    description=models.CharField(max_length=100)
-    active=models.BooleanField()
-    lab_type=models.ForeignKey(LaboratoryType, on_delete=models.CASCADE,null=True)
-    def __str__(self):
-        return self.name
-
-
-class TestType(models.Model):
-    name = models.CharField(max_length=100)
-    description = models.CharField(max_length=100)
-    active = models.BooleanField()
-    essay_type = models.ForeignKey(EssayType,on_delete=models.CASCADE)
-    def __str__(self):
-        return self.name
+    user = models.OneToOneField(ExternalUser, on_delete=models.CASCADE)
+    phone = models.CharField(max_length=20)
 
 
 class ServiceRequest(models.Model):
@@ -93,10 +81,13 @@ class ServiceRequest(models.Model):
 
 # Modelo para muestras
 class SampleTemplate(models.Model):
+    name = models.CharField(max_length=100)
     description = models.CharField(max_length=100)
+    active = models.BooleanField(default=True)
+    lab_type = models.ForeignKey(LaboratoryType, on_delete=models.CASCADE)
 
     def __str__(self):
-        return str(self.description)
+        return self.description
 
 
 class SampleFill(models.Model):
@@ -107,12 +98,19 @@ class SampleFill(models.Model):
 
 # Modelo para pruebas
 class EssayTemplate(models.Model):
-    code = models.IntegerField(default=0)
+    code = models.CharField(max_length=20)
     test_number = models.IntegerField(default=0)
+    name = models.CharField(max_length=100)
     description = models.CharField(max_length=100)
+    active = models.BooleanField(default=True)
+    lab_type = models.ForeignKey(
+        LaboratoryType,
+        on_delete=models.CASCADE,
+        null=True
+    )
 
     def __str__(self):
-        return str(self.code)
+        return self.code + ' | ' + self.name
 
     def get_test(self, index):
         test_list = TestTemplate.objects.filter(essay_template=self)
@@ -139,13 +137,15 @@ class EssayFill(models.Model):
 
 
 class TestTemplate(models.Model):
+    code = models.CharField(max_length=20)
+    name = models.CharField(max_length=100)
     description = models.CharField(max_length=100)
-    title = models.CharField(max_length=100)
     parameters_number = models.IntegerField(default=0)
-    essay_template = models.ForeignKey(EssayTemplate)
+    essay_template = models.ForeignKey(EssayTemplate, on_delete=models.CASCADE)
+    active = models.BooleanField(default=True)
 
     def __str__(self):
-        return self.title
+        return self.name
 
     def get_parameter(self, index):
         parameter_list = ParameterTemplate.objects.filter(test_template=self)
@@ -201,11 +201,3 @@ class ParameterFill(models.Model):
             return
         self.test_fill = test_insert
         self.parameter_template = param_insert
-
-
-## Tipo Muestra
-class SampleType(models.Model):
-    name=models.CharField(max_length=100)
-    description=models.CharField(max_length=100)
-    active=models.BooleanField()
-    lab_type = models.ForeignKey(LaboratoryType, on_delete=models.CASCADE)
