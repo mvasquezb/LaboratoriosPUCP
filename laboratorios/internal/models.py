@@ -32,13 +32,15 @@ class RoleByAccess (models.Model):
     access = models.ForeignKey (Access)
 
 
-<<<<<<< HEAD
-class LaboratoryType(models.Model):
-    name = models.CharField(max_length=100)
-    active = models.BooleanField()
+# Model de tipo de laboratorio
+class LaboratoryType (models.Model):
+    name = models.CharField (max_length=100)
+    description = models.CharField (max_length=200, blank=True)
+    active = models.BooleanField ()
 
     def __str__(self):
         return self.name
+
 
 class Laboratory(models.Model):
     name = models.CharField(max_length=100)
@@ -69,7 +71,6 @@ class Client (models.Model):
     idDoc = models.IntegerField ()
     username = models.OneToOneField (User, on_delete=models.CASCADE)
 
-<<<<<<< HEAD
 ### TipoEnsayo
 class EssayType(models.Model):
     name=models.CharField(max_length=100)
@@ -86,32 +87,6 @@ class TestType(models.Model):
     essay_type = models.ForeignKey(EssayType,on_delete=models.CASCADE)
     def __str__(self):
         return self.name
-=======
-
-# Model de tipo de laboratorio
-class LaboratoryType (models.Model):
-    name = models.CharField (max_length=100)
-    description = models.CharField (max_length=200, blank=True)
-    active = models.BooleanField ()
-
-    def __str__(self):
-        return self.name
-
-
-### TipoEnsayo
-class EssayType (models.Model):
-    name = models.CharField (max_length=100)
-    description = models.CharField (max_length=100)
-    active = models.BooleanField ()
-    lab_type = models.ForeignKey (LaboratoryType,null=True, on_delete=models.CASCADE)
-
->>>>>>> s1/grupo2
-
-class TestType (models.Model):
-    name = models.CharField (max_length=100)
-    description = models.CharField (max_length=100)
-    active = models.BooleanField ()
-    essay_type = models.ForeignKey (EssayType, on_delete=models.CASCADE)
 
 
 class Request (models.Model):
@@ -228,18 +203,6 @@ class ParameterFill (models.Model):
             return
         self.test_fill = test_insert
         self.parameter_template = param_insert
-
-<<<<<<< HEAD
-=======
-
-class Laboratory (models.Model):
-    name = models.CharField (max_length=100)
-    users_number = models.IntegerField ()
-    capacity = models.IntegerField ()
-    active = models.BooleanField ()
-    type = models.ForeignKey (LaboratoryType, on_delete=models.CASCADE)
-
->>>>>>> s1/grupo2
 
 ## Tipo Muestra
 class SampleType (models.Model):
