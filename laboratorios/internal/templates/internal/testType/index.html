@@ -10,19 +10,51 @@
   font-size: 40px;
   }
 </style>
-<h1> Lista de Tipos de Ensayos </h1>
+<h2><strong> Lista de Tipos de Pruebas </strong></h2>
 <tr>
   <th><br></th>
 </tr>
 
 <div class="table-responsive">
-    <div style="margin-left: 700px;" class="col-sm-3">
-        <div  class="input-group"><input type="text" placeholder="Search" id="text_search" onkeyup="myFunction()" class="input-sm form-control">
-          <span class="input-group-btn">
-            <button type="button" class="btn btn-sm btn-success"> Buscar</button>
-          </span>
+ <!--   <div style="float:left;" class="btn-group" class="col-sm-3">
+      <button data-toggle="dropdown" class="btn btn-default dropdown-toggle">Tipo Ensayo <span class="caret"></span></button>
+      <ul id="listTypes" onclick="dropdown_filter_function()" class="dropdown-menu">
+          <li><a>Tipo Ensayo 1</a></li>
+          <li><a>Tipo Ensayo 2</a></li>
+          <li><a>Tipo Ensayo 3</a></li>
+          <li class="divider"></li>
+          <li><a href="#">Separated link</a></li>
+      </ul>
+    </div> -->
+   <fieldset>
+     <legend><h3><strong>Filtrar por:</strong></h3></legend>
+        <!--<div style="float:left;"> -->
+        <div>
+          <label class="col-lg-2 control-label">Tipo de ensayo</label>
+          <select id="typeList">
+            <option style="display:none;" selected> -- Selecciona una opcion -- </option>
+            <option onclick="list_filter_function()">-- Borrar filtro --</option>
+            <option onclick="list_filter_function()">Tipo ensayo 1</option>
+            <option onclick="list_filter_function()">Tipo ensayo 2</option>
+            <option onclick="list_filter_function()">Tipo ensayo 3</option>
+            <option onclick="list_filter_function()">Tipo ensayo 4</option>
+          </select>
         </div>
-    </div>
+        <div>
+          <br>
+          <label class="col-sm-2" >Nombre</label>
+          <div class="col-sm-3 input-group"><input type="text" placeholder="Search" id="text_search" onkeyup="text_search_function()" class="input-sm form-control">
+            <span class="input-group-btn">
+              <button type="button" class="btn btn-sm btn-success"> Buscar</button>
+            </span>
+          </div>
+        </div>
+   </fieldset>
+  <table><tr><td><br><br></td></tr></table>
+  <fieldset>
+    <legend></legend>
+
+
     <div>
 
       <table class="table table-striped" id="mytable" >
@@ -31,47 +63,52 @@
               <th></th>
               <th>Nombre </th>
               <th>Descripcion </th>
-              <th>Tipo Laboratorio</th>
+              <th>Tipo Ensayo</th>
               <th>Editar</th>
           </tr>
           </thead>
           <tbody>
           <tr>
               <td><input type="checkbox"  checked class="i-checks" name="input[]"></td>
-              <td><small>Tipo Ensayo 1</small></td>
+              <td><small>Tipo Prueba 1</small></td>
               <td><span class="pie">Bla bla bla</span></td>
               <td>Corrosion</td>
               <td><a href="#"><i onclick="edit_row()" class="fa fa-pencil-square-o"></i></a></td>
           </tr>
                   <tr>
               <td><input type="checkbox"   class="i-checks" name="input[]"></td>
-              <td><small>Tipo Ensayo 2</small></td>
+              <td><small>Tipo Prueba 2</small></td>
               <td><span class="pie">Bla bla bla</span></td>
-              <td>Corrosion</td>
+              <td>Tipo ensayo 1</td>
               <td><a href="#"><i onclick="edit_row()" class="fa fa-pencil-square-o"></i></a></td>
           </tr>
           <tr>
               <td><input type="checkbox"   class="i-checks" name="input[]"></td>
-              <td><small>Tipo Ensayo 3</small></td>
+              <td><small>Tipo Prueba 3</small></td>
               <td><span class="pie">Bla bla bla</span></td>
-              <td>Corrosion</td>
+              <td>Tipo ensayo 2</td>
               <td><a href="#"><i onclick="edit_row()" class="fa fa-pencil-square-o"></i></a></td>
           </tr>
           <tr>
               <td><input type="checkbox"   class="i-checks" name="input[]"></td>
-              <td><small>Tipo Ensayo 4</small></td>
+              <td><small>Tipo Prueba 4</small></td>
               <td><span class="pie">Bla bla bla</span></td>
-              <td>Corrosion</td>
+              <td>Tipo ensayo 1</td>
               <td><a href="#"><i onclick="edit_row()" class="fa fa-pencil-square-o" ></i></a></td>
           </tr>
           </tbody>
 
       </table>
     </div>
+  </fieldset>
+
 </div>
 <div>
     <button type="button" id="deleteButton" class="btn btn-w-m btn-success">Eliminar</button>
 </div>
+
+
+
 
     <script>
         var fill_Toastr = function(pMsg, pTypeMsg,pTitle){
@@ -149,7 +186,7 @@
         });
     </script>
     <script>
-        function myFunction() {
+        function text_search_function() {
           var input, filter, table, tr, td, i;
           input = document.getElementById("text_search");
           filter = input.value.toUpperCase();
@@ -167,8 +204,59 @@
           }
         }
     </script>
+    <script>
 
+        var fill_Toastr = function(pMsg, pTypeMsg,pTitle){
+            toastr.options = {
+              closeButton: true,
+              progressBar: true,
+              showMethod: 'slideDown',
+              positionClass: "toast-bottom-right",
+              timeOut: 4000
+              };
 
+              switch(pTypeMsg){
+                case "success":
+                toastr.success(pMsg, '',pTitle);
+                break;
+
+                case "error":
+                toastr.error(pMsg, '',pTitle);
+                break;
+              }
+        }
+        function list_filter_function() {
+
+          var input, filter, table, tr, td, i;
+          input = document.getElementById("typeList");
+          filter = input[input.selectedIndex].value;
+          table = document.getElementById("mytable");
+          tr = table.getElementsByTagName("tr");
+          if (input.selectedIndex > -1)
+          {
+            if(filter == "-- Borrar filtro --")
+            {
+              for (i = 0; i < tr.length; i++) {
+                tr[i].style.display = "";
+              }
+            }
+            else
+            {
+              filter = filter.toUpperCase();
+              for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[3];
+                if (td) {
+                  if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                      tr[i].style.display = "";
+                  } else {
+                      tr[i].style.display = "none";
+                  }
+                }
+              }
+            }
+          }
+        }
+    </script>
 
 {% endblock page_content %}
 

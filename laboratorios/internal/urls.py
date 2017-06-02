@@ -1,7 +1,8 @@
-from django.conf.urls import url
+from django.conf.urls import url, include
 
 from . import views
 
+#Lugar donde se pone los Url's para el proyecto
 
 urlpatterns = [
     #
@@ -22,9 +23,33 @@ urlpatterns = [
     #
     #Assay Type
     #
-    url('^assayType/?$',
-        views.assayType.index,
-        name='assayType.index'),
+    url('^essayType/?$',
+        views.essayType.index,
+        name='essayType.index'),
+    url('^essayType/create?$',
+        views.essayType.create,
+        name='essayType.create'),
+    url('^essayType/edit/(?P<id>\d+)/$',
+        views.essayType.edit,
+        name='essayType.edit'),
+    url('^essayType/delete/?$',
+        views.essayType.delete,
+        name='essayType.delete'),
+    url('^essayType/update/(?P<id>\d+)/$',
+        views.essayType.update,
+        name='essayType.update'),
+    #
+    #Test Type
+    #
+    url('^testType/?$',
+        views.testType.index,
+        name='testType.index'),
+    url('^testType/create?$',
+        views.testType.create,
+        name='testType.create'),
+    url('^testType/edit?$',
+        views.testType.edit,
+        name='testType.edit'),
     #
     # Role
     #
@@ -49,7 +74,22 @@ urlpatterns = [
     url('^request/store$',
         views.request.store,
         name='request.store'),
-    url('^request$',
+    url('^request/?$',
         views.request.index,
         name='request.index'),
+    #
+    #Servicio de Agregar una muestra a inventario
+    #Por Sergio Cama
+    #
+    #Se observa los almacenes
+    url('^requestStorage/?$',
+        views.requestStorage.index,
+        name='requestStorage.index'),
+    url('^requestStorage/aprobar/?$',
+        views.requestStorage.aprobar,
+        name='requestStorage.aprobar'),
+    url('^requestStorage/rechazar/?$',
+        views.requestStorage.rechazar,
+        name='requestStorage.rechazar'),
+
 ]

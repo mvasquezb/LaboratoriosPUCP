@@ -10,7 +10,7 @@ from internal.models import Request
 
 
 def index(request):
-    return render(request, 'internal/request/index.html', {'requests': Request.objects.all()})
+        return render(request, 'internal/request/index.html', {'requests': Request.objects.all()})
 
 
 def create(request):

@@ -61,17 +61,21 @@ class LaboratoryType(models.Model):
         return self.name
 
 ### TipoEnsayo
-class AssayType(models.Model):
+class EssayType(models.Model):
     name=models.CharField(max_length=100)
-    description=models.CharField(max_length=100)
+    description=models.CharField(max_length=100, default =None)
     active=models.BooleanField()
     lab_type=models.ForeignKey(LaboratoryType, on_delete=models.CASCADE)
+    def __str__(self):
+        return self.name
 
 class TestType(models.Model):
     name = models.CharField(max_length=100)
     description = models.CharField(max_length=100)
     active = models.BooleanField()
-    assay_type = models.ForeignKey(AssayType, on_delete=models.CASCADE)
+    assay_type = models.ForeignKey(EssayType,on_delete=models.CASCADE)
+    def __str__(self):
+        return self.name
 
 
 class Request(models.Model):
@@ -101,7 +105,7 @@ class EssayTemplate(models.Model):
     description = models.CharField(max_length=100)
 
     def __str__(self):
-        return str(self.cod)
+        return str(self.code)
 
     def get_test(self, index):
         test_list = TestTemplate.objects.filter(essay_template=self)
@@ -202,3 +206,16 @@ class SampleType(models.Model):
     description=models.CharField(max_length=100)
     active=models.BooleanField()
     lab_type = models.ForeignKey(LaboratoryType, on_delete=models.CASCADE)
+
+### Solicitudes de almacenamiento
+class RequestStorage(models.Model):
+    idRequestStorage = models.IntegerField()
+    numEnsayo = models.IntegerField()
+    muestra = models.CharField(max_length=100)
+    tipoMuestra = models.CharField(max_length=100)
+    cliente = models.CharField(max_length=100)
+    pendiente = models.BooleanField()
+    aprobado = models.BooleanField()
+    def __str__(self):
+        return str(self.idRequestStorage)
+

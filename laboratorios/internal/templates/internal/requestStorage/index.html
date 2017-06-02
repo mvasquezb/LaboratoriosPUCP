@@ -1,0 +1,358 @@
+{% extends 'internal/base_internal.html' %}
+
+{% block title %}{{ super() }} | Inicio{% endblock title %}
+
+{% block custom_css %}{% endblock custom_css %}
+
+{% block page_content %}
+<style>
+  h1{
+  font-size: 40px;
+  }
+</style>
+<h2><strong> Lista de Solicitudes </strong></h2>
+<tr>
+  <th><br></th>
+</tr>
+
+<div class="table-responsive">
+ <!--   <div style="float:left;" class="btn-group" class="col-sm-3">
+      <button data-toggle="dropdown" class="btn btn-default dropdown-toggle">Tipo Ensayo <span class="caret"></span></button>
+      <ul id="listTypes" onclick="dropdown_filter_function()" class="dropdown-menu">
+          <li><a>Tipo Ensayo 1</a></li>
+          <li><a>Tipo Ensayo 2</a></li>
+          <li><a>Tipo Ensayo 3</a></li>
+          <li class="divider"></li>
+          <li><a href="#">Separated link</a></li>
+      </ul>
+    </div> -->
+
+  <!--FILTRO -->
+
+       <fieldset>
+     <legend><h3><strong>Filtrar por:</strong></h3></legend>
+  <div>
+      <form class="horizontal-form">
+        <div class="form-inline">
+          <div class="form-group">
+            <div class="form-group">
+              <label style="padding-right: 100px">Criterio de filtro</label><br>
+                <select id="typeList">
+                  <option style="display:none;" selected> -- Selecciona una opcion -- </option>
+                  <option onclick="no_filter_function()">-- Quitar filtro --</option>
+                  <option onclick="do_nothing()">N° Ensayo</option>
+                  <option onclick="do_nothing()">Muestra</option>
+                  <option onclick="do_nothing()">Tipo Muestra</option>
+                  <option onclick="do_nothing()">Cliente</option>
+                </select>
+              <br>
+              <br>
+            </div>
+            <div class="form-group" style="padding-left: 100px">
+              <label>Filtro</label><br>
+              <!--<input type="text" class="input-sm form-control" placeholder="Buscar" id="text_search" onkeyup="text_search_function()" >-->
+              <input type="text" class="input-sm form-control" placeholder="Buscar" id="text_search" onkeyup="do_nothing()">
+              <button type="button" class="btn btn-sm btn-success" id="uselessButton" onclick="text_search_function()" disabled> Buscar</button>
+
+              <br>
+              <input type="checkbox" name="enable" id="myCheckbox" checked class="c-checks" >
+              <font size="1">Autocompletado</font>
+
+            </div>
+          </div>
+        </div>
+      </form>
+  </div>
+</fieldset>
+
+  <!--Fin filtro-->
+
+  <table><tr><td><br><br></td></tr></table>
+  <fieldset>
+    <legend></legend>
+
+
+    <div>
+
+      <table class="table table-striped" id="mytable">
+          <thead>
+          <tr>
+              <th>N° Ensayo </th>
+              <th>Muestra</th>
+              <th>Tipo Muestra</th>
+              <th>Cliente</th>
+              <th>Aprobar</th>
+              <th>Rechazar</th>
+              <th>Pendiente</th>
+          </tr>
+          </thead>
+          <tbody>
+          {% for type in requestStorage_list %}
+                {% if type.pendiente %}
+                  <tr>
+                    <td>{{ type.numEnsayo }}</td>
+                    <td>{{ type.muestra }}</td>
+                    <td>{{ type.tipoMuestra }}</td>
+                    <td>{{ type.cliente }}</td>
+                    <form>
+                      <td><input type="radio" name="{{type.pk}}" id="myRadioAprobar" unchecked class="i-checks" ></td>
+                      <td><input type="radio" name="{{type.pk}}" id="myRadioRechazar" unchecked class="j-checks"></td>
+                      <td><input type="radio" name="{{type.pk}}" id="myRadioLater" checked class="k-checks"></td>
+                    </form>
+                  </tr>
+                {% else %}
+                  <tr style="display:none;"></tr>
+                {% endif %}
+          {% endfor %}
+          </tbody>
+      </table>
+    </div>
+  </fieldset>
+
+</div>
+<div style="text-align: center">
+        <button type="submit" id="aprobarAlmacen" class="btn btn-w-m btn-success" style="margin-right: 1.5cm;">Registrar</button>
+        <form action="../internal" style="display: inline;">
+          <input type="submit" value="Cancelar" class="btn btn-w-m btn-danger" style="margin-left: 1.5cm;">
+        </form>
+</div>
+
+
+{% endblock page_content %}
+
+{% block javascript %}
+
+
+{% endblock %}
+
+{% block custom_js %}
+
+<!-- FUNCIONES -->
+<script>
+
+      var fill_Toastr = function(pMsg, pTypeMsg,pTitle){
+        toastr.options = {
+          closeButton: true,
+          progressBar: true,
+          showMethod: 'slideDown',
+          positionClass: "toast-bottom-right",
+          timeOut: 4000
+          };
+
+          switch(pTypeMsg){
+            case "success":
+            toastr.success(pMsg, '',pTitle);
+            break;
+
+            case "error":
+            toastr.error(pMsg, '',pTitle);
+            break;
+          }
+    }
+      //Me dice el criterio del filtro
+      function find_number_filter() {
+         var input, filter;
+          input = document.getElementById("typeList");
+          filter = input[input.selectedIndex].value;
+
+        switch(filter){
+          case "N° Ensayo":
+            return 0;
+          case "Muestra":
+            return 1;
+          case "Tipo Muestra":
+            return 2;
+          case"Cliente":
+            return 3;
+          default:
+            return -1;
+        }
+      }
+
+      //Filtra la tabla de acuerdo a un criterio
+      function text_search_function() {
+
+        var boxes = document.getElementsByClassName('i-checks');
+        for (var i = 0; i < boxes.length;i++)
+        {
+            box = boxes[i];
+            box.checked = false;
+        }
+
+        var input, filter, table, tr, td, i, numberFilter;
+        input = document.getElementById("text_search");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("mytable");
+        tr = table.getElementsByTagName("tr");
+
+        numberFilter = find_number_filter();
+        if(numberFilter == -1){
+
+          return;
+        }
+
+        for (i = 0; i < tr.length; i++) {
+          td = tr[i].getElementsByTagName("td")[numberFilter];
+          if (td) {
+            if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                tr[i].style.display = "";
+            } else {
+                tr[i].style.display = "none";
+            }
+          }
+        }
+      }
+
+      //Quita los filtros de la tabla
+      function no_filter_function() {
+        var boxes = document.getElementsByClassName('i-checks');
+        for (var i = 0; i < boxes.length;i++)
+        {
+           box = boxes[i];
+           box.checked = false;
+        }
+        var input, filter, table, tr, td, i;
+        input = document.getElementById("typeList");
+        filter = input[input.selectedIndex].value;
+        table = document.getElementById("mytable");
+        tr = table.getElementsByTagName("tr");
+        if (input.selectedIndex > -1)
+        {
+          for (i = 0; i < tr.length; i++) tr[i].style.display = "";
+        }
+      }
+
+
+      function solicitudes_aprobadas(){
+        //$("input[type='radio'][name='myRadioAprobar']:checked").val();
+        var array = [];
+        var i;
+        //esto es para obtener los ids de los checkboxes seleccionados
+        $("input[type=radio][id='myRadioAprobar']:checked").each(function(){
+          array.push($(this).attr("name")) ;});
+        var boxes = document.getElementsByClassName('i-checks');
+        var leng = boxes.length;
+        var initialLength = leng;
+        var flag = 0;
+
+        //alert(array)
+
+        for (var i = 0; i < leng;) {
+          box = boxes[i];
+          i++;
+          if (box.checked) {
+              rowTag = box.parentNode.parentNode;
+              tableTag = box.parentNode.parentNode.parentNode;
+              tableTag.removeChild(rowTag);
+              i=0;
+              leng=leng-1;
+              flag = 1;
+              fill_Toastr('Se aprobo con exito la solicitud de almacenamiento'+' ', "success",'');
+          }
+          if (i==initialLength){
+              //fill_Toastr('No seleccionó ninguna solicitud de almacenamiento', "error",'Error');
+          }
+        }
+
+        if(flag == 1){
+          //alert(array)
+          $.get("{{ url('internal:requestStorage.aprobar')}}",
+            {'array': array});
+        }
+        return flag;
+      }
+
+
+      function solicitudes_rechazadas(){
+        //$("input[type='radio'][name='myRadioAprobar']:checked").val();
+        var array = [];
+        var i;
+        //esto es para obtener los ids de los checkboxes seleccionados
+        $("input[type=radio][id='myRadioRechazar']:checked").each(function(){
+          array.push($(this).attr("name")) ;});
+        var boxes = document.getElementsByClassName('j-checks');
+        var leng = boxes.length;
+        var initialLength = leng;
+        var flag = 0;
+
+        //alert(array)
+
+        for (var i = 0; i < leng;) {
+          box = boxes[i];
+          i++;
+          if (box.checked) {
+              rowTag = box.parentNode.parentNode;
+              tableTag = box.parentNode.parentNode.parentNode;
+              tableTag.removeChild(rowTag);
+              i=0;
+              leng=leng-1;
+              flag = 1;
+              fill_Toastr('Se rechazo con exito la solicitud de almacenamiento'+' ', "success",'');
+          }
+          if (i==initialLength){
+              //fill_Toastr('No seleccionó ninguna solicitud de almacenamiento', "error",'Error');
+          }
+        }
+
+        if(flag == 1){
+          //alert(array)
+          $.get("{{ url('internal:requestStorage.rechazar')}}",
+            {'array': array});
+        }
+        return flag;
+      }
+
+
+      //Procesar solicitudes seleccionadas
+      function approve_request(){
+        var flag = 0;
+        flag += solicitudes_aprobadas();
+        flag += solicitudes_rechazadas();
+        //alert(flag);
+        if (flag == 0){
+            fill_Toastr('No seleccionó ninguna solicitud de almacenamiento', "error",'Error');
+        }
+      }
+
+      function do_nothing(){
+        if(document.getElementById("myCheckbox").checked){
+          text_search_function();
+        }
+        else
+          return;
+      }
+
+      //El autocompletar
+      function check_checkbox(){
+        if(document.getElementById("myCheckbox").checked){
+          document.getElementById("uselessButton").disabled = true;
+        }
+        else{
+          document.getElementById("uselessButton").disabled = false;
+        }
+      }
+
+      document.getElementById("aprobarAlmacen").addEventListener("click", approve_request);
+      document.getElementById("myCheckbox").addEventListener("click", check_checkbox);
+</script>
+
+
+        <!-- Mainly scripts -->
+ <!--   <script src="js/jquery-2.1.1.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/plugins/metisMenu/jquery.metisMenu.js"></script>
+    <script src="js/plugins/slimscroll/jquery.slimscroll.min.js"></script> -->
+
+    <!-- Peity-->
+ <!--    <script src="js/plugins/peity/jquery.peity.min.js"></script> ->
+
+    <!-- Custom and plugin javascript -->
+ <!--    <script src="js/inspinia.js"></script>
+    <script src="js/plugins/pace/pace.min.js"></script> -->
+
+    <!-- iCheck -->
+ <!--    <script src="js/plugins/iCheck/icheck.min.js"></script> -->
+
+    <!-- Peity -->
+ <!--    <script src="js/demo/peity-demo.js"></script>  -->
+{% endblock custom_js %}
