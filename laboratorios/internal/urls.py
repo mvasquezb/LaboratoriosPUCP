@@ -29,7 +29,25 @@ urlpatterns = [
         views.laboratory.assignMonitor,
         name='laboratory.assignMonitor'),
     #
-    #Assay Type
+    # LaboratoryType
+    #
+    url('^laboratoryType/?$',
+         views.laboratoryType.index,
+         name='laboratoryType.index'),
+    url('^laboratoryType/create/?$',
+         views.laboratoryType.create,
+         name='laboratoryType.create'),
+    url('^laboratoryType/edit/(?P<id>\d+)/$',
+         views.laboratoryType.edit,
+         name='laboratoryType.edit'),
+    url('^laboratoryType/edit2/?$',
+        views.laboratoryType.edit2,
+        name='laboratoryType.edit2'),
+    url('^laboratoryType/delete/?$',
+         views.laboratoryType.delete,
+         name='laboratoryType.delete'),
+    #
+    # Essay Type
     #
     url('^essayType/?$',
         views.essayType.index,
@@ -197,4 +215,19 @@ urlpatterns = [
     url('^service/(?P<service_id>\d+)/essay/(?P<essay_id>\d+)/test/(?P<test_id>\d+)/update/?$',
         views.testfill.update,
         name='testfill.update'),
+    #
+    # sampleType
+    #
+    url('^sampleType/?$',
+         views.sampleType.index,
+         name='sampleType.index'),
+    url('^sampleType/create/?$',
+         views.sampleType.create,
+         name='sampleType.create'),
+    url('^sampleType/edit/(?P<id>\d+)/$',
+         views.sampleType.edit,
+         name='sampleType.edit'),
+    url('^sampleType/delete/?$',
+         views.sampleType.delete,
+         name='sampleType.delete'),
 ]

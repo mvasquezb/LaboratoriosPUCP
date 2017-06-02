@@ -1,0 +1,186 @@
+{% extends 'internal/base_internal.html' %}
+
+{% block title %}{{ super() }} | Inicio{% endblock title %}
+
+{% block custom_css %}{% endblock custom_css %}
+
+{% block page_content %}
+
+
+<div class="row wrapper border-bottom white-bg page-heading">
+  <h2><strong>Tipos de Laboratorio</strong></h2>
+  <tr>
+    <th><br/></th>
+  </tr>
+  <div class="ibox-content">
+    <fieldset>
+     <legend><h3><strong>Filtros</strong></h3></legend>
+        <!--<div style="float:left;"> -->
+      <div>
+        <form class="horizontal-form">
+          <div class="form-inline">
+            <div class="form-group">
+    <!--            <label class="control-label">Tipo de Ensayo: </label>
+                <select class="form-control" id="typeListEssay">
+                  <option style="display:none;" selected> -- Selecciona una opcion -- </option>
+                  <option onclick="list_filter_function()">-- Borrar filtro --</option>
+                  {% for essaytype in essayType_list %}
+                    <option>{{ essaytype.name }}</option>
+                  {% endfor %}
+                </select> -->
+              </div>
+            <div class="form-group">
+<!--             <label class="control-label">Tipo de Muestra: </label>
+            <select class="form-control" id="typeListSample">
+             <option style="display:none;" selected> -- Selecciona una opcion -- </option>
+              <option onclick="list_filter_function()">-- Borrar filtro --</option>
+              {% for sampletype in sampleType_list %}
+                <option>{{ sampletype.name }}</option>
+              {% endfor %}
+            </select> -->
+          </div>
+            <div class="form-group">
+              <label class="control-label">Nombre: </label>
+              <input type="text" placeholder="Search" id="text_search" onkeyup="text_search_function()" class="input-sm form-control">
+              <button type="button" class="btn btn-sm btn-success"> Buscar</button>
+            </div>
+          </div>
+        </form>
+      </div>
+   </fieldset>
+  </div>
+  <div class="ibox-content">
+    <div class="col-lg-12">
+      <div class="text-right">
+        <a class="btn btn-sm btn-success" href="{{ url('internal:laboratoryType.create') }}">Crear Tipo Laboratorio</a>
+      </div>
+    </div>
+  </div>
+  <div class="wrapper wrapper-content animated fadeIn">
+    <div class="row">
+      <div class="table-responsive">
+        <table id="tableLabType" class="table table-striped">
+          <thead>
+            <tr>
+              <th>Id</th>
+              <th>Nombre </th>
+              <th>Descripcion </th>
+              <th>Activo</th>
+              <th>Editar</th>
+              <th>Eliminar</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for labType in labType_list %}
+              <tr>
+                <td>{{ labType.pk }}</td>
+                <td>{{ labType.name }}</td>
+                <td>{{ labType.description }}</td>
+                <td>
+                  {% if labType.active %}
+                    Activo
+                  {% else %}
+                    Inactivo
+                  {% endif %}
+                </td>
+                <td><a href="{{ url('internal:laboratoryType.edit',labType.pk) }}"><i class="fa fa-pencil-square-o"></i></a></td>
+                <td><input type="checkbox" name="{{labType.pk}}" class="i-checks"></td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="form-group">
+      <button type="submit"  id="deleteButton" class="btn btn-w-m btn-danger">Eliminar</button>
+    </div>
+  </div>
+
+
+</div>
+
+
+{% endblock page_content %}
+
+{% block custom_js %}
+<script>
+var fill_Toastr = function(pMsg, pTypeMsg,pTitle){
+        toastr.options = {
+          closeButton: true,
+          progressBar: true,
+          showMethod: 'slideDown',
+          positionClass: "toast-bottom-right",
+          timeOut: 4000
+          };
+
+          switch(pTypeMsg){
+            case "success":
+            toastr.success(pMsg, '',pTitle);
+            break;
+
+            case "error":
+            toastr.error(pMsg, '',pTitle);
+            break;
+          }
+    }
+
+    function delete_rows() {
+      var array = [];
+      var i;
+      $("input[type=checkbox]:checked").each(function(){
+      array.push($(this).attr("name")) ;});
+      var boxes = document.getElementsByClassName('i-checks');
+      var leng = boxes.length;
+      var initialLength = leng;
+      var flag = 0;
+      for (var i = 0; i < leng;) {
+      box = boxes[i];
+      i++;
+        if (box.checked) {
+            rowTag = box.parentNode.parentNode;
+            tableTag = box.parentNode.parentNode.parentNode;
+            tableTag.removeChild(rowTag);
+            i=0;
+            leng=leng-1;
+            flag = 1;
+            fill_Toastr('Se elimino con exito el tipo de laboratorio'+' ', "success",'');
+        }
+        if (i==initialLength){
+            fill_Toastr('No seleccionó ningun tipo de laboratorio a eliminar', "error",'Error');
+        }
+      }
+
+      if(flag == 1){
+        $.get("{{ url('internal:laboratoryType.delete')}}",
+          {'array': array});
+      }
+    }
+  document.getElementById("deleteButton").addEventListener("click", delete_rows);
+
+</script>
+<script>
+      function text_search_function() {
+        var boxes = document.getElementsByClassName('i-checks');
+        for (var i = 0; i < boxes.length;i++)
+        {
+            box = boxes[i];
+            box.checked = false;
+        }
+        var input, filter, table, tr, td, i;
+        input = document.getElementById("text_search");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("tableLabType");
+        tr = table.getElementsByTagName("tr");
+        for (i = 0; i < tr.length; i++) {
+          td = tr[i].getElementsByTagName("td")[1];
+          if (td) {
+            if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                tr[i].style.display = "";
+            } else {
+                tr[i].style.display = "none";
+            }
+          }
+        }
+      }
+</script>
+{% endblock custom_js %}

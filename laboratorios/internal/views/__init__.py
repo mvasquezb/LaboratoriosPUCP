@@ -13,3 +13,7 @@ from .essayTemplate import *
 from .service import *
 from .essayfill import *
 from .testfill import *
+from .essayType import *
+from .testType import *
+from .laboratoryType import *
+from .sampleType import *

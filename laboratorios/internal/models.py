@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User as AuthUser
 
 
+
 class Test(models.Model):
     name = models.CharField(max_length=100)
     request = models.ForeignKey("ServiceRequest", on_delete=models.CASCADE)
@@ -12,6 +13,7 @@ class Test(models.Model):
 
 class Access(models.Model):
     description = models.CharField(max_length=100)
+    
     def __str__(self):
         return self.description
 
@@ -24,14 +26,10 @@ class Role(models.Model):
         return self.description
 
 
-class RoleByAccess(models.Model):
-    role = models.ForeignKey(Role)
-    access = models.ForeignKey(Access)
-
-
-class LaboratoryType(models.Model):
-    name = models.CharField(max_length=100)
-    active = models.BooleanField()
+class LaboratoryType (models.Model):
+    name = models.CharField (max_length=100)
+    description = models.CharField (max_length=200, null=True, blank=True)
+    active = models.BooleanField ()
 
     def __str__(self):
         return self.name
@@ -66,6 +64,7 @@ class Client(models.Model):
     username = models.OneToOneField(User, on_delete=models.CASCADE)
     phoneNumber = models.CharField(max_length=10)
 
+
 ### TipoEnsayo
 class EssayType(models.Model):
     name=models.CharField(max_length=100)
@@ -81,8 +80,6 @@ class TestType(models.Model):
     description = models.CharField(max_length=100)
     active = models.BooleanField()
     essay_type = models.ForeignKey(EssayType,on_delete=models.CASCADE)
-    def __str__(self):
-        return self.name
 
     def __str__(self):
         return self.name
@@ -98,20 +95,17 @@ class ServiceRequest(models.Model):
 
 
 # Modelo para muestras
-class SampleTemplate(models.Model):
-    description = models.CharField(max_length=100)
+class SampleTemplate (models.Model):
+    description = models.CharField (max_length=100)
 
     def __str__(self):
-        return str(self.description)
+        return str (self.description)
 
 
 class SampleFill(models.Model):
     request_fill = models.ForeignKey(ServiceRequest, on_delete=models.CASCADE)
     sample_template = models.ForeignKey(SampleTemplate)
     description = models.CharField(max_length=30)
-
-
-# Modelo para pruebas
 
 
 class EssayTemplate(models.Model):
@@ -124,8 +118,24 @@ class EssayTemplate(models.Model):
     def __str__(self):
         return str(self.code)
 
+
+class SampleFill (models.Model):
+    request_fill = models.ForeignKey (Request, on_delete=models.CASCADE)
+    sample_template = models.ForeignKey (SampleTemplate)
+    description = models.CharField (max_length=30)
+
+
+# Modelo para pruebas
+class EssayTemplate (models.Model):
+    code = models.IntegerField (default=0)
+    test_number = models.IntegerField (default=0)
+    description = models.CharField (max_length=100)
+
+    def __str__(self):
+        return str (self.cod)
+
     def get_test(self, index):
-        test_list = TestTemplate.objects.filter(essay_template=self)
+        test_list = TestTemplate.objects.filter (essay_template=self)
         return test_list[index - 1]
 
 
@@ -139,7 +149,7 @@ class EssayFillStatus(models.Model):
 
 class EssayFill(models.Model):
     essay_template = models.ForeignKey(EssayTemplate)
-    description = models.CharField(max_length=100, default='essay testing')
+    description = models.CharField(max_length=100)
     status = models.ForeignKey(EssayFillStatus, on_delete=models.CASCADE)
 
     def __str__(self):
@@ -168,7 +178,7 @@ class TestTemplate(models.Model):
         return self.name
 
     def get_parameter(self, index):
-        parameter_list = ParameterTemplate.objects.filter(test_template=self)
+        parameter_list = ParameterTemplate.objects.filter (test_template=self)
         return parameter_list[index - 1]
 
     def getParametersStr(self):
@@ -187,12 +197,12 @@ class TestTemplate(models.Model):
 
 
 
-class TestFill(models.Model):
+class TestFill (models.Model):
     # sampleFill = models.ForeignKey(SampleFill, on_delete=models.CASCADE)
     # requestFill = models.ForeignKey(Request,on_delete=models.CASCADE)
     test_template = models.ForeignKey(TestTemplate)
     essay_fill = models.ForeignKey(EssayFill)
-    description = models.CharField(max_length=100, default='descripcion')
+    description = models.CharField(max_length=100)
     chosen = models.IntegerField(default=1)
 
     def __str__(self):
@@ -205,12 +215,11 @@ class TestFill(models.Model):
         self.test_template = test_insert
         self.description = 'Inserte descripcion aqui\n'
         par_n = self.test_template.parameters_number
-        self.save()
-        for i in range(1, par_n + 1):
-            obj_par = ParameterFill()
-            obj_par.create(self, self.test_template.get_parameter(i))
-            obj_par.save()
-
+        self.save ()
+        for i in range (1, par_n + 1):
+            obj_par = ParameterFill ()
+            obj_par.create (self, self.test_template.get_parameter (i))
+            obj_par.save ()
 
 
 class ParameterTemplate(models.Model):
@@ -222,13 +231,13 @@ class ParameterTemplate(models.Model):
         return self.name
 
 
-class ParameterFill(models.Model):
-    parameter_template = models.ForeignKey(ParameterTemplate)
-    test_fill = models.ForeignKey(TestFill)
-    value = models.CharField(max_length=100, default='Empty field')
+class ParameterFill (models.Model):
+    parameter_template = models.ForeignKey (ParameterTemplate)
+    test_fill = models.ForeignKey (TestFill)
+    value = models.CharField (max_length=100, default='Empty field')
 
     def __str__(self):
-        return self.value + ' | ' + str(self.parameter_template)
+        return self.value + ' | ' + str (self.parameter_template)
 
     def create(self, test_insert=None, param_insert=None):
         if param_insert is None or test_insert is None:
@@ -237,12 +246,11 @@ class ParameterFill(models.Model):
         self.parameter_template = param_insert
 
 
-## Tipo Muestra
 class SampleType(models.Model):
     name=models.CharField(max_length=100)
     description=models.CharField(max_length=100)
     active=models.BooleanField()
-    lab_type = models.ForeignKey(LaboratoryType, on_delete=models.CASCADE)
+    lab_type = models.ForeignKey (LaboratoryType, null=True,on_delete=models.CASCADE)
 
 
 class Service(models.Model):

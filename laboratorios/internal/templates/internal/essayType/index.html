@@ -36,8 +36,9 @@
                 <select id="typeList">
                   <option style="display:none;" selected> -- Selecciona una opcion -- </option>
                   <option onclick="list_filter_function()">-- Todos --</option>
-                  <option onclick="list_filter_function()">Corrosion</option>
-                  <option onclick="list_filter_function()">Tipo lab 2</option>
+                  {% for labObject in lab_types %}
+                      <option onclick="list_filter_function()">{{ labObject.name }}</option>
+                  {% endfor %}
                 </select>
               <br>
             </div>

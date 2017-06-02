@@ -38,9 +38,9 @@ def create(request,
                     active=True,
                     essay_type=essay_type
                 )
-                return redirect('internal:testType.create')
-            else:
                 return redirect('internal:testType.index')
+            else:
+                return redirect('internal:testType.create')
     else:
         typeEssay = EssayType.objects.all()
         context = {'essay_types': typeEssay}

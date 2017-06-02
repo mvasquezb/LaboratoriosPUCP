@@ -5,6 +5,7 @@ from django.forms import ModelMultipleChoiceField
 from django.forms import inlineformset_factory
 from django import forms
 
+from internal.models import *
 from internal import models
 
 

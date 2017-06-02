@@ -6,8 +6,9 @@ from ..models import *
 def index(request,
           template='internal/essayType/index.html',
           extra_context=None):
+    typelabs = LaboratoryType.objects.all()
     types = EssayType.objects.all().order_by('lab_type','name')
-    context = {'essay_list': types}
+    context = {'essay_list': types,'lab_types': typelabs}
     return render(request, template, context)
 
 def validation_name(name):
@@ -21,7 +22,6 @@ def create(request,
           template='internal/essayType/create.html',
           extra_context=None):
     if  request.method == 'POST':
-        index = 'internal/essayType/index.html'
         types = EssayType.objects.all()
         context = {'essay_list': types}
         if "b_cancel" in request.POST:
@@ -39,9 +39,9 @@ def create(request,
                         active=True,
                         lab_type=lab_type
                     )
-                    return redirect('internal:essayType.create')
+                    return redirect('internal:essayType.index')
             else:
-                return redirect('internal:essayType.index')
+                return redirect('internal:essayType.create')
     else:
         typelabs = LaboratoryType.objects.all()
         context = {'lab_types': typelabs}
@@ -74,7 +74,7 @@ def delete(request,
           template='internal/essayType/index.html',
           extra_context=None):
     if request.method == 'GET':
-        array_pk = dict(request.GET)
+        array_pk = request.GET.copy()
         for i in array_pk['array[]']:
             old = EssayType.objects.get(pk=i)
             old.active = False
