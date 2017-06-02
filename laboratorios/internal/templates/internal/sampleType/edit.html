@@ -27,10 +27,11 @@
                 <label class="control-label inline">Tipo de Laboratorio</label>
                 <div class="inline">
                    <select  name="labType_combobox" class="form-control">
-                     <option style="display:none;" selected> Selecciona una opcion </option>
+                     <option  selected> Selecciona una opcion </option>
                      {% for lab_type in labType_list %}
                         <option>{{ lab_type.name }}</option>
                      {% endfor %}
+
                    </select>
                 </div>
               </div>

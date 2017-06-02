@@ -18,7 +18,7 @@
       <div class="form-inline">
         <div class="form-group">
           <label class="control-label">Tipo de Laboratorios</label>
-          <select class="form-control" id="typeListLab">
+          <select  id="typeListLab" class="form-control">
             <option style="display:none;" selected>Selecciona una opción</option>
             <option onclick="list_filter_function()">-- Todos --</option>
             {% for labtype in labType_list %}
@@ -62,19 +62,19 @@
             <tbody>
               {% for sampleType in sampleType_list %}
                 <tr>
-                  <th>{{ sampleType.pk }}</th>
-                  <th>{{ sampleType.name }}</th>
-                  <th>{{ sampleType.description }}</th>
-                  <th>{{ sampleType.lab_type }}</th>
-                  <th>
+                  <td>{{ sampleType.pk }}</td>
+                  <td>{{ sampleType.name }}</td>
+                  <td>{{ sampleType.description }}</td>
+                  <td>{{ sampleType.lab_type }}</td>
+                  <td>
                       {% if sampleType.active %}
                         Activo
                       {% else %}
                         Inactivo
                       {% endif %}
-                  </th>
-                  <th><a href="#"><i onclick="edit_row()" class="fa fa-pencil-square-o"></i></a></th>
-                  <th><input type="checkbox" name="{{sampleType.pk}}" class="i-checks"></th>
+                  </td>
+                  <td><a href="#"><i onclick="edit_row()" class="fa fa-pencil-square-o"></i></a></td>
+                  <td><input type="checkbox" name="{{sampleType.pk}}" class="i-checks"></td>
                 </tr>
               {% endfor %}
             </tbody>
@@ -162,10 +162,10 @@ var fill_Toastr = function(pMsg, pTypeMsg,pTitle){
         var input, filter, table, tr, td, i;
         input = document.getElementById("text_search");
         filter = input.value.toUpperCase();
-        table = document.getElementById("mytable");
+        table = document.getElementById("tableSample");
         tr = table.getElementsByTagName("tr");
         for (i = 0; i < tr.length; i++) {
-          td = tr[i].getElementsByTagName("td")[0];
+          td = tr[i].getElementsByTagName("td")[1];
           if (td) {
             if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
                 tr[i].style.display = "";
@@ -218,7 +218,7 @@ var fill_Toastr = function(pMsg, pTypeMsg,pTitle){
       {
         filter = filter.toUpperCase();
         for (i = 0; i < tr.length; i++) {
-          td = tr[i].getElementsByTagName("td")[2];
+          td = tr[i].getElementsByTagName("td")[3];
           if (td) {
             if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
                 tr[i].style.display = "";
