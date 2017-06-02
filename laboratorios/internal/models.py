@@ -106,10 +106,14 @@ class SampleFill(models.Model):
 
 
 # Modelo para pruebas
+
+
 class EssayTemplate(models.Model):
     code = models.IntegerField(default=0)
     test_number = models.IntegerField(default=0)
     description = models.CharField(max_length=100)
+    #tests = models.ManyToManyField(TestTemplate)
+
 
     def __str__(self):
         return str(self.code)
@@ -139,17 +143,33 @@ class EssayFill(models.Model):
 
 
 class TestTemplate(models.Model):
-    description = models.CharField(max_length=100)
+    name = models.CharField(verbose_name='Nombre de la prueba', max_length=100)
     title = models.CharField(max_length=100)
     parameters_number = models.IntegerField(default=0)
-    essay_template = models.ForeignKey(EssayTemplate)
+    #essay_template = models.ForeignKey(EssayTemplate, null=True)
+    essays = models.ManyToManyField(EssayTemplate, related_name='tests', blank=True)
 
     def __str__(self):
-        return self.title
+        return self.name
 
     def get_parameter(self, index):
         parameter_list = ParameterTemplate.objects.filter(test_template=self)
         return parameter_list[index - 1]
+
+    def getParametersStr(self):
+        parameter_list = ParameterTemplate.objects.filter(test_template=self)
+        p_str = ""
+        for i in range(0,len(parameter_list)):
+            if (i>=1 and i<=2):
+                p_str=p_str + ", "
+            if (i<=2):
+                p_str=p_str + parameter_list[i].name
+            if (i==3):
+                p_str=p_str+", ..."
+
+        return p_str
+
+
 
 
 class TestFill(models.Model):
@@ -179,10 +199,11 @@ class TestFill(models.Model):
             obj_par.save()
 
 
+
 class ParameterTemplate(models.Model):
     test_template = models.ForeignKey(TestTemplate)
-    name = models.CharField(max_length=100)
-    unit = models.CharField(max_length=100)
+    name = models.CharField(verbose_name='Nombre', max_length=100)
+    unit = models.CharField(verbose_name='Unidad',max_length=100)
 
     def __str__(self):
         return self.name

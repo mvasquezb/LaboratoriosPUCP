@@ -5,6 +5,8 @@ from .user import *
 from .servicerequest import *
 from .test import *
 from .access import *
-from .client import *
 from .essayType import *
 from .testType import *
+from .forms import *
+from .client import *
+from .essayTemplate import *

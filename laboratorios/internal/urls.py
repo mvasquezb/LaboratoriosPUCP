@@ -103,20 +103,20 @@ urlpatterns = [
     #
     # Test
     #
-    url('^test/create$',
-        views.test.create,
+    url('^test/create/$',
+        views.test.TestParameterCreate.as_view(),
         name='test.create'),
     url('^test/store$',
         views.test.store,
         name='test.store'),
-    url('^test$',
+    url('^test/$',
         views.test.index,
         name='test.index'),
     url('^test/edit/(?P<pk>\d+)$',
-        views.test.edit,
+        views.test.TestParameterUpdate.as_view(),
         name='test.edit'),
     url('^test/delete/(?P<pk>\d+)$',
-        views.test.edit,
+        views.test.TestDelete.as_view(),
         name='test.delete'),
     #
     #Access
@@ -150,5 +150,22 @@ urlpatterns = [
     url('^client/delete/(?P<pk>\d+)$',
         views.client.delete,
         name='client.delete'),
+
+
+    #
+    # EssayTemplate
+    #
+    url('^essayTemplate/$',
+        views.essayTemplate.index,
+        name='essayTemplate.index'),
+    url('^essayTemplate/create$',
+        views.essayTemplate.create,
+        name='essayTemplate.create'),
+    url('^essayTemplate/edit/(?P<pk>\d+)$',
+        views.essayTemplate.edit,
+        name='essayTemplate.edit'),
+    url('^essayTemplate/delete/(?P<pk>\d+)$',
+        views.essayTemplate.delete,
+        name='essayTemplate.delete'),
 
 ]

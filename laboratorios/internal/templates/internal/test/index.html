@@ -14,19 +14,29 @@
     <div class="col-lg-12">
         <div class="ibox float-e-margins">
             <div class="ibox-content">
+            <div class="row">
+                    <div class="col-lg-12">
+                        <div class="text-right">
+                            <a class="btn btn-primary" href="{{ url('internal:test.create') }}">Crear Prueba</a>
+                        </div>
+                    </div>
+                </div>
                 <table class="footable table table-stripped toggle-arrow-tiny footable-loaded tablet breakpoint">
                     <thead>
                         <tr>
                             <th class="footable-visible footable-sortable">Id</th>
                             <th class="footable-visible footable-sortable">Prueba</th>
+                            <th class="footable-visible footable-sortable">Parámetros</th>
+                            <th class="footable-visible footable-sortable">Eliminar Prueba</th>
                         </tr>
                     </thead>
                     <tbody>
                     {% for test in object_list %}
                         <tr>
                             <td>{{ test.id }}</td>
-                            <td><a href="{{ url('internal:test.edit', pk=test.id) }}"><div>{{ test.description }}</div></a></td>
-                            <td href="{{ url('internal:test.delete', pk=test.id) }}">Delete</td>
+                            <td><a href="{{ url('internal:test.edit', pk=test.id) }}"><div>{{ test.name }}</div></a></td>
+                            <td>{{ test.getParametersStr() }}</td>
+                            <td> <a href="{{ url('internal:test.delete', pk=test.id) }}"/>Eliminar</td>
                         </tr>
                     {% endfor %}
                     </tbody>
