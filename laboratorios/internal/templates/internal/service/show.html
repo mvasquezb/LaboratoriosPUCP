@@ -36,9 +36,10 @@
           <table class="table table-stripped toggle-arrow-tiny footable-loaded tablet breakpoint service-datatable">
             <thead>
               <tr>
-                <th class="footable-visible footable-sortable">Código</th>
-                <th class="footable-visible footable-sortable">Descripción</th>
-                <th class="footable-visible footable-sortable">Pruebas</th>
+                <th>Código</th>
+                <th>Descripción</th>
+                <th>Pruebas</th>
+                <th>Estado</th>
               </tr>
             </thead>
             <tbody>
@@ -61,6 +62,7 @@
                       {% endfor %}
                     </ul>
                   </td>
+                  <td>{{ essay.status.name }}</td>
                 </tr>
               {% endfor %}
             </tbody>
