@@ -7,7 +7,7 @@
 {% block page_content %}
 <div class="row border-bottom white-bg dashboard-header">
     <div class="col-md-6">
-        <h2><strong>Listado de Roles</strong></h2>
+        <h2><strong>Listado de Accesos</strong></h2>
     </div>
 </div>
 <div class="wrapper wrapper-content animated fadeInRight" >
@@ -17,7 +17,7 @@
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="text-right">
-                            <a class="btn btn-primary" href="{{ url('internal:role.create') }}">Crear Rol</a>
+                            <a class="btn btn-primary" href="{{ url('internal:access.create') }}">Crear Acceso</a>
                         </div>
                     </div>
                 </div>
@@ -30,14 +30,14 @@
                         </tr>
                     </thead>
                     <tbody>
-                    {% for role in object_list %}
+                    {% for access in object_list %}
                         <tr>
-                            <td>{{ role.id }}</td>
-                            <td>{{role.description}}</td>
+                            <td>{{ access.id }}</td>
+                            <td>{{access.description}}</td>
                             <td class="text-left footable-visible footable-last-column">
                                 <div class="btn-group">
-                                    <a href="{{ url('internal:role.edit', role.id) }}" class="btn-white btn btn-xs">Editar</a>
-                                    <a href="{{ url('internal:role.delete', role.id) }}" class="btn-white btn btn-xs">Eliminar</a>
+                                    <a href="{{ url('internal:access.edit', access.id) }}" class="btn-white btn btn-xs">Editar</a>
+                                    <a href="{{ url('internal:access.delete', access.id) }}" class="btn-white btn btn-xs">Eliminar</a>
                                 </div>
                             </td>
                         </tr>

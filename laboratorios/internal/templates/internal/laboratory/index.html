@@ -6,39 +6,79 @@
 
 {% block page_content %}
 
-<h1> Lista de laboratorios </h1>
-<div class="row">
-  <div class="col-md-12">
-    <table class="table table-striped">
-      <thead>
-        <tr>
-          <th>Nombre</th>
-          <th>Tipo</th>
-          <th>Cantidad de usuarios</th>
-          <th>Capacidad</th>
-          <th>Activo</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for lab in lab_list %}
-          <tr>
-            <th>{{ lab.name }}</th>
-            <th>{{ lab.type }}</th>
-            <th>{{ lab.users_number }}</th>
-            <th>{{ lab.capacity }}</th>
-            <th>
-              {% if lab.active %}
-                Activo
-              {% else %}
-                Inactivo
-              {% endif %}
-            </th>
-          </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+<div class="row border-bottom white-bg dashboard-header">
+    <div class="col-md-7">
+        <h2><strong>Administrador de Laboratorios Existentes</strong></h2>
+    </div>
+</div>
+
+<div class="ibox float-e-margins col-md-offset-0">
+  <div class="ibox-title">
+    <h5>Filtro</h5>
+    <div class="ibox-tools">
+      <a class="collapse-link">
+        <i class="fa fa-chevron-up"></i>
+      </a>
+    </div>
+  </div>
+  <div class="ibox-content">
+
   </div>
 </div>
+
+<div class="ibox float-e-margins col-md-offset-0">
+  <div class="ibox-title">
+    <h5>Lista de Laboratorios Existentes</h5>
+  </div>
+  <div class="ibox-content">
+    <div class="table-responsive" style="overflow: auto; max-height: 300px;">
+      <table class="table table-stripped" id="allCreatedLabs">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Nombre de Laboratorio</th>
+            <th>Tipo de Laboratorio</th>
+            <th>Cantidad de Usuarios</th>
+            <th>Responsable</th>
+            <th>Fecha de Creación</th>
+            <th>Modificar</th>
+            <th>Selección</th>
+          </tr>
+        </thead>
+        <tbody>
+
+            {% for lab in lab_list %}
+              <tr>
+                <th scope="row">{{ lab.pk }}</th>
+                <td>{{ lab.name }}</td>
+                <td>{{ lab.type }}</td>
+                <td>{{ lab.users_number }}</td>
+                <td><a href="{{ url('internal:laboratory.assignMonitor', lab.pk) }}"><i class="fa fa-user-circle-o"></i></a>
+                {% if lab.monitor == None%}
+                  No Asignado
+                {% else %}
+                  {{lab.monitor}}
+                {% endif%}
+                </td>
+                <td>12/12/12</td>
+                <td><a href="{{ url('internal:laboratory.edit', lab.pk) }}"><i class="fa fa-pencil-square-o"></i></a></td>
+                <td><input type="checkbox" class="i-checks" name="{{ lab.pk }}"></td>
+              </tr>
+            {% endfor %}
+
+
+        </tbody>
+      </table>
+    </div>
+    <div style="padding-top: 20px; padding-left: 500px;">
+      <a href="{{ url('internal:laboratory.create')}}">
+        <button name="b_submit" type="submit" id="createButton" class="btn btn-w-m btn-success"> Añadir Laboratorio</button>
+      </a>
+      <button id="delete_button" class="btn btn-sm btn-danger">Eliminar Selección</button>
+    </div>
+  </div>
+</div>
+
 
 {% endblock page_content %}
 
@@ -53,5 +93,65 @@ setTimeout(function() {
   };
   toastr.success('Sistema de Gestión de Laboratorios IC-PUCP', 'Bienvenido');
 }, 1300);
+</script>
+<script type="text/javascript">
+
+</script>
+<script type="text/javascript">
+  var fill_Toastr = function(pMsg, pTypeMsg,pTitle){
+    toastr.options = {
+    closeButton: true,
+    progressBar: true,
+    showMethod: 'slideDown',
+    positionClass: "toast-bottom-right",
+    timeOut: 4000
+    };
+
+    switch(pTypeMsg){
+      case "success":
+      toastr.success(pMsg, '',pTitle);
+      break;
+
+      case "error":
+      toastr.error(pMsg, '',pTitle);
+      break;
+    }
+  }
+
+  function delete_data(){
+    var array = [];
+    var i;
+    //esto es para obtener los ids de los checkboxes seleccionados
+    $("input[type=checkbox]:checked").each(function(){
+    array.push($(this).attr("name")) ;});
+    if (array.length < 1){
+      fill_Toastr('No seleccionó ningun laboratorio para eliminar', "error",'Error');
+    }
+    else{
+      var box,rowTag,tableTag;
+      var boxes = document.getElementsByClassName('i-checks');
+      var leng = boxes.length;
+      var initialLength = leng;
+      for (var i = 0; i < leng;) {
+        box = boxes[i];
+        i++;
+        if (box.checked) {
+          rowTag = box.parentNode.parentNode;
+          tableTag = box.parentNode.parentNode.parentNode;
+          tableTag.removeChild(rowTag);
+          i=0;
+          leng=leng-1;
+        }
+        if (i==initialLength){
+          fill_Toastr('No seleccionó ningun tipo de laboratorio a eliminar', "error",'Error');
+        }
+      }
+      fill_Toastr('Conjunto seleccionado eliminado exitosamente', "success",'');
+      $.get("{{ url('internal:laboratory.delete')}}", {'array': array});
+    }
+  }
+</script>
+<script>
+  $("#delete_button").click(delete_data);
 </script>
 {% endblock custom_js %}

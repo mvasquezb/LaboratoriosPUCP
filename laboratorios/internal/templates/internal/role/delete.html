@@ -7,8 +7,13 @@
 {% block page_content %}
 <div class="row border-bottom white-bg dashboard-header">
     <div class="col-md-3">
-        <h2><strong>Editar Prueba</strong></h2>
-
+        <h2><strong>Eliminar rol</strong></h2>
+        <form method="post">
+          {% csrf_token %}
+          ¿Desea eliminar "{{object}}"?
+          {{ form.as_p() }}
+          <input type="submit" value="Registrar">
+        </form>
     </div>
 </div>
 {% endblock page_content %}
