@@ -70,14 +70,14 @@ urlpatterns = [
     url('^test/store$',
         views.test.store,
         name='test.store'),
-    url('^test$',
+    url('^test/$',
         views.test.index,
         name='test.index'),
     url('^test/edit/(?P<pk>\d+)$',
-        views.test.edit,
+        views.test.TestParameterUpdate.as_view(),
         name='test.edit'),
     url('^test/delete/(?P<pk>\d+)$',
-        views.test.edit,
+        views.test.TestDelete.as_view(),
         name='test.delete'),
     #
     #Access

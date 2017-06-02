@@ -133,11 +133,24 @@ class TestTemplate(models.Model):
     essay_template = models.ForeignKey(EssayTemplate, null=True)
 
     def __str__(self):
-        return self.title
+        return self.name
 
     def get_parameter(self, index):
         parameter_list = ParameterTemplate.objects.filter(test_template=self)
         return parameter_list[index - 1]
+
+    def getParametersStr(self):
+        parameter_list = ParameterTemplate.objects.filter(test_template=self)
+        p_str = ""
+        for i in range(0,len(parameter_list)):
+            if (i>=1 and i<=2):
+                p_str=p_str + ", "
+            if (i<=2):
+                p_str=p_str + parameter_list[i].name
+            if (i==3):
+                p_str=p_str+", ..."
+
+        return p_str
 
 
 class TestFill(models.Model):
