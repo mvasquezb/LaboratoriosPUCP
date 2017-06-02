@@ -33,6 +33,7 @@
                         </div>
                         <div class="col-lg-6">
                             <div class="form-group">
+                                <label for="tests">Pruebas</label>
                                 <select name="tests" class="form-control" multiple>
                                 {% for test in tests %}
                                     <option value="{{ test.id }}">{{ test.name }}</option>
