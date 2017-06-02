@@ -13,7 +13,7 @@ class Test(models.Model):
 
 class Access(models.Model):
     description = models.CharField(max_length=100)
-    
+
     def __str__(self):
         return self.description
 
@@ -120,7 +120,7 @@ class EssayTemplate(models.Model):
 
 
 class SampleFill (models.Model):
-    request_fill = models.ForeignKey (Request, on_delete=models.CASCADE)
+    request_fill = models.ForeignKey (ServiceRequest, on_delete=models.CASCADE)
     sample_template = models.ForeignKey (SampleTemplate)
     description = models.CharField (max_length=30)
 
