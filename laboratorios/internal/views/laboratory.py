@@ -76,7 +76,7 @@ def edit(request, id_lab):
 
 
 def getMonitorId(MonitorStr):
-    returnId = 1
+    returnId = 0
     for character in MonitorStr:
         if (character == ' '):
             break
