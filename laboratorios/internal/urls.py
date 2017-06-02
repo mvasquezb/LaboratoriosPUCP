@@ -37,9 +37,15 @@ urlpatterns = [
     #
     # ServiceRequest
     #
-    url('^servicerequest/create$',
+    url('^servicerequest/create/(?P<pk>\d+)$',
         views.servicerequest.create,
         name='servicerequest.create'),
+    url('^servicerequest/select_client$',
+        views.servicerequest.select_client,
+        name='servicerequest.select_client'),
+    url('^servicerequest/create_client$',
+        views.servicerequest.create_client,
+        name='servicerequest.create_client'),
     url('^servicerequest/store$',
         views.servicerequest.store,
         name='servicerequest.store'),

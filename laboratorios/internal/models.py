@@ -64,8 +64,11 @@ class User(AuthUser):
 class Client(models.Model):
     name = models.CharField(max_length=100)
     idDoc = models.IntegerField()
-    username = models.OneToOneField(User, on_delete=models.CASCADE)
+    username = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
     phoneNumber = models.CharField(max_length=10)
+
+    def __str__(self):
+        return self.name
 
 
 class TestType(models.Model):

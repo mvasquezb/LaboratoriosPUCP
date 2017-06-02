@@ -35,7 +35,10 @@ class TestForm(ModelForm):
         fields = ['id', "name"]
 
 
-
+class ClientForm(ModelForm):
+    class Meta:
+        model = Client
+        exclude =('username',)
 
 
 
@@ -46,6 +49,19 @@ class ParameterForm(ModelForm):
 
 ParameterFormSet = inlineformset_factory(TestTemplate, ParameterTemplate, form=ParameterForm, extra=1)
 
+class EssayForm(ModelForm):
+    class Meta:
+        model = EssayTemplate
+        fields = ['description']
+
+class SampleForm(ModelForm):
+    class Meta:
+        model = SampleTemplate
+        fields = ['description']
+
+SampleFormSet = inlineformset_factory(ServiceRequest, SampleFill, form=SampleForm, extra=1)
+
+
 class AccessForm(ModelForm):
     class Meta:
         model = Access
@@ -55,3 +71,7 @@ class AccessForm(ModelForm):
         }
 
 
+class ServiceRequestForm(ModelForm):
+    class Meta:
+        model = ServiceRequest
+        exclude = ()
