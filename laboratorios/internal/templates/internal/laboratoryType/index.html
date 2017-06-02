@@ -9,77 +9,93 @@
 
 <div class="row wrapper border-bottom white-bg page-heading">
   <h2><strong>Tipos de Laboratorio</strong></h2>
-  <div>
+  <tr>
+    <th><br/></th>
+  </tr>
+  <div class="ibox-content">
     <fieldset>
      <legend><h3><strong>Filtros</strong></h3></legend>
         <!--<div style="float:left;"> -->
       <div>
-        <div class="form-group">
-          <label class="col-md-2 control-label">Tipo de Ensayo: </label>
-          <select id="typeListEssay">
-            <option style="display:none;" selected> -- Selecciona una opcion -- </option>
-            <option onclick="list_filter_function()">-- Borrar filtro --</option>
-            {% for essaytype in essayType_list %}
-              <option>{{ essaytype.name }}</option>
-            {% endfor %}
-          </select>
-        </div>
-        <div class="form-group">
-          <label class="col-md-2 control-label">Tipo de Muestra: </label>
-          <select id="typeListSample">
-            <option style="display:none;" selected> -- Selecciona una opcion -- </option>
-            <option onclick="list_filter_function()">-- Borrar filtro --</option>
-            {% for sampletype in sampleType_list %}
-              <option>{{ sampletype.name }}</option>
-            {% endfor %}
-          </select>
-        </div>
-      </div>
-      <div>
-          <br>
-          <label class="col-md-2" >Nombre</label>
-          <div class="col-md-3 input-group"><input type="text" placeholder="Search" id="text_search" onkeyup="text_search_function()" class="input-sm form-control">
-            <span class="input-group-btn">
-              <button type="button" class="btn btn-sm btn-success"> Buscar</button>
-            </span>
+        <form class="horizontal-form">
+          <div class="form-inline">
+            <div class="form-group">
+                <label class="control-label">Tipo de Ensayo: </label>
+                <select class="form-control" id="typeListEssay">
+                  <option style="display:none;" selected> -- Selecciona una opcion -- </option>
+                  <option onclick="list_filter_function()">-- Borrar filtro --</option>
+                  {% for essaytype in essayType_list %}
+                    <option>{{ essaytype.name }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+            <div class="form-group">
+            <label class="control-label">Tipo de Muestra: </label>
+            <select class="form-control" id="typeListSample">
+              <option style="display:none;" selected> -- Selecciona una opcion -- </option>
+              <option onclick="list_filter_function()">-- Borrar filtro --</option>
+              {% for sampletype in sampleType_list %}
+                <option>{{ sampletype.name }}</option>
+              {% endfor %}
+            </select>
           </div>
-        </div>
+            <div class="form-group">
+              <label class="control-label">Nombre: </label>
+              <input type="text" placeholder="Search" id="text_search" onkeyup="text_search_function()" class="input-sm form-control">
+              <button type="button" class="btn btn-sm btn-success"> Buscar</button>
+            </div>
+          </div>
+        </form>
+      </div>
    </fieldset>
   </div>
-  <div class="wrapper wrapper-content animated fadeIn">
-      <div class="row">
-        <div>
-          <table class="table">
-            <thead>
-              <tr>
-                <th>Id</th>
-                <th>Nombre </th>
-                <th>Descripcion </th>
-                <th>Activo</th>
-                <th>Editar</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for labType in labType_list %}
-                <tr>
-                  <th>{{ labType.pk }}</th>
-                  <th>{{ labType.name }}</th>
-                  <th>{{ labType.description }}</th>
-                  <th>
-                    {% if labType.active %}
-                      Activo
-                    {% else %}
-                      Inactivo
-                    {% endif %}
-                  </th>
-                  <th><a href="#"><i onclick="edit_row()" class="fa fa-pencil-square-o"></i></a></th>
-                </tr>
-              {% endfor %}
-            </tbody>
-          </table>
-        </div>
+  <div class="ibox-content">
+    <div class="col-lg-12">
+      <div class="text-right">
+        <a class="btn btn-primary" href="{{ url('internal:laboratoryType.create') }}">Crear Tipo Laboratorio</a>
+      </div>
     </div>
   </div>
+  <div class="wrapper wrapper-content animated fadeIn">
+    <div class="row">
+      <div class="table-responsive">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>Id</th>
+              <th>Nombre </th>
+              <th>Descripcion </th>
+              <th>Activo</th>
+              <th>Editar</th>
+              <th>Eliminar</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for labType in labType_list %}
+              <tr>
+                <th>{{ labType.pk }}</th>
+                <th>{{ labType.name }}</th>
+                <th>{{ labType.description }}</th>
+                <th>
+                  {% if labType.active %}
+                    Activo
+                  {% else %}
+                    Inactivo
+                  {% endif %}
+                </th>
+                <th><a href="#"><i onclick="edit_row()" class="fa fa-pencil-square-o"></i></a></th>
+                <th><input type="checkbox" name="{{labType.pk}}" class="i-checks"></th>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="form-group">
+      <button type="submit"  id="deleteButton" class="btn btn-w-m btn-danger">Eliminar</button>
+    </div>
+  </div>
+
 
 </div>
 
@@ -88,14 +104,58 @@
 
 {% block custom_js %}
 <script>
-setTimeout(function() {
-  toastr.options = {
-    closeButton: true,
-    progressBar: true,
-    showMethod: 'slideDown',
-    timeOut: 4000
-  };
-  toastr.success('Sistema de Gestión de Laboratorios IC-PUCP', 'Bienvenido');
-}, 1300);
+var fill_Toastr = function(pMsg, pTypeMsg,pTitle){
+        toastr.options = {
+          closeButton: true,
+          progressBar: true,
+          showMethod: 'slideDown',
+          positionClass: "toast-bottom-right",
+          timeOut: 4000
+          };
+
+          switch(pTypeMsg){
+            case "success":
+            toastr.success(pMsg, '',pTitle);
+            break;
+
+            case "error":
+            toastr.error(pMsg, '',pTitle);
+            break;
+          }
+    }
+
+    function delete_rows() {
+      var array = [];
+      var i;
+      $("input[type=checkbox]:checked").each(function(){
+      array.push($(this).attr("name")) ;});
+      var boxes = document.getElementsByClassName('i-checks');
+      var leng = boxes.length;
+      var initialLength = leng;
+      var flag = 0;
+      for (var i = 0; i < leng;) {
+      box = boxes[i];
+      i++;
+        if (box.checked) {
+            rowTag = box.parentNode.parentNode;
+            tableTag = box.parentNode.parentNode.parentNode;
+            tableTag.removeChild(rowTag);
+            i=0;
+            leng=leng-1;
+            flag = 1;
+            fill_Toastr('Se elimino con exito el tipo de laboratorio'+' ', "success",'');
+        }
+        if (i==initialLength){
+            fill_Toastr('No seleccionó ningun tipo de laboratorio a eliminar', "error",'Error');
+        }
+      }
+
+      if(flag == 1){
+        $.get("{{ url('internal:laboratoryType.delete')}}",
+          {'array': array});
+      }
+    }
+  document.getElementById("deleteButton").addEventListener("click", delete_rows);
+
 </script>
 {% endblock custom_js %}

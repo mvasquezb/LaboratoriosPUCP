@@ -61,7 +61,7 @@ class Migration(migrations.Migration):
             ],
         ),
         migrations.CreateModel(
-            name='SampleType',
+            name='sampleType',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('description', models.CharField(max_length=100)),
@@ -121,7 +121,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='sample',
             name='sampleType',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='internal.SampleType'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='internal.sampleType'),
         ),
         migrations.AddField(
             model_name='role',

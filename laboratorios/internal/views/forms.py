@@ -1,5 +1,5 @@
-from django.forms import ModelForm
-from internal.models import Role
+from django.forms import ModelForm, TextInput, CheckboxSelectMultiple
+from ..models import *
 
 
 class RoleForm(ModelForm):

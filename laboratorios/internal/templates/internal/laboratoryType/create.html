@@ -10,45 +10,41 @@
     <h2><strong>Registrar Tipos de laboratorios</strong></h2>
   </div>
   <div>
-    <div >
+    <form action="{{ url('internal:laboratoryType.create') }}" method="post" >
       <div class="ibox float-e-margins">
-         <div class="ibox-title">
+        <div class="ibox-title">
            <h5>Datos generales <small>(*)Todos los campos son obligatorios</small></h5>
          </div>
         <div class="ibox-content">
           <table>
-          <form action="{{ url('internal:laboratoryType.create') }}" method="post">
-            <div class="col-md-4">
+            <div class="form-group form-group-lg">
                {% csrf_token %}
               <tr>
-                <th>Nombre:</th>
-                <th align="left"><input type="text"  name="textname" autofocus required  /></th>
+                <th><label class="control-label col-sm-2">Nombre </label></th>
+                <th><input type="text" name="textname" autofocus required  /></th>
               </tr>
               <tr><th><br></th></tr>
               <tr>
-                <th>Descripción:</th>
-                <th><input type="text"  class="form-control input-md"/></th>
+                <th><label class="control-label col-sm-2">Descripción </label></th>
+                <th><input type="text"  name="description" class="form-control"/></th>
               </tr>
             </div>
-          </form>
         </table>
         </div>
       </div>
-      <div class="ibox float-e-margins">
-        <div>
-          <div class="panel blank-panel">
-            <div class="panel-heading">
-              <div class="panel-title m-b-md">
-                <h4>Seleccionar Tipos relacionados</h4>
-              </div>
-              <div class="panel-options">
-                <ul class="nav nav-tabs">
-                  <li class="active"><a data-toggle="tab" href="#tab-1">Tipos de ensayo</a></li>
-                  <li class=""><a data-toggle="tab" href="#tab-2">Tipos de muestra</a></li>
-                </ul>
-              </div>
+      <div class="panel blank-panel">
+          <div class="panel-heading">
+            <div class="panel-title m-b-md">
+              <h4>Seleccionar Tipos relacionados</h4>
             </div>
-            <div class="panel-body">
+            <div class="panel-options">
+              <ul class="nav nav-tabs">
+                <li class="active"><a data-toggle="tab" href="#tab-1">Tipos de ensayo</a></li>
+                <li class=""><a data-toggle="tab" href="#tab-2">Tipos de muestra</a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="panel-body">
               <div class="tab-content">
                 <div id="tab-1" class="tab-pane active">
                   <table class="table table-striped">
@@ -88,7 +84,7 @@
                           <th>{{ sampletype.pk }}</th>
                           <th>{{ sampletype.name }}</th>
                           <th>{{ sampletype.description }}</th>
-                          <th><div class="i-checks"><input type="checkbox" value=""> <i></i></div></th>
+                          <th><div class="i-checks"><input name="samplecheck"type="checkbox" value=""> <i></i></div></th>
                         </tr>
                       {% endfor %}
                     </tbody>
@@ -96,16 +92,14 @@
                 </div>
               </div>
             </div>
-          </div>
         </div>
-      </div>
-      <div class="ibox-content form-group">
+      <div class="ibox-content form-group ">
         <div class="col-md-offset-5">
-          <button id="cancel" class="btn btn-w-m btn-white" type="submit">Cancel</button>
-          <button type="submit" id="createButton" class="btn btn-w-m btn-success"> Registrar</button>
+          <button name="b_cancel" class="btn btn-w-m btn-white" type="submit" formnovalidate>Cancel</button>
+          <button type="submit" id= createButton name="b_submit" class="btn btn-w-m btn-success"> Registrar</button>
         </div>
       </div>
-    </div>
+    </form>
   </div>
 </div>
 
@@ -114,16 +108,59 @@
 
 {% block custom_js %}
 <script>
-setTimeout(function() {
-  toastr.options = {
-    closeButton: true,
-    progressBar: true,
-    showMethod: 'slideDown',
-    timeOut: 4000
-  };
-  toastr.success('Sistema de Gestión de Laboratorios IC-PUCP', 'Bienvenido');
-}, 1300);
+var fill_Toastr = function(pMsg, pTypeMsg,pTitle){
+        toastr.options = {
+          closeButton: true,
+          progressBar: true,
+          showMethod: 'slideDown',
+          positionClass: "toast-bottom-right",
+          timeOut: 4000
+          };
 
+          switch(pTypeMsg){
+            case "success":
+            toastr.success(pMsg, '',pTitle);
+            break;
+
+            case "error":
+            toastr.error(pMsg, '',pTitle);
+            break;
+          }
+    }
+
+    function add_rows() {
+      var array = [];
+      var i;
+      //esto es para obtener los ids de los checkboxes seleccionados
+      $("input[type=checkbox]:checked").each(function(){
+      array.push($(this).attr("name")) ;});
+      var boxes = document.getElementsByClassName('i-checks');
+      var leng = boxes.length;
+      var initialLength = leng;
+      var flag = 0;
+      for (var i = 0; i < leng;) {
+        box = boxes[i];
+        i++;
+          if (box.checked) {
+            rowTag = box.parentNode.parentNode;
+            tableTag = box.parentNode.parentNode.parentNode;
+            tableTag.add(rowTag);
+            leng=leng+1;
+            flag = 1;
+            fill_Toastr('Se registró con exito el tipo de laboratorio Z'+' ', "success",'');
+          }
+        if ((initialLength+i)==initialLength){
+            fill_Toastr('No se registró ningún tipo de laboratorio', "error",'Error');
+        }
+      }
+
+      if(flag == 1){
+        $.get("{{ url('internal:laboratoryType.create')}}",
+          {'array': array});
+      }
+    }
+
+  document.getElementById("createButton").addEventListener("click", add_rows);
 
 </script>
 {% endblock custom_js %}

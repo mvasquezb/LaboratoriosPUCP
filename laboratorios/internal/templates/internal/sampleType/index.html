@@ -8,37 +8,46 @@
 
 
 <div class="row wrapper border-bottom white-bg page-heading">
-  <h1>Tipos de Muestra</h1>
+  <h2><strong>Tipos de Muestra</strong></h2>
+  <tr>
+    <th><br/></th>
+  </tr>
   <div class="form-group">
     <fieldset>
      <legend><h3><strong>Filtros</strong></h3></legend>
-      <div>
+      <div class="form-inline">
         <div class="form-group">
-          <label class="col-md-2 control-label">Tipo de Laboratorios: </label>
-          <select id="typeListEssay">
-            <option style="display:none;" selected> -- Selecciona una opcion -- </option>
-            <option onclick="list_filter_function()">-- Borrar filtro --</option>
+          <label class="control-label">Tipo de Laboratorios</label>
+          <select class="form-control" id="typeListLab">
+            <option style="display:none;" selected>Selecciona una opción</option>
+            <option onclick="list_filter_function()">-- Todos --</option>
             {% for labtype in labType_list %}
-              <option>{{ labtype.name }}</option>
+              <option onclick="list_filter_function()">{{ labtype.name }}</option>
             {% endfor %}
           </select>
         </div>
-      </div>
-      <div>
-          <br>
-          <label class="col-md-2" >Nombre</label>
-          <div class="col-md-3 input-group"><input type="text" placeholder="Search" id="text_search" onkeyup="text_search_function()" class="input-sm form-control">
-            <span class="input-group-btn">
-              <button type="button" class="btn btn-sm btn-success"> Buscar</button>
-            </span>
-          </div>
+        <div class="form-group" >
+        <label>Nombre</label>
+        <div class="input-group"><input type="text" placeholder="Search" id="text_search" onkeyup="text_search_function()" class="input-sm form-control">
+          <span class="input-group-btn">
+            <button type="button" onclick="text_search_function()" class="btn btn-sm btn-success"> Buscar</button>
+          </span>
         </div>
+      </div>
+      </div>
    </fieldset>
+  </div>
+  <div class="ibox-content">
+    <div class="col-lg-12">
+      <div class="text-right">
+        <a class="btn btn-primary" href="{{ url('internal:sampleType.create') }}">Crear Tipo Muestra</a>
+      </div>
+    </div>
   </div>
   <div class="wrapper wrapper-content animated fadeIn">
       <div class="row">
         <div>
-          <table class="table table-striped table-hover dataTables-example" >
+          <table id="tableSample" class="table table-striped table-hover dataTables-example" >
             <thead>
               <tr>
                 <th>Id</th>
@@ -47,6 +56,7 @@
                 <th>Tipo de Laboratorio </th>
                 <th>Activo</th>
                 <th>Editar</th>
+                <th>Eliminar</th>
               </tr>
             </thead>
             <tbody>
@@ -63,7 +73,8 @@
                         Inactivo
                       {% endif %}
                   </th>
-                  <th><a href="#"><i onclick="edit_row()" class="fa fa-pencil-square-o"></i></th>
+                  <th><a href="#"><i onclick="edit_row()" class="fa fa-pencil-square-o"></i></a></th>
+                  <th><input type="checkbox" name="{{sampleType.pk}}" class="i-checks"></th>
                 </tr>
               {% endfor %}
             </tbody>
@@ -71,6 +82,11 @@
         </div>
     </div>
   </div>
+  <div class="form-group">
+     <span class="input-group-btn">
+       <button type="submit" id="deleteButton" class="btn btn-w-m btn-danger">Eliminar</button>
+     </span>
+    </div>
 
 </div>
 
@@ -79,14 +95,140 @@
 
 {% block custom_js %}
 <script>
-setTimeout(function() {
-  toastr.options = {
-    closeButton: true,
-    progressBar: true,
-    showMethod: 'slideDown',
-    timeOut: 4000
-  };
-  toastr.success('Sistema de Gestión de Laboratorios IC-PUCP', 'Bienvenido');
-}, 1300);
+var fill_Toastr = function(pMsg, pTypeMsg,pTitle){
+        toastr.options = {
+          closeButton: true,
+          progressBar: true,
+          showMethod: 'slideDown',
+          positionClass: "toast-bottom-right",
+          timeOut: 4000
+          };
+
+          switch(pTypeMsg){
+            case "success":
+            toastr.success(pMsg, '',pTitle);
+            break;
+
+            case "error":
+            toastr.error(pMsg, '',pTitle);
+            break;
+          }
+    }
+
+    function delete_rows() {
+
+      var array = [];
+      var i;
+      //esto es para obtener los ids de los checkboxes seleccionados
+      $("input[type=checkbox]:checked").each(function(){
+      array.push($(this).attr("name")) ;});
+      var boxes = document.getElementsByClassName('i-checks');
+      var leng = boxes.length;
+      var initialLength = leng;
+      var flag = 0;
+      for (var i = 0; i < leng;) {
+      box = boxes[i];
+      i++;
+        if (box.checked) {
+            rowTag = box.parentNode.parentNode;
+            tableTag = box.parentNode.parentNode.parentNode;
+            tableTag.removeChild(rowTag);
+            i=0;
+            leng=leng-1;
+            flag = 1;
+            fill_Toastr('Se elimino con exito el tipo de ensayo Z'+' ', "success",'');
+        }
+        if (i==initialLength){
+            fill_Toastr('No seleccionó ningun tipo de ensayo a eliminar', "error",'Error');
+        }
+      }
+
+      if(flag == 1){
+        $.get("{{ url('internal:sampleType.delete')}}",
+          {'array': array});
+      }
+    }
+  document.getElementById("deleteButton").addEventListener("click", delete_rows);
+
+</script>
+<script>
+      function text_search_function() {
+        var boxes = document.getElementsByClassName('i-checks');
+        for (var i = 0; i < boxes.length;i++)
+        {
+            box = boxes[i];
+            box.checked = false;
+        }
+        var input, filter, table, tr, td, i;
+        input = document.getElementById("text_search");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("mytable");
+        tr = table.getElementsByTagName("tr");
+        for (i = 0; i < tr.length; i++) {
+          td = tr[i].getElementsByTagName("td")[0];
+          if (td) {
+            if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                tr[i].style.display = "";
+            } else {
+                tr[i].style.display = "none";
+            }
+          }
+        }
+      }
+</script>
+<script>
+  var fill_Toastr = function(pMsg, pTypeMsg,pTitle){
+      toastr.options = {
+        closeButton: true,
+        progressBar: true,
+        showMethod: 'slideDown',
+        positionClass: "toast-bottom-right",
+        timeOut: 4000
+        };
+        switch(pTypeMsg){
+          case "success":
+          toastr.success(pMsg, '',pTitle);
+          break;
+          case "error":
+          toastr.error(pMsg, '',pTitle);
+          break;
+        }
+  }
+  function list_filter_function() {
+      var boxes = document.getElementsByClassName('i-checks');
+      for (var i = 0; i < boxes.length;i++)
+      {
+        box = boxes[i];
+        box.checked = false;
+      }
+    var input, filter, table, tr, td, i;
+    input = document.getElementById("typeListLab");
+    filter = input[input.selectedIndex].value;
+    table = document.getElementById("tableSample");
+    tr = table.getElementsByTagName("tr");
+    if (input.selectedIndex > -1)
+    {
+      if(filter == "-- Todos --")
+      {
+        for (i = 0; i < tr.length; i++) {
+          tr[i].style.display = "";
+        }
+      }
+      else
+      {
+        filter = filter.toUpperCase();
+        for (i = 0; i < tr.length; i++) {
+          td = tr[i].getElementsByTagName("td")[2];
+          if (td) {
+            if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                tr[i].style.display = "";
+            } else {
+                tr[i].style.display = "none";
+            }
+          }
+        }
+      }
+    }
+  }
 </script>
 {% endblock custom_js %}

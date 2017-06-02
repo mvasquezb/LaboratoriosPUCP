@@ -76,7 +76,7 @@ class Migration(migrations.Migration):
             name='sampleType',
         ),
         migrations.DeleteModel(
-            name='SampleType',
+            name='sampleType',
         ),
         migrations.AlterModelOptions(
             name='user',

@@ -9,47 +9,49 @@
   <div>
     <h2><strong>Registrar Tipos de Muestra</strong></h2>
   </div>
-  <div>
-    <div >
+  <div >
       <div class="ibox float-e-margins">
-         <div class="ibox-title">
+        <div class="ibox-title">
            <h5>Datos generales<small>(*)campos obligatorios</small></h5>
          </div>
         <div class="ibox-content">
           <table>
-          <form action="{{ url('internal:laboratoryType.create') }}" method="post">
+          <form action="{{ url('internal:sampleType.create') }}" method="post">
+            {% csrf_token %}
             <div class="row">
               <div class="col-md-3 form-group">
-                <label class="control-label inline">Nombre<small>(*)</small>: </label>
+                <label class="control-label inline">Nombre<small>(*)</small></label>
                 <div class="inline"><input type="text"  name="textname" autofocus required /></div>
               </div>
               <div class="col-md-3 form-group">
-                <label class="control-label inline">Tipo de Laboratorio: </label>
+                <label class="control-label inline">Tipo de Laboratorio</label>
                 <div class="inline">
-                     <select  class="form-control">
-                       <option style="display:none;" selected> -- Selecciona una opcion -- </option>
-                       {% for lab_type in types %}
-                          <option>{{ lab_type.name }}</option>
-                       {% endfor %}
-                     </select>
+                   <select  name="labType_combobox" class="form-control">
+                     <option  selected> Selecciona una opcion </option>
+                     {% for lab_type in labType_list %}
+                        <option>{{ lab_type.name }}</option>
+                     {% endfor %}
+
+                   </select>
                 </div>
               </div>
             </div>
             <div>
-              <div class="form-group"><label class="control-label">Descripción:</label><br/>
-              <input type="text"  class="form-control"/>
+              <div class="form-group">
+                <label class="control-label">Descripción</label>
+                <input name="description" type="text"  class="form-control"/>
+              </div>
+            </div>
+            <div class="ibox-content form-group">
+              <div class="col-md-offset-4">
+                <button name="b_cancel" class="btn btn-w-m btn-white" type="submit" formnovalidate>Cancel</button>
+                <button type="submit" name="b_submit" class="btn btn-w-m btn-success"> Registrar</button>
+              </div>
             </div>
           </form>
         </table>
         </div>
       </div>
-      <div class="ibox-content form-group">
-        <div class="col-md-offset-5">
-          <button id="cancel" class="btn btn-w-m btn-white" type="submit">Cancel</button>
-          <button type="submit" id="createButton" class="btn btn-w-m btn-success"> Registrar</button>
-        </div>
-      </div>
-    </div>
   </div>
 </div>
 

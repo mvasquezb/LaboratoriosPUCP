@@ -22,15 +22,18 @@ urlpatterns = [
     #
     # LaboratoryType
     #
-    url ('^laboratoryType/?$',
+    url('^laboratoryType/?$',
          views.laboratoryType.index,
          name='laboratoryType.index'),
-    url ('^laboratoryType/create/?$',
+    url('^laboratoryType/create/?$',
          views.laboratoryType.create,
          name='laboratoryType.create'),
-    url ('^laboratoryType/edit/?$',
+    url('^laboratoryType/edit/?$',
          views.laboratoryType.edit,
          name='laboratoryType.edit'),
+    url('^laboratoryType/delete/?$',
+         views.laboratoryType.delete,
+         name='laboratoryType.delete'),
     #
     #Assay Type
     #
@@ -67,13 +70,16 @@ urlpatterns = [
     #
     # sampleType
     #
-    url ('^sampleType/?$',
+    url('^sampleType/?$',
          views.sampleType.index,
          name='sampleType.index'),
-    url ('^sampleType/create/?$',
+    url('^sampleType/create/?$',
          views.sampleType.create,
          name='sampleType.create'),
-    url ('^sampleType/edit/?$',
+    url('^sampleType/edit/?$',
          views.sampleType.edit,
          name='sampleType.edit'),
+    url('^sampleType/delete/?$',
+         views.sampleType.delete,
+         name='sampleType.delete'),
 ]

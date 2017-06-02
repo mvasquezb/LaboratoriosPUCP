@@ -42,6 +42,20 @@
             <li><a href="{{ url('internal:request.create') }}">Agregar Solicitud</a></li>
           </ul>
         </li>
+        <li>
+          <a href="{{ url('internal:laboratoryType.index') }}"><i class="fa fa-th-large"></i> <span class="nav-label">Tipo de Laboratorios</span> <span class="fa arrow"></span></a>
+          <ul class="nav nav-second-level">
+            <li><a href="{{ url('internal:laboratoryType.create') }}">Agregar Tipo de Laboratorio</a></li>
+            <li><a href="{{ url('internal:laboratoryType.index') }}">Lista de Tipo de Laboratorio</a></li>
+          </ul>
+        </li>
+        <li>
+          <a href="{{ url('internal:sampleType.index') }}"><i class="fa fa-th-large"></i> <span class="nav-label">Muestras</span> <span class="fa arrow"></span></a>
+          <ul class="nav nav-second-level">
+            <li><a href="{{ url('internal:sampleType.create') }}">Agregar Muestra</a></li>
+            <li><a href="{{ url('internal:sampleType.index') }}">Lista de Muestra</a></li>
+          </ul>
+        </li>
       </ul>
     </div>
   </nav>

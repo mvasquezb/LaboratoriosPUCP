@@ -69,7 +69,7 @@ class EssayType (models.Model):
     name = models.CharField (max_length=100)
     description = models.CharField (max_length=100)
     active = models.BooleanField ()
-    lab_type = models.ForeignKey (LaboratoryType, on_delete=models.CASCADE)
+    lab_type = models.ForeignKey (LaboratoryType,null=True, on_delete=models.CASCADE)
 
 
 class TestType (models.Model):
@@ -208,7 +208,7 @@ class SampleType (models.Model):
     name = models.CharField (max_length=100)
     description = models.CharField (max_length=100)
     active = models.BooleanField ()
-    lab_type = models.ForeignKey (LaboratoryType, on_delete=models.CASCADE)
+    lab_type = models.ForeignKey (LaboratoryType, null=True,on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
