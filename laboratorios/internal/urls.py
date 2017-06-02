@@ -112,6 +112,20 @@ urlpatterns = [
         views.client.delete,
         name='client.delete'),
 
-
+    #
+    # EssayTemplate
+    #
+    url('^essayTemplate/$',
+        views.essayTemplate.index,
+        name='essayTemplate.index'),
+    url('^essayTemplate/create$',
+        views.essayTemplate.create,
+        name='essayTemplate.create'),
+    url('^essayTemplate/edit/(?P<pk>\d+)$',
+        views.essayTemplate.edit,
+        name='essayTemplate.edit'),
+    url('^essayTemplate/delete/(?P<pk>\d+)$',
+        views.essayTemplate.delete,
+        name='essayTemplate.delete'),
 
 ]
