@@ -6,3 +6,5 @@ from .servicerequest import *
 from .test import *
 from .access import *
 from .forms import *
+from .client import *
+from .essayTemplate import *

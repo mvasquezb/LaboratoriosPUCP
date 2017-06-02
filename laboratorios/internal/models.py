@@ -94,10 +94,14 @@ class SampleFill(models.Model):
 
 
 # Modelo para pruebas
+
+
 class EssayTemplate(models.Model):
     code = models.IntegerField(default=0)
     test_number = models.IntegerField(default=0)
     description = models.CharField(max_length=100)
+    #tests = models.ManyToManyField(TestTemplate)
+
 
     def __str__(self):
         return str(self.code)
@@ -130,7 +134,8 @@ class TestTemplate(models.Model):
     name = models.CharField(verbose_name='Nombre de la prueba', max_length=100)
     title = models.CharField(max_length=100)
     parameters_number = models.IntegerField(default=0)
-    essay_template = models.ForeignKey(EssayTemplate, null=True)
+    #essay_template = models.ForeignKey(EssayTemplate, null=True)
+    essays = models.ManyToManyField(EssayTemplate, related_name='tests', blank=True)
 
     def __str__(self):
         return self.name
@@ -151,6 +156,8 @@ class TestTemplate(models.Model):
                 p_str=p_str+", ..."
 
         return p_str
+
+
 
 
 class TestFill(models.Model):
@@ -178,6 +185,7 @@ class TestFill(models.Model):
             obj_par = ParameterFill()
             obj_par.create(self, self.test_template.get_parameter(i))
             obj_par.save()
+
 
 
 class ParameterTemplate(models.Model):
