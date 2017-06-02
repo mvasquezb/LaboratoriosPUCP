@@ -1,6 +1,6 @@
 from django.shortcuts import render,redirect, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
-from internal.models  import Role
+from internal.models  import *
 from internal.views.forms import RoleForm
 
 
@@ -12,6 +12,7 @@ def index(request,
     data = {
         'object_list': roles,
     }
+    
     return render(request, template, data)
 
 
@@ -29,18 +30,24 @@ def create(request,
 
 def edit(request,
          pk,
-         template='internal/role/create.html'):
+         template='internal/role/edit.html'):
     role = get_object_or_404(Role, pk=pk)
     form = RoleForm(request.POST or None, instance=role)
+    context = {
+        'accesses' : Access.objects.all(),
+        'selected_accesses' : list(
+            role.access.values_list('id', flat=True)
+        ),
+        'custom_role' : role
+    }
     if form.is_valid():
         form.save()
         return redirect('internal:role.index')
-    return render(request, template, {'form': form})
+    return render(request, template, context)
 
 
-def delete(request, pk, template='internal/role/delete.html'):
+def delete(request, pk):
     role = get_object_or_404(Role, pk=pk)
-    if request.method == 'POST':
-        role.delete()
-        return redirect('internal:role.index')
-    return render(request, template, {'object': role})
+    role.delete()
+
+    return redirect('internal:role.index')

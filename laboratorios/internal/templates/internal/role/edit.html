@@ -1,0 +1,29 @@
+{% extends 'internal/base_internal.html' %}
+
+{% block title %}{{ super() }} | Inicio{% endblock title %}
+
+{% block custom_css %}{% endblock custom_css %}
+
+{% block page_content %}
+<div class="row border-bottom white-bg dashboard-header">
+    <div class="col-md-3">
+        <h2><strong>Crear Nuevo Rol</strong></h2>
+        <form action="{{ url('internal:role.edit', custom_role.id) }}" method="post">
+          {% csrf_token %}
+          <div class="form-group">
+          	<label>Descripción</label>
+          	<input value="{{ custom_role.description }}" type="text" name="description" class="form-control">
+          </div>
+          <div class="form-group">
+          	<label>Accesos</label>
+          	<select name="access" multiple="multiple" id="id_access" required>
+      		{% for access in accesses %}
+                <option {{ 'selected' if (access.id in selected_accesses) }} value="{{ access.id }}">{{ access.description }}</option>
+            {% endfor %}
+			</select>
+          </div>
+          <input type="submit" value="Registrar">
+        </form>
+    </div>
+</div>
+{% endblock page_content %}
