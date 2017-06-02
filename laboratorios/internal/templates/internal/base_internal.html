@@ -54,6 +54,34 @@
         <li>
            <a href="{{ url('internal:test.index') }}"><i class="fa fa-th-large"></i> <span class="nav-label">Pruebas</span> <span class="fa arrow"></span></a>
         </li>
+        <li>
+          <a href="index.html"><i class="fa fa-th-large"></i> <span class="nav-label">Laboratorios</span> <span class="fa arrow"></span></a>
+          <ul class="nav nav-second-level">
+            <li><a href="{{ url('internal:laboratory.index') }}">Lista Laboratorios</a></li>
+              <ul class="nav nav-third-level">
+                <li><a href="{{ url('internal:laboratory.create') }}">Nuevo Laboratorio</a></li>
+              </ul>
+          </ul>
+        </li>
+        <li>
+          <a href="index.html"><i class="fa fa-th-large"></i> <span class="nav-label">Ensayos</span> <span class="fa arrow"></span></a>
+          <ul class="nav nav-second-level">
+            <li><a href="{{ url('internal:essayType.index') }}">Tipo Ensayos</a></li>
+              <ul class="nav nav-third-level">
+                <li><a href="{{ url('internal:essayType.create') }}">Nuevo Tipo</a></li>
+              </ul>
+          </ul>
+        </li>
+
+        <li>
+          <a href="index.html"><i class="fa fa-th-large"></i> <span class="nav-label">Pruebas</span> <span class="fa arrow"></span></a>
+          <ul class="nav nav-second-level">
+            <li><a href="{{ url('internal:testType.index') }}">Tipo Pruebas</a></li>
+              <ul class="nav nav-third-level">
+                <li><a href="{{ url('internal:testType.create') }}">Nuevo Tipo</a></li>
+              </ul>
+          </ul>
+        </li>
       </ul>
     </div>
   </nav>

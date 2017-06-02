@@ -19,6 +19,45 @@ urlpatterns = [
     url('^laboratory/create/?$',
         views.laboratory.create,
         name='laboratory.create'),
+    url('^laboratory/delete/?$',
+        views.laboratory.delete,
+        name='laboratory.delete'),
+    url('^laboratory/edit/(?P<id_lab>\d+)/$',
+        views.laboratory.edit,
+        name='laboratory.edit'),
+    url('^laboratory/assignMonitor/(?P<id>\d+)/$',
+        views.laboratory.assignMonitor,
+        name='laboratory.assignMonitor'),
+    #
+    #Assay Type
+    #
+    url('^essayType/?$',
+        views.essayType.index,
+        name='essayType.index'),
+    url('^essayType/create?$',
+        views.essayType.create,
+        name='essayType.create'),
+    url('^essayType/edit/(?P<id>\d+)/$',
+        views.essayType.edit,
+        name='essayType.edit'),
+    url('^essayType/delete/?$',
+        views.essayType.delete,
+        name='essayType.delete'),
+    #
+    #Test Type
+    #
+    url('^testType/?$',
+        views.testType.index,
+        name='testType.index'),
+    url('^testType/create?$',
+        views.testType.create,
+        name='testType.create'),
+    url('^testType/edit/(?P<id>\d+)/$',
+        views.testType.edit,
+        name='testType.edit'),
+    url('^testType/delete/?$',
+        views.testType.delete,
+        name='testType.delete'),
     #
     # Role
     #

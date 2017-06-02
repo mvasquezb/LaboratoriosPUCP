@@ -16,7 +16,6 @@ class Access(models.Model):
         return self.description
 
 
-# Modelo para usuarios
 class Role(models.Model):
     description = models.CharField(max_length=100, blank=True)
     access = models.ManyToManyField(Access)
@@ -44,6 +43,7 @@ class Laboratory(models.Model):
     capacity = models.IntegerField()
     active = models.BooleanField()
     type = models.ForeignKey(LaboratoryType, on_delete=models.CASCADE)
+    monitor = models.ForeignKey('User', on_delete=models.CASCADE, null=True)
 
     def __str__(self):
         return self.name
@@ -60,17 +60,29 @@ class User(AuthUser):
         return self.get_full_name() or self.username
 
 
-
 class Client(models.Model):
     name = models.CharField(max_length=100)
     idDoc = models.IntegerField()
     username = models.OneToOneField(User, on_delete=models.CASCADE)
     phoneNumber = models.CharField(max_length=10)
 
+### TipoEnsayo
+class EssayType(models.Model):
+    name=models.CharField(max_length=100)
+    description=models.CharField(max_length=100)
+    active=models.BooleanField()
+    lab_type=models.ForeignKey(LaboratoryType, on_delete=models.CASCADE,null=True)
+    def __str__(self):
+        return self.name
+
 
 class TestType(models.Model):
+    name = models.CharField(max_length=100)
     description = models.CharField(max_length=100)
     active = models.BooleanField()
+    essay_type = models.ForeignKey(EssayType,on_delete=models.CASCADE)
+    def __str__(self):
+        return self.name
 
 
 class ServiceRequest(models.Model):
@@ -189,3 +201,11 @@ class ParameterFill(models.Model):
             return
         self.test_fill = test_insert
         self.parameter_template = param_insert
+
+
+## Tipo Muestra
+class SampleType(models.Model):
+    name=models.CharField(max_length=100)
+    description=models.CharField(max_length=100)
+    active=models.BooleanField()
+    lab_type = models.ForeignKey(LaboratoryType, on_delete=models.CASCADE)
