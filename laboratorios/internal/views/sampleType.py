@@ -24,11 +24,10 @@ def create(request,
            template='internal/sampleType/create.html',
            extra_context=None):
     labtypes = LaboratoryType.objects.all()
-    context = {'labType_list': labtypes}
+    sampletypes = SampleType.objects.all ()
+    context = {'labType_list': labtypes,'sampleType_list':sampletypes}
     if request.method == 'POST':
         index='internal/sampleType/index.html'
-        sampletypes=SampleType.objects.all()
-        context = {'sampleType_list':sampletypes}
         if "b_cancel" in request.POST:
             return redirect('internal:sampleType.index')
         if "b_submit" in request.POST:
@@ -55,33 +54,33 @@ def create(request,
     return render(request, template, context)
 
 
-def edit(request,
-           template='internal/sampleType/edit.html',
-           extra_context=None):
-    labtypes = LaboratoryType.objects.all ()
-    context = {'labType_list': labtypes}
+def edit(request,id):
     if request.method == 'POST':
-        index = 'internal/sampleType/index.html'
-        sampletypes = SampleType.objects.all ()
-        context = {'sampleType_list': sampletypes}
         if "b_cancel" in request.POST:
             return redirect ('internal:sampleType.index')
         if "b_submit" in request.POST:
-            labtypes = LaboratoryType.objects.all ()
+            oldsampletype = SampleType.objects.get(pk=id)
             name = str (request.POST.get ('textname'))
             description = str (request.POST.get ('description'))
             lab_type_choose = str (request.POST.get ('labType_combobox'))
-            if name not in sampletypes:
-                lab_type = LaboratoryType.objects.get (name=lab_type_choose)
-                sample_type = SampleType.objects.create (
-                    name=name,
-                    description=description,
-                    active=True,
-                    lab_type=lab_type
-                )
-                return redirect ('internal:sampleType.index')
-
-    return render (request, template, context)
+            if validation_name (name):
+                oldsampletype.name=name
+                oldsampletype.description=description
+                oldsampletype.active=True
+                if (lab_type_choose != NOT_OPTION_SELECTED):
+                    lab_type = LaboratoryType.objects.get (name=lab_type_choose)
+                    oldsampletype.lab_type=lab_type
+                else:
+                    oldsampletype.lab_type=None
+                oldsampletype.save()
+            return redirect('internal:sampleType.index')
+    else:
+        sample = SampleType.objects.get(pk=id)
+        labtypes = LaboratoryType.objects.all()
+        sampletypes = SampleType.objects.all()
+        context = {'sample': sample,'labType_list': labtypes, 'sampleType_list': sampletypes}
+        template = 'internal/sampleType/edit.html'
+        return render (request, template, context)
 
 
 def delete(request,

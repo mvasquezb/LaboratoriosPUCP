@@ -62,7 +62,7 @@
                           <th>{{ essaytype.pk }}</th>
                           <th>{{ essaytype.name }}</th>
                           <th>{{ essaytype.description }}</th>
-                          <th><div ><input type="checkbox" value="" name="E{{ essaytype.name }}" class="i-checks"> <i></i></div></th>
+                          <th><div ><input type="checkbox" value="" name="essay_{{ essaytype.name }}" class="i-checks"> <i></i></div></th>
                         </tr>
                       {% endfor %}
                     </tbody>
@@ -84,7 +84,7 @@
                           <th>{{ sampletype.pk }}</th>
                           <th>{{ sampletype.name }}</th>
                           <th>{{ sampletype.description }}</th>
-                          <th><div ><input name="S{{ sampletype.name }}" class="i-checks" name="samplecheck"type="checkbox" value=""> <i></i></div></th>
+                          <th><div ><input name="sample_{{ sampletype.name }}" class="i-checks" name="samplecheck"type="checkbox" value=""> <i></i></div></th>
                         </tr>
                       {% endfor %}
                     </tbody>
@@ -132,12 +132,9 @@ var fill_Toastr = function(pMsg, pTypeMsg,pTitle){
       var array = [];
       var i;
       var nameObject = document.getElementById("labName");
-      //var nameArray = [];
-      //nameArray.push(nameObject.value)
       //esto es para obtener los ids de los checkboxes seleccionados
       $("input[type=checkbox]:checked").each(function(){
       array.push($(this).attr("name")) ;});
-
       $.get("{{ url('internal:laboratoryType.create')}}",
           {'array': array, 'name':nameObject.value});
 
@@ -162,8 +159,7 @@ var fill_Toastr = function(pMsg, pTypeMsg,pTitle){
       }
 
       if(flag == 3){
-        $.get("{{ url('internal:laboratoryType.create2')}}",
-          {'array': array});
+
       }
     }
 

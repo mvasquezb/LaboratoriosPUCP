@@ -57,111 +57,13 @@
     </div>
   </div>
 
-  <div class="col-md-offset-1">
-    <div class="ibox float-e-margins">
-      <div class="form-inline">
-        <div class="form-group">
-          <div class="ibox-title">
-            <h5>Personal disponible para este Laboratorio </h5>
-          </div>
-          <div class="ibox-content" style="height: 300px; width: 480px;">
-            <div style="padding-bottom: 10px;">
-              <label>Buscar Personal </label><br>
-              <input type="text" class="form-control input-sm" id="searchTextTable1" onkeyup="searchInTable1()" placeholder="Nombre de Personal">
-            </div>
-            <div class="table-responsive" style="overflow: auto; max-height: 180px;">
-            <table class="table table-striped" id="avaibleUsersTable">
-              <thead>
-                <tr>
-                  <th>PK</th>
-                  <th>Nombre</th>
-                  <th>Apellidos</th>
-                  <th>Fecha Inicio</th>
-                  <th>Agregar a Laboratorio</th>
-                </tr>
-              </thead>
-              <tbody id="in_put">
-                  <tr>
-                    <th class="1_1" scope="row">1</th>
-                    <td class="2_1">First Name1</td>
-                    <td class="3_1">Last Name1</td>
-                    <td class="4_1">12/12/12</td>
-                    <td><i onclick="move_items(1)" class="5_1 fa fa-arrow-right"></i></td>
-                  </tr>
-
-                  <tr>
-                    <th class="1_2" scope="row">2</th>
-                    <td class="2_2">First Name2</td>
-                    <td class="3_2">Last Name2</td>
-                    <td class="4_2">12/12/12</td>
-                    <td><i onclick="move_items(2)" class="5_2 fa fa-arrow-right"></i></td>
-                  </tr>
-
-                  <tr>
-                    <th class="1_3" scope="row">2</th>
-                    <td class="2_3">First Name2</td>
-                    <td class="3_3">Last Name2</td>
-                    <td class="4_3">12/12/12</td>
-                    <td><i onclick="move_items(3)" class="5_3 fa fa-arrow-right"></i></td>
-                  </tr>
 
 
-                {% for user in users : %}
-                  <tr class="0_{{ user.pk }}">
-                    <th class="1_{{ user.pk }}" scope="row">{{ user.pk }}</th>
-                    <td class="2_{{ user.pk }}">{{ user.first_name }}</td>
-                    <td class="3_{{ user.pk }}">{{ user.last_name }}</td>
-                    <td class="4_{{ user.pk }}">12/12/12</td>
-                    <td><i onclick="move_items({{ user.pk }})" class="5_{{ user.pk }} fa fa-arrow-right"></i></td>
-                  </tr>
-                {% endfor %}
-              </tbody>
-            </table>
-            </div>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <div class="ibox-title">
-            <h5>Personal añadido a este Laboratorio </h5>
-          </div>
-          <div class="ibox-content" style="height: 300px; width: 480px;">
-            <div style="padding-bottom: 10px;">
-              <label>Buscar Personal </label><br>
-              <input type="text" class="form-control input-sm" id="searchTextTable2" onkeyup="searchInTable2()" placeholder="Nombre de Personal">
-            </div>
-            <div class="table-responsive" style="overflow: auto; max-height: 180px;">
-            <table class="table table-striped" id="addedUsersTable">
-              <thead>
-                <tr>
-                  <th>#</th>
-                  <th>Nombre</th>
-                  <th>Apellidos</th>
-                  <th>Fecha Inicio</th>
-                  <th>Quitar de Laboratorio</th>
-                </tr>
-              </thead>
-              <tbody id="out_put">
-
-              </tbody>
-            </table>
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </div>
-
-  <div class="col-md-offset-0">
-    <div class="ibox float-e-margins">
-      <div class="ibox-content form-group form-inline">
-        <div class="col-md-offset-5">
+        <div class="col-md-offset-4">
           <button type="submit" id="createButton" class="btn btn-w-m btn-success"> Registrar</button>
           <button type="button" id="cancelButton" class="btn btn-w-m btn-white"> Cancelar</button>
         </div>
-      </div>
-    </div>
+
   </div>
 </form>
 {% endblock page_content %}

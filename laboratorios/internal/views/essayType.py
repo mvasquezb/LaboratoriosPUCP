@@ -6,8 +6,9 @@ from ..models import *
 def index(request,
           template='internal/essayType/index.html',
           extra_context=None):
+    typelabs = LaboratoryType.objects.all()
     types = EssayType.objects.all().order_by('lab_type','name')
-    context = {'essay_list': types}
+    context = {'essay_list': types,'lab_types': typelabs}
     return render(request, template, context)
 
 def validation_name(name):
@@ -18,7 +19,7 @@ def validation_name(name):
     return True
 
 def create(request,
-          template='internal/essayType/create.html',
+          template='internal/essayType/index.html',
           extra_context=None):
     if  request.method == 'POST':
         index = 'internal/essayType/index.html'
@@ -39,12 +40,13 @@ def create(request,
                         active=True,
                         lab_type=lab_type
                     )
-                    return redirect('internal:essayType.create')
+                    return redirect('internal:essayType.index')
             else:
                 return redirect('internal:essayType.index')
     else:
         typelabs = LaboratoryType.objects.all()
         context = {'lab_types': typelabs}
+        template = 'internal/essayType/create.html'
         return render(request, template, context)
 
 def edit(request,id):

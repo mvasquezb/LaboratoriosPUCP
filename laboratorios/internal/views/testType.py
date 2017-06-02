@@ -38,7 +38,7 @@ def create(request,
                     active=True,
                     essay_type=essay_type
                 )
-                return redirect('internal:testType.create')
+                return redirect('internal:testType.index')
             else:
                 return redirect('internal:testType.index')
     else:

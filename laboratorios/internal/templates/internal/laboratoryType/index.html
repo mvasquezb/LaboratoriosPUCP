@@ -20,24 +20,24 @@
         <form class="horizontal-form">
           <div class="form-inline">
             <div class="form-group">
-                <label class="control-label">Tipo de Ensayo: </label>
+    <!--            <label class="control-label">Tipo de Ensayo: </label>
                 <select class="form-control" id="typeListEssay">
                   <option style="display:none;" selected> -- Selecciona una opcion -- </option>
                   <option onclick="list_filter_function()">-- Borrar filtro --</option>
                   {% for essaytype in essayType_list %}
                     <option>{{ essaytype.name }}</option>
                   {% endfor %}
-                </select>
+                </select> -->
               </div>
             <div class="form-group">
-            <label class="control-label">Tipo de Muestra: </label>
+<!--             <label class="control-label">Tipo de Muestra: </label>
             <select class="form-control" id="typeListSample">
-              <option style="display:none;" selected> -- Selecciona una opcion -- </option>
+             <option style="display:none;" selected> -- Selecciona una opcion -- </option>
               <option onclick="list_filter_function()">-- Borrar filtro --</option>
               {% for sampletype in sampleType_list %}
                 <option>{{ sampletype.name }}</option>
               {% endfor %}
-            </select>
+            </select> -->
           </div>
             <div class="form-group">
               <label class="control-label">Nombre: </label>
@@ -52,14 +52,14 @@
   <div class="ibox-content">
     <div class="col-lg-12">
       <div class="text-right">
-        <a class="btn btn-primary" href="{{ url('internal:laboratoryType.create') }}">Crear Tipo Laboratorio</a>
+        <a class="btn btn-sm btn-success" href="{{ url('internal:laboratoryType.create') }}">Crear Tipo Laboratorio</a>
       </div>
     </div>
   </div>
   <div class="wrapper wrapper-content animated fadeIn">
     <div class="row">
       <div class="table-responsive">
-        <table class="table table-striped">
+        <table id="tableLabType" class="table table-striped">
           <thead>
             <tr>
               <th>Id</th>
@@ -73,18 +73,18 @@
           <tbody>
             {% for labType in labType_list %}
               <tr>
-                <th>{{ labType.pk }}</th>
-                <th>{{ labType.name }}</th>
-                <th>{{ labType.description }}</th>
-                <th>
+                <td>{{ labType.pk }}</td>
+                <td>{{ labType.name }}</td>
+                <td>{{ labType.description }}</td>
+                <td>
                   {% if labType.active %}
                     Activo
                   {% else %}
                     Inactivo
                   {% endif %}
-                </th>
-                <th><a href="#"><i onclick="edit_row()" class="fa fa-pencil-square-o"></i></a></th>
-                <th><input type="checkbox" name="{{labType.pk}}" class="i-checks"></th>
+                </td>
+                <td><a href="{{ url('internal:laboratoryType.edit',labType.pk) }}"><i class="fa fa-pencil-square-o"></i></a></td>
+                <td><input type="checkbox" name="{{labType.pk}}" class="i-checks"></td>
               </tr>
             {% endfor %}
           </tbody>
@@ -157,5 +157,30 @@ var fill_Toastr = function(pMsg, pTypeMsg,pTitle){
     }
   document.getElementById("deleteButton").addEventListener("click", delete_rows);
 
+</script>
+<script>
+      function text_search_function() {
+        var boxes = document.getElementsByClassName('i-checks');
+        for (var i = 0; i < boxes.length;i++)
+        {
+            box = boxes[i];
+            box.checked = false;
+        }
+        var input, filter, table, tr, td, i;
+        input = document.getElementById("text_search");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("tableLabType");
+        tr = table.getElementsByTagName("tr");
+        for (i = 0; i < tr.length; i++) {
+          td = tr[i].getElementsByTagName("td")[1];
+          if (td) {
+            if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                tr[i].style.display = "";
+            } else {
+                tr[i].style.display = "none";
+            }
+          }
+        }
+      }
 </script>
 {% endblock custom_js %}
