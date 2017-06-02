@@ -21,8 +21,8 @@ def create(request,
     print(form.errors)
 
     if form.is_valid():
-        print(form.data['tests'])
         form.save()
+        print(form.data)
         return redirect('internal:essayTemplate.index')
     return render(request, template, context)
 

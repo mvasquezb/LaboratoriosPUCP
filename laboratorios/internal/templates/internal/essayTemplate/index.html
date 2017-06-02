@@ -25,7 +25,7 @@
                     <thead>
                         <tr>
                             <th class="footable-visible footable-sortable">Codigo</th>
-                            <th class="footable-visible footable-sortable">Num. de Pruebas</th>
+                            <th class="footable-visible footable-sortable">Nombre</th>
                             <th class="footable-visible footable-sortable">Acción</th>
                         </tr>
                     </thead>
@@ -33,7 +33,7 @@
                     {% for essay in essays %}
                         <tr>
                             <td>{{ essay.code}}</td>
-                            <td>{{ essay.test_number}}</td>
+                            <td>{{ essay.description}}</td>
                             <td class="text-left footable-visible footable-last-column">
                                 <div class="btn-group">
                                     <a href="{{ url('internal:essayTemplate.edit', essay.id) }}" class="btn-white btn btn-xs">Editar</a>

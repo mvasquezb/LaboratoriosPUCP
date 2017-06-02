@@ -57,11 +57,12 @@ class ClientForm(ModelForm):
 class EssayTemplateForm(ModelForm):
     class Meta:
         model = EssayTemplate
-        fields = ['code', 'test_number', 'description']
+        #fields = ['code', 'test_number', 'description']
+        fields = ['code', 'description']
+
     tests = forms.ModelMultipleChoiceField(queryset=TestTemplate.objects.all())
 
     # Overriding __init__ here allows us to provide initial
-    # data for 'toppings' field
     def __init__(self, *args, **kwargs):
         # Only in case we build the form from an instance
         # (otherwise, 'toppings' list should be empty)
@@ -73,7 +74,9 @@ class EssayTemplateForm(ModelForm):
             # a list of primary key for the selected data.
             initial['tests'] = [t.pk for t in kwargs['instance'].tests.all()]
 
+
         forms.ModelForm.__init__(self, *args, **kwargs)
+        self.fields['tests'].required = False
 
     # Overriding save allows us to process the value of 'toppings' field
     def save(self, commit=True):
