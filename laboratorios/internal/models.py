@@ -61,8 +61,11 @@ class User(AuthUser):
 class Client(models.Model):
     name = models.CharField(max_length=100)
     idDoc = models.IntegerField()
-    username = models.OneToOneField(User, on_delete=models.CASCADE)
+    username = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
     phoneNumber = models.CharField(max_length=10)
+
+    def __str__(self):
+        return self.name
 
 
 ### TipoEnsayo
@@ -108,17 +111,6 @@ class SampleFill(models.Model):
     description = models.CharField(max_length=30)
 
 
-class EssayTemplate(models.Model):
-    code = models.IntegerField(default=0)
-    test_number = models.IntegerField(default=0)
-    description = models.CharField(max_length=100)
-    #tests = models.ManyToManyField(TestTemplate)
-
-
-    def __str__(self):
-        return str(self.code)
-
-
 class SampleFill (models.Model):
     request_fill = models.ForeignKey (ServiceRequest, on_delete=models.CASCADE)
     sample_template = models.ForeignKey (SampleTemplate)
@@ -132,7 +124,7 @@ class EssayTemplate (models.Model):
     description = models.CharField (max_length=100)
 
     def __str__(self):
-        return str (self.cod)
+        return str (self.code)
 
     def get_test(self, index):
         test_list = TestTemplate.objects.filter (essay_template=self)

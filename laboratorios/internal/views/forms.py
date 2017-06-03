@@ -10,7 +10,7 @@ from internal import models
 
 
 class RoleForm(forms.ModelForm):
-    class Meta:        
+    class Meta:
         model = models.Role
         fields = ['description', 'access']
 
@@ -42,12 +42,32 @@ class TestForm(ModelForm):
         model = TestTemplate
         fields = ['id', "name"]
 
+
+class ClientForm(ModelForm):
+    class Meta:
+        model = Client
+        exclude =('username',)
+
+
 class ParameterForm(ModelForm):
     class Meta:
         model = ParameterTemplate
         exclude = ()
 
 ParameterFormSet = inlineformset_factory(TestTemplate, ParameterTemplate, form=ParameterForm, extra=1)
+
+class EssayForm(ModelForm):
+    class Meta:
+        model = EssayTemplate
+        fields = ['description']
+
+class SampleForm(ModelForm):
+    class Meta:
+        model = SampleTemplate
+        fields = ['description']
+
+SampleFormSet = inlineformset_factory(ServiceRequest, SampleFill, form=SampleForm, extra=1)
+
 
 class AccessForm(ModelForm):
     class Meta:
@@ -57,15 +77,15 @@ class AccessForm(ModelForm):
             "description": TextInput()
         }
 
-class ClientForm(ModelForm):
-    class Meta:
-        model = Client
-        fields = [
-            'name',
-            'idDoc',
-            'username',
-            'phoneNumber'
-        ]
+# class ClientForm(ModelForm):
+#     class Meta:
+#         model = Client
+#         fields = [
+#             'name',
+#             'idDoc',
+#             'username',
+#             'phoneNumber'
+#         ]
 
 
 class EssayTemplateForm(ModelForm):
@@ -135,3 +155,9 @@ class EssayTemplateForm(ModelForm):
         #                 # we add newly selected books
         #                 instance.books.add(test)
         #     return instance
+
+
+class ServiceRequestForm(ModelForm):
+    class Meta:
+        model = ServiceRequest
+        exclude = ()
