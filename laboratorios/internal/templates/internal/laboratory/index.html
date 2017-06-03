@@ -22,7 +22,9 @@
     </div>
   </div>
   <div class="ibox-content">
-
+    <form class="horizontal-form">
+      <input type="text"  class="input-sm form-control" placeholder="Buscar" id="text_search" onkeyup="text_search_function()" >
+    </form>
   </div>
 </div>
 
@@ -83,20 +85,6 @@
 {% endblock page_content %}
 
 {% block custom_js %}
-<script>
-setTimeout(function() {
-  toastr.options = {
-    closeButton: true,
-    progressBar: true,
-    showMethod: 'slideDown',
-    timeOut: 4000
-  };
-  toastr.success('Sistema de Gestión de Laboratorios IC-PUCP', 'Bienvenido');
-}, 1300);
-</script>
-<script type="text/javascript">
-
-</script>
 <script type="text/javascript">
   var fill_Toastr = function(pMsg, pTypeMsg,pTitle){
     toastr.options = {
@@ -153,5 +141,32 @@ setTimeout(function() {
 </script>
 <script>
   $("#delete_button").click(delete_data);
+</script>
+<script>
+      function text_search_function() {
+
+        var boxes = document.getElementsByClassName('i-checks');
+        for (var i = 0; i < boxes.length;i++)
+        {
+            box = boxes[i];
+            box.checked = false;
+        }
+
+        var input, filter, table, tr, td, i;
+        input = document.getElementById("text_search");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("allCreatedLabs");
+        tr = table.getElementsByTagName("tr");
+        for (i = 0; i < tr.length; i++) {
+          td = tr[i].getElementsByTagName("td")[0];
+          if (td) {
+            if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                tr[i].style.display = "";
+            } else {
+                tr[i].style.display = "none";
+            }
+          }
+        }
+      }
 </script>
 {% endblock custom_js %}

@@ -24,7 +24,6 @@
       <div class="ibox-content">
         <div class="row">
           <div class="col-sm-6 b-r">
-
               <div class="form-group">
                 <label>Nombre de Laboratorio (*)</label>
                 <input type="text" name="textname" required placeholder="Ingrese Nombre de Laboratorio" class="form-control">
@@ -57,49 +56,7 @@
     </div>
   </div>
 
-<form action="{{ url('internal:laboratory.create') }}" method="post">
-  {% csrf_token %}
-  <div class="col-md-offset-2" style="width: 700px">
-    <div class="ibox float-e-margins">
-      <div class="ibox-title">
-        <h5>Datos Generales </h5>
-      </div>
-      <div class="ibox-content">
-        <div class="row">
-          <div class="col-sm-6 b-r">
-              <div class="form-group">
-                <label>Nombre de Laboratorio (*)</label>
-                <input type="text" name="textname" required placeholder="Ingrese Nombre de Laboratorio" class="form-control">
-                <span>Ejemplo: Laboratorio de Corrosión</span>
-              </div>
-              <div class="form-group">
-                <label>Cantidad de Usuarios (*)</label>
-                <input type="number" name="numberUsers" required min="5" max="15" class="form-control">
-                <span>Cantidad mínima es cinco (5), cantidad máxima es quince (15)</span>
-              </div>
-
-          </div>
-          <div class="col-sm-6 b-r">
-
-              <div class="form-group">
-                <label>Tipo de Laboratorio (*)</label>
-                <select class="form-control m-b" name="comboBox_type">
-                  {% for lab_type in types %}
-                    {% if lab_type.active == True %}
-                      <option>{{ lab_type.name }}</option>
-                    {% endif %}
-                  {% endfor %}
-                </select>
-                <span>Seleccione un tipo de laboratorio</span>
-              </div>
-          </div>
-        </div>
-        <p><strong>(*)</strong> campos obligatorios</p>
-      </div>
-    </div>
-  </div>
-
-  <div class="col-md-offset-1">
+{#   <div class="col-md-offset-1">
     <div class="ibox float-e-margins">
       <div class="form-inline">
         <div class="form-group">
@@ -109,8 +66,8 @@
           <div class="ibox-content" style="height: 300px; width: 480px;">
             <div style="padding-bottom: 10px;">
               <label>Buscar Personal </label><br>
-              <input type="text" class="form-control input-sm" id="searchTextTable1" onkeyup="searchInTable1()" placeholder="Nombre de Personal">
             </div>
+              <input type="text" class="form-control input-sm" id="searchTextTable1" onkeyup="searchInTable1()" placeholder="Nombre de Personal">
             <div class="table-responsive" style="overflow: auto; max-height: 180px;">
             <table class="table table-striped" id="avaibleUsersTable">
               <thead>
@@ -194,7 +151,7 @@
       </div>
     </div>
   </div>
-
+ #}
   <div class="col-md-offset-0">
     <div class="ibox float-e-margins">
       <div class="ibox-content form-group form-inline">
