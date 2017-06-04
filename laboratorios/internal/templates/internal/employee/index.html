@@ -1,0 +1,52 @@
+{% extends 'internal/base_internal.html' %}
+
+{% block title %}{{ super() }} | Inicio{% endblock title %}
+
+{% block custom_css %}{% endblock custom_css %}
+
+{% block page_content %}
+<div class="row border-bottom white-bg dashboard-header">
+    <div class="col-md-6">
+        <h2><strong>Listado de Usuarios</strong></h2>
+    </div>
+</div>
+<div class="wrapper wrapper-content animated fadeInRight" >
+    <div class="col-lg-12">
+        <div class="ibox float-e-margins">
+            <div class="ibox-content">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="text-right">
+                            <a class="btn btn-primary" href="{{ url('internal:employee.create') }}">Crear Empleado</a>
+                        </div>
+                    </div>
+                </div>
+                <table class="footable table table-stripped toggle-arrow-tiny footable-loaded tablet breakpoint">
+                    <thead>
+                        <tr>
+                            <th class="footable-visible footable-sortable">Nombre de empleado</th>
+                            <th class="footable-visible footable-sortable">Correo</th>
+                            <th class="footable-visible footable-sortable">Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for employee in employees %}
+                        <tr>
+                            <td>{{ employee.username }}</td>
+                            <td>{{ employee.first_name }} {{ employee.last_name }} {{ employee.surname }}</td>
+                            <td>{{ employee.email }}</td>
+                            <td class="text-left footable-visible footable-last-column">
+                                <div class="btn-group">
+                                    <a href="{{ url('internal:employee.edit', employee.id) }}" class="btn-white btn btn-xs">Editar</a>
+                                    <a href="{{ url('internal:employee.delete', employee.id) }}" class="btn-white btn btn-xs">Eliminar</a>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock page_content %}
