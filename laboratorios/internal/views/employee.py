@@ -41,8 +41,9 @@ def edit(request, pk,
     context={
         'laboratories' : Laboratory.objects.all(),
         'selected_laboratories' : list(employee.laboratories.values_list('id', flat=True)),
-        'selected_roles' : list(employee.role.values_list('id', flat=True)),
+        'selected_roles' : list(employee.roles.values_list('id', flat=True)),
         'roles' : Role.objects.all(),
+        'form' : form,
         'custom_employee' : employee,
     }
     if form.is_valid():

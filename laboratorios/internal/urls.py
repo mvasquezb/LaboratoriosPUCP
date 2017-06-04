@@ -22,7 +22,7 @@ urlpatterns = [
         name='employee.edit'),
     url('^employee/detail/(?P<pk>\d+)$',
         views.employee.detail,
-        name='employee.edit'),
+        name='employee.detail'),
     url('^employee/delete/(?P<pk>\d+)$',
         views.employee.delete,
         name='employee.delete'),
