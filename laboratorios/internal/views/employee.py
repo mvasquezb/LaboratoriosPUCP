@@ -31,8 +31,12 @@ def index(request):
 def detail(request, pk,
            template='internal/employee/detail.html'):
     employee = get_object_or_404(Employee, pk=pk)
-
-    return render(request, 'internal/employee/index.html', {'employee': employee})
+    context = {
+        'selected_laboratories' : list(employee.laboratories.values_list('id', flat=True)),
+        'selected_roles' : list(employee.roles.values_list('id', flat=True)),
+        'custom_employee': employee
+    }
+    return render(request, template, context)
 
 
 def create(request,

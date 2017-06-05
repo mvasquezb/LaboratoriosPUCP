@@ -46,6 +46,7 @@
                                     <td>{{ employee.email }}</td>
                                     <td class="text-left footable-visible footable-last-column">
                                         <div class="btn-group">
+                                            <a href="{{ url('internal:employee.detail', employee.id) }}" class="btn-white btn btn-xs">Detalle</a>
                                             <a href="{{ url('internal:employee.edit', employee.id) }}" class="btn-white btn btn-xs">Editar</a>
                                             <a href="{{ url('internal:employee.delete', employee.id) }}" class="myBtn1 btn-white btn btn-xs">Eliminar</a>
                                         </div>
