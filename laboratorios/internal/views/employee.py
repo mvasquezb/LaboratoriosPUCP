@@ -32,7 +32,8 @@ def index(request,
         employees = paginator.page(paginator.num_pages)
 
     context = {
-        'employees_list': employees
+        'employees_list': employees,
+        'paginator': paginator,
     }
     if extra_context is not None:
         context.update(extra_context)
