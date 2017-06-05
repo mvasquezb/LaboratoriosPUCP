@@ -77,8 +77,18 @@ class EssayMethod(models.Model):
 class EssayMethodParameter(models.Model):
     description = models.CharField(max_length=100)
     unit = models.CharField(max_length=20)
+
+    def __str__(self):
+        return self.description + ' | ' + self.unit
+
+
+class EssayMethodParameterFill(models.Model):
+    parameter = models.ForeignKey(EssayMethodParameter)
     value = models.CharField(max_length=20)  # Is this always a numeric value ?
     uncertainty = models.FloatField()
+
+    def __str__(self):
+        return str(self.parameter) + ' | ' + self.value
 
 
 class EssayFill(models.Model):
