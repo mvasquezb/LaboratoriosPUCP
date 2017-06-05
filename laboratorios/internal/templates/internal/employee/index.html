@@ -10,7 +10,7 @@
         <h2><strong>Listado de Usuarios</strong></h2>
     </div>
 </div>
-<div class="wrapper wrapper-content animated fadeInRight" >
+<div class="wrapper wrapper-content animated" >
     <div class="col-lg-12">
         <div class="ibox float-e-margins">
             <div class="ibox-content">
@@ -47,7 +47,7 @@
                                     <td class="text-left footable-visible footable-last-column">
                                         <div class="btn-group">
                                             <a href="{{ url('internal:employee.edit', employee.id) }}" class="btn-white btn btn-xs">Editar</a>
-                                            <a href="{{ url('internal:employee.delete', employee.id) }}" class="btn-white btn btn-xs">Eliminar</a>
+                                            <a href="{{ url('internal:employee.delete', employee.id) }}" class="myBtn1 btn-white btn btn-xs">Eliminar</a>
                                         </div>
                                     </td>
                                 </tr>
@@ -85,4 +85,39 @@
         </div>
     </div>
 </div>
+<div id="myModal1" class="modal1">
+
+  <!-- Modal content -->
+  <div class="modal-content">
+    <span class="span-close close">&times;</span>
+    <div class="modeal-center-content">
+        <p>¿Seguro que quiere eliminarlo?</p>
+        <button type="button" class="delete-employee btn btn-danger">Eliminar</button>
+        <button type="button" class="span-close btn btn-primary">Cancelar</button>
+    </div>
+  </div>
+
+</div>
 {% endblock page_content %}
+{% block custom_js %}
+<script>
+$( document ).ready(function() {
+    $(".myBtn1").click(function() {
+         $("#myModal1").show();
+         var delete_url = $(this).attr("href")
+         $(".delete-employee").click(function() {
+            window.location.href = delete_url;
+         });
+    });
+
+    $(".span-close").click(function() {
+         $("#myModal1").hide();
+    });
+
+    $(".myBtn1").click(function(event) {
+        event.preventDefault();
+        return false;
+    })
+});
+</script>
+{% endblock custom_js %}
