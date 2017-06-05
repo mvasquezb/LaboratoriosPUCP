@@ -7,14 +7,13 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
     <title>{% block title %}Instituto para la Calidad - PUCP{% endblock title %}</title>
-    
+
     <link rel="shortcut icon" href="{{ static('img/logo-pucp.jpg') }}" type="image/x-icon">
-    
+
     {% block base_css %}
       <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
       <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
       <!-- Custom theme styles -->
-      <link href="{{ static('css/footable.core.css') }}" rel="stylesheet">
       <link href="{{ static('css/style.css') }}" rel="stylesheet">
     {% endblock base_css %}
     {% block custom_css %}{% endblock custom_css %}
@@ -22,7 +21,7 @@
   </head>
 
   <body class="{% block body_class %}{% endblock body_class %}">
-    
+
     {% block base_content %}{% endblock base_content %}
 
     {% block base_js %}
