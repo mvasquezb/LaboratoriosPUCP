@@ -26,5 +26,13 @@ urlpatterns = [
     url('^employee/delete/(?P<pk>\d+)$',
         views.employee.delete,
         name='employee.delete'),
-
+    #
+    # Laboratory
+    #
+    url('^laboratory/$',
+        views.laboratory.index,
+        name='laboratory.index'),
+    url('^laboratory/create$',
+        views.laboratory.create,
+        name='laboratory.create'),
 ]
