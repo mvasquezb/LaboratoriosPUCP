@@ -63,6 +63,7 @@ def create(request,
     if request.method == 'POST':
         if form.is_valid():
             form.save()
+            messages.success(request, 'Se ha creado el empleado exitosamante!')
             return redirect('internal:employee.index')
     return render(request, template, context)
 
@@ -82,7 +83,7 @@ def edit(request, pk,
     if request.method == 'POST':
         if form.is_valid():
             form.save()
-            messages.success(request, 'Your password was updated successfully!')
+            messages.success(request, 'Se ha editado el empleado exitosamante!')
             return redirect('internal:employee.index')
         else:
             messages.warning(request, 'Please correct the error below.')
