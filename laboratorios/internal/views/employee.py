@@ -60,9 +60,10 @@ def create(request,
         'roles': Role.objects.all(),
         'form': form
     }
-    if form.is_valid():
-        form.save()
-        return redirect('internal:employee.index')
+    if request.method == 'POST':
+        if form.is_valid():
+            form.save()
+            return redirect('internal:employee.index')
     return render(request, template, context)
 
 
@@ -78,12 +79,13 @@ def edit(request, pk,
         'form': form,
         'custom_employee': employee,
     }
-    if form.is_valid():
-        form.save()
-        messages.success(request, 'Your password was updated successfully!')
-        return redirect('internal:employee.index')
-    else:
-        messages.warning(request, 'Please correct the error below.')
+    if request.method == 'POST':
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Your password was updated successfully!')
+            return redirect('internal:employee.index')
+        else:
+            messages.warning(request, 'Please correct the error below.')
     return render(request, template, context)
 
 
