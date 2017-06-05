@@ -1,13 +1,13 @@
 {% extends 'internal/base_internal.html' %}
 
-{% block title %}{{ super() }} | Inicio{% endblock title %}
+{% block title %}{{ super() }} | Empleados{% endblock title %}
 
 {% block custom_css %}{% endblock custom_css %}
 
 {% block page_content %}
 <div class="row border-bottom white-bg dashboard-header">
     <div class="col-md-6">
-        <h2><strong>Crear Nuevo Usuario</strong></h2>
+        <h2><strong>Detalle del Usuario</strong></h2>
     </div>
 </div>
 <div class="wrapper wrapper-content animated fadeInRight" >
@@ -18,11 +18,11 @@
                         <div class="col-lg-6">
                             <div class="form-group">
                                 <label>Nombre de Usuario</label>
-                                <div class="text-primary">{{ custom_employee.username }}</div>
+                                <div class="text-primary">{{ employee.username }}</div>
                             </div>
                             <div class="form-group">
                                 <label>Correo</label>
-                                <div class="text-primary">{{ custom_employee.email }}</div>
+                                <div class="text-primary">{{ employee.email }}</div>
                             </div>
                         </div>
                         <div class="col-lg-6">

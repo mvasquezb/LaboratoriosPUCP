@@ -8326,6 +8326,12 @@ body.md-skin {
   }
 }
 
+.confirm-modal-sm {}
+
+.confirm-modal-sm .modal-header {
+  padding: 15px 5px;
+}
+
 .modal1 {
     display: none; /* Hidden by default */
     position: fixed; /* Stay in place */
