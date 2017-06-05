@@ -43,16 +43,22 @@ class LaboratoryServiceHours(models.Model):
         return str(self.start_time) + ' - ' + str(self.end_time)
 
 
+class LaboratoryType(models.Model):
+    name = models.CharField(max_length=100)
+    description = models.CharField(max_length=100)
+    essay_methods = models.ManyToManyField(
+        'EssayMethod',
+        related_name='laboratories'
+    )
+
+
 class Laboratory(models.Model):
     name = models.CharField(max_length=50)
     employees = models.ManyToManyField('Employee', related_name='laboratories')
     capacity = models.PositiveIntegerField()
     supervisor = models.ForeignKey('Employee')
     service_hours = models.ForeignKey(LaboratoryServiceHours)
-    essay_methods = models.ManyToManyField(
-        'EssayMethod',
-        related_name='laboratories'
-    )
+    type = models.ForeignKey(LaboratoryType, on_delete=models.CASCADE)
     inventory = models.ManyToManyField(
         'Inventory',
         related_name='laboratories'
@@ -62,6 +68,10 @@ class Laboratory(models.Model):
 class Essay(models.Model):
     name = models.CharField(max_length=100)
     description = models.CharField(max_length=100)
+    essay_methods = models.ManyToManyField(
+        'EssayMethod',
+        related_name='essays'
+    )
 
 
 class EssayMethod(models.Model):
