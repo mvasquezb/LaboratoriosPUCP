@@ -11,5 +11,6 @@ def index(request,
 def create(request,
           template='internal/laboratory/create.html',
           extra_content=None):
-    context = {}
+    users = Employee.objects.all()
+    context = {'users': users}
     return render(request, template, context)
