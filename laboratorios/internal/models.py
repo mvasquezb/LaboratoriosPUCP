@@ -6,7 +6,7 @@ from django.contrib.auth.models import (
 
 
 class Role(models.Model):
-    permissions = models.ManyToManyField(Permission)
+    permissions = models.ManyToManyField(Permission, blank=True)
     name = models.CharField(max_length=100)
     description = models.CharField(max_length=100)
 
@@ -130,7 +130,7 @@ class ServiceRequest(models.Model):
     client = models.ForeignKey(Client, on_delete=models.CASCADE)
     supervisor = models.ForeignKey(Employee)
     state = models.ForeignKey('ServiceRequestState')
-    observations = models.CharField(max_length=500)
+    observations = models.CharField(max_length=500, null=True, blank=True)
 
 
 class ServiceRequestState(models.Model):
