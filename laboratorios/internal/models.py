@@ -86,25 +86,34 @@ class EssayMethodParameter(models.Model):
         return self.description + ' | ' + self.unit
 
 
-class EssayMethodParameterFill(models.Model):
-    parameter = models.ForeignKey(EssayMethodParameter)
-    value = models.CharField(max_length=20)  # Is this always a numeric value ?
-    uncertainty = models.FloatField()
-
-    def __str__(self):
-        return str(self.parameter) + ' | ' + self.value
-
-
 class EssayFill(models.Model):
     essay = models.ForeignKey(Essay)
     sample = models.ForeignKey('Sample')
 
 
 class EssayMethodFill(models.Model):
-    essay_method = models.OneToOneField(EssayMethod)
+    essay_method = models.ForeignKey(
+        EssayMethod,
+        on_delete=models.CASCADE,
+        related_name='essay_methods'
+    )
     essay = models.ForeignKey(EssayFill)
     external_provider = models.ForeignKey('ExternalProvider', null=True)
     inventory_order = models.ForeignKey('InventoryOrder', null=True)
+
+
+class EssayMethodParameterFill(models.Model):
+    parameter = models.ForeignKey(EssayMethodParameter)
+    value = models.CharField(max_length=20)  # Is this always a numeric value ?
+    uncertainty = models.FloatField()
+    essay_method = models.ForeignKey(
+        EssayMethodFill,
+        on_delete=models.CASCADE,
+        related_name='parameters'
+    )
+
+    def __str__(self):
+        return str(self.parameter) + ' | ' + self.value
 
 
 class ExternalProvider(models.Model):
