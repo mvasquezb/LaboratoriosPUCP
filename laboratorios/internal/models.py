@@ -27,11 +27,13 @@ class Client(BasicUser):
 class Employee(BasicUser):
     essay_methods = models.ManyToManyField(
         'EssayMethod',
-        related_name='employees'
+        related_name='employees',
+        blank=True
     )
     assigned_essay_methods = models.ManyToManyField(
         'EssayMethodFill',
-        related_name='employees'
+        related_name='employees',
+        blank=True
     )
 
 
@@ -45,17 +47,23 @@ class LaboratoryServiceHours(models.Model):
 
 class Laboratory(models.Model):
     name = models.CharField(max_length=50)
-    employees = models.ManyToManyField('Employee', related_name='laboratories')
+    employees = models.ManyToManyField(
+        'Employee',
+        related_name='laboratories',
+        blank=True
+    )
     capacity = models.PositiveIntegerField()
-    supervisor = models.ForeignKey('Employee')
+    supervisor = models.ForeignKey('Employee', null=True, blank=True)
     service_hours = models.ForeignKey(LaboratoryServiceHours)
     essay_methods = models.ManyToManyField(
         'EssayMethod',
-        related_name='laboratories'
+        related_name='laboratories',
+        blank=True
     )
     inventory = models.ManyToManyField(
         'Inventory',
-        related_name='laboratories'
+        related_name='laboratories',
+        blank=True
     )
 
 
@@ -64,7 +72,8 @@ class Essay(models.Model):
     description = models.CharField(max_length=100)
     essay_methods = models.ManyToManyField(
         'EssayMethod',
-        related_name='essays'
+        related_name='essays',
+        blank=True
     )
 
 
@@ -74,7 +83,8 @@ class EssayMethod(models.Model):
     price = models.FloatField()
     parameters = models.ManyToManyField(
         'EssayMethodParameter',
-        related_name='essaymethods'
+        related_name='essaymethods',
+        blank=True
     )
 
 
@@ -98,8 +108,16 @@ class EssayMethodFill(models.Model):
         related_name='essay_methods'
     )
     essay = models.ForeignKey(EssayFill)
-    external_provider = models.ForeignKey('ExternalProvider', null=True)
-    inventory_order = models.ForeignKey('InventoryOrder', null=True)
+    external_provider = models.ForeignKey(
+        'ExternalProvider',
+        null=True,
+        blank=True
+    )
+    inventory_order = models.ForeignKey(
+        'InventoryOrder',
+        null=True,
+        blank=True
+    )
 
 
 class EssayMethodParameterFill(models.Model):
@@ -119,7 +137,7 @@ class EssayMethodParameterFill(models.Model):
 class ExternalProvider(models.Model):
     name = models.CharField(max_length=100)
     description = models.CharField(max_length=200)
-    services = models.ManyToManyField('ExternalProviderService')
+    services = models.ManyToManyField('ExternalProviderService', blank=True)
 
 
 class ExternalProviderService(models.Model):
