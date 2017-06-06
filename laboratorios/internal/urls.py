@@ -1,7 +1,19 @@
 from django.conf.urls import url
 from . import views
+from django.contrib.auth.views import login, logout_then_login
 
 urlpatterns = [
+    #
+    # Login
+    #
+    url(r'^login$',
+        login,
+        {'template_name' : 'internal/login.html'},
+        name='login'),
+
+        url(r'^cerrar$',
+        logout_then_login,
+        name='logout'),
     #
     # Index
     #
