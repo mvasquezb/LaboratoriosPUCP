@@ -62,6 +62,10 @@ class Laboratory(models.Model):
 class Essay(models.Model):
     name = models.CharField(max_length=100)
     description = models.CharField(max_length=100)
+    essay_methods = models.ManyToManyField(
+        'EssayMethod',
+        related_name='essays'
+    )
 
 
 class EssayMethod(models.Model):
