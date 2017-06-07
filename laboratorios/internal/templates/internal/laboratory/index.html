@@ -42,7 +42,7 @@
                     Supervisor
                   </th>
                   <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-label="Browser: activate to sort column ascending">
-                    Cantidad de Empleados
+                    Capacidad
                   </th>
                   <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-label="Browser: activate to sort column ascending">Acción</th>
                 </tr>
@@ -52,14 +52,18 @@
                   <tr role="row">
                     <td>{{ laboratory.pk }}</td>
                     <td>{{ laboratory.name }}</td>
-                    <td>{{ laboratory.supervisor.name }}</td>
-                    <td>{{ len(laboratory.employees) }}</td>
+                    <td>
+                      {% if laboratory.supervisor %}
+                        {{ laboratory.supervisor}}
+                      {% endif %}
+                    </td>
+                    <td>{{ laboratory.capacity }}</td>
                     <td class="text-left footable-visible footable-last-column">
                       <div class="btn-group">
-                        <!--<a href="{{ url('internal:laboratory.show', laboratory.id) }}" class="btn-white btn btn-xs">Detalle</a>
-                        <a href="{{ url('internal:laboratory.edit', laboratory.id) }}" class="btn-white btn btn-xs">Editar</a>
-                        <a class="myBtn1 btn-white btn btn-xs" data-toggle="modal" data-target="#myModal1" data-url="{{ url('internal:laboratory.delete', laboratory.id) }}">Eliminar</a>
-                      --></div>
+                        <a  class="btn-white btn btn-xs"><i class="fa fa-eye" aria-hidden="true"></i></a>
+                        <a  class="btn-white btn btn-xs"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+                        <a class="myBtn1 btn-white btn btn-xs" data-toggle="modal" data-target="#myModal1" ><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+                      </div>
                     </td>
                   </tr>
                 {% endfor %}
@@ -163,33 +167,23 @@
 
 </script>
 <script>
-        $(document).ready(function(){
-            $('.dataTables-example').DataTable({
-                pageLength: 25,
-                responsive: true,
-                dom: '<"html5buttons"B>lTfgitp',
-                buttons: [
-                    { extend: 'copy'},
-                    {extend: 'csv'},
-                    {extend: 'excel', title: 'ExampleFile'},
-                    {extend: 'pdf', title: 'ExampleFile'},
+$( document ).ready(function() {
+  $(".myBtn1").click(function() {
+    $("#myModal1").show();
+    var delete_url = $(this).attr("data-url");
+    $(".delete-employee").click(function() {
+      window.location.href = delete_url;
+    });
+  });
 
-                    {extend: 'print',
-                     customize: function (win){
-                            $(win.document.body).addClass('white-bg');
-                            $(win.document.body).css('font-size', '10px');
-
-                            $(win.document.body).find('table')
-                                    .addClass('compact')
-                                    .css('font-size', 'inherit');
-                    }
-                    }
-                ]
-
-            });
-
-        });
-
+  $(".span-close").click(function() {
+    $("#myModal1").hide();
+  });
+});
+$(".myBtn1").click(function(event) {
+  event.preventDefault();
+  return false;
+});
 </script>
 <script>
 var searchParams = new URLSearchParams(window.location.search);
@@ -209,24 +203,6 @@ if ($('.message-container .messages li')) {
   $.extend(toastr.options, {"positionClass": "toast-bottom-right",});
   toastr[msg.data('tags')](msg.text());
 }
-</script>
-<script>
-$(".myBtn1").click(function() {
-  $("#myModal1").show();
-  var delete_url = $(this).attr("href")
-  $(".delete-employee").click(function() {
-    window.location.href = delete_url;
-  });
-});
-
-  $(".span-close").click(function() {
-  $("#myModal1").hide();
-});
-
-$(".myBtn1").click(function(event) {
-  event.preventDefault();
-  return false;
-});
 </script>
 
 {% endblock custom_js %}

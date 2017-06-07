@@ -15,20 +15,19 @@ def index(request,
           extra_context=None):
     search = request.GET.get('search')
     if search:
-        laboratory_list = Laboratory.objects.filter (
-            name__icontains=search
-        ).order_by ('name')
+        laboratory_list = Laboratory.objects.filter(
+            name__icontains=search).order_by ('name')
     else:
         laboratory_list = Laboratory.objects.order_by ('name')
 
-    paginator = Paginator (laboratory_list, 3)
-    page = request.GET.get ('page')
+    paginator = Paginator(laboratory_list, 3)
+    page = request.GET.get('page')
     try:
         laboratorys = paginator.page (page)
     except PageNotAnInteger:
-        laboratorys = paginator.page (1)
+        laboratorys = paginator.page(1)
     except EmptyPage:
-        laboratorys = paginator.page (paginator.num_pages)
+        laboratorys = paginator.page(paginator.num_pages)
 
     context = {
         'laboratorys_list': laboratorys,
@@ -38,9 +37,10 @@ def index(request,
         context.update(extra_context)
     return render(request, template, context)
 
+
 def create(request,
            template='internal/laboratory/create.html',
            extra_content=None):
-    users = Laboratory.objects.all()
+    users = Laboratory.objects.all ()
     context = {'users': users}
     return render(request, template, context)
