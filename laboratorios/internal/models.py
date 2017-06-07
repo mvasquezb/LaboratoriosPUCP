@@ -123,6 +123,7 @@ class EssayMethodFill(models.Model):
         null=True,
         blank=True
     )
+    sample = models.ForeignKey('Sample')
 
 
 class EssayMethodParameterFill(models.Model):
