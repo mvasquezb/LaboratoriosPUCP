@@ -17,3 +17,14 @@ class EmployeeForm(ModelForm):
         fields = ['username', 'email', 'roles', 'password']
 
     laboratories = forms.ModelMultipleChoiceField(queryset=Laboratory.objects.all())
+
+class RoleForm(ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(RoleForm,self).__init__( *args, **kwargs)
+        self.fields['permissions'].required=True
+        self.fields['name'].required=True
+        self.fields['description'].required=False
+    class Meta:
+        model=Role
+        fields = ['name','description']
+    permissions = forms.ModelMultipleChoiceField(queryset=Permission.objects.all())

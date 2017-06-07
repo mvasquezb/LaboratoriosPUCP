@@ -26,5 +26,21 @@ urlpatterns = [
     url('^employee/delete/(?P<pk>\d+)$',
         views.employee.delete,
         name='employee.delete'),
+    url('^role/$',
+        views.role.index,
+        name='role.index'),
+    url('^role/show/(?P<pk>\d+)$',
+        views.role.show,
+        name='role.show'),
+    url('^role/create$',
+    views.role.create,
+    name='role.create'),
+    url('^role/edit/(?P<pk>\d+)$',
+    views.role.edit,
+    name='role.edit'),
+        url('^role/delete/(?P<pk>\d+)$',
+        views.role.delete,
+        name='role.delete'),
+
 
 ]
