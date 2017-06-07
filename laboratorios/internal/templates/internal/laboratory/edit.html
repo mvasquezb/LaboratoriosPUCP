@@ -10,7 +10,7 @@
 
 <div class="row border-bottom white-bg dashboard-header">
     <div class="col-md-3">
-        <h2><strong>Crear Laboratorio</strong></h2>
+        <h2><strong>Editar Laboratorio</strong></h2>
     </div>
 </div>
 
@@ -19,7 +19,7 @@
 {% csrf_token %}
 {{ form.as_p() }}
 <input type="submit" value="submit">
-  </form>
+</form>
 -->
 
   <div class="wrapper wrapper-content animated fadeInRight" >
@@ -175,19 +175,6 @@
     //$('#users_selection').show();
     $('input:checkbox[id^="checkbox_users"]').removeAttr('disabled');
     capacity_users = document.getElementById("capacity").value;
-  });
-
-  var value = $('#capacity').val();
-  $('#capacity').bind('keyup change click',function(){
-    if (this.value !== value){
-      $('input:checkbox[id^="checkbox_users"]').prop('checked', false);
-      counting = 0;
-      $('#comboBox').empty();
-      $('#comboBox').append($('<option>', {
-          text: "-- Ningún Responsable Seleccionado --"
-        }));
-      capacity_users = document.getElementById("capacity").value;
-      }
   });
 
   //cuando se clickea en los checkboxes de usuarios de laboratorio
