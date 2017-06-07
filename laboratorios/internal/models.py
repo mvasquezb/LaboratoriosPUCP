@@ -86,6 +86,11 @@ class EssayMethod(models.Model):
         related_name='essaymethods',
         blank=True
     )
+    sample_types = models.ManyToManyField(
+        'SampleType',
+        related_name='essay_methods',
+        blank=True
+    )
 
 
 class EssayMethodParameter(models.Model):
