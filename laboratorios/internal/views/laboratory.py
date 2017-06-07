@@ -6,7 +6,8 @@ from internal.models import *
 def index(request,
           template='internal/laboratory/index.html',
           extra_content=None):
-    context = {}
+    labs = Laboratory.objects.all()
+    context = {'labs': labs}
     return render(request, template, context)
 
 def create(request,

@@ -29,7 +29,15 @@
           </tr>
         </thead>
         <tbody>
-          
+          {% for lab in labs %}
+            <tr>
+              <th>{{ lab.pk }}</th>
+              <th>{{ lab.name }}</th>
+              <th>{{ lab.capacity }}</th>
+              <th>sd</th>
+              <th>dfvs</th>
+            </tr>
+          {% endfor %}
         </tbody>
       </table>
     </div>

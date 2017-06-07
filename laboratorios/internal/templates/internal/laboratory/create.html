@@ -16,11 +16,12 @@
 
 <form id="djform">{{ form.as_p() }} <input type="submit" value="submit"></form>
 
-<form data-toggle="validator" id="form" method="POST">
   <div class="wrapper wrapper-content animated fadeInRight" >
     <div class="col-lg-12">
       <div class="ibox float-e-margins">
         <div class="ibox-content">
+          {{ form.errors }}
+          <form action="{{ url('internal:laboratory.create') }}" data-toggle="validator" id="form" method="POST">
             <div class="row">
               {% csrf_token %}
               <div class="form-group">
@@ -30,18 +31,16 @@
                 <div class="help-block with-errors"></div>
               </div>
               
-              <form data-toggle="validator" id="key">
-                <div class="form-group">
-                  <label>Capacidad Máxima de Empleados (*)</label>
-                  <input class="form-control" name="laboratory_capacity" id="capacity" type="number" min="5" max="10" value="5" required data-error="Ingrese un valor válido para capacidad de personal">
-                  <span class="help-block m-b-none">Mínima cantidad será cinco (5) y máxima será diez (10)</span>
-                  <div class="help-block with-errors"></div>              
-                </div>
-              </form>
+              <div class="form-group">
+                <label>Capacidad Máxima de Empleados (*)</label>
+                <input class="form-control" name="laboratory_capacity" id="capacity" type="number" min="5" max="10" value="5" required data-error="Ingrese un valor válido para capacidad de personal">
+                <span class="help-block m-b-none">Mínima cantidad será cinco (5) y máxima será diez (10)</span>
+                <div class="help-block with-errors"></div>              
+              </div>
             </div>
             <div class="row">
               <div class="form-group">
-                  <label>Seleccione al personal para el nuevo laboratorio (*)</label>
+                  <label>Seleccione al personal para el nuevo laboratorio</label>
                   <div class="table-responsive">
                     <table class="table table-striped table-bordered table-hover dataTables-example" >
                       <thead>
@@ -56,7 +55,7 @@
                           <tr class="gradeX">
                             <td>{{ user.username }}</td>
                             <td>{{ user.email }}</td>
-                            <td><input type="checkbox" name="checkbox_users" id="{{ user.pk }}" class="i-checks"></td>
+                            <td><input type="checkbox" id="checkbox_users" name="{{ user.username }}" class="{{ user.pk }}"></td>
                           </tr>
                         {% endfor %}
                       </tbody>
@@ -65,7 +64,7 @@
                     <div class="form-group">
                       <label>Responsable de Laboratorio</label>
                         <select class="form-control m-b" id="comboBox">
-                          <option disabled selected> -- Seleccione al Responsable -- </option>
+                          <option selected>-- Ningún Responsable Seleccionado --</option>
 
                         </select>
                     </div>
@@ -75,9 +74,9 @@
             <div class="row">
               <div class="form-group">
                 <label>Horas de Servicio (*)</label>
-                  <select class="form-control m-b" id="comboBox">
+                  <select class="form-control m-b" id="comboBox_service_hours">
                     {% for service_hour in service_hours %}
-                      <option>De {{ service_hour.start_time }} a {{ service_hour.end_time }}</option>
+                      <option id="{{ service_hour.pk }}">De {{ service_hour.start_time }} a {{ service_hour.end_time }}</option>
                     {% endfor %}
                   </select>
               </div>
@@ -99,7 +98,7 @@
                       <tr class="gradeX">
                         <td>{{ inventory.name }}</td>
                         <td>{{ inventory.location }}</td>
-                        <td><input type="checkbox" name="checkbox_users" id="{{ inventory.pk }}" class="i-checks"></td>
+                        <td><input type="checkbox" id="checkbox_inventory" name="{{ inventory.pk }}" class="i-checks"></td>
                       </tr>
                     {% endfor %}
                   </tbody>
@@ -108,7 +107,7 @@
             </div>
 
             <div class="row">
-              <label>Seleccione las pruebas realizables para este laboratorio (*)</label>
+              <label>Seleccione las pruebas realizables para este laboratorio </label>
               <div class="table-responsive">
                 <table class="table table-striped table-bordered table-hover dataTables-example" >
                   <thead>
@@ -125,96 +124,128 @@
                         <td>{{ essaymethod.name }}</td>
                         <td>{{ essaymethod.description }}</td>
                         <td>{{ essaymethod.price }}</td>
-                        <td><input type="checkbox" name="checkbox_users" id="{{ essaymethod.pk }}" class="i-checks"></td>
+                        <td><input type="checkbox" id="checkbox_essay" name="{{ essaymethod.pk }}" class="i-checks"></td>
                       </tr>
                     {% endfor %}
                   </tbody>
                 </table>
               </div>
             </div>
+            <p><strong>(*) Campos obligatorios</strong></p>
             <input type="submit" name="registrar" id="register_button">
+
+          </form>
         </div>
         
       </div>
     </div>
   </div>
-</form>
+
 {% endblock page_content %}
 
 {% block custom_js %}
 <script type="text/javascript">
-  var selected_users = [];
+  //var selected_users = [];
   var capacity_users;
   var counting = 0;
   var to_out;
 
+  //cuando se invalida data
   $('#capacity').on('invalid.bs.validator', function(){
     //$('#users_selection').hide();
-    $('input:checkbox').prop('checked', false);
-    selected_users.length = 0;
-    $('input[type=checkbox]').attr('disabled', 'true');
+    $('input:checkbox[id^="checkbox_users"]').prop('checked', false);
+    //selected_users.length = 0;
+    $('input:checkbox[id^="checkbox_users"]').attr('disabled', 'true');
     counting = 0;
+    //borrar todos los campos en responsable de laboratorio
+    $('#comboBox').empty();
+    $('#comboBox').append($('<option>', {
+          text: "-- Ningún Responsable Seleccionado --"
+        }));
   });
 
-  $('#capacity').on('valid.bs.validator', function(){
+  //cuando se valida la data
+  $('#form').on('valid.bs.validator', function(){
     //$('#users_selection').show();
-    console.log("sjduc");
-    $('input[type=checkbox]').removeAttr('disabled');
+    $('input:checkbox[id^="checkbox_users"]').removeAttr('disabled');
     capacity_users = document.getElementById("capacity").value;
   });
 
-  $('input[type=checkbox]').click(function() {
+  //cuando se clickea en los checkboxes de usuarios de laboratorio
+  $('input:checkbox[id^="checkbox_users"]').click(function() {
     if($(this).is(':checked')) {
       //selected_users.push(String(this.id));
       if ((counting + 1) <= capacity_users){
         counting = counting + 1;
-        selected_users.push(String(this.id)); //añadimos en el arreglo los ids de los usuarios seleccionados
-        //alert("añadido a la lista");
+        //selected_users.push(String(this.id)); //añadimos en el arreglo los ids de los usuarios //seleccionados
         $('#comboBox').append($('<option>', {
-          text: String(this.id)
-        }));
+          text: String(this.name)
+        }).attr('id',this.class));
       } else {
         this.checked = false;
       }
-    } else {
-      selected_users.splice(selected_users.indexOf(String(this.id)), 1); //quitamos del arreglo los ids de los usuarios los cuales fueron unchecked
-      //alert("quitado de la lista");
-      to_out = String(this.id);
+    } else { //si el checkbox es unchecked
+      //selected_users.splice(selected_users.indexOf(String(this.id)), 1); //quitamos del arreglo los ids de los usuarios los cuales fueron unchecked
+      counting = counting - 1;
+      to_out = String(this.name);
       $('#comboBox option').each(function(){
         if ($(this).text() == to_out){
           $(this).remove();
         }
       });
     }
-    //responsable_selector_refresh();
   });
 
+  //cuando se clickea en el boton registrar
   $('#form').on('submit', function(evt){
     var $form = $(this);
     //console.log($(this).serialize());
 
     var name = $('<input>').attr('name', 'name').val($('#laboratory_name').val());
+    $form.append(name);
+
     var capacity = $('<input>').attr('name', 'capacity').val($('#capacity').val());
-
-
-    $('lista').each(function(index, elem) {
-      var employee = $('<input>').attr('name', 'employees').val($(elem).val());
-      $form.append(employee);
-    });
+    $form.append(capacity);
 
     /*
-    //para pasar de un array de ids a un function
-    var lista = [1, 2, 3];
-    lista.forEach(function (elem) {
-      var employee = $('<input>').attr('name', 'employees').val($(elem).val());
+    $('input:checkbox[id^="checkbox_users"]:checked').each(function(){
+      var employee = $('<input>').attr('name', 'employees').val($(this).attr('class'));
+      $form.append(employee);
     });
-    $form.submit();
     */
+
+    /*
+    if ($('#comboBox option:selected').text == '-- Ningún Responsable Seleccionado --'){
+      $form.append($('<input>').attr('name', 'supervisor').val());
+    } else {
+      var supervisor = $('<input>').attr('name', 'supervisor').val($('#comboBox option:selected').attr('id'));
+    }
+    */
+    
+    var service_hours = $('<input>').attr('name', 'service_hours').val($('#comboBox_service_hours option:selected').attr('id'));
+    $form.append(service_hours);
+
+    /*
+    $('input:checkbox[id^="checkbox_inventory"]:checked').each(function(){
+      var inventory = $('<input>').attr('name', 'inventory').val($(this).attr('name'));
+      $form.append(inventory);
+    });
+    */
+
+    /*
+    $('input:checkbox[id^="checkbox_essay"]:checked').each(function(){
+      var essay = $('<input>').attr('name', 'essay_methods').val($(this).attr('name'));
+      $form.append(essay);
+    });
+    */
+
+    $form.submit();
   });
 
   $('#djform').on('submit', function(e) {
-    //e.preventDefault();
-    //console.log($(this).serialize());
+    e.preventDefault();
+    console.log($(this).serialize());
+    $(this).submit();
   });
   </script>
 {% endblock custom_js %}
