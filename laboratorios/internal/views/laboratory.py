@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect
-from ..models import *
+from .forms import LaboratoryForm
+from internal.models import *
 
 def index(request,
           template='internal/laboratory/index.html',
@@ -11,6 +12,16 @@ def index(request,
 def create(request,
           template='internal/laboratory/create.html',
           extra_content=None):
-    users = Employee.objects.all()
-    context = {'users': users}
-    return render(request, template, context)
+	if request.method == 'POST':
+		form = LaboratoryForm(request.POST)
+		if form.is_valid():
+			form.save()
+	else:
+	    users = Employee.objects.all()
+	    service_hours = LaboratoryServiceHours.objects.all()
+	    inventories = Inventory.objects.all()
+	    essaymethods = EssayMethod.objects.all()
+	    form = LaboratoryForm()
+	    context = {'users': users, 'service_hours': service_hours, 'inventories': inventories,
+	               'essaymethods': essaymethods, 'form': form}
+	    return render(request, template, context)

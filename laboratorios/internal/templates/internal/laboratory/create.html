@@ -14,84 +14,207 @@
     </div>
 </div>
 
-<div class="wrapper wrapper-content animated fadeInRight" >
-  <div class="col-lg-12">
-    <div class="ibox float-e-margins">
-      <div class="ibox-content">
-        
-          {% csrf_token %}
-          <div class="row">
-            <form data-toggle="validator" id="form">
-            <div class="form-group">
-              <label>Nombre de Laboratorio (*)</label>
-              <input type="text" maxlength="50" class="form-control" name="laboratory_name" required data-error="El nombre es obligatorio" placeholder="Ingrese nombre de laboratorio">
-              <span class="help-block m-b-none">Hasta 50 caracteres permitidos</span>
-              <div class="help-block with-errors"></div>
+<form id="djform">{{ form.as_p() }} <input type="submit" value="submit"></form>
+
+<form data-toggle="validator" id="form" method="POST">
+  <div class="wrapper wrapper-content animated fadeInRight" >
+    <div class="col-lg-12">
+      <div class="ibox float-e-margins">
+        <div class="ibox-content">
+            <div class="row">
+              {% csrf_token %}
+              <div class="form-group">
+                <label>Nombre de Laboratorio (*)</label>
+                <input type="text" maxlength="50" class="form-control" id="laboratory_name" required data-error="El nombre es obligatorio" placeholder="Ingrese nombre de laboratorio">
+                <span class="help-block m-b-none">Hasta 50 caracteres permitidos</span>
+                <div class="help-block with-errors"></div>
+              </div>
+              
+              <form data-toggle="validator" id="key">
+                <div class="form-group">
+                  <label>Capacidad Máxima de Empleados (*)</label>
+                  <input class="form-control" name="laboratory_capacity" id="capacity" type="number" min="5" max="10" value="5" required data-error="Ingrese un valor válido para capacidad de personal">
+                  <span class="help-block m-b-none">Mínima cantidad será cinco (5) y máxima será diez (10)</span>
+                  <div class="help-block with-errors"></div>              
+                </div>
+              </form>
             </div>
-            </form>
-            <form data-toggle="validator" id="key">
-            <div class="form-group">
-              <label>Cantidad de Empleados (*)</label>
-              <input class="form-control" name="laboratory_capacity" type="number" min="5" max="10" required value="5" required data-error="Ingrese un valor válido para capacidad de personal">
-              <span class="help-block m-b-none">Mínima cantidad será cinco (5) y máxima será diez (10)</span>
-              <div class="help-block with-errors"></div>              
+            <div class="row">
+              <div class="form-group">
+                  <label>Seleccione al personal para el nuevo laboratorio (*)</label>
+                  <div class="table-responsive">
+                    <table class="table table-striped table-bordered table-hover dataTables-example" >
+                      <thead>
+                        <tr>
+                          <th>Nombre del empleado</th>
+                          <th>Correo</th>
+                          <th>Selección</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for user in users %}
+                          <tr class="gradeX">
+                            <td>{{ user.username }}</td>
+                            <td>{{ user.email }}</td>
+                            <td><input type="checkbox" name="checkbox_users" id="{{ user.pk }}" class="i-checks"></td>
+                          </tr>
+                        {% endfor %}
+                      </tbody>
+                      
+                    </table>
+                    <div class="form-group">
+                      <label>Responsable de Laboratorio</label>
+                        <select class="form-control m-b" id="comboBox">
+                          <option disabled selected> -- Seleccione al Responsable -- </option>
+
+                        </select>
+                    </div>
+                  </div>
+              </div>
             </div>
-            </form>
-          </div>
-          <div class="ibox">
-            <div class="ibox-title">
-              <h5>Seleccione al personal para el nuevo laboratorio</h5>
+            <div class="row">
+              <div class="form-group">
+                <label>Horas de Servicio (*)</label>
+                  <select class="form-control m-b" id="comboBox">
+                    {% for service_hour in service_hours %}
+                      <option>De {{ service_hour.start_time }} a {{ service_hour.end_time }}</option>
+                    {% endfor %}
+                  </select>
+              </div>
             </div>
-            <div class="ibox-content">
+            
+            <div class="row">
+              <label>Seleccione los inventarios </label>
               <div class="table-responsive">
                 <table class="table table-striped table-bordered table-hover dataTables-example" >
                   <thead>
                     <tr>
-                      <th>Nombre del empleado</th>
-                      <th>Correo</th>
+                      <th>Nombre de Inventario</th>
+                      <th>Ubicación</th>
                       <th>Selección</th>
                     </tr>
-                    <tbody>
-                    {% for user in users %}
+                  </thead>
+                  <tbody>
+                    {% for inventory in inventories %}
                       <tr class="gradeX">
-                        <td>{{ user.username }}</td>
-                        <td>{{ user.email }}}</td>
-                        <td><input type="checkbox" value="" name="" class="i-checks"></td>
+                        <td>{{ inventory.name }}</td>
+                        <td>{{ inventory.location }}</td>
+                        <td><input type="checkbox" name="checkbox_users" id="{{ inventory.pk }}" class="i-checks"></td>
                       </tr>
                     {% endfor %}
-                    </tbody>
-                  </thead>
+                  </tbody>
                 </table>
-                <div class="form-group">
-                  <label>Responsable de Laboratorio</label>
-                    <select class="form-control m-b" name="comboBox_type">
-                      <option>Usuario 1</option>
-                      <option>Usuario 2</option>
-                      <option>Usuario 3</option>
-                      <option>Usuario 4</option>
-                    </select>
-                </div>
               </div>
             </div>
-          </div>
+
+            <div class="row">
+              <label>Seleccione las pruebas realizables para este laboratorio (*)</label>
+              <div class="table-responsive">
+                <table class="table table-striped table-bordered table-hover dataTables-example" >
+                  <thead>
+                    <tr>
+                      <th>Nombre de Prueba</th>
+                      <th>Descripción</th>
+                      <th>Precio</th>
+                      <th>Selección</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for essaymethod in essaymethods %}
+                      <tr class="gradeX">
+                        <td>{{ essaymethod.name }}</td>
+                        <td>{{ essaymethod.description }}</td>
+                        <td>{{ essaymethod.price }}</td>
+                        <td><input type="checkbox" name="checkbox_users" id="{{ essaymethod.pk }}" class="i-checks"></td>
+                      </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <input type="submit" name="registrar" id="register_button">
+        </div>
         
       </div>
     </div>
   </div>
-</div>
-
+</form>
 {% endblock page_content %}
 
 {% block custom_js %}
 <script type="text/javascript">
-  $('#key').on('invalid.bs.validator', function(){
-    $('table').hide();
-    $('responsable_lab').hide();
+  var selected_users = [];
+  var capacity_users;
+  var counting = 0;
+  var to_out;
+
+  $('#capacity').on('invalid.bs.validator', function(){
+    //$('#users_selection').hide();
+    $('input:checkbox').prop('checked', false);
+    selected_users.length = 0;
+    $('input[type=checkbox]').attr('disabled', 'true');
+    counting = 0;
   });
 
-  $('#key').on('valid.bs.validator', function(){
-    $('table').show();
-    $('responsable_lab').show();
+  $('#capacity').on('valid.bs.validator', function(){
+    //$('#users_selection').show();
+    console.log("sjduc");
+    $('input[type=checkbox]').removeAttr('disabled');
+    capacity_users = document.getElementById("capacity").value;
   });
-</script>
+
+  $('input[type=checkbox]').click(function() {
+    if($(this).is(':checked')) {
+      //selected_users.push(String(this.id));
+      if ((counting + 1) <= capacity_users){
+        counting = counting + 1;
+        selected_users.push(String(this.id)); //añadimos en el arreglo los ids de los usuarios seleccionados
+        //alert("añadido a la lista");
+        $('#comboBox').append($('<option>', {
+          text: String(this.id)
+        }));
+      } else {
+        this.checked = false;
+      }
+    } else {
+      selected_users.splice(selected_users.indexOf(String(this.id)), 1); //quitamos del arreglo los ids de los usuarios los cuales fueron unchecked
+      //alert("quitado de la lista");
+      to_out = String(this.id);
+      $('#comboBox option').each(function(){
+        if ($(this).text() == to_out){
+          $(this).remove();
+        }
+      });
+    }
+    //responsable_selector_refresh();
+  });
+
+  $('#form').on('submit', function(evt){
+    var $form = $(this);
+    //console.log($(this).serialize());
+
+    var name = $('<input>').attr('name', 'name').val($('#laboratory_name').val());
+    var capacity = $('<input>').attr('name', 'capacity').val($('#capacity').val());
+
+
+    $('lista').each(function(index, elem) {
+      var employee = $('<input>').attr('name', 'employees').val($(elem).val());
+      $form.append(employee);
+    });
+
+    /*
+    //para pasar de un array de ids a un function
+    var lista = [1, 2, 3];
+    lista.forEach(function (elem) {
+      var employee = $('<input>').attr('name', 'employees').val($(elem).val());
+    });
+    $form.submit();
+    */
+  });
+
+  $('#djform').on('submit', function(e) {
+    //e.preventDefault();
+    //console.log($(this).serialize());
+  });
+  </script>
 {% endblock custom_js %}
