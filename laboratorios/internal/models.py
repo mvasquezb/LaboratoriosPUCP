@@ -6,7 +6,7 @@ from django.contrib.auth.models import (
 
 
 class Role(models.Model):
-    permissions = models.ManyToManyField(Permission)
+    permissions = models.ManyToManyField(Permission, blank=True)
     name = models.CharField(max_length=100)
     description = models.CharField(max_length=100)
 
@@ -27,11 +27,13 @@ class Client(BasicUser):
 class Employee(BasicUser):
     essay_methods = models.ManyToManyField(
         'EssayMethod',
-        related_name='employees'
+        related_name='employees',
+        blank=True
     )
     assigned_essay_methods = models.ManyToManyField(
         'EssayMethodFill',
-        related_name='employees'
+        related_name='employees',
+        blank=True
     )
 
 
@@ -45,23 +47,34 @@ class LaboratoryServiceHours(models.Model):
 
 class Laboratory(models.Model):
     name = models.CharField(max_length=50)
-    employees = models.ManyToManyField('Employee', related_name='laboratories')
+    employees = models.ManyToManyField(
+        'Employee',
+        related_name='laboratories',
+        blank=True
+    )
     capacity = models.PositiveIntegerField()
-    supervisor = models.ForeignKey('Employee')
+    supervisor = models.ForeignKey('Employee', null=True, blank=True)
     service_hours = models.ForeignKey(LaboratoryServiceHours)
     essay_methods = models.ManyToManyField(
         'EssayMethod',
-        related_name='laboratories'
+        related_name='laboratories',
+        blank=True
     )
     inventory = models.ManyToManyField(
         'Inventory',
-        related_name='laboratories'
+        related_name='laboratories',
+        blank=True
     )
 
 
 class Essay(models.Model):
     name = models.CharField(max_length=100)
     description = models.CharField(max_length=100)
+    essay_methods = models.ManyToManyField(
+        'EssayMethod',
+        related_name='essays',
+        blank=True
+    )
 
 
 class EssayMethod(models.Model):
@@ -70,7 +83,8 @@ class EssayMethod(models.Model):
     price = models.FloatField()
     parameters = models.ManyToManyField(
         'EssayMethodParameter',
-        related_name='essaymethods'
+        related_name='essaymethods',
+        blank=True
     )
 
 
@@ -82,31 +96,48 @@ class EssayMethodParameter(models.Model):
         return self.description + ' | ' + self.unit
 
 
-class EssayMethodParameterFill(models.Model):
-    parameter = models.ForeignKey(EssayMethodParameter)
-    value = models.CharField(max_length=20)  # Is this always a numeric value ?
-    uncertainty = models.FloatField()
-
-    def __str__(self):
-        return str(self.parameter) + ' | ' + self.value
-
-
 class EssayFill(models.Model):
     essay = models.ForeignKey(Essay)
     sample = models.ForeignKey('Sample')
 
 
 class EssayMethodFill(models.Model):
-    essay_method = models.OneToOneField(EssayMethod)
+    essay_method = models.ForeignKey(
+        EssayMethod,
+        on_delete=models.CASCADE,
+        related_name='essay_methods'
+    )
     essay = models.ForeignKey(EssayFill)
-    external_provider = models.ForeignKey('ExternalProvider', null=True)
-    inventory_order = models.ForeignKey('InventoryOrder', null=True)
+    external_provider = models.ForeignKey(
+        'ExternalProvider',
+        null=True,
+        blank=True
+    )
+    inventory_order = models.ForeignKey(
+        'InventoryOrder',
+        null=True,
+        blank=True
+    )
+
+
+class EssayMethodParameterFill(models.Model):
+    parameter = models.ForeignKey(EssayMethodParameter)
+    value = models.CharField(max_length=20)  # Is this always a numeric value ?
+    uncertainty = models.FloatField()
+    essay_method = models.ForeignKey(
+        EssayMethodFill,
+        on_delete=models.CASCADE,
+        related_name='parameters'
+    )
+
+    def __str__(self):
+        return str(self.parameter) + ' | ' + self.value
 
 
 class ExternalProvider(models.Model):
     name = models.CharField(max_length=100)
     description = models.CharField(max_length=200)
-    services = models.ManyToManyField('ExternalProviderService')
+    services = models.ManyToManyField('ExternalProviderService', blank=True)
 
 
 class ExternalProviderService(models.Model):
@@ -117,7 +148,7 @@ class ServiceRequest(models.Model):
     client = models.ForeignKey(Client, on_delete=models.CASCADE)
     supervisor = models.ForeignKey(Employee)
     state = models.ForeignKey('ServiceRequestState')
-    observations = models.CharField(max_length=500)
+    observations = models.CharField(max_length=500, null=True, blank=True)
 
 
 class ServiceRequestState(models.Model):
