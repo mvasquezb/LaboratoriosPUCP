@@ -68,6 +68,7 @@
                 </thead>
                 <!--Cuerpo de nuestra tabla-->
                 <tbody>
+
                   {% for inventoryOrder in inventoryOrder_list %}
                     {% if inventoryOrder.unsettled %}
                       <tr role="row">
@@ -90,6 +91,27 @@
                       </tr>
                     {% endif %}
                   {% endfor %}
+
+                <!--
+                {% for inventoryOrder in inventoryOrder_list %}
+                      <tr role="row">
+                        <td>{{ inventoryOrder.essay.sample.name }}</td>
+                        <td>{{ inventoryOrder.essay.sample.sample_type.name }}</td>
+                        <td>{{ inventoryOrder.essay.quantity}}</td>
+                        <td>{{ inventoryOrder.essay.sample.request.client }}</td>
+                        <td>{{ inventoryOrder.essay.sample.inventory.name }}</td>
+                        <td class="text-left footable-visible footable-last-column">
+                          <div class="btn-group">
+                            <a href="{{ url('internal:inventoryOrder.show', inventoryOrder.id) }}" class="btn-white btn btn-xs">Detalle</a>
+                            <a class="myBtn1 btn-white btn btn-xs" data-toggle="modal" data-target="#myModal1" data-url="{{ url('internal:inventoryOrder.aprobar', inventoryOrder.id) }}">Aprobar</a>
+                            <a class="myBtn2 btn-white btn btn-xs" data-toggle="modal" data-target="#myModal2" data-url="{{ url('internal:inventoryOrder.rechazar', inventoryOrder.id) }}">Rechazar</a>
+                          </div>
+                        </td>
+                      </tr>
+                  {% endfor %}
+                  -->
+
+
                 </tbody>
                 <!--Fin de la tabla-->
 

@@ -17,12 +17,13 @@ def index(request,
 
     search = request.GET.get('search')
     if search:
-       inventoryOrder_list = InventoryOrder.objects.filter(
-       essay__sample__name__icontains=search
+       inventoryOrder_listAux = InventoryOrder.objects.filter(
+       essay__sample__name__icontains=search,
         #).order_by('username')
        ).order_by('essay__sample__name')
+       inventoryOrder_list = inventoryOrder_listAux.objects.filter(unsettled = True)
     else:
-        inventoryOrder_list = InventoryOrder.objects.order_by('essay__sample__name')
+        inventoryOrder_list = InventoryOrder.objects.filter(unsettled = True).order_by('essay__sample__name')
 
 
     #inventoryOrder_list = InventoryOrder.objects.all()
