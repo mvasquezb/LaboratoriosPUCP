@@ -22,9 +22,9 @@
             <div class="row">
               <div class="col-lg-6">
                 <div class="form-group">
-                  <label>{{field.label}}*</label>
+                  <label>{{ field.label }}*</label>
                   <div class="form-control" required data-error="El" {{field.label}} " es obligatorio" placeholder="------">
-                    {{field}}
+                    {{ field }}
                   </div>
                 <div class="help-block with-errors"></div>
               </div>
@@ -41,7 +41,7 @@
                   <th>Id</th>
                   <th>Muestra</th>
                   <th>Tipo de Muestra</th>
-                  <th>Nombre de Ensayo: {{essays[loop.index-1]}}</th>
+                  <th>Nombre de Ensayo: {{ essays[loop.index-1] }}</th>
                   <th>Editar/Eliminar</th>
                 </tr>
               </thead>
@@ -55,7 +55,7 @@
                       <thead>
                         <tr>
                           {% for essay_method_fill in essays_methods[loop.index-1] %}
-                          <th>{{essay_method_fill.essay_method.name}}</th>
+                          <th>{{ essay_method_fill.essay_method.name }}</th>
                           {% endfor %}
                         </tr>
                       </thead>

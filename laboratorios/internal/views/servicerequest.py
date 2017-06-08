@@ -13,7 +13,10 @@ from internal.views.forms import *
 
 
 def index(request):
-    return render(request, 'internal/servicerequest/index.html', {'requests': ServiceRequest.objects.all()})
+    context = {
+        'requests': ServiceRequest.objects.all()
+    }
+    return render(request, 'internal/servicerequest/index.html', context)
 
 
 def create(request,
@@ -30,7 +33,8 @@ def create(request,
     return render(request, template, context)
 
 
-def select_client(request, template='internal/servicerequest/select_client.html'):
+def select_client(request,
+                  template='internal/servicerequest/select_client.html'):
     types = Client.objects.all().order_by('doc_number', 'username')
     context = {'client_list': types}
     return render(request, template, context)
@@ -42,7 +46,7 @@ def create_client(request,
     context = {'form': form}
     if form.is_valid():
         new_client = form.save()
-        return redirect(reverse('internal:servicerequest.create', args=(new_client.pk,)))
+        return redirect('internal:servicerequest.create', new_client.pk)
     return render(request, template, context)
 
 
@@ -63,15 +67,27 @@ def edit(request,
         essay_fill = EssayFill.objects.filter(sample=sample_listed)[0]
         essay_fill_list.append(essay_fill)
         essay_methods_list.append(
-            EssayMethodFill.objects.filter(essay=essay_fill))
+            EssayMethodFill.objects.filter(essay=essay_fill)
+        )
         aux_essay_methods_forms = []
         for j in range(0, len(essay_methods_list[i])):
-            aux_essay_methods_forms.append(EssayMethodFillChosenForm(request.POST or None, instance=essay_methods_list[
-                                           i][j], prefix='emf_' + str(essay_methods_list[i][j].id)))
+            aux_essay_methods_forms.append(
+                EssayMethodFillChosenForm(
+                    request.POST,
+                    instance=essay_methods_list[i][j],
+                    prefix='emf_' + str(essay_methods_list[i][j].id)
+                )
+            )
         essay_methods_chosen_forms.append(aux_essay_methods_forms)
 
-    context = {'form': service_request_form, 'samples': sample_list, 'essays': essay_fill_list,
-               'essays_methods': essay_methods_list, 'essay_methods_chosen_forms': essay_methods_chosen_forms, 'pk': pk}
+    context = {
+        'form': service_request_form,
+        'samples': sample_list,
+        'essays': essay_fill_list,
+        'essays_methods': essay_methods_list,
+        'essay_methods_chosen_forms': essay_methods_chosen_forms,
+        'pk': pk
+    }
     # verificacion
     forms_verified = 0  # Means true lol
 
@@ -102,13 +118,22 @@ def add_sample(request,
                pk,
                template='internal/servicerequest/add_sample.html'):
     service_request = ServiceRequest.objects.get(pk=pk)
-    sample_form = SampleForm(request.POST or None, initial={
-                             'request': service_request, })
-    context = {'form': sample_form, 'pk': pk}
+    sample_form = SampleForm(
+        request.POST,
+        initial={
+            'request': service_request,
+        }
+    )
+    context = {
+        'form': sample_form,
+        'pk': pk
+    }
     # verificacion
     if sample_form.is_valid():
         sample_form.save()
-        return redirect(reverse("internal:servicerequest.edit", args=(pk,)))
+        return redirect('internal:servicerequest.edit', pk)
+    else:
+        context['errors'] = str(sample_form.errors)
     return render(request, template, context)
 
 
@@ -121,12 +146,15 @@ def edit_sample(request,
     essay_fill_form = EssayFillSelectionForm(
         request.POST or None, instance=EssayFill.objects.get(sample=sample))
     forms = [sample_form, essay_fill_form]
-    context = {'forms': forms, 'pk_request': pk_request,
-               'pk_sample': pk_sample}
+    context = {
+        'forms': forms,
+        'pk_request': pk_request,
+        'pk_sample': pk_sample
+    }
     if sample_form.is_valid() and essay_fill_form.is_valid():
         sample_form.save()
         essay_fill_form.save()
-        return redirect(reverse("internal:servicerequest.edit", args=(pk_request,)))
+        return redirect('internal:servicerequest.edit', pk_request)
     return render(request, template, context)
 
 
@@ -142,7 +170,7 @@ def delete_sample(request,
                   pk_sample):
     sample = Sample.objects.get(pk=pk_sample)
     sample.delete()
-    return redirect(reverse("internal:servicerequest.edit", args=(pk_request,)))
+    return redirect('internal:servicerequest.edit', pk_request)
 
 
 def show(request, request_id):
