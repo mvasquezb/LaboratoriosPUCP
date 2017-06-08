@@ -104,6 +104,12 @@ class EssayMethodParameter(models.Model):
 class EssayFill(models.Model):
     essay = models.ForeignKey(Essay)
     sample = models.ForeignKey('Sample')
+    quotation = models.ForeignKey(
+        'Quotation',
+        related_name='essay_fills',
+        null=True,
+        blank=True
+    )
 
 
 class EssayMethodFill(models.Model):
