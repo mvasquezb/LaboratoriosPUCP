@@ -67,6 +67,12 @@ class ClientForm(ModelForm):
 
 
 class ServiceRequestForm(ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(ServiceRequestForm, self).__init__(*args, **kwargs)
+        self.fields['client'].widget.attrs['class'] = 'form-control'
+        self.fields['supervisor'].widget.attrs['class'] = 'form-control'
+        self.fields['state'].widget.attrs['class'] = 'form-control'
+
     class Meta:
         model = ServiceRequest
         exclude = ()
