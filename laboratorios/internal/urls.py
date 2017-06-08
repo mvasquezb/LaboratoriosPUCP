@@ -27,4 +27,12 @@ urlpatterns = [
         views.employee.delete,
         name='employee.delete'),
 
+
+
+    url('^servicerequest/(?P<request_id>\d+)/?$',
+        views.servicerequest.show,
+        name='servicerequest.show'),
+    url('^servicerequest/(?P<request_id>\d+)/quotation/?$',
+        views.servicerequest.quotation,
+        name='servicerequest.quotation'),
 ]
