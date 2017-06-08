@@ -67,6 +67,17 @@ class Essay(models.Model):
         related_name='essays'
     )
 
+    def get_essay_methods(self):
+        return EssayMethod.objects.filter(essays=self)
+
+    def get_essay_methods_count(self):
+        return len(self.get_essay_methods())
+
+    def get_essay_method(self, index):
+        if (index>0 and index<=self.get_essay_methods_count()):
+            return self.get_essay_methods()[index-1]
+   
+
 
 class EssayMethod(models.Model):
     name = models.CharField(max_length=100)
@@ -77,6 +88,19 @@ class EssayMethod(models.Model):
         related_name='essaymethods'
     )
 
+    def __str__(self):
+        return self.name
+    
+    def get_parameters(self):
+        return EssayMethodParameter.objects.filter(essaymethods=self)
+
+    def get_parameter_count(self):
+        return len(self.get_parameters())
+
+    def get_parameter(self,index):
+        if (i>0 and i<=self.get_parameter_count()):
+            return self.get_parameters()[i]
+
 
 class EssayMethodParameter(models.Model):
     description = models.CharField(max_length=100)
@@ -86,25 +110,66 @@ class EssayMethodParameter(models.Model):
         return self.description + ' | ' + self.unit
 
 
-class EssayMethodParameterFill(models.Model):
-    parameter = models.ForeignKey(EssayMethodParameter)
-    value = models.CharField(max_length=20)  # Is this always a numeric value ?
-    uncertainty = models.FloatField()
-
-    def __str__(self):
-        return str(self.parameter) + ' | ' + self.value
 
 
 class EssayFill(models.Model):
     essay = models.ForeignKey(Essay)
     sample = models.ForeignKey('Sample')
 
+    def __str__(self):
+        return self.essay.name
+
+    def create(self, essay_insert=None):    # function for creating essay tree
+        if essay_insert is None:
+            return
+        self.essay = essay_insert
+        self.save()
+        test_number = self.essay.get_essay_methods_count()
+        for i in range(1, test_number+1):
+            obj_test = EssayMethodFill()
+            obj_test.create(self.essay.get_essay_method(i),self)
+            obj_test.save()
+
+
 
 class EssayMethodFill(models.Model):
-    essay_method = models.OneToOneField(EssayMethod)
+    essay_method = models.ForeignKey(EssayMethod)
     essay = models.ForeignKey(EssayFill)
     external_provider = models.ForeignKey('ExternalProvider', null=True)
     inventory_order = models.ForeignKey('InventoryOrder', null=True)
+    chosen = models.BooleanField(default=False)
+
+    def __str__(self):
+        return essay_method.name
+    
+    def create(self, essay_method_insert = None, essay_insert = None):
+        if essay_method_insert is None or essay_insert is None:
+            return
+        self.essay_method = essay_method_insert
+        self.essay = essay_insert
+        self.save()
+        parameters_number = essay_method_insert.get_parameter_count()
+        for i in range(1,parameters_number+1):
+            obj_par = EssayMethodParameterFill()
+            obj_par.create(self, self.essay_method.get_parameter(i))
+            obj_par.save()
+
+
+class EssayMethodParameterFill(models.Model):
+    parameter = models.ForeignKey(EssayMethodParameter)
+    value = models.CharField(max_length=20)  # Is this always a numeric value ?
+    uncertainty = models.FloatField()
+    essay_method = models.ForeignKey(EssayMethodFill)
+
+    def __str__(self):
+        return str(self.parameter) + ' | ' + self.value
+
+    def create(self, essay_method_insert = None, essay_method_parameter_insert = None):
+        if (essay_method_insert is None or essay_method_parameter_insert is None):
+            return
+        self.essay_method = essay_method_insert
+        self.parameter = essay_method_parameter_insert
+        self.save()
 
 
 class ExternalProvider(models.Model):
@@ -159,9 +224,12 @@ class SampleType(models.Model):
 
 
 class Sample(models.Model):
+    name = models.CharField(max_length=50, default='Insertar nombre de muestra')
+    code = models.CharField(max_length=10,default='#######')
     sample_type = models.ForeignKey(SampleType)
     request = models.ForeignKey(ServiceRequest, on_delete=models.CASCADE)
     inventory = models.ForeignKey('Inventory', on_delete=models.CASCADE)
+    
 
 
 class Inventory(models.Model):

@@ -1,0 +1,105 @@
+{% extends 'internal/base_internal.html' %}
+
+{% block title %}{{ super() }} | Inicio{% endblock title %}
+
+{% block custom_css %}{% endblock custom_css %}
+
+{% block page_content %}
+<div class="row border-bottom white-bg dashboard-header">
+    <div class="col-md-6">
+        <h2><strong>Modificar Solicitud</strong></h2>
+    </div>
+</div>
+<div class="wrapper wrapper-content animated fadeInRight" >
+    <div class="col-lg-12">
+        <div class="ibox float-e-margins">
+            <div class="ibox-content">
+            
+             {{ form.errors }}
+                <form id='requestform' action="{{ url('internal:servicerequest.edit',pk=pk) }}" method="post">
+                    {% csrf_token %}
+                    {% for field in form %}
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label>{{field.label}}*</label>
+                                <div class="form-control"required data-error="El" {{field.label}} " es obligatorio" placeholder="------">{{field}}</div>
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+                      {% endfor %}  
+                    
+                </form> 
+                <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper form-inline dt-bootstrap">      
+                {% for sample in samples %}
+                <table class="table table-striped table-bordered table-hover dataTables-example dataTable" id="DataTables_Table_0">
+                    <thead>
+                        <tr>
+                            <th class="footable-visible footable-sortable">Id</th>
+                            <th class="footable-visible footable-sortable">Muestra</th>
+                            <th class="footable-visible footable-sortable">Tipo de Muestra</th>
+                            <th class="footable-visible footable-sortable">Ensayo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    
+                        <tr>
+                            <td>{{ sample.id }}</td>
+                            <td>{{ sample.name }}</td>
+                            <td>{{ sample.sample_type }}</td>
+                            <td>{{ essays[loop.index-1].name }}</td>
+                            
+                        </tr>
+                    
+                    </tbody>
+                    </table>
+
+                    <table class="table table-striped table-bordered table-hover dataTables-example dataTable" id="DataTables_Table_0">
+                    <thead>
+                        <tr>
+                            {% for essay_method_fill in essays_methods[loop.index-1] %}
+                                <th class="footable-visible footable-sortable">{{essay_method_fill.essay_method.name}}</th>
+                            {% endfor %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                    
+                        <tr>
+                            {% for essay_method_active in essays_methods_active[loop.index-1] %}
+                                <td>{{ essay_method_active}}</td>
+                            {% endfor%}
+                        </tr>
+                    
+                    </tbody>
+                    </table>
+
+
+
+                    {% endfor %}
+                
+                    <div>
+                        <div class="text-left">
+                            <input type="submit" value="Registrar" class="btn btn-primary">                            
+                        </div>
+                        <div class="text-right">
+                            <button><a href="{{ url('internal:servicerequest.add_sample', pk)}}" value="Añadir Prueba" class="btn btn-primary"></a></button>
+                        </div>
+                    </div>
+            </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock page_content %}
+
+
+
+
+
+
+
+
+
+
+
+

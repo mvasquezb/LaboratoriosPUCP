@@ -27,4 +27,27 @@ urlpatterns = [
         views.employee.delete,
         name='employee.delete'),
 
+    
+    #
+    # ServiceRequest
+    #
+    url('^servicerequest/create/(?P<pk>\d+)$',
+        views.servicerequest.create,
+        name='servicerequest.create'),
+    url('^servicerequest/select_client$',
+        views.servicerequest.select_client,
+        name='servicerequest.select_client'),
+   url('^servicerequest/edit/(?P<pk>\d+)$',
+        views.servicerequest.edit,
+        name='servicerequest.edit'),     
+    url('^servicerequest/add_sample/(?P<pk>\d+)$',
+        views.servicerequest.add_sample,
+        name='servicerequest.add_sample'),         
+    url('^servicerequest/create_client$',
+        views.servicerequest.create_client,
+        name='servicerequest.create_client'),
+    url('^servicerequest$',
+        views.servicerequest.index,
+        name='servicerequest.index'),
+
 ]
