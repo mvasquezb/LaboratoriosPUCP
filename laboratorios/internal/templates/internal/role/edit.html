@@ -36,7 +36,7 @@
                                 <label>Permisos</label>
                                 <select name="permissions" class="form-control" multiple>
                                 {% for permission in permissions %}
-                                    <option {{ 'selected' if (permission.id in selected_permissions) }} value="{{ permission.id }}">{{ permission.name }}</option>
+                                    <option {% if (permission in selected_permissions) %}'selected' {% endif %} value="{{ permission.id }}">{{ permission.name }}</option>
                                 {% endfor %}
                                 </select>
                             </div>

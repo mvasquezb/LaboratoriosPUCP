@@ -21,7 +21,7 @@
                                 <div class="text-primary">{{ role.name }}</div>
                             </div>
                             <div class="form-group">
-                                <label>Correo</label>
+                                <label>Descrcipcion</label>
                                 <div class="text-primary">{{ role.description }}</div>
                             </div>
                         </div>
@@ -29,7 +29,7 @@
                             <div class="form-group">
                                 <label>Permisos</label>
                                 <select name="permissions" class="form-control" multiple>
-                                {% for permission in selected_roles %}
+                                {% for permission in selected_permissions %}
                                     <option value="{{ permission.name }}">{{ permission.name }}</option>
                                 {% endfor %}
                                 </select>
