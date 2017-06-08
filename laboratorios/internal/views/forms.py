@@ -40,10 +40,10 @@ class RequestForm(ModelForm):
 
 
 class SampleForm(ModelForm):
-    iquery = Essay.objects.values_list('name',flat=True).distinct()
-    iquery_choices = [('', 'None')] + [(name,name) for name in iquery]
-    essay_field = forms.ChoiceField(iquery_choices,required=False, widget=forms.Select())
-    #essay_field= forms.ModelChoiceField(widget=forms.Select, queryset=Essay.objects.all().values())
+    # iquery = Essay.objects.values_list('name',flat=True).distinct()
+    # iquery_choices = [('', 'None')] + [(name,name) for name in iquery]
+    # essay_field = forms.ChoiceField(iquery_choices,required=False, widget=forms.Select())
+    essay_field = forms.ModelChoiceField(queryset=Essay.objects.all())
     class Meta:
         model = Sample
         fields = ['name','sample_type','inventory','request']+['essay_field']
@@ -56,8 +56,8 @@ class SampleForm(ModelForm):
         essay_fill_created.create(essay_selected)
         essay_fill_created.save()
         return super(SampleForm,self).save(commit=commit)
-    
-    
+
+
 
 
 class ClientForm(ModelForm):
@@ -96,7 +96,7 @@ class EssayFillSelectionForm(ModelForm):
     class Meta:
         model = EssayFill
         fields = ['essay']
-    
+
     def save(self,commit=True):
         # verify that methods belong to particular essay
         myself = super(EssayFillSelectionForm,self).save(commit=commit)
@@ -116,5 +116,5 @@ class EssayFillSelectionForm(ModelForm):
                return super(EssayFillSelectionForm,self).save(commit=commit)
         # if it goes beyond this line, it means it has selected a new essay to use as template
         myself.recreate(essay)
-        return super(EssayFillSelectionForm,self).save(commit=commit) 
+        return super(EssayFillSelectionForm,self).save(commit=commit)
 
