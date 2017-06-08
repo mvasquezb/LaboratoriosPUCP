@@ -129,6 +129,7 @@ class EssayMethodFill(models.Model):
         null=True,
         blank=True
     )
+    chosen = models.BooleanField(default=False)
 
 
 class EssayMethodParameterFill(models.Model):
