@@ -1,0 +1,226 @@
+{% extends 'internal/base_internal.html' %}
+
+{% block title %}{{ super() }} | Inicio{% endblock title %}
+
+{% block custom_css %}{% endblock custom_css %}
+
+{% block page_content %}
+<style>
+  h1{
+  font-size: 40px;
+  }
+</style>
+<h2><strong> Creación de Solicitud: Selección de Cliente </strong></h2>
+<tr>
+  <th><br></th>
+</tr>
+
+     <fieldset>
+     <legend><h3><strong>Filtrar por:</strong></h3></legend>
+  <div>
+      <form class="horizontal-form">
+        <div class="form-inline">
+          <div class="form-group">
+
+            <div class="form-group" style="padding-left: 100px">
+              <label>Nombre</label><br>
+              <input type="text"  class="input-sm form-control" placeholder="Buscar" id="text_search" onkeyup="text_search_function()" >
+              <button type="button" class="btn btn-sm btn-success" onclick="text_search_function()"> Buscar</button>
+            </div>
+          </div>
+        </div>
+      </form>
+  </div>
+</fieldset>
+
+  <table><tr><td><br><br></td></tr></table>
+  <fieldset>
+    <legend></legend>
+
+        <div class="table-responsive" style="overflow: auto; max-height: 300px;">
+          <table class="table table-striped" id="mytable">
+              <thead>
+              <tr>
+                  <th>Nombre </th>
+                  <th>Número de Documento </th>
+                  <th>Seleccionar</th>
+              </tr>
+              </thead>
+              <tbody>
+              {% for type in client_list %}
+
+                    <tr>
+                      <td>{{ type.name }}</td>
+                      <td>{{ type.idDoc }}</td>
+                      <td><a href="{{ url('internal:servicerequest.create',type.pk)}}"><i name="{{type.pk}}" class="fa fa-pencil-square-o" ></i></a></td>
+
+                    </tr>
+
+              {% endfor %}
+              </tbody>
+          </table>
+        </div>
+
+  </fieldset>
+
+
+<div class="col-md-offset-4">
+  <a href="{{ url('internal:servicerequest.create_client')}}">
+    <button name="b_submit" type="submit" id="createButton" class="btn btn-w-m btn-success"> Crear nuevo Cliente</button>
+  </a>
+  <button type="submit" id="deleteButton" class="btn btn-w-m btn-danger">Eliminar</button>
+</div>
+
+
+
+{% endblock page_content %}
+
+{% block javascript %}
+
+
+{% endblock %}
+
+{% block custom_js %}
+
+
+<script>
+var fill_Toastr = function(pMsg, pTypeMsg,pTitle){
+        toastr.options = {
+          closeButton: true,
+          progressBar: true,
+          showMethod: 'slideDown',
+          positionClass: "toast-bottom-right",
+          timeOut: 4000
+          };
+
+          switch(pTypeMsg){
+            case "success":
+            toastr.success(pMsg, '',pTitle);
+            break;
+
+            case "error":
+            toastr.error(pMsg, '',pTitle);
+            break;
+          }
+    }
+
+
+
+  document.getElementById("deleteButton").addEventListener("click", delete_rows);
+
+</script>
+
+    <script>
+        $(document).ready(function(){
+
+        });
+    </script>
+
+<script>
+      function text_search_function() {
+
+        var boxes = document.getElementsByClassName('i-checks');
+        for (var i = 0; i < boxes.length;i++)
+        {
+            box = boxes[i];
+            box.checked = false;
+        }
+
+        var input, filter, table, tr, td, i;
+        input = document.getElementById("text_search");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("mytable");
+        tr = table.getElementsByTagName("tr");
+        for (i = 0; i < tr.length; i++) {
+          td = tr[i].getElementsByTagName("td")[0];
+          if (td) {
+            if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                tr[i].style.display = "";
+            } else {
+                tr[i].style.display = "none";
+            }
+          }
+        }
+      }
+</script>
+
+    <script>
+
+        var fill_Toastr = function(pMsg, pTypeMsg,pTitle){
+            toastr.options = {
+              closeButton: true,
+              progressBar: true,
+              showMethod: 'slideDown',
+              positionClass: "toast-bottom-right",
+              timeOut: 4000
+              };
+
+              switch(pTypeMsg){
+                case "success":
+                toastr.success(pMsg, '',pTitle);
+                break;
+
+                case "error":
+                toastr.error(pMsg, '',pTitle);
+                break;
+              }
+        }
+        function list_filter_function() {
+            var boxes = document.getElementsByClassName('i-checks');
+            for (var i = 0; i < boxes.length;i++)
+            {
+              box = boxes[i];
+              box.checked = false;
+            }
+
+          var input, filter, table, tr, td, i;
+          input = document.getElementById("typeList");
+          filter = input[input.selectedIndex].value;
+          table = document.getElementById("mytable");
+          tr = table.getElementsByTagName("tr");
+          if (input.selectedIndex > -1)
+          {
+            if(filter == "-- Todos --")
+            {
+              for (i = 0; i < tr.length; i++) {
+                tr[i].style.display = "";
+              }
+            }
+            else
+            {
+              filter = filter.toUpperCase();
+              for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[2];
+                if (td) {
+                  if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                      tr[i].style.display = "";
+                  } else {
+                      tr[i].style.display = "none";
+                  }
+                }
+              }
+            }
+          }
+        }
+    </script>
+
+
+        <!-- Mainly scripts -->
+ <!--   <script src="js/jquery-2.1.1.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/plugins/metisMenu/jquery.metisMenu.js"></script>
+    <script src="js/plugins/slimscroll/jquery.slimscroll.min.js"></script> -->
+
+    <!-- Peity-->
+ <!--    <script src="js/plugins/peity/jquery.peity.min.js"></script> ->
+
+    <!-- Custom and plugin javascript -->
+ <!--    <script src="js/inspinia.js"></script>
+    <script src="js/plugins/pace/pace.min.js"></script> -->
+
+    <!-- iCheck -->
+ <!--    <script src="js/plugins/iCheck/icheck.min.js"></script> -->
+
+    <!-- Peity -->
+ <!--    <script src="js/demo/peity-demo.js"></script>  -->
+{% endblock custom_js %}
