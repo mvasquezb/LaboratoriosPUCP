@@ -76,6 +76,16 @@ class Essay(models.Model):
         blank=True
     )
 
+    def get_essay_methods(self):
+        return EssayMethod.objects.filter(essays=self)
+
+    def get_essay_methods_count(self):
+        return len(self.get_essay_methods())
+
+    def get_essay_method(self, index):
+        if (index > 0 and index <= self.get_essay_methods_count()):
+            return self.get_essay_methods()[index - 1]
+
 
 class EssayMethod(models.Model):
     name = models.CharField(max_length=100)
@@ -91,6 +101,19 @@ class EssayMethod(models.Model):
         related_name='essay_methods',
         blank=True
     )
+
+    def __str__(self):
+        return self.name
+
+    def get_parameters(self):
+        return EssayMethodParameter.objects.filter(essaymethods=self)
+
+    def get_parameter_count(self):
+        return len(self.get_parameters())
+
+    def get_parameter(self, index):
+        if index > 0 and index <= self.get_parameter_count():
+            return self.get_parameters()[index]
 
 
 class EssayMethodParameter(models.Model):
@@ -110,6 +133,37 @@ class EssayFill(models.Model):
         null=True,
         blank=True
     )
+
+    def __str__(self):
+        return self.essay.name
+
+    def create(self, essay_insert=None):    # function for creating essay tree
+        if essay_insert is None:
+            return
+        self.essay = essay_insert
+        self.save()
+        test_number = self.essay.get_essay_methods_count()
+        for i in range(1, test_number + 1):
+            obj_test = EssayMethodFill()
+            obj_test.create(self.essay.get_essay_method(i), self)
+            obj_test.save()
+
+    # function for destroying old tree and creating new one
+    def recreate(self, essay_insert=None):
+        if essay_insert is None:
+            return
+
+        methods_to_delete = EssayMethodFill.objects.filter(essay=self)
+        for i in range(0, len(methods_to_delete)):
+            methods_to_delete[i].delete()
+
+        self.essay = essay_insert
+        self.save()
+        test_number = self.essay.get_essay_methods_count()
+        for i in range(1, test_number + 1):
+            obj_test = EssayMethodFill()
+            obj_test.create(self.essay.get_essay_method(i), self)
+            obj_test.save()
 
 
 class EssayMethodFill(models.Model):
@@ -131,6 +185,21 @@ class EssayMethodFill(models.Model):
     )
     chosen = models.BooleanField(default=False)
 
+    def __str__(self):
+        return self.essay_method.name
+
+    def create(self, essay_method_insert=None, essay_insert=None):
+        if essay_method_insert is None or essay_insert is None:
+            return
+        self.essay_method = essay_method_insert
+        self.essay = essay_insert
+        self.save()
+        parameters_number = essay_method_insert.get_parameter_count()
+        for i in range(1, parameters_number + 1):
+            obj_par = EssayMethodParameterFill()
+            obj_par.create(self, self.essay_method.get_parameter(i))
+            obj_par.save()
+
 
 class EssayMethodParameterFill(models.Model):
     parameter = models.ForeignKey(EssayMethodParameter)
@@ -144,6 +213,15 @@ class EssayMethodParameterFill(models.Model):
 
     def __str__(self):
         return str(self.parameter) + ' | ' + self.value
+
+    def create(self,
+               essay_method_insert=None,
+               essay_method_param_insert=None):
+        if essay_method_insert is None or essay_method_param_insert is None:
+            return
+        self.essay_method = essay_method_insert
+        self.parameter = essay_method_param_insert
+        self.save()
 
 
 class ExternalProvider(models.Model):
@@ -174,7 +252,8 @@ class ServiceRequestState(models.Model):
 class RequestAttachment(models.Model):
     request = models.ForeignKey(ServiceRequest, on_delete=models.CASCADE)
     description = models.CharField(max_length=100)
-    # file = models.FileField()  # Should we save the file in DB or in server, or at all ?
+    # file = models.FileField()  # Should we save the file in DB or in server,
+    # or at all ?
 
 
 class ServiceContract(models.Model):
@@ -198,6 +277,8 @@ class SampleType(models.Model):
 
 
 class Sample(models.Model):
+    name = models.CharField(max_length=50)
+    code = models.CharField(max_length=10)
     sample_type = models.ForeignKey(SampleType)
     request = models.ForeignKey(ServiceRequest, on_delete=models.CASCADE)
     inventory = models.ForeignKey('Inventory', on_delete=models.CASCADE)

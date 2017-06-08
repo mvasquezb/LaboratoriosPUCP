@@ -62,7 +62,10 @@ def create(request,
     }
     if request.method == 'POST':
         if form.is_valid():
-            form.save()
+            new_employee = form.save(commit=False)
+            new_employee.set_password(new_employee.password)
+            new_employee.save()
+            form.save_m2m()
             messages.success(request, 'Se ha creado el empleado exitosamante!')
             return redirect('internal:employee.index')
     return render(request, template, context)

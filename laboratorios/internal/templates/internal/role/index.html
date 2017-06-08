@@ -1,6 +1,6 @@
 {% extends 'internal/base_internal.html' %}
 
-{% block title %}{{ super() }} | Empleados{% endblock title %}
+{% block title %}{{ super() }} | Roles{% endblock title %}
 
 {% block custom_css %}
 <link href="{{ static('vendors/footable/footable.core.css') }}" rel="stylesheet">
@@ -9,7 +9,7 @@
 {% block page_content %}
 <div class="row border-bottom white-bg dashboard-header">
     <div class="col-md-6">
-        <h2><strong>Listado de Usuarios</strong></h2>
+        <h2><strong>Listado de Roles</strong></h2>
     </div>
 </div>
 <div class="wrapper wrapper-content animated" >
@@ -19,13 +19,13 @@
         <div class="row">
           <div class="col-lg-12">
             <div class="text-right">
-              <a class="btn btn-primary" href="{{ url('internal:employee.create') }}">Crear Empleado</a>
+              <a class="btn btn-primary" href="{{ url('internal:role.create') }}">Crear Rol</a>
             </div>
           </div>
         </div>
         <div class="table-responsive">
           <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper form-inline dt-bootstrap">
-            <form action="{{ url('internal:employee.index') }}" method="get" >
+            <form action="{{ url('internal:role.index') }}" method="get" >
               <input name="search" type="text" class="form-control input-sm m-b-xs" id="filter" placeholder="Buscar">
               <input class="btn btn-primary"  type="submit" value="Enviar">
             </form>
@@ -36,25 +36,21 @@
                     Nombre
                   </th>
                   <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Rendering engine: activate to sort column descending" >
-                    Usuario
-                  </th>
-                  <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-label="Browser: activate to sort column ascending">
-                    Correo
+                    Descripcion
                   </th>
                   <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-label="Browser: activate to sort column ascending">Acción</th>
                 </tr>
               </thead>
               <tbody>
-                {% for employee in employees_list %}
+                {% for role in role_list %}
                   <tr role="row">
-                    <td>{{ employee.first_name }} {{ employee.last_name }} </td>
-                    <td>{{ employee.username }}</td>
-                    <td>{{ employee.email }}</td>
+                    <td>{{ role.name }}</td>
+                    <td>{{ role.description }}</td>
                     <td class="text-left footable-visible footable-last-column">
                       <div class="btn-group">
-                        <a href="{{ url('internal:employee.show', employee.id) }}" class="btn-white btn btn-xs">Detalle</a>
-                        <a href="{{ url('internal:employee.edit', employee.id) }}" class="btn-white btn btn-xs">Editar</a>
-                        <a class="myBtn1 btn-white btn btn-xs" data-toggle="modal" data-target="#myModal1" data-url="{{ url('internal:employee.delete', employee.id) }}">Eliminar</a>
+                        <a href="{{ url('internal:role.show', role.id) }}" class="btn-white btn btn-xs">Detalle</a>
+                        <a href="{{ url('internal:role.edit', role.id) }}" class="btn-white btn btn-xs">Editar</a>
+                        <a class="myBtn1 btn-white btn btn-xs" data-toggle="modal" data-target="#myModal1" data-url="{{ url('internal:role.delete', role.id) }}">Eliminar</a>
                       </div>
                     </td>
                   </tr>
@@ -64,20 +60,20 @@
                 <tr>
                   <td colspan="5" class="footable-visible">
                     <ul class="pagination pull-right">
-                      {% if employees_list.has_previous() %}
+                      {% if role_list.has_previous() %}
                         <li class="footable-page-arrow">
                           <a class="pagination-link" data-page="first" data-pagenum="1">«</a>
                         </li>
                         <li class="footable-page-arrow">
-                          <a class="pagination-link" data-page="prev" data-pagenum="{{ employees_list.previous_page_number() }}">‹</a>
+                          <a class="pagination-link" data-page="prev" data-pagenum="{{ role_list.previous_page_number() }}">‹</a>
                         </li>
                       {% endif %}
                       <li class="footable-page">
-                        <a data-page="0">{{ employees_list.number }}</a>
+                        <a data-page="0">{{ role_list.number }}</a>
                       </li>
-                      {% if employees_list.has_next() %}
+                      {% if role_list.has_next() %}
                         <li class="footable-page-arrow">
-                          <a class="pagination-link" data-page="next" data-pagenum="{{ employees_list.next_page_number() }}">›</a>
+                          <a class="pagination-link" data-page="next" data-pagenum="{{ role_list.next_page_number() }}">›</a>
                         </li>
                         <li class="footable-page-arrow">
                           <a class="pagination-link" data-page="last" data-pagenum="{{ paginator.num_pages }}">»</a>
@@ -100,7 +96,7 @@
     <span class="span-close close">&times;</span>
     <div class="modeal-center-content">
         <p>¿Seguro que quiere eliminarlo?</p>
-        <button type="button" class="delete-employee btn btn-danger">Eliminar</button>
+        <button type="button" class="delete-role btn btn-danger">Eliminar</button>
         <button type="button" class="span-close btn btn-primary">Cancelar</button>
     </div>
   </div>
@@ -121,7 +117,7 @@ $( document ).ready(function() {
   $(".myBtn1").click(function() {
     $("#myModal1").show();
     var delete_url = $(this).attr("data-url");
-    $(".delete-employee").click(function() {
+    $(".delete-role").click(function() {
       window.location.href = delete_url;
     });
   });
