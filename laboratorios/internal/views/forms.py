@@ -17,3 +17,8 @@ class EmployeeForm(ModelForm):
         fields = ['username', 'email', 'roles', 'password']
 
     laboratories = forms.ModelMultipleChoiceField(queryset=Laboratory.objects.all())
+
+class LaboratoryForm(ModelForm):
+    class Meta:
+        model = Laboratory
+        exclude = []

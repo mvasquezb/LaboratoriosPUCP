@@ -8,6 +8,9 @@ from django.shortcuts import (
 from django.contrib import messages
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from internal.models import *
+from django.shortcuts import render, redirect
+from django.http import HttpResponse
+from .forms import LaboratoryForm
 
 
 def index(request,
@@ -39,8 +42,37 @@ def index(request,
 
 
 def create(request,
-           template='internal/laboratory/create.html',
-           extra_content=None):
-    users = Laboratory.objects.all ()
-    context = {'users': users}
-    return render(request, template, context)
+          template='internal/laboratory/create.html',
+          extra_content=None):
+    if request.method == 'POST':
+        form = LaboratoryForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('internal:laboratory.index')
+        else:
+            return HttpResponse(str(form.errors))
+    else:
+        users = Employee.objects.all()
+        service_hours = LaboratoryServiceHours.objects.all()
+        inventories = Inventory.objects.all()
+        essaymethods = EssayMethod.objects.all()
+        form = LaboratoryForm()
+        context = {'users': users, 'service_hours': service_hours, 'inventories': inventories,
+                   'essaymethods': essaymethods, 'form': form}
+        return render(request, template, context)
+
+def edit(request,
+        pk):
+    if request.method == 'POST':
+        print("snd")
+    else :
+        laboratory = Laboratory.objects.get(pk=pk)
+        users = Employee.objects.all()
+        service_hours = LaboratoryServiceHours.objects.all()
+        inventories = Inventory.objects.all()
+        essaymethods = EssayMethod.objects.all()
+        form = LaboratoryForm()
+        context = {'users': users, 'service_hours': service_hours, 'inventories': inventories,
+                   'essaymethods': essaymethods, 'form': form, 'laboratory': laboratory}
+        template = 'internal/laboratory/edit.html'
+        return render(request, template, context)

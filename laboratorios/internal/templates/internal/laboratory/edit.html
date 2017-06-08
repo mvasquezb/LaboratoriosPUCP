@@ -10,7 +10,7 @@
 
 <div class="row border-bottom white-bg dashboard-header">
     <div class="col-md-3">
-        <h2><strong>Crear Laboratorio</strong></h2>
+        <h2><strong>Editar Laboratorio</strong></h2>
     </div>
 </div>
 
@@ -19,7 +19,7 @@
 {% csrf_token %}
 {{ form.as_p() }}
 <input type="submit" value="submit">
-  </form>
+</form>
 -->
 
   <div class="wrapper wrapper-content animated fadeInRight" >
@@ -39,15 +39,14 @@
               
               <div class="form-group">
                 <label>Capacidad Máxima de Empleados (*)</label>
-                <input class="form-control" name="laboratory_capacity" id="capacity" type="number" min="5" max="10" value="5" onkeydown="return FilterNmberInput(event)" onpaste="handlePaste(event)" required data-error="Ingrese un valor válido para capacidad de personal">
+                <input class="form-control" name="laboratory_capacity" id="capacity" type="number" min="5" max="10" value="5" required data-error="Ingrese un valor válido para capacidad de personal">
                 <span class="help-block m-b-none">Mínima cantidad será cinco (5) y máxima será diez (10)</span>
                 <div class="help-block with-errors"></div>              
               </div>
             </div>
             <div class="row">
               <div class="form-group">
-                  <label>Seleccione al personal para el nuevo laboratorio</label><br>
-                  <span>Podrá seleccionar tantos usuarios como la capacidad máxima se lo permita</span>
+                  <label>Seleccione al personal para el nuevo laboratorio</label>
                   <div class="table-responsive">
                     <table class="table table-striped table-bordered table-hover dataTables-example" >
                       <thead>
@@ -83,7 +82,7 @@
                 <label>Horas de Servicio (*)</label>
                   <select class="form-control m-b" id="comboBox_service_hours">
                     {% for service_hour in service_hours %}
-                      <option id="{{ service_hour.pk }}">Inicio: {{ service_hour.start_time }} - Fin: {{ service_hour.end_time }}</option>
+                      <option id="{{ service_hour.pk }}">De {{ service_hour.start_time }} a {{ service_hour.end_time }}</option>
                     {% endfor %}
                   </select>
               </div>
@@ -114,7 +113,7 @@
             </div>
 
             <div class="row">
-              <label>Seleccione los tipos de pruebas realizables para este laboratorio </label>
+              <label>Seleccione las pruebas realizables para este laboratorio </label>
               <div class="table-responsive">
                 <table class="table table-striped table-bordered table-hover dataTables-example" >
                   <thead>
@@ -139,8 +138,7 @@
               </div>
             </div>
             <p><strong>(*) Campos obligatorios</strong></p>
-            
-            <input type="submit" class="btn btn-primary" name="registrar" id="register_button" value="Registrar">
+            <input type="submit" class="btn btn-primary" name="registrar" id="register_button">
 
           </form>
         </div>
@@ -157,27 +155,6 @@
   var capacity_users;
   var counting = 0;
   var to_out;
-
-  function handlePaste (e) {
-    var clipboardData, pastedData;
-
-    // Get pasted data via clipboard API
-    clipboardData = e.clipboardData || window.clipboardData;
-    pastedData = clipboardData.getData('Text').toUpperCase();
-
-    if(pastedData.indexOf('E')>-1) {
-        //alert('found an E');
-        e.stopPropagation();
-        e.preventDefault();
-    }
-};
-
-  function FilterNmberInput(event) {
-    var keyCode = ('which' in event) ? event.which : event.keyCode;
-
-    isNotWanted = (keyCode == 69 || keyCode == 101);
-    return !isNotWanted;
-};
 
   //cuando se invalida data
   $('#capacity').on('invalid.bs.validator', function(){
@@ -198,19 +175,6 @@
     //$('#users_selection').show();
     $('input:checkbox[id^="checkbox_users"]').removeAttr('disabled');
     capacity_users = document.getElementById("capacity").value;
-  });
-
-  var value = $('#capacity').val();
-  $('#capacity').bind('keyup change click',function(){
-    if (this.value !== value){
-      $('input:checkbox[id^="checkbox_users"]').prop('checked', false);
-      counting = 0;
-      $('#comboBox').empty();
-      $('#comboBox').append($('<option>', {
-          text: "-- Ningún Responsable Seleccionado --"
-        }));
-      capacity_users = document.getElementById("capacity").value;
-      }
   });
 
   //cuando se clickea en los checkboxes de usuarios de laboratorio
