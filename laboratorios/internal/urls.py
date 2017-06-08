@@ -27,4 +27,17 @@ urlpatterns = [
         views.employee.delete,
         name='employee.delete'),
 
+    #URL de requestStorage
+    url('^inventoryOrder/?$',
+        views.inventoryOrder.index,
+        name='inventoryOrder.index'),
+    url('^inventoryOrder/show/(?P<pk>\d+)$',
+        views.inventoryOrder.show,
+        name='inventoryOrder.show'),
+    url('^inventoryOrder/aprobar/(?P<pk>\d+)$',
+        views.inventoryOrder.aprobar,
+        name='inventoryOrder.aprobar'),
+    url('^inventoryOrder/rechazar/(?P<pk>\d+)$',
+        views.inventoryOrder.rechazar,
+        name='inventoryOrder.rechazar'),
 ]
