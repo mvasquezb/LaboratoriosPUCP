@@ -22,6 +22,7 @@
                      <th class="footable-visible footable-sortable">Id</th>
                      <th class="footable-visible footable-sortable">Cliente</th>
                      <th class="footable-visible footable-sortable">Responsable</th>
+                     <th class="footable-visible footable-sortable">Editar/Eliminar</th>
                   </tr>
                </thead>
                <tbody>
@@ -30,7 +31,8 @@
                      <td>{{ request.id }}</td>
                      <td>{{ request.client }}</td>
                      <td>{{ request.supervisor }}</td>
-                     <td><a class="btn-white btn btn-xs" href="{{ url('internal:servicerequest.edit', request.id) }}">Editar</a></td>
+                     <td><a class="btn-white btn btn-xs" href="{{ url('internal:servicerequest.edit', request.id) }}">Editar</a>
+                         <a class="btn-white btn btn-xs" href="{{ url('internal:servicerequest.delete', request.id) }}">Eliminar</a></td>
                   </tr>
                   {% endfor %}
                </tbody>

@@ -96,3 +96,25 @@ class EssayFillSelectionForm(ModelForm):
     class Meta:
         model = EssayFill
         fields = ['essay']
+    
+    def save(self,commit=True):
+        # verify that methods belong to particular essay
+        myself = super(EssayFillSelectionForm,self).save(commit=commit)
+        essay = Essay.objects.get(pk=self.data['essay'])
+        methods_count = len(EssayFill.objects.filter(essay=myself.essay))
+        print(methods_count)
+        if methods_count == len(EssayMethod.objects.filter(essays=essay)):
+            essay_methods = EssayMethod.objects.filter(essays=essay)
+            essay_fill_methods = EssayFill.objects.filter(essay=myself.essay)
+            exit_loop = 0
+            for i in range(0,methods_count):
+                if (essay_fill_methods[i].essay_method == essay_methods[i]):
+                    pass
+                else:
+                    exit_loop +=1
+            if exit_loop == 0:
+               return super(EssayFillSelectionForm,self).save(commit=commit)
+        # if it goes beyond this line, it means it has selected a new essay to use as template
+        myself.recreate(essay)
+        return super(EssayFillSelectionForm,self).save(commit=commit) 
+

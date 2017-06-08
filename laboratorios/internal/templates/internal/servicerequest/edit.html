@@ -64,7 +64,8 @@
                                             </tbody>
                                         </table>
                                     </td>
-                                    <td><a class="btn-white btn btn-xs" href="{{ url('internal:servicerequest.edit_sample',pk,sample.id) }}">Editar</a></td>
+                                    <td><a class="btn-white btn btn-xs" href="{{ url('internal:servicerequest.edit_sample',pk,sample.id) }}">Editar</a>
+                                        <a class="btn-white btn btn-xs" href="{{ url('internal:servicerequest.delete_sample',pk,sample.id) }}">Eliminar</a></td>
 
                                 </tr>
 
@@ -80,10 +81,8 @@
 
                     <div class="col-lg-4">
                         <div class="text-left">
-                            <input type="submit" value="Registrar" class="btn btn-primary">
-                        </div>
-                        <div class="text-right">
-                            <button><a href="{{ url('internal:servicerequest.add_sample',pk)}}" value="Añadir Prueba" class="btn btn-primary"></a></button>
+                            <input type="submit" value="Registrar" class="btn btn-primary">                        
+                            ___<a href="{{ url('internal:servicerequest.add_sample',pk)}}" class="btn btn-primary">Añadir Prueba</a>
                         </div>
                     </div>
                 </div>

@@ -120,7 +120,21 @@ def edit_sample(request,
     essay_fill_form = EssayFillSelectionForm(request.POST or None, instance = EssayFill.objects.get(sample=sample))
     forms = [sample_form,essay_fill_form]
     context = {'forms':forms,'pk_request':pk_request,'pk_sample':pk_sample}
-    if sample_form.is_valid():
+    if sample_form.is_valid() and essay_fill_form.is_valid():
         sample_form.save()
+        essay_fill_form.save()
         return redirect(reverse("internal:servicerequest.edit",args=(pk_request,)))
     return render(request, template, context)
+
+def delete(request,
+    pk):
+    service_request = ServiceRequest.objects.get(pk=pk)
+    service_request.delete()
+    return redirect(reverse("internal:servicerequest.index"))
+
+def delete_sample(request,
+    pk_request,
+    pk_sample):
+    sample = Sample.objects.get(pk=pk_sample)
+    sample.delete()
+    return redirect(reverse("internal:servicerequest.edit",args=(pk_request,)))    
