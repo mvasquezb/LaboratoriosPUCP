@@ -57,34 +57,41 @@ def edit(request,
     sample_list=Sample.objects.filter(request=service_request)
     essay_fill_list=[]
     essay_methods_list=[] # To get all essay_methods for every sample
-    essay_methods_active=[] # To get whether each essay_method is chosen or not  
+    essay_methods_chosen_forms=[] # To get whether each essay_method is chosen or not  
     
     for i in range(0,len(sample_list)):
         sample_listed = sample_list[i]
         essay_fill = EssayFill.objects.filter(sample=sample_listed)[0]
         essay_fill_list.append(essay_fill)
         essay_methods_list.append(EssayMethodFill.objects.filter(essay=essay_fill))
-
-        aux_active_list=[]
-
-        # Logic for samples dashboard for each user
-        # for j in range(0,len(essay_methods_list[i])):
-        #     if len(essay_methods_list[i][j].employees.all())>0:
-        #         aux_active_list.append('X')
-        #     else:
-        #         aux_active_list.append('_')
-
+        aux_essay_methods_forms=[]
         for j in range(0,len(essay_methods_list[i])):
-            if essay_methods_list[i][j].chosen is True:
-                aux_active_list.append('X')
-            else:
-                aux_active_list.append('_')
-        essay_methods_active.append(aux_active_list) 
+            aux_essay_methods_forms.append(EssayMethodFillChosenForm(request.POST or None, instance=essay_methods_list[i][j], prefix='emf_'+str(essay_methods_list[i][j].id)))
+        essay_methods_chosen_forms.append(aux_essay_methods_forms) 
     
-    context = {'form':service_request_form,'samples':sample_list,'essays':essay_fill_list,'essays_methods':essay_methods_list,'essays_methods_active':essay_methods_active,'pk':pk}
+    context = {'form':service_request_form,'samples':sample_list,'essays':essay_fill_list,'essays_methods':essay_methods_list,'essay_methods_chosen_forms':essay_methods_chosen_forms,'pk':pk}
     # verificacion
+    forms_verified = 0 # Means true lol
+
+    # loop for verifying each essay method form
+    for i in range(0,len(essay_methods_chosen_forms)):
+        for j in range(0,len(essay_methods_chosen_forms[i])):
+            if essay_methods_chosen_forms[i][j].is_valid():
+                pass
+            else:
+                forms_verified +=1
     if service_request_form.is_valid():
+        pass
+    else:
+        forms_verified +=1
+    # end of verifying segment        
+
+    if forms_verified == 0:
         service_request_form.save()
+        # add save for each form 
+        for i in range(0,len(essay_methods_chosen_forms)):
+            for j in range(0,len(essay_methods_chosen_forms[i])):
+                essay_methods_chosen_forms[i][j].save()
         return redirect(reverse("internal:servicerequest.index"))
     return render(request, template, context)
 
@@ -104,38 +111,16 @@ def add_sample(request,
     return render(request, template, context)
 
 
-
-    # def add_sample(request,
-    # pk,
-    # template='internal/servicerequest/add_sample.html'):
-    # service_request = ServiceRequest.objects.get(pk=pk)
-    # if (len(Sample.objects.filter(request=service_request))==0):
-    #     sample_form = SampleForm(request.POST or None, initial={'request':service_request,})
-    # else:
-    #     sample_previous = Sample.objects.filter
-    #     sample_form = SampleForm(request.POST or None, initial={'request':service_request,})
-    # active_list = []
-    # essay_methods_list =[]
-    # #For all samples and their selected essayFills in list
-    # if len(EssayFill.objects.filter(sample=pk))>0:
-    #     essay = EssayFill.objects.filter(sample=pk)[0]
-    #     if len(EssayMethodFill.objects.filter(essay=essay))>0: 
-    #         essay_methods_list = EssayMethodFill.objects.filter(essay=essay)   
-    #         for i in range(0,len(essay_method_list)):
-    #             if essay_methods_list[i].chosen is True:
-    #                 active_list.append('X')
-    #             else:
-    #                 active_list.append('_')
- 
-    # context = {'form':sample_form,'essay_methods':essay_methods_list,'active_list':active_list,'pk':pk}
-    # # verificacion
-    # if sample_form.is_valid():
-    #     sample = service_request_form.save()
-    #     essay_selected = self.cleaned_data['essay_field']
-    #     # If there is no previous selection for essay or it has been changed
-    #     if (len(EssayFill.objects.filter(sample=sample)) == 0 or len(EssayFill.objects.filter(sample=sample,pk=sample)) == 0):
-    #         essay_fill_created = EssayFill(sample=sample)
-    #         essay_fill_created.create(essay_selected)
-    #         essay_fill_created.save()    
-    #     return redirect(reverse("internal:servicerequest.edit",args=(pk,)))
-    # return render(request, template, context)
+def edit_sample(request,
+    pk_request,
+    pk_sample,
+    template='internal/servicerequest/edit_sample.html'):
+    sample = Sample.objects.get(pk=pk_sample)
+    sample_form = SampleEditForm(request.POST or None, instance = sample)
+    essay_fill_form = EssayFillSelectionForm(request.POST or None, instance = EssayFill.objects.get(sample=sample))
+    forms = [sample_form,essay_fill_form]
+    context = {'forms':forms,'pk_request':pk_request,'pk_sample':pk_sample}
+    if sample_form.is_valid():
+        sample_form.save()
+        return redirect(reverse("internal:servicerequest.edit",args=(pk_request,)))
+    return render(request, template, context)

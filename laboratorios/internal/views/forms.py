@@ -82,3 +82,17 @@ class RoleForm(ModelForm):
         fields = ['name','description']
     permissions = forms.ModelMultipleChoiceField(queryset=Permission.objects.all())
 
+class EssayMethodFillChosenForm(ModelForm):
+    class Meta:
+        model = EssayMethodFill
+        fields = ['chosen']
+
+class SampleEditForm(ModelForm):
+    class Meta:
+        model = Sample
+        fields = ['name','sample_type','inventory']
+
+class EssayFillSelectionForm(ModelForm):
+    class Meta:
+        model = EssayFill
+        fields = ['essay']

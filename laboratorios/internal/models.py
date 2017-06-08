@@ -129,6 +129,22 @@ class EssayFill(models.Model):
             obj_test = EssayMethodFill()
             obj_test.create(self.essay.get_essay_method(i),self)
             obj_test.save()
+    
+    def recreate(self, essay_insert=None): # function for destroying old tree and creating new one
+        if essay_insert is None:
+            return
+            
+        methods_to_delete=EssayMethodFill.objects.filter(essay=self)
+        for i in range(0,len(methods_to_delete)):
+            methods_to_delete[i].delete()
+
+        self.essay = essay_insert
+        self.save()
+        test_number = self.essay.get_essay_methods_count()
+        for i in range(1, test_number+1):
+            obj_test = EssayMethodFill()
+            obj_test.create(self.essay.get_essay_method(i),self)
+            obj_test.save()
 
 
 
