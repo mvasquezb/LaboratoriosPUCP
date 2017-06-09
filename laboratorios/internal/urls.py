@@ -38,6 +38,9 @@ urlpatterns = [
     url('^employee/delete/(?P<pk>\d+)$',
         views.employee.delete,
         name='employee.delete'),
+    #
+    # Role
+    #
     url('^role/$',
         views.role.index,
         name='role.index'),
@@ -108,4 +111,22 @@ urlpatterns = [
     url('^servicerequest/(?P<request_id>\d+)/assign_employee/(?P<sample_id>\d+)/?$',
         views.servicerequest.assign_employee,
         name='servicerequest.assign_employee'),
+    #
+    # Laboratory
+    #
+    url('^laboratory/$',
+        views.laboratory.index,
+        name='laboratory.index'),
+    url('^laboratory/create$',
+        views.laboratory.create,
+        name='laboratory.create'),
+    url('^laboratory/edit/(?P<pk>\d+)$',
+        views.laboratory.edit,
+        name='laboratory.edit'),
+    url('^laboratory/delete/(?P<pk>\d+)$',
+        views.laboratory.delete,
+        name='laboratory.delete'),
+    url('^laboratory/show/(?P<pk>\d+)$',
+        views.laboratory.show,
+        name='laboratory.show'),
 ]

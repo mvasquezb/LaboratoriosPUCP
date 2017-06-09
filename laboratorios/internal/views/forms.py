@@ -58,8 +58,6 @@ class SampleForm(ModelForm):
         return super(SampleForm,self).save(commit=commit)
 
 
-
-
 class ClientForm(ModelForm):
     class Meta:
         model = Client
@@ -135,3 +133,11 @@ class ServiceAssignEmployeeForm(forms.Form):
         super().__init__(*args, **kwargs)
         if employee is not None:
             self.fields['employee'].queryset = employee
+
+    laboratories = forms.ModelMultipleChoiceField(queryset=Laboratory.objects.all())
+
+
+class LaboratoryForm(ModelForm):
+    class Meta:
+        model = Laboratory
+        exclude = []
