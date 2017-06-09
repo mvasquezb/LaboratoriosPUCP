@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+{% extends 'internal/base_internal.html' %}
+
+{% block title %}{{ super() }} | Carga Laboral{% endblock title %}
+
+{% block custom_css %}
+<link rel="stylesheet" type="text/css" href="{{static('css/gantt/style.css')}}">
+{% endblock custom_css %}
+
+{% block page_content %}
+<div class="row border-bottom white-bg dashboard-header">
+  <div class="col-md-6">
+    <h2><strong>Carga Laboral</strong></h2>
+  </div>
+</div>
+<div class="wrapper wrapper-content animated fadeInRight" >
+  <div class="col-lg-12">
+    <div class="ibox float-e-margins">
+      <div class="ibox-content">
+        <div class="chart" id="Chart" style="width: 100%"></div>
+      </div>
+    </div>
+  </div>
+</div> 
+{% endblock page_content %}
+{% block custom_js %}
+  
+  <script src="https://d3js.org/d3.v3.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+  <script type="text/javascript" src="{{static('js/ganttChart.js')}}"></script>
+  <script type="text/javascript">
+
+var data = {{ js_data|safe }};
+
+var cycles = [
+  {
+    id: 1,
+    name: "Cycle 1", 
+    start_date: "01/01/2017", 
+    end_date: "02/28/2017",
+  },
+  {
+    id: 2,
+    name: "Cycle 2", 
+    start_date: "05/01/2017", 
+    end_date: "06/30/2017",
+  },
+  {
+    id: 3,
+    name: "Cycle 3", 
+    start_date: "07/01/2017", 
+    end_date: "10/30/2017",
+  },
+  {
+    id: 3,
+    name: "Cycle 4", 
+    start_date: "10/01/2017", 
+    end_date: "12/30/2017",
+  }
+]
+
+var config = {
+  data: data, // Your actuall data
+  element: "#Chart", // The element for rendering the chart
+  box_padding: 10, // Padding for the blocks
+  // metrics: {type: "overall", years: [2016, 2017, 2018]}, // Type of gantt
+  // metrics: {type: "sprint", year: 2017, cycles: cycles}, // Type of gantt
+  // metrics: {type: "yearly", year: 2017}, // Type of gantt
+   metrics: {type: "monthly", month: "{{ actual_month|safe}}"  }, // For Monthly Data
+  // metrics: {type: "quarterly", months: ['January 2017','February 2017','March 2017', 'April 2017', 'May 2017', 'June 2017']}, // For quarterly or half yearly data
+  onClick: function(data) {
+    console.log(data); // Onclick of each node
+  },
+  onEmptyButtonClick: function() {
+    console.log("Empty Clicked");
+  },
+  onAreaClick: function(location) {
+    console.log("Clicked On" + location);
+  }
+}
+ganttChart(config);
+  </script>
+{% endblock custom_js %}

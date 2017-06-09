@@ -49,6 +49,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'internal.middleware.AuthRequiredMiddleware'
 ]
 
 ROOT_URLCONF = 'laboratorios.urls'
@@ -162,6 +163,6 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
 
-LOGIN_URL = reverse_lazy('login')
+LOGIN_URL = reverse_lazy('internal:login')
 LOGIN_REDIRECT_URL = reverse_lazy('internal:index')
-LOGOUT_URL = reverse_lazy('logout')
+LOGOUT_URL = reverse_lazy('internal:logout')
