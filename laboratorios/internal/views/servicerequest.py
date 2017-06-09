@@ -24,12 +24,23 @@ def create(request,
            template='internal/servicerequest/create.html'):
     selected_client = Client.objects.get(pk=pk)
     service_request_form = ServiceRequestForm(
-        request.POST or None, initial={'client': selected_client})
-    context = {'sr_form': service_request_form, 'pk': pk}
-    if service_request_form.is_valid():
-        created_service_request = service_request_form.save()
-        messages.success(request, 'Se ha creado la solicitud exitosamante!')
-        return redirect(reverse('internal:servicerequest.index'))
+        request.POST or None,
+        initial={
+            'client': selected_client
+        }
+    )
+    context = {
+        'sr_form': service_request_form,
+        'pk': pk
+    }
+    if request.method == 'POST':
+        if service_request_form.is_valid():
+            created_service_request = service_request_form.save()
+            messages.success(
+                request,
+                'Se ha creado la solicitud exitosamante!'
+            )
+            return redirect(reverse('internal:servicerequest.index'))
     return render(request, template, context)
 
 
