@@ -27,19 +27,19 @@
       <div class="ibox float-e-margins">
         <div class="ibox-content">
           {{ form.errors }}
-          <form action="{{ url('internal:laboratory.create') }}" data-toggle="validator" id="form" method="POST">
+          <form action="{{ url('internal:laboratory.edit', pk=laboratory.pk) }}" data-toggle="validator" id="form" method="POST">
             <div class="row">
               {% csrf_token %}
               <div class="form-group">
                 <label>Nombre de Laboratorio (*)</label>
-                <input type="text" maxlength="50" class="form-control" id="laboratory_name" required data-error="El nombre es obligatorio" placeholder="Ingrese nombre de laboratorio">
+                <input type="text" maxlength="50" class="form-control" id="laboratory_name" required data-error="El nombre es obligatorio" placeholder="Ingrese nombre de laboratorio" value="{{ laboratory.name }}">
                 <span class="help-block m-b-none">Hasta 50 caracteres permitidos</span>
                 <div class="help-block with-errors"></div>
               </div>
               
               <div class="form-group">
                 <label>Capacidad Máxima de Empleados (*)</label>
-                <input class="form-control" name="laboratory_capacity" id="capacity" type="number" min="5" max="10" value="5" required data-error="Ingrese un valor válido para capacidad de personal">
+                <input class="form-control" name="laboratory_capacity" onkeydown="return FilterNmberInput(event)" onpaste="handlePaste(event)" id="capacity" type="number" min="5" max="10" value="{{ laboratory.capacity }}" required data-error="Ingrese un valor válido para capacidad de personal">
                 <span class="help-block m-b-none">Mínima cantidad será cinco (5) y máxima será diez (10)</span>
                 <div class="help-block with-errors"></div>              
               </div>
@@ -57,11 +57,21 @@
                         </tr>
                       </thead>
                       <tbody>
-                        {% for user in users %}
+                        {% for user in all_users %}
+                          {% set reach_out = [] %}
                           <tr class="gradeX">
                             <td>{{ user.username }}</td>
                             <td>{{ user.email }}</td>
-                            <td><input type="checkbox" id="checkbox_users" name="{{ user.username }}" class="{{ user.pk }}"></td>
+                            {% for selected_user in selected_users %}
+                              {% if user.pk == selected_user.pk %}
+                                <td><input type="checkbox" id="checkbox_users" name="{{ user.username }}" class="{{ user.pk }}" checked></td>
+                                {% if reach_out.append(True) %}{% endif %}
+                                {% break %}
+                              {% endif %}
+                            {% endfor %}
+                            {% if not reach_out %}
+                              <td><input type="checkbox" id="checkbox_users" name="{{ user.username }}" class="{{ user.pk }}"></td>
+                            {% endif %}
                           </tr>
                         {% endfor %}
                       </tbody>
@@ -71,7 +81,13 @@
                       <label>Responsable de Laboratorio</label>
                         <select class="form-control m-b" id="comboBox">
                           <option selected>-- Ningún Responsable Seleccionado --</option>
-
+                          {% for selected_user in selected_users %}
+                            {% if selected_user.pk == laboratory.supervisor.pk %}
+                              <option id="{{ selected_user.pk }}" selected>{{ selected_user.username }}</option>
+                            {% else %}
+                              <option id="{{ selected_user.pk }}" >{{ selected_user.username }}</option>
+                            {% endif %}
+                          {% endfor %}
                         </select>
                     </div>
                   </div>
@@ -81,8 +97,12 @@
               <div class="form-group">
                 <label>Horas de Servicio (*)</label>
                   <select class="form-control m-b" id="comboBox_service_hours">
-                    {% for service_hour in service_hours %}
-                      <option id="{{ service_hour.pk }}">De {{ service_hour.start_time }} a {{ service_hour.end_time }}</option>
+                    {% for service_hour in all_service_hours %}
+                      {% if selected_service_hours.pk == service_hour.pk %}
+                        <option id="{{ service_hour.pk }}" selected>De {{ service_hour.start_time }} a {{ service_hour.end_time }}</option>
+                      {% else %}
+                        <option id="{{ service_hour.pk }}">De {{ service_hour.start_time }} a {{ service_hour.end_time }}</option>
+                      {% endif %}
                     {% endfor %}
                   </select>
               </div>
@@ -100,11 +120,21 @@
                     </tr>
                   </thead>
                   <tbody>
-                    {% for inventory in inventories %}
+                    {% for inventory in all_inventories %}
+                      {% set reach_out = [] %}
                       <tr class="gradeX">
                         <td>{{ inventory.name }}</td>
                         <td>{{ inventory.location }}</td>
-                        <td><input type="checkbox" id="checkbox_inventory" name="{{ inventory.pk }}" class="i-checks"></td>
+                        {% for selected_inventory in selected_inventories %}
+                          {% if inventory.pk==selected_inventory.pk %}
+                            <td><input type="checkbox" id="checkbox_inventory" name="{{ inventory.pk }}" class="i-checks" checked=""></td>
+                            {% if reach_out.append(True) %}{% endif %}
+                            {% break %}
+                          {% endif %}
+                        {% endfor %}
+                        {% if not reach_out %}
+                          <td><input type="checkbox" id="checkbox_inventory" name="{{ inventory.pk }}" class="i-checks" ></td>
+                        {% endif %}
                       </tr>
                     {% endfor %}
                   </tbody>
@@ -125,12 +155,22 @@
                     </tr>
                   </thead>
                   <tbody>
-                    {% for essaymethod in essaymethods %}
+                    {% for essaymethod in all_essaymethods %}
+                      {% set reach_out = [] %}
                       <tr class="gradeX">
                         <td>{{ essaymethod.name }}</td>
                         <td>{{ essaymethod.description }}</td>
                         <td>{{ essaymethod.price }}</td>
-                        <td><input type="checkbox" id="checkbox_essay" name="{{ essaymethod.pk }}" class="i-checks"></td>
+                        {% for selected_essaymethod in selected_essaymethods %}
+                          {% if essaymethod.pk == selected_essaymethod.pk %}
+                            <td><input type="checkbox" id="checkbox_essay" name="{{ essaymethod.pk }}" class="i-checks" checked></td>
+                            {% if reach_out.append(True) %}{% endif %}
+                            {% break %}
+                          {% endif %}
+                        {% endfor %}
+                        {% if not reach_out %}
+                          <td><input type="checkbox" id="checkbox_essay" name="{{ essaymethod.pk }}" class="i-checks"></td>
+                        {% endif %}
                       </tr>
                     {% endfor %}
                   </tbody>
@@ -138,8 +178,8 @@
               </div>
             </div>
             <p><strong>(*) Campos obligatorios</strong></p>
-            <input type="submit" class="btn btn-primary" name="registrar" id="register_button">
-
+            <input type="submit" class="btn btn-primary" name="registrar" id="register_button" value="Guardar Cambios">
+            <input type="button" name="cancel" class="btn btn-white" value="Cancelar">
           </form>
         </div>
         
@@ -153,8 +193,29 @@
 <script type="text/javascript">
   //var selected_users = [];
   var capacity_users;
-  var counting = 0;
+  var counting = {{ selected_users|length }};
   var to_out;
+
+  function handlePaste (e) {
+    var clipboardData, pastedData;
+
+    // Get pasted data via clipboard API
+    clipboardData = e.clipboardData || window.clipboardData;
+    pastedData = clipboardData.getData('Text').toUpperCase();
+
+    if(pastedData.indexOf('E')>-1) {
+        //alert('found an E');
+        e.stopPropagation();
+        e.preventDefault();
+    }
+};
+
+  function FilterNmberInput(event) {
+    var keyCode = ('which' in event) ? event.which : event.keyCode;
+
+    isNotWanted = (keyCode == 69 || keyCode == 101);
+    return !isNotWanted;
+};
 
   //cuando se invalida data
   $('#capacity').on('invalid.bs.validator', function(){
@@ -175,6 +236,19 @@
     //$('#users_selection').show();
     $('input:checkbox[id^="checkbox_users"]').removeAttr('disabled');
     capacity_users = document.getElementById("capacity").value;
+  });
+
+  var value = $('#capacity').val();
+  $('#capacity').bind('keyup change click',function(){
+    if (this.value < value){
+      $('input:checkbox[id^="checkbox_users"]').prop('checked', false);
+      counting = 0;
+      $('#comboBox').empty();
+      $('#comboBox').append($('<option>', {
+          text: "-- Ningún Responsable Seleccionado --"
+        }));
+      capacity_users = document.getElementById("capacity").value;
+      }
   });
 
   //cuando se clickea en los checkboxes de usuarios de laboratorio
