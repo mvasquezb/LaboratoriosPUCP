@@ -14,9 +14,11 @@ from django.db.models import (
     F,
 )
 from django.urls import *
+import json as simplejson
+from datetime import *
 from django.http import JsonResponse
 from django.views.decorators.csrf import ensure_csrf_cookie
-
+from django.utils import timezone
 from internal.models import *
 from internal.views.forms import *
 
@@ -329,3 +331,34 @@ def approve(request,
         service_contract = ServiceContract(client=client, request=service_request)
         service_contract.save()  # Guardamos el service_contract en la tabla "ServiceContract"
         return redirect(reverse("internal:servicerequest.index"))
+
+
+def workload_view_per_request(request,
+    template='internal/servicerequest/workload_view_per_request.html'):
+    month_names=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre']
+    service_request_list=ServiceRequest.objects.all()
+    my_data=[]
+    for i in range(0,len(service_request_list)):
+        date_in_service = service_request_list[i].registered_date
+        #date_in_service.strftime("%d/%m/%Y")
+        #date_in_service.replace(day=date_in_service.day+service_request_list[i].expected_duration).strftime("%d/%m/%Y")
+
+        # progresion calculation
+        now = timezone.localtime(timezone.now())
+        delta = now - date_in_service
+        total = int(100*delta.days/service_request_list[i].expected_duration)
+
+
+        my_dict={
+        "id": service_request_list[i].id,
+        "title": "Cliente" + service_request_list[i].client.get_full_name(),
+        "start_date": date_in_service.strftime("%m/%d/%Y"), 
+        "end_date": date_in_service.replace(day=date_in_service.day+service_request_list[i].expected_duration).strftime("%m/%d/%Y"),
+        "value": 67,
+        "term": "Short Term",
+        "completion_percentage": total,
+        "color": "#770051",
+        }
+        my_data.append(my_dict)
+    js_data = simplejson.dumps(my_data)
+    return render(request, template, {'js_data':js_data,'actual_month':month_names[now.month-1] + " " + str(now.year)})

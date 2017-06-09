@@ -253,6 +253,8 @@ class ServiceRequest(models.Model):
     supervisor = models.ForeignKey(Employee)
     state = models.ForeignKey('ServiceRequestState')
     observations = models.CharField(max_length=500, null=True, blank=True)
+    expected_duration = models.IntegerField(default=10)
+    registered_date = models.DateTimeField(auto_now_add=True, auto_now=False)
 
     def __str__(self):
         return str(self.client) + ' | ' + str(self.state)
