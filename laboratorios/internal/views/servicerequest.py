@@ -5,7 +5,14 @@ from django.shortcuts import (
     reverse,
 )
 from django.contrib import messages
-from django.db.models import Sum, Q
+from django.db.models import (
+    Sum,
+    Q,
+    When,
+    Case,
+    Value,
+    F,
+)
 from django.urls import *
 from django.http import JsonResponse
 from django.views.decorators.csrf import ensure_csrf_cookie
@@ -77,7 +84,10 @@ def edit(request,
 
     for i in range(0, len(sample_list)):
         sample_listed = sample_list[i]
-        essay_fill = EssayFill.objects.filter(sample=sample_listed)[0]
+        essay_fill = EssayFill.objects.filter(
+            sample=sample_listed
+        ).first()
+
         essay_fill_list.append(essay_fill)
         essay_methods_list.append(
             EssayMethodFill.objects.filter(essay=essay_fill)
@@ -200,7 +210,7 @@ def quotation(request,
         request=service_request
     )
     essay_list = EssayFill.objects.filter(
-        sample__in=service_request.sample_set.all()
+        sample__in=service_request.sample_set.all(),
     )
     quotation_essays = quotation.essay_fills.all()
     essays_to_add = set(essay_list) - set(quotation_essays)
@@ -208,8 +218,17 @@ def quotation(request,
 
     essay_list = quotation.essay_fills.all()
     essay_list = essay_list.annotate(
-        price=Sum('essaymethodfill__essay_method__price')
+        price=Sum(
+            Case(
+                When(
+                    essaymethodfill__chosen=True,
+                    then=F('essaymethodfill__essay_method__price')
+                ),
+                default=Value(0)
+            )
+        )
     )
+
     total_price = sum([
         essay.price
         if essay.price else 0
@@ -251,7 +270,7 @@ def assign_employee(request,
     for essay_method in essay_method_list:
         query &= Q(essay_methods=essay_method)
     assigned_employee = employee_list.filter(query).first()
-    print(assigned_employee)
+
     # Está cagada esta lógica
     if request.method == 'POST':
         if form.is_valid():
