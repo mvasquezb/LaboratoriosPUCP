@@ -116,7 +116,7 @@ class EssayMethod(models.Model):
 
     def get_parameter(self, index):
         if index > 0 and index <= self.get_parameter_count():
-            return self.get_parameters()[index]
+            return self.get_parameters()[index - 1]
 
 
 class EssayMethodParameter(models.Model):
@@ -206,8 +206,8 @@ class EssayMethodFill(models.Model):
 
 class EssayMethodParameterFill(models.Model):
     parameter = models.ForeignKey(EssayMethodParameter)
-    value = models.CharField(max_length=20)  # Is this always a numeric value ?
-    uncertainty = models.FloatField()
+    value = models.CharField(max_length=20, null=True, blank=True)  # Is this always a numeric value ?
+    uncertainty = models.FloatField(null=True, blank=True)
     essay_method = models.ForeignKey(
         EssayMethodFill,
         on_delete=models.CASCADE,
