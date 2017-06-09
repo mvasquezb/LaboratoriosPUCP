@@ -11,7 +11,7 @@ urlpatterns = [
         {'template_name' : 'internal/login.html'},
         name='login'),
 
-        url(r'^cerrar$',
+        url(r'^logout$',
         logout_then_login,
         name='logout'),
     #
@@ -45,16 +45,29 @@ urlpatterns = [
         views.role.show,
         name='role.show'),
     url('^role/create$',
-    views.role.create,
-    name='role.create'),
+        views.role.create,
+        name='role.create'),
     url('^role/edit/(?P<pk>\d+)$',
-    views.role.edit,
-    name='role.edit'),
-        url('^role/delete/(?P<pk>\d+)$',
+        views.role.edit,
+        name='role.edit'),
+    url('^role/delete/(?P<pk>\d+)$',
         views.role.delete,
         name='role.delete'),
-
-
+    #
+    # RequestStorage
+    #
+    url('^inventoryOrder/?$',
+        views.inventoryOrder.index,
+        name='inventoryOrder.index'),
+    url('^inventoryOrder/show/(?P<pk>\d+)$',
+        views.inventoryOrder.show,
+        name='inventoryOrder.show'),
+    url('^inventoryOrder/approve/(?P<pk>\d+)$',
+        views.inventoryOrder.approve,
+        name='inventoryOrder.approve'),
+    url('^inventoryOrder/reject/(?P<pk>\d+)$',
+        views.inventoryOrder.reject,
+        name='inventoryOrder.reject'),
 
     #
     # ServiceRequest

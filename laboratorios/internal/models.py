@@ -130,6 +130,7 @@ class EssayMethodParameter(models.Model):
 class EssayFill(models.Model):
     essay = models.ForeignKey(Essay)
     sample = models.ForeignKey('Sample')
+    quantity = models.PositiveIntegerField(default=0)
     quotation = models.ForeignKey(
         'Quotation',
         related_name='essay_fills',
@@ -206,7 +207,11 @@ class EssayMethodFill(models.Model):
 
 class EssayMethodParameterFill(models.Model):
     parameter = models.ForeignKey(EssayMethodParameter)
-    value = models.CharField(max_length=20, null=True, blank=True)  # Is this always a numeric value ?
+    value = models.CharField(
+        max_length=20,
+        null=True,
+        blank=True
+    )  # Is this always a numeric value ?
     uncertainty = models.FloatField(null=True, blank=True)
     essay_method = models.ForeignKey(
         EssayMethodFill,
@@ -294,6 +299,7 @@ class SampleType(models.Model):
 class Sample(models.Model):
     name = models.CharField(max_length=50)
     code = models.CharField(max_length=10)
+
     sample_type = models.ForeignKey(SampleType)
     request = models.ForeignKey(ServiceRequest, on_delete=models.CASCADE)
     inventory = models.ForeignKey('Inventory', on_delete=models.CASCADE)
@@ -311,10 +317,16 @@ class Inventory(models.Model):
 
 
 class InventoryItem(models.Model):
-    name = models.CharField(max_length=100)
+    sample = models.ForeignKey(Sample)
+    # name = models.CharField(max_length=100)
     quantity = models.PositiveIntegerField()
-    location = models.CharField(max_length=200)
-    inventory = models.ForeignKey(Inventory, on_delete=models.CASCADE)
+    # location = models.CharField(max_length=200)
+    # inventory = models.ForeignKey(Inventory, on_delete=models.CASCADE)
+
+
+def make_inventoryItem(sample, quantity):
+    inventoryItem = InventoryItem(sample, quantity)
+    return inventoryItem
 
     def __str__(self):
         return self.name
@@ -322,6 +334,7 @@ class InventoryItem(models.Model):
 
 class InventoryOrder(models.Model):
     essay = models.ForeignKey(EssayFill)
+    unsettled = models.BooleanField()
 
 
 class InventoryOrderDefault(models.Model):
