@@ -11,17 +11,18 @@ from django.forms.models import BaseInlineFormSet
 
 
 class EmployeeForm(ModelForm):
+    laboratories = forms.ModelMultipleChoiceField(queryset=Laboratory.objects.all())
+
     def __init__(self, *args, **kwargs):
         super(EmployeeForm, self).__init__(*args, **kwargs)
         self.fields['roles'].required = False
         self.fields['laboratories'].required = False
         self.fields['username'].required = True
         self.fields['password'].required = True
+
     class Meta:
         model = Employee
         fields = ['username', 'email', 'roles', 'password', 'first_name', 'last_name']
-
-    laboratories = forms.ModelMultipleChoiceField(queryset=Laboratory.objects.all())
 
 
 class EssayFillForm(ModelForm):
@@ -57,13 +58,6 @@ class SampleForm(ModelForm):
         essay_fill_created.save()
         return super(SampleForm,self).save(commit=commit)
 
-
-    laboratories = forms.ModelMultipleChoiceField(queryset=Laboratory.objects.all())
-
-class LaboratoryForm(ModelForm):
-    class Meta:
-        model = Laboratory
-        exclude = []
 
 class ClientForm(ModelForm):
     class Meta:
@@ -140,3 +134,15 @@ class ServiceAssignEmployeeForm(forms.Form):
         super().__init__(*args, **kwargs)
         if employee is not None:
             self.fields['employee'].queryset = employee
+
+
+class LaboratoryForm(ModelForm):
+    class Meta:
+        model = Laboratory
+        exclude = []
+
+
+class SampleTypeForm(ModelForm):
+    class Meta:
+        model = SampleType
+        exclude = []
