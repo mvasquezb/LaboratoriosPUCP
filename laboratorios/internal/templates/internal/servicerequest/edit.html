@@ -2,7 +2,11 @@
 
 {% block title %}{{ super() }} | Solicitudes{% endblock title %}
 
-{% block custom_css %}{% endblock custom_css %}
+{% block custom_css %}
+<style>
+.alert { display: none; }
+</style>
+{% endblock custom_css %}
 
 {% block page_content %}
 <div class="row border-bottom white-bg dashboard-header">
@@ -102,16 +106,13 @@
   </div>
 </div>
 
-<div class="modal fade inmodal" id="assign-employee-modal">
-  <div class="modal-dialog">
-    <div class="modal-content">
-    </div>
-  </div>
+<div class="modal inmodal" id="assign-employee-modal" tabindex="-1" role="dialog" aria-hidden="true">
 </div>
 {% endblock page_content %}
 
 {% block custom_js %}
 <script>
+console.log(csrftoken);
 $('#assign-employee-modal').on('show.bs.modal', function (e) {
   var $btn = $(e.relatedTarget);
   var $modal = $(this);
@@ -119,7 +120,31 @@ $('#assign-employee-modal').on('show.bs.modal', function (e) {
   $.ajax({
     url: url,
   }).done(function (response) {
-    $modal.find('.modal-content').html(response);
+    $modal.html(response);
+    $('#assign-employee-form').validator();
+  });
+});
+
+$(document).on('submit', '#assign-employee-form', function (e) {
+  e.preventDefault();
+
+  var $form = $(e.target);
+  var $modal = $('#assign-employee-modal');
+
+  $.ajax({
+    url: $form.get(0).action,
+    method: $form.get(0).method,
+    data: $form.serialize(),
+  }).done(function (response) {
+    $modal.find('.alert').hide();
+    if (!response.success) {
+      $modal.find('.form-errors').html(response.errors).fadeIn();
+      return;
+    }
+    $modal.find('.form-success').html(response.message).fadeIn();
+    setTimeout(function () {
+      $modal.modal('hide');
+    }, 1500);
   });
 });
 </script>

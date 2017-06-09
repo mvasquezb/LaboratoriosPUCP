@@ -46,7 +46,7 @@ class SampleForm(ModelForm):
     essay_field = forms.ModelChoiceField(queryset=Essay.objects.all())
     class Meta:
         model = Sample
-        fields = ['name','sample_type','inventory','request']+['essay_field']
+        fields = ['name','sample_type','inventory','request', 'essay_field']
 
 
     def save(self, commit=True):
@@ -124,3 +124,14 @@ class EssayFillSelectionForm(ModelForm):
         myself.recreate(essay)
         return super(EssayFillSelectionForm,self).save(commit=commit)
 
+
+class ServiceAssignEmployeeForm(forms.Form):
+    employee = forms.ModelChoiceField(queryset=Employee.objects.all())
+
+    def __init__(self, *args, **kwargs):
+        employee = None
+        if 'employee' in kwargs:
+            employee = kwargs.pop('employee')
+        super().__init__(*args, **kwargs)
+        if employee is not None:
+            self.fields['employee'].queryset = employee

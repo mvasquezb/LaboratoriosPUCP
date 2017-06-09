@@ -5,8 +5,10 @@ from django.shortcuts import (
     reverse,
 )
 from django.contrib import messages
-from django.db.models import Sum
+from django.db.models import Sum, Q
 from django.urls import *
+from django.http import JsonResponse
+from django.views.decorators.csrf import ensure_csrf_cookie
 
 from internal.models import *
 from internal.views.forms import *
@@ -223,15 +225,62 @@ def quotation(request,
     return render(request, template, context)
 
 
+@ensure_csrf_cookie
 def assign_employee(request,
                     request_id,
                     sample_id,
                     template='internal/servicerequest/assign_employee.html',
                     extra_context=None):
-    request = get_object_or_404(ServiceRequest, pk=request_id)
-    sample = get_object_or_404(request.sample_set.all(), pk=sample_id)
+    service_request = get_object_or_404(ServiceRequest, pk=request_id)
+    sample = get_object_or_404(service_request.sample_set.all(), pk=sample_id)
 
     essay = sample.essayfill_set.first()
-    employee_list = Employee.objects.filter(
-        essay_methods__contains=sample.essayfill_set.all
+    essay_method_list = EssayMethodFill.objects.filter(
+        essay=essay,
+        chosen=True,
+    ).distinct()
+    query = Q()
+    for essay_method in essay_method_list:
+        query &= Q(essay_methods=essay_method.essay_method)
+    employee_list = Employee.objects.filter(query)
+    form = ServiceAssignEmployeeForm(
+        request.POST or None,
+        employee=employee_list
     )
+    query = Q()
+    for essay_method in essay_method_list:
+        query &= Q(essay_methods=essay_method)
+    assigned_employee = employee_list.filter(query).first()
+    print(assigned_employee)
+    # Está cagada esta lógica
+    if request.method == 'POST':
+        if form.is_valid():
+            employee = form.cleaned_data['employee']
+            employee_methods = employee.essay_methods.all
+            methods_to_add = set(employee_methods) - set(essay_method_list)
+            employee.assigned_essay_methods.add(*methods_to_add)
+
+            if request.is_ajax():
+                return JsonResponse({
+                    'success': True,
+                    'message': 'Se asignó la muestra correctamente',
+                }, json_dumps_params={
+                    'ensure_ascii': False,
+                })
+        else:
+            if request.is_ajax():
+                return JsonResponse({
+                    'success': False,
+                    'errors': str(form.errors),
+                }, json_dumps_params={
+                    'ensure_ascii': False,
+                })
+    context = {
+        'employees': employee_list,
+        'service_request': service_request,
+        'sample': sample,
+        'essay_methods': essay_method_list,
+        'form': form,
+        'assigned_employee': assigned_employee,
+    }
+    return render(request, template, context)
