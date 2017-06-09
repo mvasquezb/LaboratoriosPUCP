@@ -19,7 +19,7 @@
   <div class="col-lg-12">
     <div class="ibox float-e-margins">
       <div class="ibox-title">
-        <a href="{{ url('internal:servicerequest.quotation', request_id=pk) }}" class="btn btn-success">
+        <a href="{{ url('internal:servicerequest.quotation', request_id=pk) }}" class="btn btn-primary">
           Ver Cotización
         </a>
       </div>
@@ -33,7 +33,7 @@
                 <div class="form-group">
                   <label>{{ field.label }} {% if field.field.required %}(*){% endif %}</label>
                   <div required data-error="El" {{field.label}} " es obligatorio" placeholder="------">
-                    {{ field }}
+                    {{ field.as_widget(attrs={'data-error': "Este campo es obligatorio",'class':"form-control"}) }}
                   </div>
                 <div class="help-block with-errors"></div>
               </div>

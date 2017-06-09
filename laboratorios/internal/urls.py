@@ -38,6 +38,9 @@ urlpatterns = [
     url('^employee/delete/(?P<pk>\d+)$',
         views.employee.delete,
         name='employee.delete'),
+    #
+    # Role
+    #
     url('^role/$',
         views.role.index,
         name='role.index'),
@@ -111,4 +114,37 @@ urlpatterns = [
     url('^servicerequest/view_workload_per_request$',
         views.servicerequest.workload_view_per_request,
         name='servicerequest.workload_view_per_request')
+    #
+    # Laboratory
+    #
+    url('^laboratory/$',
+        views.laboratory.index,
+        name='laboratory.index'),
+    url('^laboratory/create$',
+        views.laboratory.create,
+        name='laboratory.create'),
+    url('^laboratory/edit/(?P<pk>\d+)$',
+        views.laboratory.edit,
+        name='laboratory.edit'),
+    url('^laboratory/delete/(?P<pk>\d+)$',
+        views.laboratory.delete,
+        name='laboratory.delete'),
+    url('^laboratory/show/(?P<pk>\d+)$',
+        views.laboratory.show,
+        name='laboratory.show'),
+    #
+    # sampleType
+    #
+    url('^sampleType/?$',
+        views.sampleType.index,
+        name='sampleType.index'),
+    url('^sampleType/create/?$',
+        views.sampleType.create,
+        name='sampleType.create'),
+    url('^sampleType/edit/(?P<id>\d+)/$',
+        views.sampleType.edit,
+        name='sampleType.edit'),
+    url('^sampleType/delete/?$',
+        views.sampleType.delete,
+        name='sampleType.delete'),
 ]
