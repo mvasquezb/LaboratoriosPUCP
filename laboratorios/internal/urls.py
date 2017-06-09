@@ -2,6 +2,9 @@ from django.conf.urls import url
 from . import views
 from django.contrib.auth.views import login, logout_then_login
 
+from django.conf import settings
+from django.conf.urls.static import static
+
 urlpatterns = [
     #
     # Login
@@ -20,6 +23,24 @@ urlpatterns = [
     url('^$',
         views.main.index,
         name='index'),
+    #
+    #ServiceRequest
+    #
+    url('^servicerequest/attachFile/(?P<id>\d+)$',
+        views.servicerequest.upload,
+        name='serviceRequest.upload'),
+    url('^servicerequest/files/(?P<id>\d+)$',
+        views.servicerequest.attachmentList,
+        name='serviceRequest.attachmentList'),
+    url('^servicerequest/attachedFileShow/(?P<id>\d+)$',
+        views.servicerequest.showAttachedFile,
+        name='serviceRequest.showAttachedFile'),
+    url('^servicerequest/deleteAttachedFile/(?P<id>\d+)$',
+        views.servicerequest.deleteAttachedFile,
+        name='serviceRequest.deleteAttachedFile'),
+    url('^servicerequest/downloadAttachedFile/(?P<id>\d+)$',
+        views.servicerequest.downloadAttachedFile,
+        name='serviceRequest.downloadAttachedFile'),
     #
     # Employee
     #
@@ -168,4 +189,4 @@ urlpatterns = [
     url('^sampleType/delete/?$',
         views.sampleType.delete,
         name='sampleType.delete'),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
