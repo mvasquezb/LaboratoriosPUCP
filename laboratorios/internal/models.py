@@ -3,6 +3,7 @@ from django.contrib.auth.models import (
     User as AuthUser,
     Permission
 )
+import os
 
 
 class Role(models.Model):
@@ -104,7 +105,12 @@ class EssayMethodParameter(models.Model):
 class EssayFill(models.Model):
     essay = models.ForeignKey(Essay)
     sample = models.ForeignKey('Sample')
-
+    quotation = models.ForeignKey(
+        'Quotation',
+        related_name='essay_fills',
+        null=True,
+        blank=True
+    )
 
 class EssayMethodFill(models.Model):
     essay_method = models.ForeignKey(
@@ -123,7 +129,7 @@ class EssayMethodFill(models.Model):
         null=True,
         blank=True
     )
-
+    chosen = models.BooleanField(default=False)
 
 class EssayMethodParameterFill(models.Model):
     parameter = models.ForeignKey(EssayMethodParameter)
@@ -163,12 +169,15 @@ class ServiceRequestState(models.Model):
     def __str__(self):
         return self.description
 
+## Para el archivo adjunto
+def content_file_name(instance, filename):
+    return '/'.join(['requestFiles', str(instance.request.pk), filename])
 
 class RequestAttachment(models.Model):
     request = models.ForeignKey(ServiceRequest, on_delete=models.CASCADE)
-    description = models.CharField(max_length=100)
-    # file = models.FileField()  # Should we save the file in DB or in server, or at all ?
-
+    description = models.CharField(max_length=100, null=True, blank = True)
+    fileName =  models.CharField(max_length=100, null =True)
+    file = models.FileField(upload_to=content_file_name, null=True, blank = True)  # Should we save the file in DB or in server, or at all ?
 
 class ServiceContract(models.Model):
     client = models.ForeignKey(Client, on_delete=models.CASCADE)
@@ -191,6 +200,7 @@ class SampleType(models.Model):
 
 
 class Sample(models.Model):
+    name = models.CharField(max_length=50,default="default")
     sample_type = models.ForeignKey(SampleType)
     request = models.ForeignKey(ServiceRequest, on_delete=models.CASCADE)
     inventory = models.ForeignKey('Inventory', on_delete=models.CASCADE)
