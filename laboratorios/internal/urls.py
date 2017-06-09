@@ -55,7 +55,7 @@ urlpatterns = [
         name='role.delete'),
 
 
-    
+
     #
     # ServiceRequest
     #
@@ -70,7 +70,7 @@ urlpatterns = [
         name='servicerequest.select_client'),
    url('^servicerequest/edit/(?P<pk>\d+)$',
         views.servicerequest.edit,
-        name='servicerequest.edit'),     
+        name='servicerequest.edit'),
     url('^servicerequest/add_sample/(?P<pk>\d+)$',
         views.servicerequest.add_sample,
         name='servicerequest.add_sample'),
@@ -79,20 +79,20 @@ urlpatterns = [
         name='servicerequest.edit_sample'),
     url('^servicerequest/delete_sample/(?P<pk_request>\d+)/(?P<pk_sample>\d+)$',
         views.servicerequest.delete_sample,
-        name='servicerequest.delete_sample'),         
+        name='servicerequest.delete_sample'),
     url('^servicerequest/create_client$',
         views.servicerequest.create_client,
         name='servicerequest.create_client'),
     url('^servicerequest$',
         views.servicerequest.index,
         name='servicerequest.index'),
-
-
-
     url('^servicerequest/(?P<request_id>\d+)/?$',
         views.servicerequest.show,
         name='servicerequest.show'),
     url('^servicerequest/(?P<request_id>\d+)/quotation/?$',
         views.servicerequest.quotation,
         name='servicerequest.quotation'),
+    url('^servicerequest/(?P<request_id>\d+)/assign_employee/(?P<sample_id>\d+)/?$',
+        views.servicerequest.assign_employee,
+        name='servicerequest.assign_employee'),
 ]

@@ -42,10 +42,12 @@
                           </div>
                           <div class="col-md-6">
                             <ul>
-                              {% for essay_method in essay.essaymethodfill_set.all() %}
+                              {% for essay_method in essay.essaymethodfill_set.filter(chosen=True) %}
                                 <li>
                                   {{ essay_method.essay_method.name }} - S/. {{ essay_method.essay_method.price }}
                                 </li>
+                              {% else %}
+                                <p>No se seleccionó ningún método de ensayo</p>
                               {% endfor %}
                             </ul>
                           </div>

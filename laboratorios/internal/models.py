@@ -76,6 +76,9 @@ class Essay(models.Model):
         blank=True
     )
 
+    def __str__(self):
+        return self.name
+
     def get_essay_methods(self):
         return EssayMethod.objects.filter(essays=self)
 
@@ -113,7 +116,7 @@ class EssayMethod(models.Model):
 
     def get_parameter(self, index):
         if index > 0 and index <= self.get_parameter_count():
-            return self.get_parameters()[index]
+            return self.get_parameters()[index - 1]
 
 
 class EssayMethodParameter(models.Model):
@@ -203,8 +206,8 @@ class EssayMethodFill(models.Model):
 
 class EssayMethodParameterFill(models.Model):
     parameter = models.ForeignKey(EssayMethodParameter)
-    value = models.CharField(max_length=20)  # Is this always a numeric value ?
-    uncertainty = models.FloatField()
+    value = models.CharField(max_length=20, null=True, blank=True)  # Is this always a numeric value ?
+    uncertainty = models.FloatField(null=True, blank=True)
     essay_method = models.ForeignKey(
         EssayMethodFill,
         on_delete=models.CASCADE,
@@ -229,9 +232,15 @@ class ExternalProvider(models.Model):
     description = models.CharField(max_length=200)
     services = models.ManyToManyField('ExternalProviderService', blank=True)
 
+    def __str__(self):
+        return self.name
+
 
 class ExternalProviderService(models.Model):
     description = models.CharField(max_length=500)
+
+    def __str__(self):
+        return self.description
 
 
 class ServiceRequest(models.Model):
@@ -239,6 +248,9 @@ class ServiceRequest(models.Model):
     supervisor = models.ForeignKey(Employee)
     state = models.ForeignKey('ServiceRequestState')
     observations = models.CharField(max_length=500, null=True, blank=True)
+
+    def __str__(self):
+        return str(self.client) + ' | ' + str(self.state)
 
 
 class ServiceRequestState(models.Model):
@@ -275,6 +287,9 @@ class SampleType(models.Model):
     slug = models.CharField(max_length=50)
     name = models.CharField(max_length=100)
 
+    def __str__(self):
+        return self.name
+
 
 class Sample(models.Model):
     name = models.CharField(max_length=50)
@@ -283,10 +298,16 @@ class Sample(models.Model):
     request = models.ForeignKey(ServiceRequest, on_delete=models.CASCADE)
     inventory = models.ForeignKey('Inventory', on_delete=models.CASCADE)
 
+    def __str__(self):
+        return self.name + ' | ' + str(self.sample_type)
+
 
 class Inventory(models.Model):
     name = models.CharField(max_length=100)
     location = models.CharField(max_length=200)
+
+    def __str__(self):
+        return self.name
 
 
 class InventoryItem(models.Model):
@@ -294,6 +315,9 @@ class InventoryItem(models.Model):
     quantity = models.PositiveIntegerField()
     location = models.CharField(max_length=200)
     inventory = models.ForeignKey(Inventory, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.name
 
 
 class InventoryOrder(models.Model):

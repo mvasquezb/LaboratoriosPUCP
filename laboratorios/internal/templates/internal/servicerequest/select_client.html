@@ -47,15 +47,16 @@
               </tr>
               </thead>
               <tbody>
-              {% for type in client_list %}
-
-                    <tr>
-                      <td>{{ type.name }}</td>
-                      <td>{{ type.idDoc }}</td>
-                      <td><a href="{{ url('internal:servicerequest.create',type.pk)}}"><i name="{{type.pk}}" class="fa fa-pencil-square-o" ></i></a></td>
-
+                {% for client in client_list %}
+                  <tr>
+                    <td>{{ client.get_full_name() }}</td>
+                    <td>{{ client.doc_number }}</td>
+                    <td>
+                      <a href="{{ url('internal:servicerequest.create', client.pk)}}">
+                        <i class="fa fa-pencil-square-o" ></i>
+                      </a>
+                    </td>
                     </tr>
-
               {% endfor %}
               </tbody>
           </table>

@@ -5,8 +5,17 @@ from django.shortcuts import (
     reverse,
 )
 from django.contrib import messages
-from django.db.models import Sum
+from django.db.models import (
+    Sum,
+    Q,
+    When,
+    Case,
+    Value,
+    F,
+)
 from django.urls import *
+from django.http import JsonResponse
+from django.views.decorators.csrf import ensure_csrf_cookie
 
 from internal.models import *
 from internal.views.forms import *
@@ -24,12 +33,23 @@ def create(request,
            template='internal/servicerequest/create.html'):
     selected_client = Client.objects.get(pk=pk)
     service_request_form = ServiceRequestForm(
-        request.POST or None, initial={'client': selected_client})
-    context = {'sr_form': service_request_form, 'pk': pk}
-    if service_request_form.is_valid():
-        created_service_request = service_request_form.save()
-        messages.success(request, 'Se ha creado la solicitud exitosamante!')
-        return redirect(reverse('internal:servicerequest.index'))
+        request.POST or None,
+        initial={
+            'client': selected_client
+        }
+    )
+    context = {
+        'sr_form': service_request_form,
+        'pk': pk
+    }
+    if request.method == 'POST':
+        if service_request_form.is_valid():
+            created_service_request = service_request_form.save()
+            messages.success(
+                request,
+                'Se ha creado la solicitud exitosamante!'
+            )
+            return redirect(reverse('internal:servicerequest.index'))
     return render(request, template, context)
 
 
@@ -64,7 +84,10 @@ def edit(request,
 
     for i in range(0, len(sample_list)):
         sample_listed = sample_list[i]
-        essay_fill = EssayFill.objects.filter(sample=sample_listed)[0]
+        essay_fill = EssayFill.objects.filter(
+            sample=sample_listed
+        ).first()
+
         essay_fill_list.append(essay_fill)
         essay_methods_list.append(
             EssayMethodFill.objects.filter(essay=essay_fill)
@@ -73,7 +96,7 @@ def edit(request,
         for j in range(0, len(essay_methods_list[i])):
             aux_essay_methods_forms.append(
                 EssayMethodFillChosenForm(
-                    request.POST,
+                    request.POST or None,
                     instance=essay_methods_list[i][j],
                     prefix='emf_' + str(essay_methods_list[i][j].id)
                 )
@@ -119,7 +142,7 @@ def add_sample(request,
                template='internal/servicerequest/add_sample.html'):
     service_request = ServiceRequest.objects.get(pk=pk)
     sample_form = SampleForm(
-        request.POST,
+        request.POST or None,
         initial={
             'request': service_request,
         }
@@ -129,11 +152,12 @@ def add_sample(request,
         'pk': pk
     }
     # verificacion
-    if sample_form.is_valid():
-        sample_form.save()
-        return redirect('internal:servicerequest.edit', pk)
-    else:
-        context['errors'] = str(sample_form.errors)
+    if request.method == 'POST':
+        if sample_form.is_valid():
+            sample_form.save()
+            return redirect('internal:servicerequest.edit', pk)
+        else:
+            context['errors'] = str(sample_form.errors)
     return render(request, template, context)
 
 
@@ -186,7 +210,7 @@ def quotation(request,
         request=service_request
     )
     essay_list = EssayFill.objects.filter(
-        sample__in=service_request.sample_set.all()
+        sample__in=service_request.sample_set.all(),
     )
     quotation_essays = quotation.essay_fills.all()
     essays_to_add = set(essay_list) - set(quotation_essays)
@@ -194,8 +218,17 @@ def quotation(request,
 
     essay_list = quotation.essay_fills.all()
     essay_list = essay_list.annotate(
-        price=Sum('essaymethodfill__essay_method__price')
+        price=Sum(
+            Case(
+                When(
+                    essaymethodfill__chosen=True,
+                    then=F('essaymethodfill__essay_method__price')
+                ),
+                default=Value(0)
+            )
+        )
     )
+
     total_price = sum([
         essay.price
         if essay.price else 0
@@ -208,4 +241,65 @@ def quotation(request,
     }
     if extra_context is not None:
         context.update(extra_context)
+    return render(request, template, context)
+
+
+@ensure_csrf_cookie
+def assign_employee(request,
+                    request_id,
+                    sample_id,
+                    template='internal/servicerequest/assign_employee.html',
+                    extra_context=None):
+    service_request = get_object_or_404(ServiceRequest, pk=request_id)
+    sample = get_object_or_404(service_request.sample_set.all(), pk=sample_id)
+
+    essay = sample.essayfill_set.first()
+    essay_method_list = EssayMethodFill.objects.filter(
+        essay=essay,
+        chosen=True,
+    ).distinct()
+    query = Q()
+    for essay_method in essay_method_list:
+        query &= Q(essay_methods=essay_method.essay_method)
+    employee_list = Employee.objects.filter(query)
+    form = ServiceAssignEmployeeForm(
+        request.POST or None,
+        employee=employee_list
+    )
+    query = Q()
+    for essay_method in essay_method_list:
+        query &= Q(essay_methods=essay_method)
+    assigned_employee = employee_list.filter(query).first()
+
+    # Está cagada esta lógica
+    if request.method == 'POST':
+        if form.is_valid():
+            employee = form.cleaned_data['employee']
+            employee_methods = employee.essay_methods.all
+            methods_to_add = set(employee_methods) - set(essay_method_list)
+            employee.assigned_essay_methods.add(*methods_to_add)
+
+            if request.is_ajax():
+                return JsonResponse({
+                    'success': True,
+                    'message': 'Se asignó la muestra correctamente',
+                }, json_dumps_params={
+                    'ensure_ascii': False,
+                })
+        else:
+            if request.is_ajax():
+                return JsonResponse({
+                    'success': False,
+                    'errors': str(form.errors),
+                }, json_dumps_params={
+                    'ensure_ascii': False,
+                })
+    context = {
+        'employees': employee_list,
+        'service_request': service_request,
+        'sample': sample,
+        'essay_methods': essay_method_list,
+        'form': form,
+        'assigned_employee': assigned_employee,
+    }
     return render(request, template, context)

@@ -15,42 +15,29 @@
         <div class="ibox float-e-margins">
             <div class="ibox-content">
             {{ sr_form.errors }}
-                <form id='requestform' action="{{ url('internal:servicerequest.create',pk=pk) }}" method="post">
-                    {% csrf_token %}
-                    {% for field in sr_form %}
+                <form id='requestform' action="{{ url('internal:servicerequest.create',pk=pk) }}" method="post" data-toggle="validator">
+                  {% csrf_token %}
+                  {% for field in sr_form %}
                     <div class="row">
                         <div class="col-lg-6">
                             <div class="form-group">
-                                <label>{{field.label}}*</label>
-                                <div class="form-control"required data-error="El" {{field.label}} " es obligatorio" placeholder="------">{{field}}</div>
+                                <label>{{field.label}} {% if field.field.required %}(*){% endif %}</label>
+                                <div data-error="El {{field.label}} es obligatorio" placeholder="------">
+                                  {{ field.as_widget(attrs={'data-error': "Este campo es obligatorio"}) }}
+                                </div>
                                 <div class="help-block with-errors"></div>
                             </div>
                         </div>
-                      {% endfor %}  
-                    <div class="mail-box">
-                        <div class="col-lg-12">
-                            <input type="submit" value="Registrar" class="btn btn-primary">                            
-                        </div>
+                      </div>
+                  {% endfor %}
+                  <div class="row">
+                    <div class="col-lg-12">
+                      <input type="submit" value="Registrar" class="btn btn-primary">
                     </div>
+                  </div>
                 </form>
             </div>
         </div>
     </div>
 </div>
 {% endblock page_content %}
-{% block base_js %}
-{{ super() }}
-{% endblock base_js %}
-
-
-
-
-
-
-
-
-
-
-
-
-
