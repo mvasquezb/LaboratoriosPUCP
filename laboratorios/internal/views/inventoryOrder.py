@@ -3,30 +3,31 @@ from django.shortcuts import (
     get_object_or_404,
     redirect,
     reverse,
-    HttpResponseRedirect
 )
 from django.contrib import messages
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from ..models import *
+from internal.models import *
+
 
 def index(request,
           template='internal/inventoryOrder/index.html',
           extra_context=None):
-    #types = InventoryOrder.objects.all()
-    #context = {'inventoryOrder_list': types}
+    # types = InventoryOrder.objects.all()
+    # context = {'inventoryOrder_list': types}
 
     search = request.GET.get('search')
     if search:
-       inventoryOrder_listAux = InventoryOrder.objects.filter(
-       essay__sample__name__icontains=search,
-        #).order_by('username')
-       ).order_by('essay__sample__name')
-       inventoryOrder_list = inventoryOrder_listAux.objects.filter(unsettled = True)
+        inventoryOrder_listAux = InventoryOrder.objects.filter(
+            essay__sample__name__icontains=search,
+            # ).order_by('username')
+        ).order_by('essay__sample__name')
+        inventoryOrder_list = inventoryOrder_listAux.objects.filter(
+            unsettled=True)
     else:
-        inventoryOrder_list = InventoryOrder.objects.filter(unsettled = True).order_by('essay__sample__name')
+        inventoryOrder_list = InventoryOrder.objects.filter(
+            unsettled=True).order_by('essay__sample__name')
 
-
-    #inventoryOrder_list = InventoryOrder.objects.all()
+    # inventoryOrder_list = InventoryOrder.objects.all()
 
     paginator = Paginator(inventoryOrder_list, 3)
     page = request.GET.get('page')
@@ -45,7 +46,6 @@ def index(request,
         context.update(extra_context)
     return render(request, template, context)
 
-    #return render(request, template, context)
 
 def show(request,
          pk,
@@ -56,7 +56,7 @@ def show(request,
     }
     return render(request, template, context)
 
-#def index(request,
+# def index(request,
 #          template='internal/inventoryOrder/index.html',
 #          extra_context=None):
 #    search = request.GET.get('search')
@@ -84,22 +84,24 @@ def show(request,
 #        context.update(extra_context)
 #    return render(request, template, context)
 
-def aprobar(request, pk):
+
+def approve(request, pk):
     inventoryOrder = get_object_or_404(InventoryOrder, pk=pk)
     inventoryOrder.unsettled = False
-    #Falta crear añadir inventory item
-    #stored = InventoryItem.__new__()
+    # Falta crear añadir inventory item
+    # stored = InventoryItem.__new__()
 
-    #newInventoryItem = InventoryItem( sample = inventoryOrder.essay.sample , quantity = inventoryOrder.essay.quantity)
-    newInventoryItem = InventoryItem(sample = inventoryOrder.essay.sample, quantity=inventoryOrder.essay.quantity)
-    #newInventoryItem = InventoryItem( inventoryOrder.essay.sample._get_pk_val , inventoryOrder.essay.quantity)
+    # newInventoryItem = InventoryItem( sample = inventoryOrder.essay.sample , quantity = inventoryOrder.essay.quantity)
+    newInventoryItem = InventoryItem(
+        sample=inventoryOrder.essay.sample, quantity=inventoryOrder.essay.quantity)
+    # newInventoryItem = InventoryItem( inventoryOrder.essay.sample._get_pk_val , inventoryOrder.essay.quantity)
 
     newInventoryItem.save()
     inventoryOrder.save()
     messages.success(request, 'Se almaceno la muestra con exito!')
     return redirect('internal:inventoryOrder.index')
 
-#def create(request,
+# def create(request,
 #           template='internal/employee/create.html'):
 #    form = EmployeeForm(request.POST or None)
 #    context = {
@@ -115,15 +117,15 @@ def aprobar(request, pk):
 #    return render(request, template, context)
 
 
-def rechazar(request, pk):
+def reject(request, pk):
     inventoryOrder = get_object_or_404(InventoryOrder, pk=pk)
     inventoryOrder.unsettled = False
     inventoryOrder.save()
     messages.success(request, 'Se rechazo el almacenamiento con exito!')
-    #messages.success(request, 'Se rechazo el almacenamiento!')
+    # messages.success(request, 'Se rechazo el almacenamiento!')
     return redirect('internal:inventoryOrder.index')
 
-#def aprobar(request,
+# def approve(request,
 #          template='internal/inventoryOrder/index.html',
 #          extra_context=None):
 #    print(request.GET)
@@ -139,19 +141,19 @@ def rechazar(request, pk):
     #    types = InventoryOrder.objects.all()
     #    context = {'inventoryOrder_list': types}
 #    return render(request, template, context)
-    #return redirect('requestStorage.index')
+    # return redirect('requestStorage.index')
 
-#def rechazar(request,
+# def reject(request,
     #          template='internal/inventoryOrder/index.html',
     #          extra_context=None):
     #    if request.method == 'GET':
     #        x = dict(request.GET)
 #        for i in x['array[]']:
 #            old = InventoryOrder.objects.get(pk=i)
-            #            old.pendiente = False
-            #            old.aprobado = False
-            #            old.save()
+    #            old.pendiente = False
+    #            old.aprobado = False
+    #            old.save()
 
-            #    types = InventoryOrder.objects.all()
+    #    types = InventoryOrder.objects.all()
 #    context = {'inventoryOrder_list': types}
 #    return render(request, template, context)
