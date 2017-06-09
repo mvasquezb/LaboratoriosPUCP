@@ -21,11 +21,13 @@ def index(request,
             essay__sample__name__icontains=search,
             # ).order_by('username')
         ).order_by('essay__sample__name')
-        inventoryOrder_list = inventoryOrder_listAux.objects.filter(
-            unsettled=True)
+        inventoryOrder_list = inventoryOrder_listAux.filter(
+            unsettled=True
+        )
     else:
         inventoryOrder_list = InventoryOrder.objects.filter(
-            unsettled=True).order_by('essay__sample__name')
+            unsettled=True
+        ).order_by('essay__sample__name')
 
     # inventoryOrder_list = InventoryOrder.objects.all()
 
