@@ -108,4 +108,26 @@ urlpatterns = [
     url('^servicerequest/(?P<request_id>\d+)/assign_employee/(?P<sample_id>\d+)/?$',
         views.servicerequest.assign_employee,
         name='servicerequest.assign_employee'),
+    # Agregado
+    url('^servicerequest/approve/(?P<pk>\d+)$',
+        views.servicerequest.approve,
+        name='servicerequest.approve'),
+
+    #
+    # ServiceContract
+    #
+    url('^servicecontract/$',
+        views.servicecontract.index,
+        name='servicecontract.index'),
+    url('^servicecontract/edit/(?P<pk>\d+)$',
+        views.servicecontract.edit,
+        name='servicecontract.edit'),
+    url('^servicecontract/show/(?P<pk>\d+)$',
+        views.servicecontract.show,
+        name='servicecontract.show'),
+    url('^servicecontract/delete/(?P<pk>\d+)$',
+        views.servicecontract.delete,
+        name='servicecontract.delete'),
+
+
 ]
