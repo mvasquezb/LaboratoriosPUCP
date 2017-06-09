@@ -1,0 +1,70 @@
+{% extends 'internal/base_internal.html' %}
+
+{% block title %}{{ super() }} | Inicio{% endblock title %}
+
+{% block custom_css %}{% endblock custom_css %}
+
+{% block page_content %}
+<div class="row border-bottom white-bg dashboard-header">
+    <div class="col-md-6">
+        <h2><strong>Añadir Archivo </strong></h2>
+    </div>
+</div>
+<div class="wrapper wrapper-content animated fadeInRight" >
+    <div class="col-lg-12">
+        <div class="ibox float-e-margins">
+            <div class="ibox-content">
+              <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label>Seleccione el archivo que desea subir</label>
+                    <br>
+                    <input type="file" name="myfile">
+                  <br>
+                    <label>Descripción</label>
+                  <br>
+                  <input onblur="textCounter(this,this.form.counter,95);" onkeydown="textCounter(this,this.form.counter,95);" onkeyup="textCounter(this,this.form.counter,95);" type="text" class="form-control" name="text_description" maxlength="95" placeholder="Breve descripción del archivo">
+                  <br>
+                  <span>Caracteres restantes: </span>
+                  <input onblur="textCounter(this.form.recipients,this,95);" disabled  onfocus="this.blur();" tabindex="-1" maxlength="2" size="2" value="95" name="counter">
+                </div>
+                <div class="col-md-offset-0">
+                  <br>
+                  <button type="submit" name="b_upload" class="btn btn-w-m btn-primary"><i class="fa fa-upload"></i>&nbsp;&nbsp;<span class="bold">Almacenar</span></button>
+                  <button name="b_cancel" id="cancel" class="btn btn-w-m btn-white" >Cancelar</button>
+                </div>
+              </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="message-container hidden">
+  <ul class="messages">
+    {% for message in messages %}
+    <li {% if message.tags %} data-tags="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+  </ul>
+</div>
+{% endblock page_content %}
+
+{% block custom_js %}
+<script>
+  if ($('.message-container .messages li')) {
+  var msg = $('.message-container .messages li').first();
+  $.extend(toastr.options, {"positionClass": "toast-bottom-right",});
+  toastr[msg.data('tags')](msg.text());
+}
+</script>
+<script>
+  function textCounter( field, countfield, maxlimit ) {
+ if ( field.value.length > maxlimit ) {
+  field.value = field.value.substring( 0, maxlimit );
+  field.blur();
+  field.focus();
+  return false;
+ } else {
+  countfield.value = maxlimit - field.value.length;
+ }
+}
+</script>
+{% endblock custom_js %}
