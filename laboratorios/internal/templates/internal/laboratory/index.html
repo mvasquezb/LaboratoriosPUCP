@@ -60,9 +60,9 @@
                     <td>{{ laboratory.capacity }}</td>
                     <td class="text-left footable-visible footable-last-column">
                       <div class="btn-group">
-                        <a  class="btn-white btn btn-xs"><i class="fa fa-eye" aria-hidden="true"></i></a>
-                        <a  class="btn-white btn btn-xs"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
-                        <a class="myBtn1 btn-white btn btn-xs" data-toggle="modal" data-target="#myModal1" ><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+                        <a  href="{{ url('internal:laboratory.show', laboratory.id) }}" class="btn-white btn btn-xs"><i class="fa fa-eye" aria-hidden="true"></i></a>
+                        <a  href="{{ url('internal:laboratory.edit', laboratory.id) }}" class="btn-white btn btn-xs"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+                        <a class="myBtn1 btn-white btn btn-xs" data-toggle="modal" data-target="#myModal1" data-url="{{ url('internal:laboratory.delete', laboratory.id) }}"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
                       </div>
                     </td>
                   </tr>
@@ -114,7 +114,7 @@
       <!-- Modal content -->
       <div class="modal-body text-center">
         <p>¿Seguro que quiere eliminarlo?</p>
-        <button type="button" class="delete-employee btn btn-danger">Eliminar</button>
+        <button type="button" class="delete-laboratory btn btn-danger">Eliminar</button>
         <button type="button" class="span-close btn btn-primary">Cancelar</button>
       </div>
     </div>
@@ -127,7 +127,7 @@
     <span class="span-close close">&times;</span>
     <div class="modeal-center-content">
         <p>¿Seguro que quiere eliminarlo?</p>
-        <button type="button" class="delete-employee btn btn-danger">Eliminar</button>
+        <button type="button" class="delete-laboratory btn btn-danger">Eliminar</button>
         <button type="button" class="span-close btn btn-primary">Cancelar</button>
     </div>
   </div>
@@ -171,7 +171,7 @@ $( document ).ready(function() {
   $(".myBtn1").click(function() {
     $("#myModal1").show();
     var delete_url = $(this).attr("data-url");
-    $(".delete-employee").click(function() {
+    $(".delete-laboratory").click(function() {
       window.location.href = delete_url;
     });
   });

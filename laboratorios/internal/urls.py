@@ -38,4 +38,10 @@ urlpatterns = [
     url('^laboratory/edit/(?P<pk>\d+)$',
         views.laboratory.edit,
         name='laboratory.edit'),
+    url('^laboratory/delete/(?P<pk>\d+)$',
+        views.laboratory.delete,
+        name='laboratory.delete'),
+    url('^laboratory/show/(?P<pk>\d+)$',
+        views.laboratory.show,
+        name='laboratory.show'),
 ]

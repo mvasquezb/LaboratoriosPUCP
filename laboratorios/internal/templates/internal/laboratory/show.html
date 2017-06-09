@@ -10,7 +10,7 @@
 
 <div class="row border-bottom white-bg dashboard-header">
     <div class="col-md-3">
-        <h2><strong>Editar Laboratorio</strong></h2>
+        <h2><strong>Detalle Laboratorio</strong></h2>
     </div>
 </div>
 
@@ -178,8 +178,9 @@
               </div>
             </div>
             <p><strong>(*) Campos obligatorios</strong></p>
-            <input type="submit" class="btn btn-primary" name="registrar" id="register_button" value="Guardar Cambios">
-            <a href="{{ url('internal:laboratory.index') }}" class="btn btn-white">Cancelar</a>
+            <!--<input type="submit" class="btn btn-primary" name="registrar" id="register_button" value="Guardar Cambios">-->
+            <a  href="{{ url('internal:laboratory.edit', laboratory.id) }}" class="btn btn-xs"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>Editar</a>
+            <a href="{{ url('internal:laboratory.index') }}" class="btn btn-white">Regresar</a>
           </form>
         </div>
 
