@@ -38,15 +38,19 @@
                </thead>
                <tbody>
                   {% for request in requests %}
-                  <tr>
-                    <td>{{ request.id }}</td>
-                    <td>{{ request.client }}</td>
-                    <td>{{ request.supervisor }}</td>
-                    <td>
-                      <a class="btn-white btn btn-xs" href="{{ url('internal:servicerequest.edit', request.id) }}">Editar</a>
-                      <a class="btn-white btn btn-xs" href="{{ url('internal:servicerequest.delete', request.id) }}">Eliminar</a>
-                    </td>
-                  </tr>
+                    {% if request.state.description != "Verificado"  %}      <!--  Esto es para no mostrar las solicitudes que han sido aprobadas, pues se convierten en contratos-->
+
+                    <tr>
+                      <td>{{ request.id }}</td>
+                      <td>{{ request.client }}</td>
+                      <td>{{ request.supervisor }}</td>
+                      <td>
+                        <a class="btn-white btn btn-xs" href="{{ url('internal:servicerequest.edit', request.id) }}">Editar</a>
+                        <a class="btn-white btn btn-xs" href="{{ url('internal:servicerequest.delete', request.id) }}">Eliminar</a>
+                        <a class="btn-white btn btn-xs" href="{{ url('internal:servicerequest.approve', request.id) }}">Aprobar</a>  <!--Agregado-->
+                      </td>
+                    </tr>
+                    {% endif %}
                   {% endfor %}
                </tbody>
             </table>
