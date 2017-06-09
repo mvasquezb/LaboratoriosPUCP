@@ -191,7 +191,5 @@ urlpatterns = [
     url('^sampleType/delete/?$',
         views.sampleType.delete,
         name='sampleType.delete'),
-]
-
- + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
