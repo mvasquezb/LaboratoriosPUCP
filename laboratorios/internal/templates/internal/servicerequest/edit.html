@@ -16,13 +16,13 @@
     <div class="ibox float-e-margins">
       <div class="ibox-content">
         {{ form.errors }}
-        <form id='requestform' action="{{ url('internal:servicerequest.edit',pk=pk) }}" method="post">
+        <form id='requestform' action="{{ url('internal:servicerequest.edit',pk=pk) }}" method="post" data-toggle="validator">
           {% csrf_token %}
           {% for field in form %}
             <div class="row">
               <div class="col-lg-6">
                 <div class="form-group">
-                  <label>{{ field.label }}*</label>
+                  <label>{{ field.label }} {% if field.field.required %}(*){% endif %}</label>
                   <div required data-error="El" {{field.label}} " es obligatorio" placeholder="------">
                     {{ field }}
                   </div>
@@ -79,8 +79,8 @@
         </div>
         {% endfor %}
         <div class="row">
-          <div class="col-lg-4 col-lg-offset-4">
-            <div class="text-left">
+          <div class="col-lg-6 col-lg-offset-3">
+            <div class="text-center">
               <input type="submit" value="Registrar" class="btn btn-primary" form="requestform">
               <a href="{{ url('internal:servicerequest.add_sample',pk)}}" class="btn btn-primary">Añadir Prueba</a>
             </div>

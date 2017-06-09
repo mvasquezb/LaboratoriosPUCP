@@ -73,7 +73,7 @@ def edit(request,
         for j in range(0, len(essay_methods_list[i])):
             aux_essay_methods_forms.append(
                 EssayMethodFillChosenForm(
-                    request.POST,
+                    request.POST or None,
                     instance=essay_methods_list[i][j],
                     prefix='emf_' + str(essay_methods_list[i][j].id)
                 )
@@ -119,7 +119,7 @@ def add_sample(request,
                template='internal/servicerequest/add_sample.html'):
     service_request = ServiceRequest.objects.get(pk=pk)
     sample_form = SampleForm(
-        request.POST,
+        request.POST or None,
         initial={
             'request': service_request,
         }
@@ -129,11 +129,12 @@ def add_sample(request,
         'pk': pk
     }
     # verificacion
-    if sample_form.is_valid():
-        sample_form.save()
-        return redirect('internal:servicerequest.edit', pk)
-    else:
-        context['errors'] = str(sample_form.errors)
+    if request.method == 'POST':
+        if sample_form.is_valid():
+            sample_form.save()
+            return redirect('internal:servicerequest.edit', pk)
+        else:
+            context['errors'] = str(sample_form.errors)
     return render(request, template, context)
 
 
