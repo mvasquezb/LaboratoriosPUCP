@@ -17,7 +17,7 @@ def index(request,
     search = request.GET.get('search')
     if search:
         employee_list = Employee.objects.filter(
-            username__icontains=search
+            username__icontains = search
         ).order_by('username')
     else:
         employee_list = Employee.objects.order_by('username')

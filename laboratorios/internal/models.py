@@ -302,3 +302,4 @@ class InventoryOrder(models.Model):
 
 class InventoryOrderDefault(models.Model):
     detail = models.CharField(max_length=100)
+

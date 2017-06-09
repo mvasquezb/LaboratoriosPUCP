@@ -1,3 +1,5 @@
+# En la tabla ServiceRequestState hay que agregar un registro en el cual el slug sea igual a Verificado
+
 from django.shortcuts import (
     render,
     get_object_or_404,
@@ -164,6 +166,19 @@ def delete(request,
     service_request = ServiceRequest.objects.get(pk=pk)
     service_request.delete()
     return redirect(reverse("internal:servicerequest.index"))
+
+
+def approve(request,
+           pk, template='internal/servicerequest/index.html'):
+        service_request = ServiceRequest.objects.get(pk=pk)
+        state = ServiceRequestState.objects.get(slug = "Verificado")
+        service_request.state = state           # Le asignamos el estado de aprobado
+        service_request.save()
+        client = Client.objects.get(pk = service_request.client.id)
+
+        service_contract = ServiceContract(client = client, request = service_request)
+        service_contract.save()  # Guardamos el service_contract en la tabla "ServiceContract"
+        return redirect(reverse("internal:servicerequest.index"))
 
 
 def delete_sample(request,

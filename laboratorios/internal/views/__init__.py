@@ -5,3 +5,5 @@ from .laboratory import *
 from .essay_method import *
 from .role import *
 from .servicerequest import *
+from .servicecontract import *
+from .forms import *
