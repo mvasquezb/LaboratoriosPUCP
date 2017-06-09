@@ -1,6 +1,9 @@
 from django.conf.urls import url
 from . import views
 
+from django.conf import settings
+from django.conf.urls.static import static
+
 urlpatterns = [
     #
     # Index
@@ -8,6 +11,24 @@ urlpatterns = [
     url('^$',
         views.main.index,
         name='index'),
+    #
+    #ServiceRequest
+    #
+    url('^serviceRequest/attachFile/(?P<id>\d+)$',
+        views.serviceRequest.upload,
+        name='serviceRequest.upload'),
+    url('^serviceRequest/files/(?P<id>\d+)$',
+        views.serviceRequest.attachmentList,
+        name='serviceRequest.attachmentList'),
+    url('^serviceRequest/attachedFileShow/(?P<id>\d+)$',
+        views.serviceRequest.showAttachedFile,
+        name='serviceRequest.showAttachedFile'),
+    url('^serviceRequest/deleteAttachedFile/(?P<id>\d+)$',
+        views.serviceRequest.deleteAttachedFile,
+        name='serviceRequest.deleteAttachedFile'),
+    url('^serviceRequest/downloadAttachedFile/(?P<id>\d+)$',
+        views.serviceRequest.downloadAttachedFile,
+        name='serviceRequest.downloadAttachedFile'),
     #
     # Employee
     #
@@ -27,4 +48,4 @@ urlpatterns = [
         views.employee.delete,
         name='employee.delete'),
 
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -1,10 +1,45 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+{% extends 'internal/base_internal.html' %}
+
+{% block title %}{{ super() }} | Empleados{% endblock title %}
+
+{% block custom_css %}{% endblock custom_css %}
+
+{% block page_content %}
+<div class="row border-bottom white-bg dashboard-header">
+    <div class="col-md-6">
+        <h2><strong>Detalle del archivo</strong></h2>
+    </div>
+</div>
+<div class="wrapper wrapper-content animated fadeInRight" >
+    <div class="col-lg-12">
+        <div class="ibox float-e-margins">
+            <div class="ibox-content">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label>Nombre de archivo</label>
+                                <div class="text-primary">{{ selected_file.fileName }}</div>
+                            </div>
+                            <div class="form-group">
+                                <label>Descripción</label>
+                                {% if selected_file.description %}
+                                <div class="text-primary">{{ selected_file.description}}</div>
+                                {% else %}
+                                <div class="text-primary">Sin descripción</div>
+                                {% endif%}
+                            </div>
+                        </div>
+                    </div>
+              <div class="col-md-offset-0">
+                <a href="{{ url('internal:serviceRequest.attachmentList', selected_file.request.pk) }}" style = "color: #818587; text-decoration: none;"><button name="b_cancel" id="cancel" class="btn btn-w-m btn-white" ><span class="bold" >Regresar</span></button></a>
+                <a href="{{ url('internal:serviceRequest.downloadAttachedFile', selected_file.pk) }}"><button name="b_download" id="descargar" class="btn btn-primary" ><i class="fa fa-download"></i>&nbsp;&nbsp;<span class="bold">Descargar</span></button></a>
+              </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock page_content %}
+
+{% block custom_js %}
+
+{% endblock custom_js %}
