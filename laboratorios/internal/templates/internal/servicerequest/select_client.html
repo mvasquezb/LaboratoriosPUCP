@@ -25,7 +25,7 @@
             <div class="form-group" style="padding-left: 100px">
               <label>Nombre</label><br>
               <input type="text"  class="input-sm form-control" placeholder="Buscar" id="text_search" onkeyup="text_search_function()" >
-              <button type="button" class="btn btn-sm btn-success" onclick="text_search_function()"> Buscar</button>
+              <button type="button" class="btn btn-primary btn-sm" onclick="text_search_function()"> Buscar</button>
             </div>
           </div>
         </div>
@@ -43,13 +43,13 @@
               <tr>
                   <th>Nombre </th>
                   <th>Número de Documento </th>
-                  <th>Seleccionar</th>
+                  <th>Crear Solicitud</th>
               </tr>
               </thead>
               <tbody>
                 {% for client in client_list %}
                   <tr>
-                    <td>{{ client.get_full_name() }}</td>
+                    <td>{{ client.get_full_name() or client.username }}</td>
                     <td>{{ client.doc_number }}</td>
                     <td>
                       <a href="{{ url('internal:servicerequest.create', client.pk)}}">
@@ -67,7 +67,7 @@
 
 <div class="col-md-offset-4">
   <a href="{{ url('internal:servicerequest.create_client')}}">
-    <button name="b_submit" type="submit" id="createButton" class="btn btn-w-m btn-success"> Crear nuevo Cliente</button>
+    <button name="b_submit" type="submit" id="createButton" class="btn btn-primary"> Crear nuevo Cliente</button>
   </a>
   <button type="submit" id="deleteButton" class="btn btn-w-m btn-danger">Eliminar</button>
 </div>
