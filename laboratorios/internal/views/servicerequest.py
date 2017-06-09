@@ -258,25 +258,36 @@ def assign_employee(request,
         essay=essay,
         chosen=True,
     ).distinct()
-    query = Q()
+
+    employee_q = Q()
     for essay_method in essay_method_list:
-        query &= Q(essay_methods=essay_method.essay_method)
-    employee_list = Employee.objects.filter(query)
+        employee_q &= Q(essay_methods=essay_method.essay_method)
+    employee_list = Employee.objects.filter(employee_q)
     form = ServiceAssignEmployeeForm(
         request.POST or None,
         employee=employee_list
     )
+
     query = Q()
     for essay_method in essay_method_list:
-        query &= Q(essay_methods=essay_method)
-    assigned_employee = employee_list.filter(query).first()
+        query &= Q(assigned_essay_methods=essay_method)
+
+    if employee_q:
+        assigned_employee = employee_list.filter(query).first()
+    else:
+        assigned_employee = None
 
     # Está cagada esta lógica
     if request.method == 'POST':
         if form.is_valid():
+            # Remove previous assigned employee, if existant
             employee = form.cleaned_data['employee']
-            employee_methods = employee.essay_methods.all
-            methods_to_add = set(employee_methods) - set(essay_method_list)
+            if assigned_employee and not employee == assigned_employee:
+                assigned_employee.assigned_essay_methods.remove(
+                    *essay_method_list
+                )
+            employee_methods = employee.assigned_essay_methods.all()
+            methods_to_add = set(essay_method_list) - set(employee_methods)
             employee.assigned_essay_methods.add(*methods_to_add)
 
             if request.is_ajax():

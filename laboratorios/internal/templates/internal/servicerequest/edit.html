@@ -44,7 +44,7 @@
         {% for sample in samples %}
         <div class="row">
           <div class="col-lg-12">
-            <table class="table table-bordered table-hover">
+            <table class="table table-bordered table-hover sample-table">
               <thead>
                 <tr>
                   <th>Id</th>
@@ -60,7 +60,7 @@
                   <td>{{ sample.name }}</td>
                   <td>{{ sample.sample_type.name }}</td>
                   <td>
-                    <table class="table table-bordered table-hover">
+                    <table class="table table-bordered table-hover essaymethod-table">
                       <thead>
                         <tr>
                           {% for essay_method_fill in essays_methods[loop.index-1] %}
@@ -71,7 +71,7 @@
                       <tbody>
                         <tr>
                           {% for essay_method_active in essay_methods_chosen_forms[loop.index-1] %}
-                          <td>{{ essay_method_active.as_p()}}</td>
+                          <td>{{ essay_method_active.as_p() }}</td>
                           {% endfor%}
                         </tr>
                       </tbody>
@@ -80,11 +80,13 @@
                   <td>
                     <a class="btn-white btn btn-xs" href="{{ url('internal:servicerequest.edit_sample',pk,sample.id) }}">Editar</a>
                     <a class="btn-white btn btn-xs" href="{{ url('internal:servicerequest.delete_sample',pk,sample.id) }}">Eliminar</a>
-                    <a class="btn btn-white btn-xs"
+                    <a class="btn btn-white btn-xs btn-assign-employee"
                        data-toggle="modal"
                        data-target="#assign-employee-modal"
                        data-url="{{ url('internal:servicerequest.assign_employee', request_id=pk, sample_id=sample.id) }}">
-                      Asignar Empleado
+                       <span>
+                        Asignar Empleado
+                       </span>
                     </a>
                   </td>
                 </tr>
@@ -147,5 +149,34 @@ $(document).on('submit', '#assign-employee-form', function (e) {
     }, 1500);
   });
 });
+
+$('#assign-employee-modal').on('hidden.bs.modal', function () {
+  var $modal = $(this);
+  $modal.find('.alert').hide();
+});
+
+$('.btn-assign-employee').each(function (index, elem) {
+  var $btn = $(elem);
+  update_assign_btn($btn);
+});
+
+$('.essaymethod-table [type="checkbox"]').on('change', function () {
+  var $btn = $(this).parents('.sample-table').find('.btn-assign-employee');
+  update_assign_btn($btn);
+});
+
+function update_assign_btn($btn) {
+  var $sampleTable = $btn.parents('.sample-table');
+  var $essayMethodTable = $sampleTable.find('.essaymethod-table');
+  var $checkedMethods = $essayMethodTable.find('[type="checkbox"]:checked');
+
+  if ($checkedMethods.length == 0) {
+    $btn.prop('disabled', true).find('span').tooltip({
+      title: 'Debe seleccionar un método de ensayo',
+    });
+  } else {
+    $btn.prop('disabled', false).find('span').tooltip('destroy');
+  }
+}
 </script>
 {% endblock custom_js %}
