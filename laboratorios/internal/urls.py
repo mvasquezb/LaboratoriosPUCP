@@ -129,4 +129,19 @@ urlpatterns = [
     url('^laboratory/show/(?P<pk>\d+)$',
         views.laboratory.show,
         name='laboratory.show'),
+    #
+    # sampleType
+    #
+    url('^sampleType/?$',
+        views.sampleType.index,
+        name='sampleType.index'),
+    url('^sampleType/create/?$',
+        views.sampleType.create,
+        name='sampleType.create'),
+    url('^sampleType/edit/(?P<id>\d+)/$',
+        views.sampleType.edit,
+        name='sampleType.edit'),
+    url('^sampleType/delete/?$',
+        views.sampleType.delete,
+        name='sampleType.delete'),
 ]
