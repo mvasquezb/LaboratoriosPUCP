@@ -47,7 +47,7 @@
                   <th>Muestra</th>
                   <th>Tipo de Muestra</th>
                   <th>Nombre de Ensayo: {{ essays[loop.index-1] }}</th>
-                  <th>Editar/Eliminar</th>
+                  <th>Acciones</th>
                 </tr>
               </thead>
               <tbody>
@@ -76,6 +76,12 @@
                   <td>
                     <a class="btn-white btn btn-xs" href="{{ url('internal:servicerequest.edit_sample',pk,sample.id) }}">Editar</a>
                     <a class="btn-white btn btn-xs" href="{{ url('internal:servicerequest.delete_sample',pk,sample.id) }}">Eliminar</a>
+                    <a class="btn btn-white btn-xs"
+                       data-toggle="modal"
+                       data-target="#assign-employee-modal"
+                       data-url="{{ url('internal:servicerequest.assign_employee', request_id=pk, sample_id=sample.id) }}">
+                      Asignar Empleado
+                    </a>
                   </td>
                 </tr>
               </tbody>
@@ -95,4 +101,26 @@
     </div>
   </div>
 </div>
+
+<div class="modal fade inmodal" id="assign-employee-modal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+    </div>
+  </div>
+</div>
 {% endblock page_content %}
+
+{% block custom_js %}
+<script>
+$('#assign-employee-modal').on('show.bs.modal', function (e) {
+  var $btn = $(e.relatedTarget);
+  var $modal = $(this);
+  var url = $btn.data('url');
+  $.ajax({
+    url: url,
+  }).done(function (response) {
+    $modal.find('.modal-content').html(response);
+  });
+});
+</script>
+{% endblock custom_js %}

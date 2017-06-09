@@ -221,3 +221,17 @@ def quotation(request,
     if extra_context is not None:
         context.update(extra_context)
     return render(request, template, context)
+
+
+def assign_employee(request,
+                    request_id,
+                    sample_id,
+                    template='internal/servicerequest/assign_employee.html',
+                    extra_context=None):
+    request = get_object_or_404(ServiceRequest, pk=request_id)
+    sample = get_object_or_404(request.sample_set.all(), pk=sample_id)
+
+    essay = sample.essayfill_set.first()
+    employee_list = Employee.objects.filter(
+        essay_methods__contains=sample.essayfill_set.all
+    )
