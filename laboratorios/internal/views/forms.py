@@ -91,7 +91,7 @@ class RoleForm(ModelForm):
 class EssayMethodFillChosenForm(ModelForm):
     class Meta:
         model = EssayMethodFill
-        fields = ['chosen']
+        fields = ['chosen',]
 
 class SampleEditForm(ModelForm):
     class Meta:

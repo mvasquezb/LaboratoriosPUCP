@@ -98,7 +98,7 @@ def edit(request,
                 EssayMethodFillChosenForm(
                     request.POST or None,
                     instance=essay_methods_list[i][j],
-                    prefix='emf_' + str(essay_methods_list[i][j].id)
+                    prefix='emf_' + str(essay_methods_list[i][j].pk)
                 )
             )
         essay_methods_chosen_forms.append(aux_essay_methods_forms)
@@ -132,6 +132,7 @@ def edit(request,
         # add save for each form
         for i in range(0, len(essay_methods_chosen_forms)):
             for j in range(0, len(essay_methods_chosen_forms[i])):
+                print(essay_methods_chosen_forms[i][j].save().chosen)
                 essay_methods_chosen_forms[i][j].save()
         return redirect(reverse("internal:servicerequest.index"))
     return render(request, template, context)
