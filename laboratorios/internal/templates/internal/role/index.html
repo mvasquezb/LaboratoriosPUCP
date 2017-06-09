@@ -1,0 +1,153 @@
+{% extends 'internal/base_internal.html' %}
+
+{% block title %}{{ super() }} | Roles{% endblock title %}
+
+{% block custom_css %}
+<link href="{{ static('vendors/footable/footable.core.css') }}" rel="stylesheet">
+{% endblock custom_css %}
+
+{% block page_content %}
+<div class="row border-bottom white-bg dashboard-header">
+    <div class="col-md-6">
+        <h2><strong>Listado de Roles</strong></h2>
+    </div>
+</div>
+<div class="wrapper wrapper-content animated" >
+  <div class="col-lg-12">
+    <div class="ibox float-e-margins">
+      <div class="ibox-content">
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="text-right">
+              <a class="btn btn-primary" href="{{ url('internal:role.create') }}">Crear Rol</a>
+            </div>
+          </div>
+        </div>
+        <div class="table-responsive">
+          <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper form-inline dt-bootstrap">
+            <form action="{{ url('internal:role.index') }}" method="get" >
+              <input name="search" type="text" class="form-control input-sm m-b-xs" id="filter" placeholder="Buscar">
+              <input class="btn btn-primary"  type="submit" value="Enviar">
+            </form>
+            <table class="table table-striped table-bordered table-hover dataTables-example dataTable" id="DataTables_Table_0">
+              <thead>
+                <tr role="row">
+                  <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Rendering engine: activate to sort column descending" >
+                    Nombre
+                  </th>
+                  <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Rendering engine: activate to sort column descending" >
+                    Descripcion
+                  </th>
+                  <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-label="Browser: activate to sort column ascending">Acción</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for role in role_list %}
+                  <tr role="row">
+                    <td>{{ role.name }}</td>
+                    <td>{{ role.description }}</td>
+                    <td class="text-left footable-visible footable-last-column">
+                      <div class="btn-group">
+                        <a href="{{ url('internal:role.show', role.id) }}" class="btn-white btn btn-xs">Detalle</a>
+                        <a href="{{ url('internal:role.edit', role.id) }}" class="btn-white btn btn-xs">Editar</a>
+                        <a class="myBtn1 btn-white btn btn-xs" data-toggle="modal" data-target="#myModal1" data-url="{{ url('internal:role.delete', role.id) }}">Eliminar</a>
+                      </div>
+                    </td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td colspan="5" class="footable-visible">
+                    <ul class="pagination pull-right">
+                      {% if role_list.has_previous() %}
+                        <li class="footable-page-arrow">
+                          <a class="pagination-link" data-page="first" data-pagenum="1">«</a>
+                        </li>
+                        <li class="footable-page-arrow">
+                          <a class="pagination-link" data-page="prev" data-pagenum="{{ role_list.previous_page_number() }}">‹</a>
+                        </li>
+                      {% endif %}
+                      <li class="footable-page">
+                        <a data-page="0">{{ role_list.number }}</a>
+                      </li>
+                      {% if role_list.has_next() %}
+                        <li class="footable-page-arrow">
+                          <a class="pagination-link" data-page="next" data-pagenum="{{ role_list.next_page_number() }}">›</a>
+                        </li>
+                        <li class="footable-page-arrow">
+                          <a class="pagination-link" data-page="last" data-pagenum="{{ paginator.num_pages }}">»</a>
+                        </li>
+                      {% endif %}
+                    </ul>
+                  </td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="myModal1" class="modal1">
+  <!-- Modal content -->
+  <div class="modal-content">
+    <span class="span-close close">&times;</span>
+    <div class="modeal-center-content">
+        <p>¿Seguro que quiere eliminarlo?</p>
+        <button type="button" class="delete-role btn btn-danger">Eliminar</button>
+        <button type="button" class="span-close btn btn-primary">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<div class="message-container hidden">
+  <ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} data-tags="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+  </ul>
+</div>
+{% endblock page_content %}
+
+{% block custom_js %}
+<script>
+$( document ).ready(function() {
+  $(".myBtn1").click(function() {
+    $("#myModal1").show();
+    var delete_url = $(this).attr("data-url");
+    $(".delete-role").click(function() {
+      window.location.href = delete_url;
+    });
+  });
+
+  $(".span-close").click(function() {
+    $("#myModal1").hide();
+  });
+});
+$(".myBtn1").click(function(event) {
+  event.preventDefault();
+  return false;
+});
+</script>
+<script>
+var searchParams = new URLSearchParams(window.location.search);
+
+if (searchParams.get('search')) {
+  $('#filter').val(searchParams.get('search'));
+}
+
+$('.pagination-link').click(function (e) {
+  var page = $(e.target).data('pagenum');
+  searchParams.set('page', page);
+  window.location.search = searchParams.toString();
+});
+
+if ($('.message-container .messages li')) {
+  var msg = $('.message-container .messages li').first();
+  $.extend(toastr.options, {"positionClass": "toast-bottom-right",});
+  toastr[msg.data('tags')](msg.text());
+}
+</script>
+{% endblock custom_js %}

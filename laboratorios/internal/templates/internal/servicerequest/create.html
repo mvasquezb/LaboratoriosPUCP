@@ -1,0 +1,56 @@
+{% extends 'internal/base_internal.html' %}
+
+{% block title %}{{ super() }} | Inicio{% endblock title %}
+
+{% block custom_css %}{% endblock custom_css %}
+
+{% block page_content %}
+<div class="row border-bottom white-bg dashboard-header">
+    <div class="col-md-6">
+        <h2><strong>Crear Nueva Solicitud</strong></h2>
+    </div>
+</div>
+<div class="wrapper wrapper-content animated fadeInRight" >
+    <div class="col-lg-12">
+        <div class="ibox float-e-margins">
+            <div class="ibox-content">
+            {{ sr_form.errors }}
+                <form id='requestform' action="{{ url('internal:servicerequest.create',pk=pk) }}" method="post">
+                    {% csrf_token %}
+                    {% for field in sr_form %}
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label>{{field.label}}*</label>
+                                <div class="form-control"required data-error="El" {{field.label}} " es obligatorio" placeholder="------">{{field}}</div>
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+                      {% endfor %}  
+                    <div class="mail-box">
+                        <div class="col-lg-12">
+                            <input type="submit" value="Registrar" class="btn btn-primary">                            
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock page_content %}
+{% block base_js %}
+{{ super() }}
+{% endblock base_js %}
+
+
+
+
+
+
+
+
+
+
+
+
+
