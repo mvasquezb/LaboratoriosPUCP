@@ -1,0 +1,185 @@
+{% extends 'internal/base_internal.html' %}
+
+{% block title %}{{ super() }} | Solicitudes{% endblock title %}
+
+{% block custom_css %}
+<style>
+.alert { display: none; }
+</style>
+{% endblock custom_css %}
+
+{% block page_content %}
+<div class="row border-bottom white-bg dashboard-header">
+  <div class="col-md-6">
+    <h2><strong>Modificar Solicitud</strong></h2>
+  </div>
+</div>
+
+<div class="wrapper wrapper-content animated fadeInRight">
+  <div class="col-lg-12">
+    <div class="ibox float-e-margins">
+      <div class="ibox-title">
+        <a href="{{ url('internal:servicerequest.quotation', request_id=pk) }}" class="btn btn-success">
+          Ver Cotización
+        </a>
+      </div>
+      <div class="ibox-content">
+        {{ form.errors }}
+        <form id='requestform' action="{{ url('internal:servicerequest.edit',pk=pk) }}" method="post" data-toggle="validator">
+          {% csrf_token %}
+          {% for field in form %}
+            <div class="row">
+              <div class="col-lg-6">
+                <div class="form-group">
+                  <label>{{ field.label }} {% if field.field.required %}(*){% endif %}</label>
+                  <div required data-error="El" {{field.label}} " es obligatorio" placeholder="------">
+                    {{ field }}
+                  </div>
+                <div class="help-block with-errors"></div>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        {% for sample in samples %}
+        <div class="row">
+          <div class="col-lg-12">
+            <table class="table table-bordered table-hover sample-table">
+              <thead>
+                <tr>
+                  <th>Id</th>
+                  <th>Muestra</th>
+                  <th>Tipo de Muestra</th>
+                  <th>Nombre de Ensayo: {{ essays[loop.index-1] }}</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>{{ sample.id }}</td>
+                  <td>{{ sample.name }}</td>
+                  <td>{{ sample.sample_type.name }}</td>
+                  <td>
+                    <table class="table table-bordered table-hover essaymethod-table">
+                      <thead>
+                        <tr>
+                          {% for essay_method_fill in essays_methods[loop.index-1] %}
+                          <th>{{ essay_method_fill.essay_method.name }}</th>
+                          {% endfor %}
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          {% for essay_method_active in essay_methods_chosen_forms[loop.index-1] %}
+                          <td>{{ essay_method_active.as_p() }}</td>
+                          {% endfor%}
+                        </tr>
+                      </tbody>
+                    </table>
+                  </td>
+                  <td>
+                    <a class="btn-white btn btn-xs" href="{{ url('internal:servicerequest.edit_sample',pk,sample.id) }}">Editar</a>
+                    <a class="btn-white btn btn-xs" href="{{ url('internal:servicerequest.delete_sample',pk,sample.id) }}">Eliminar</a>
+                    <a class="btn btn-white btn-xs btn-assign-employee"
+                       data-toggle="modal"
+                       data-target="#assign-employee-modal"
+                       data-url="{{ url('internal:servicerequest.assign_employee', request_id=pk, sample_id=sample.id) }}">
+                       <span>
+                        Asignar Empleado
+                       </span>
+                    </a>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        {% endfor %}
+        <div class="row">
+          <div class="col-lg-6 col-lg-offset-3">
+            <div class="text-center">
+              <input type="submit" value="Registrar" class="btn btn-primary" form="requestform">
+              <a href="{{ url('internal:servicerequest.add_sample',pk)}}" class="btn btn-primary">Añadir Prueba</a>
+            </div>
+          </div>
+        
+        
+        
+        </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal inmodal" id="assign-employee-modal" tabindex="-1" role="dialog" aria-hidden="true">
+</div>
+{% endblock page_content %}
+
+{% block custom_js %}
+<script>
+console.log(csrftoken);
+$('#assign-employee-modal').on('show.bs.modal', function (e) {
+  var $btn = $(e.relatedTarget);
+  var $modal = $(this);
+  var url = $btn.data('url');
+  $.ajax({
+    url: url,
+  }).done(function (response) {
+    $modal.html(response);
+    $('#assign-employee-form').validator();
+  });
+});
+
+$(document).on('submit', '#assign-employee-form', function (e) {
+  e.preventDefault();
+
+  var $form = $(e.target);
+  var $modal = $('#assign-employee-modal');
+
+  $.ajax({
+    url: $form.get(0).action,
+    method: $form.get(0).method,
+    data: $form.serialize(),
+  }).done(function (response) {
+    $modal.find('.alert').hide();
+    if (!response.success) {
+      $modal.find('.form-errors').html(response.errors).fadeIn();
+      return;
+    }
+    $modal.find('.form-success').html(response.message).fadeIn();
+    setTimeout(function () {
+      $modal.modal('hide');
+    }, 1500);
+  });
+});
+
+$('#assign-employee-modal').on('hidden.bs.modal', function () {
+  var $modal = $(this);
+  $modal.find('.alert').hide();
+});
+
+$('.btn-assign-employee').each(function (index, elem) {
+  var $btn = $(elem);
+  update_assign_btn($btn);
+});
+
+$('.essaymethod-table [type="checkbox"]').on('change', function () {
+  var $btn = $(this).parents('.sample-table').find('.btn-assign-employee');
+  update_assign_btn($btn);
+});
+
+function update_assign_btn($btn) {
+  var $sampleTable = $btn.parents('.sample-table');
+  var $essayMethodTable = $sampleTable.find('.essaymethod-table');
+  var $checkedMethods = $essayMethodTable.find('[type="checkbox"]:checked');
+
+  if ($checkedMethods.length == 0) {
+    $btn.prop('disabled', true).find('span').tooltip({
+      title: 'Debe seleccionar un método de ensayo',
+    });
+  } else {
+    $btn.prop('disabled', false).find('span').tooltip('destroy');
+  }
+}
+</script>
+{% endblock custom_js %}
