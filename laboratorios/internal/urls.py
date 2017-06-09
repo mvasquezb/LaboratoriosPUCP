@@ -11,7 +11,7 @@ urlpatterns = [
         {'template_name' : 'internal/login.html'},
         name='login'),
 
-        url(r'^cerrar$',
+        url(r'^logout$',
         logout_then_login,
         name='logout'),
     #
