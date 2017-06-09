@@ -166,3 +166,5 @@ STATICFILES_DIRS = [
 LOGIN_URL = reverse_lazy('internal:login')
 LOGIN_REDIRECT_URL = reverse_lazy('internal:index')
 LOGOUT_URL = reverse_lazy('internal:logout')
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

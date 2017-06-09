@@ -2,6 +2,9 @@ from django.conf.urls import url
 from . import views
 from django.contrib.auth.views import login, logout_then_login
 
+from django.conf import settings
+from django.conf.urls.static import static
+
 urlpatterns = [
     #
     # Login
@@ -20,6 +23,24 @@ urlpatterns = [
     url('^$',
         views.main.index,
         name='index'),
+    #
+    #ServiceRequest
+    #
+    url('^servicerequest/attachFile/(?P<id>\d+)$',
+        views.servicerequest.upload,
+        name='serviceRequest.upload'),
+    url('^servicerequest/files/(?P<id>\d+)$',
+        views.servicerequest.attachmentList,
+        name='serviceRequest.attachmentList'),
+    url('^servicerequest/attachedFileShow/(?P<id>\d+)$',
+        views.servicerequest.showAttachedFile,
+        name='serviceRequest.showAttachedFile'),
+    url('^servicerequest/deleteAttachedFile/(?P<id>\d+)$',
+        views.servicerequest.deleteAttachedFile,
+        name='serviceRequest.deleteAttachedFile'),
+    url('^servicerequest/downloadAttachedFile/(?P<id>\d+)$',
+        views.servicerequest.downloadAttachedFile,
+        name='serviceRequest.downloadAttachedFile'),
     #
     # Employee
     #
@@ -111,6 +132,29 @@ urlpatterns = [
     url('^servicerequest/(?P<request_id>\d+)/assign_employee/(?P<sample_id>\d+)/?$',
         views.servicerequest.assign_employee,
         name='servicerequest.assign_employee'),
+
+    # Agregado
+    url('^servicerequest/approve/(?P<pk>\d+)$',
+        views.servicerequest.approve,
+        name='servicerequest.approve'),
+
+    #
+    # ServiceContract
+    #
+    url('^servicecontract/$',
+        views.servicecontract.index,
+        name='servicecontract.index'),
+    url('^servicecontract/edit/(?P<pk>\d+)$',
+        views.servicecontract.edit,
+        name='servicecontract.edit'),
+    url('^servicecontract/show/(?P<pk>\d+)$',
+        views.servicecontract.show,
+        name='servicecontract.show'),
+    url('^servicecontract/delete/(?P<pk>\d+)$',
+        views.servicecontract.delete,
+        name='servicecontract.delete'),
+
+
     url('^servicerequest/view_workload_per_request$',
         views.servicerequest.workload_view_per_request,
         name='servicerequest.workload_view_per_request'),
@@ -147,4 +191,5 @@ urlpatterns = [
     url('^sampleType/delete/?$',
         views.sampleType.delete,
         name='sampleType.delete'),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
