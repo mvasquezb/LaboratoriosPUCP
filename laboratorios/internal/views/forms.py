@@ -58,7 +58,12 @@ class SampleForm(ModelForm):
         return super(SampleForm,self).save(commit=commit)
 
 
+    laboratories = forms.ModelMultipleChoiceField(queryset=Laboratory.objects.all())
 
+class LaboratoryForm(ModelForm):
+    class Meta:
+        model = Laboratory
+        exclude = []
 
 class ClientForm(ModelForm):
     class Meta:
