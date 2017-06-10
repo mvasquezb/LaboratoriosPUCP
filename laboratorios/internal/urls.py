@@ -186,7 +186,7 @@ urlpatterns = [
     url('^sampleType/edit/(?P<id>\d+)/$',
         views.sampleType.edit,
         name='sampleType.edit'),
-    url('^sampleType/delete/?$',
+    url('^sampleType/delete/(?P<id>\d+)/?$',
         views.sampleType.delete,
         name='sampleType.delete'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

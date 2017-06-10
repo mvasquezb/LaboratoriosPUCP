@@ -145,4 +145,4 @@ class LaboratoryForm(ModelForm):
 class SampleTypeForm(ModelForm):
     class Meta:
         model = SampleType
-        exclude = []
+        exclude = ['slug']
