@@ -31,14 +31,14 @@
             <div class="row">
               {% csrf_token %}
               <div class="form-group">
-                <label>Nombre de Laboratorio (*)</label>
+                <label>Nombre de laboratorio (*)</label>
                 <input type="text" maxlength="50" class="form-control" id="laboratory_name" required data-error="El nombre es obligatorio" placeholder="Ingrese nombre de laboratorio" value="{{ laboratory.name }}">
                 <span class="help-block m-b-none">Hasta 50 caracteres permitidos</span>
                 <div class="help-block with-errors"></div>
               </div>
 
               <div class="form-group">
-                <label>Capacidad Máxima de Empleados (*)</label>
+                <label>Capacidad máxima de empleados (*)</label>
                 <input class="form-control" name="laboratory_capacity" onkeydown="return FilterNmberInput(event)" onpaste="handlePaste(event)" id="capacity" type="number" min="5" max="10" value="{{ laboratory.capacity }}" required data-error="Ingrese un valor válido para capacidad de personal">
                 <span class="help-block m-b-none">Mínima cantidad será cinco (5) y máxima será diez (10)</span>
                 <div class="help-block with-errors"></div>
@@ -46,7 +46,7 @@
             </div>
             <div class="row">
               <div class="form-group">
-                  <label>Seleccione al personal para el nuevo laboratorio</label>
+                  <label>Seleccione al personal para el laboratorio</label>
                   <div class="table-responsive">
                     <table class="table table-striped table-bordered table-hover dataTables-example" >
                       <thead>
@@ -78,7 +78,7 @@
 
                     </table>
                     <div class="form-group">
-                      <label>Responsable de Laboratorio</label>
+                      <label>Responsable del laboratorio</label>
                         <select class="form-control m-b" id="comboBox">
                           <option selected>-- Ningún Responsable Seleccionado --</option>
                           {% for selected_user in selected_users %}
@@ -95,7 +95,7 @@
             </div>
             <div class="row">
               <div class="form-group">
-                <label>Horas de Servicio (*)</label>
+                <label>Horas de servicio (*)</label>
                   <select class="form-control m-b" id="comboBox_service_hours">
                     {% for service_hour in all_service_hours %}
                       {% if selected_service_hours.pk == service_hour.pk %}
@@ -114,7 +114,7 @@
                 <table class="table table-striped table-bordered table-hover dataTables-example" >
                   <thead>
                     <tr>
-                      <th>Nombre de Inventario</th>
+                      <th>Nombre de inventario</th>
                       <th>Ubicación</th>
                       <th>Selección</th>
                     </tr>
@@ -148,9 +148,9 @@
                 <table class="table table-striped table-bordered table-hover dataTables-example" >
                   <thead>
                     <tr>
-                      <th>Nombre de Prueba</th>
+                      <th>Nombre de prueba</th>
                       <th>Descripción</th>
-                      <th>Precio</th>
+                      <th>Precio(S/.)</th>
                       <th>Selección</th>
                     </tr>
                   </thead>
@@ -178,8 +178,10 @@
               </div>
             </div>
             <p><strong>(*) Campos obligatorios</strong></p>
-            <input type="submit" class="btn btn-primary" name="registrar" id="register_button" value="Guardar Cambios">
-            <a href="{{ url('internal:laboratory.index') }}" class="btn btn-white">Cancelar</a>
+            <div class="col-md-offset-4">
+              <input type="submit" class="btn btn-primary" name="registrar" id="register_button" value="Guardar Cambios">
+              <a href="{{ url('internal:laboratory.index') }}" class="btn btn-white">Cancelar</a>
+            </div>
           </form>
         </div>
 

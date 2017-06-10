@@ -48,6 +48,7 @@ def create(request,
         form = LaboratoryForm(request.POST)
         if form.is_valid():
             form.save()
+            messages.success(request, 'Se ha creado el laboratorio exitosamante!')
             return redirect('internal:laboratory.index')
         else:
             return HttpResponse(str(form.errors))
@@ -68,6 +69,7 @@ def edit(request,
         aux_form = LaboratoryForm(request.POST or None, instance=instance)
         if aux_form.is_valid():
             aux_form.save()
+            messages.success(request, 'Se ha editado el laboratorio exitosamante!')
             return redirect('internal:laboratory.index')
     else :
         laboratory = Laboratory.objects.get(pk=pk)

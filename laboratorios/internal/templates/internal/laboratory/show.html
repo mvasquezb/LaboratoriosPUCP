@@ -14,14 +14,6 @@
     </div>
 </div>
 
-<!--
-<form id="djform" action="{{ url('internal:laboratory.create') }}" method="POST">
-{% csrf_token %}
-{{ form.as_p() }}
-<input type="submit" value="submit">
-</form>
--->
-
   <div class="wrapper wrapper-content animated fadeInRight" >
     <div class="col-lg-12">
       <div class="ibox float-e-margins">
@@ -31,15 +23,15 @@
             <div class="row">
               {% csrf_token %}
               <div class="form-group">
-                <label>Nombre de Laboratorio (*)</label>
-                <input type="text" maxlength="50" class="form-control" id="laboratory_name" required data-error="El nombre es obligatorio" placeholder="Ingrese nombre de laboratorio" value="{{ laboratory.name }}">
+                <label>Nombre de laboratorio (*)</label>
+                <input type="text" maxlength="50" disabled class="form-control" id="laboratory_name" required data-error="El nombre es obligatorio" placeholder="Ingrese nombre de laboratorio" value="{{ laboratory.name }}">
                 <span class="help-block m-b-none">Hasta 50 caracteres permitidos</span>
                 <div class="help-block with-errors"></div>
               </div>
 
               <div class="form-group">
-                <label>Capacidad Máxima de Empleados (*)</label>
-                <input class="form-control" name="laboratory_capacity" onkeydown="return FilterNmberInput(event)" onpaste="handlePaste(event)" id="capacity" type="number" min="5" max="10" value="{{ laboratory.capacity }}" required data-error="Ingrese un valor válido para capacidad de personal">
+                <label>Capacidad máxima de empleados (*)</label>
+                <input class="form-control" disabled name="laboratory_capacity" onkeydown="return FilterNmberInput(event)" onpaste="handlePaste(event)" id="capacity" type="number" min="5" max="10" value="{{ laboratory.capacity }}" required data-error="Ingrese un valor válido para capacidad de personal">
                 <span class="help-block m-b-none">Mínima cantidad será cinco (5) y máxima será diez (10)</span>
                 <div class="help-block with-errors"></div>
               </div>
@@ -53,33 +45,21 @@
                         <tr>
                           <th>Nombre del empleado</th>
                           <th>Correo</th>
-                          <th>Selección</th>
                         </tr>
                       </thead>
                       <tbody>
-                        {% for user in all_users %}
-                          {% set reach_out = [] %}
+                        {% for selected_user in selected_users %}
                           <tr class="gradeX">
-                            <td>{{ user.username }}</td>
-                            <td>{{ user.email }}</td>
-                            {% for selected_user in selected_users %}
-                              {% if user.pk == selected_user.pk %}
-                                <td><input type="checkbox" id="checkbox_users" name="{{ user.username }}" class="{{ user.pk }}" checked></td>
-                                {% if reach_out.append(True) %}{% endif %}
-                                {% break %}
-                              {% endif %}
-                            {% endfor %}
-                            {% if not reach_out %}
-                              <td><input type="checkbox" id="checkbox_users" name="{{ user.username }}" class="{{ user.pk }}"></td>
-                            {% endif %}
+                            <td>{{ selected_user.username }}</td>
+                            <td>{{ selected_user.email }}</td>
                           </tr>
                         {% endfor %}
                       </tbody>
 
                     </table>
                     <div class="form-group">
-                      <label>Responsable de Laboratorio</label>
-                        <select class="form-control m-b" id="comboBox">
+                      <label>Responsable de laboratorio</label>
+                        <select class="form-control m-b" id="comboBox" disabled>
                           <option selected>-- Ningún Responsable Seleccionado --</option>
                           {% for selected_user in selected_users %}
                             {% if selected_user.pk == laboratory.supervisor.pk %}
@@ -96,7 +76,7 @@
             <div class="row">
               <div class="form-group">
                 <label>Horas de Servicio (*)</label>
-                  <select class="form-control m-b" id="comboBox_service_hours">
+                  <select class="form-control m-b" id="comboBox_service_hours" disabled>
                     {% for service_hour in all_service_hours %}
                       {% if selected_service_hours.pk == service_hour.pk %}
                         <option id="{{ service_hour.pk }}" selected>De {{ service_hour.start_time }} a {{ service_hour.end_time }}</option>
@@ -116,25 +96,13 @@
                     <tr>
                       <th>Nombre de Inventario</th>
                       <th>Ubicación</th>
-                      <th>Selección</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {% for inventory in all_inventories %}
-                      {% set reach_out = [] %}
+                    {% for inventory in selected_inventories %}
                       <tr class="gradeX">
                         <td>{{ inventory.name }}</td>
                         <td>{{ inventory.location }}</td>
-                        {% for selected_inventory in selected_inventories %}
-                          {% if inventory.pk==selected_inventory.pk %}
-                            <td><input type="checkbox" id="checkbox_inventory" name="{{ inventory.pk }}" class="i-checks" checked=""></td>
-                            {% if reach_out.append(True) %}{% endif %}
-                            {% break %}
-                          {% endif %}
-                        {% endfor %}
-                        {% if not reach_out %}
-                          <td><input type="checkbox" id="checkbox_inventory" name="{{ inventory.pk }}" class="i-checks" ></td>
-                        {% endif %}
                       </tr>
                     {% endfor %}
                   </tbody>
@@ -150,27 +118,15 @@
                     <tr>
                       <th>Nombre de Prueba</th>
                       <th>Descripción</th>
-                      <th>Precio</th>
-                      <th>Selección</th>
+                      <th>Precio(S/.)</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {% for essaymethod in all_essaymethods %}
-                      {% set reach_out = [] %}
+                    {% for essaymethod in selected_essaymethods %}
                       <tr class="gradeX">
                         <td>{{ essaymethod.name }}</td>
                         <td>{{ essaymethod.description }}</td>
                         <td>{{ essaymethod.price }}</td>
-                        {% for selected_essaymethod in selected_essaymethods %}
-                          {% if essaymethod.pk == selected_essaymethod.pk %}
-                            <td><input type="checkbox" id="checkbox_essay" name="{{ essaymethod.pk }}" class="i-checks" checked></td>
-                            {% if reach_out.append(True) %}{% endif %}
-                            {% break %}
-                          {% endif %}
-                        {% endfor %}
-                        {% if not reach_out %}
-                          <td><input type="checkbox" id="checkbox_essay" name="{{ essaymethod.pk }}" class="i-checks"></td>
-                        {% endif %}
                       </tr>
                     {% endfor %}
                   </tbody>
@@ -178,9 +134,10 @@
               </div>
             </div>
             <p><strong>(*) Campos obligatorios</strong></p>
-            <!--<input type="submit" class="btn btn-primary" name="registrar" id="register_button" value="Guardar Cambios">-->
-            <a  href="{{ url('internal:laboratory.edit', laboratory.id) }}" class="btn btn-xs"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>Editar</a>
-            <a href="{{ url('internal:laboratory.index') }}" class="btn btn-white">Regresar</a>
+            <div class="col-md-offset-4">
+              <a  href="{{ url('internal:laboratory.edit', laboratory.id) }}"  class="btn btn-primary"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>Editar</a>
+              <a href="{{ url('internal:laboratory.index') }}" class="btn btn-white">Regresar</a>
+            </div>
           </form>
         </div>
 
