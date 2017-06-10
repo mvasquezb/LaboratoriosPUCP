@@ -81,7 +81,7 @@
             <div class="row">
               <div class="form-group">
                 <label>Horas de Servicio (*)</label>
-                  <select class="form-control m-b" id="comboBox_service_hours">
+                  <select class="form-control m-b" id="comboBox_service_hours" required="">
                     {% for service_hour in service_hours %}
                       <option id="{{ service_hour.pk }}">Inicio: {{ service_hour.start_time }} - Fin: {{ service_hour.end_time }}</option>
                     {% endfor %}

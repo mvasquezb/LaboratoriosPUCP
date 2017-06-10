@@ -48,9 +48,9 @@
                     <td>{{ employee.email }}</td>
                     <td class="text-left footable-visible footable-last-column">
                       <div class="btn-group">
-                        <a href="{{ url('internal:employee.show', employee.id) }}" class="btn-white btn btn-xs">Detalle</a>
-                        <a href="{{ url('internal:employee.edit', employee.id) }}" class="btn-white btn btn-xs">Editar</a>
-                        <a class="myBtn1 btn-white btn btn-xs" data-toggle="modal" data-target="#myModal1" data-url="{{ url('internal:employee.delete', employee.id) }}">Eliminar</a>
+                        <a href="{{ url('internal:employee.show', employee.id) }}" class="btn-white btn"><i class="fa fa-eye" aria-hidden="true"></i></a>
+                        <a href="{{ url('internal:employee.edit', employee.id) }}" class="btn-white btn"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+                        <a class="btn-white btn" data-toggle="modal" data-target="#myModal1" data-url="{{ url('internal:employee.delete', employee.id) }}"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
                       </div>
                     </td>
                   </tr>
