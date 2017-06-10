@@ -1,0 +1,55 @@
+{% extends 'internal/base_internal.html' %}
+
+{% block title %}{{ super() }} | Inicio{% endblock title %}
+
+{% block custom_css %}
+<style>
+.alert { display: none; }
+</style>
+{% endblock custom_css %}
+
+{% block page_content %}
+<div class="row border-bottom white-bg dashboard-header">
+  <div>
+    <h2><strong>{{ page_title or 'Registrar Tipos de Muestra' }}</strong></h2>
+  </div>
+  <div >
+      <div class="ibox float-e-margins">
+        <div class="ibox-title">
+           <h5>Datos generales <small>(*) campos obligatorios</small></h5>
+         </div>
+        <div class="ibox-content">
+          <div class="alert alert-danger">
+            {{ form.errors }}
+          </div>
+          <form action="{% if edit %}{{ url('internal:sampleType.edit', id=sample_type.id) }}{% else %}{{ url('internal:sampleType.create') }}{% endif %}" method="post" data-toggle="validator">
+            {% csrf_token %}
+            <div class="row">
+              <div class="col-md-3 form-group">
+                <label class="control-label inline">Nombre <small>(*)</small></label>
+                <div class="inline">
+                  {{ form.name.as_widget(attrs={
+                        'class': 'form-control',
+                        'autofocus': '',
+                  })}}
+                </div>
+              </div>
+            </div>
+              <div class="form-group">
+                <label class="control-label">Descripción</label>
+                  {{ form.description.as_widget(attrs={
+                    'class': 'form-control',
+                  })}}
+              </div>
+            <div class="ibox-content form-group">
+              <div class="col-md-offset-4">
+                <button type="submit" name="b_submit" class="btn btn-w-m btn-primary">Registrar</button>
+                <button name="b_cancel" class="btn btn-w-m btn-white" type="submit">Cancel</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+  </div>
+</div>
+{% endblock page_content %}

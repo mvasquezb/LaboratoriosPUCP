@@ -41,9 +41,6 @@
                   <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-label="Browser: activate to sort column ascending">
                     Descripcion
                   </th>
-                  <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-label="Browser: activate to sort column ascending">
-                    Estado
-                  </th>
                   <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-label="Browser: activate to sort column ascending">Acción</th>
                 </tr>
               </thead>
@@ -53,14 +50,6 @@
                     <td>{{ sampleType.pk }}</td>
                     <td>{{ sampleType.name }}</td>
                     <td>{{ sampleType.description }}</td>
-                    <td>{{ sampleType.lab_type }}</td>
-                    <td>
-                        {% if sampleType.active %}
-                          Activo
-                        {% else %}
-                          Inactivo
-                        {% endif %}
-                    </td>
                     <td class="text-left footable-visible footable-last-column">
                       <div class="btn-group">
                         <a  href="{{ url('internal:sampleType.edit', sampleType.id) }}" class="btn-white btn btn-xs"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>

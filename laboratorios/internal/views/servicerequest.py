@@ -344,13 +344,13 @@ def workload_view_per_request(request,
     month_names=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre']
     service_request_list=ServiceRequest.objects.all()
     my_data=[]
+    now = timezone.localtime(timezone.now())
     for i in range(0,len(service_request_list)):
         date_in_service = service_request_list[i].registered_date
         #date_in_service.strftime("%d/%m/%Y")
         #date_in_service.replace(day=date_in_service.day+service_request_list[i].expected_duration).strftime("%d/%m/%Y")
 
         # progresion calculation
-        now = timezone.localtime(timezone.now())
         delta = now - date_in_service
         total = int(100*delta.days/service_request_list[i].expected_duration)
 
@@ -358,7 +358,7 @@ def workload_view_per_request(request,
         my_dict={
         "id": service_request_list[i].id,
         "title": "Cliente" + service_request_list[i].client.get_full_name(),
-        "start_date": date_in_service.strftime("%m/%d/%Y"), 
+        "start_date": date_in_service.strftime("%m/%d/%Y"),
         "end_date": date_in_service.replace(day=date_in_service.day+service_request_list[i].expected_duration).strftime("%m/%d/%Y"),
         "value": 67,
         "term": "Short Term",
@@ -458,4 +458,3 @@ def downloadAttachedFile(request,id):
     response['Content-Disposition'] = 'attachment; filename=%s' % filename
 
     return response
-

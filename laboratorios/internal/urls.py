@@ -141,21 +141,19 @@ urlpatterns = [
     #
     # ServiceContract
     #
-    url('^servicecontract/$',
+    url('^servicecontract/?$',
         views.servicecontract.index,
         name='servicecontract.index'),
-    url('^servicecontract/edit/(?P<pk>\d+)$',
+    url('^servicecontract/edit/(?P<pk>\d+)/?$',
         views.servicecontract.edit,
         name='servicecontract.edit'),
-    url('^servicecontract/show/(?P<pk>\d+)$',
+    url('^servicecontract/show/(?P<pk>\d+)/?$',
         views.servicecontract.show,
         name='servicecontract.show'),
-    url('^servicecontract/delete/(?P<pk>\d+)$',
+    url('^servicecontract/delete/(?P<pk>\d+)/?$',
         views.servicecontract.delete,
         name='servicecontract.delete'),
-
-
-    url('^servicerequest/view_workload_per_request$',
+    url('^servicerequest/view_workload_per_request/?$',
         views.servicerequest.workload_view_per_request,
         name='servicerequest.workload_view_per_request'),
     #
@@ -188,7 +186,8 @@ urlpatterns = [
     url('^sampleType/edit/(?P<id>\d+)/$',
         views.sampleType.edit,
         name='sampleType.edit'),
-    url('^sampleType/delete/?$',
+    url('^sampleType/delete/(?P<id>\d+)/?$',
         views.sampleType.delete,
         name='sampleType.delete'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
