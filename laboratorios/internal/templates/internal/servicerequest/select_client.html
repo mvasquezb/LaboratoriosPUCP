@@ -1,3 +1,4 @@
+
 {% extends 'internal/base_internal.html' %}
 
 {% block title %}{{ super() }} | Inicio{% endblock title %}
@@ -15,42 +16,22 @@
         <h2><strong>Creación de Solicitud: Selección de Cliente</strong></h2>
     </div>
 </div>
-<div class="wrapper wrapper-content animated">
+<div class="wrapper wrapper-content animated fadeInRight">
     <div class="col-lg-12">
       <div class="ibox float-e-margins">
         <div class="ibox-content">
+
           <div class="table-responsive">
              <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper form-inline dt-bootstrap">
-                  <fieldset>
-                  <legend><h3><strong>Filtrar por:</strong></h3></legend>
-                <div>
-                  
-                    <form class="horizontal-form">
-                      <div class="form-inline">
-                        <div class="form-group">
-
-                          <div class="form-group" style="padding-left: 100px">
-                            <label>Nombre</label><br>
-                            <input type="text"  class="input-sm form-control" placeholder="Buscar" id="text_search" onkeyup="text_search_function()" >
-                            <button type="button" class="btn btn-primary btn-sm" onclick="text_search_function()"> Buscar</button>
-                          </div>
-                        </div>
-                      </div>
-                    </form>
-                </div>
-              </fieldset>
-
-            
-                <fieldset>
-                  <legend></legend>
-
-                      <div class="table-responsive" style="overflow: auto; max-height: 300px;">
-                        <table class="table table-striped" id="mytable">
+                    <input type="text"  class="input-sm form-control" placeholder="Buscar nombre" id="text_search" onkeyup="text_search_function()">
+                    <button type="button" class="btn btn-primary btn-sm"  style="margin-bottom:0px !important;" onclick="text_search_function()"> Buscar</button>
+                     <a  href="{{ url('internal:servicerequest.create_client')}}" name="b_submit" type="submit" id="createButton" class="btn btn-primary pull-right"><i class="fa fa-plus"> Crear nuevo cliente</i></a>
+                        <table class="table table-striped table-bordered table-hover dataTables-example dataTable" id="mytable">
                             <thead>
                             <tr>
-                                <th>Nombre </th>
-                                <th>Número de Documento </th>
-                                <th>Crear Solicitud</th>
+                                <th  class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Rendering engine: activate to sort column descending" >Nombre </th>
+                                <th  class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Rendering engine: activate to sort column descending" >Número de Documento </th>
+                                <th  class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Rendering engine: activate to sort column descending" >Crear Solicitud</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -63,27 +44,17 @@
                                       <i class="fa fa-pencil-square-o" ></i>
                                     </a>
                                   </td>
-                                  </tr>
+                                </tr>
                             {% endfor %}
                             </tbody>
                         </table>
-                      </div>
 
-                </fieldset>
-
-
-              <div class="col-md-offset-4">
-                <a href="{{ url('internal:servicerequest.create_client')}}">
-                  <button name="b_submit" type="submit" id="createButton" class="btn btn-primary"> Crear nuevo Cliente</button>
-                </a>
-                <button type="submit" id="deleteButton" class="btn btn-w-m btn-danger">Eliminar</button>
-              </div>
              </div>
           </div>
         </div>
       </div>
     </div>
-</div>  
+</div>
 
 
 {% endblock page_content %}
@@ -237,3 +208,4 @@ var fill_Toastr = function(pMsg, pTypeMsg,pTitle){
     <!-- Peity -->
  <!--    <script src="js/demo/peity-demo.js"></script>  -->
 {% endblock custom_js %}
+
