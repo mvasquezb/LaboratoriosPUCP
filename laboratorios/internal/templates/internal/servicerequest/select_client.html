@@ -10,68 +10,80 @@
   font-size: 40px;
   }
 </style>
-<h2><strong> Creación de Solicitud: Selección de Cliente </strong></h2>
-<tr>
-  <th><br></th>
-</tr>
+<div class="row border-bottom white-bg dashboard-header">
+    <div class="col-md-6">
+        <h2><strong>Creación de Solicitud: Selección de Cliente</strong></h2>
+    </div>
+</div>
+<div class="wrapper wrapper-content animated">
+    <div class="col-lg-12">
+      <div class="ibox float-e-margins">
+        <div class="ibox-content">
+          <div class="table-responsive">
+             <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper form-inline dt-bootstrap">
+                  <fieldset>
+                  <legend><h3><strong>Filtrar por:</strong></h3></legend>
+                <div>
+                  
+                    <form class="horizontal-form">
+                      <div class="form-inline">
+                        <div class="form-group">
 
-     <fieldset>
-     <legend><h3><strong>Filtrar por:</strong></h3></legend>
-  <div>
-      <form class="horizontal-form">
-        <div class="form-inline">
-          <div class="form-group">
+                          <div class="form-group" style="padding-left: 100px">
+                            <label>Nombre</label><br>
+                            <input type="text"  class="input-sm form-control" placeholder="Buscar" id="text_search" onkeyup="text_search_function()" >
+                            <button type="button" class="btn btn-primary btn-sm" onclick="text_search_function()"> Buscar</button>
+                          </div>
+                        </div>
+                      </div>
+                    </form>
+                </div>
+              </fieldset>
 
-            <div class="form-group" style="padding-left: 100px">
-              <label>Nombre</label><br>
-              <input type="text"  class="input-sm form-control" placeholder="Buscar" id="text_search" onkeyup="text_search_function()" >
-              <button type="button" class="btn btn-primary btn-sm" onclick="text_search_function()"> Buscar</button>
-            </div>
+            
+                <fieldset>
+                  <legend></legend>
+
+                      <div class="table-responsive" style="overflow: auto; max-height: 300px;">
+                        <table class="table table-striped" id="mytable">
+                            <thead>
+                            <tr>
+                                <th>Nombre </th>
+                                <th>Número de Documento </th>
+                                <th>Crear Solicitud</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                              {% for client in client_list %}
+                                <tr>
+                                  <td>{{ client.get_full_name() or client.username }}</td>
+                                  <td>{{ client.doc_number }}</td>
+                                  <td>
+                                    <a href="{{ url('internal:servicerequest.create', client.pk)}}">
+                                      <i class="fa fa-pencil-square-o" ></i>
+                                    </a>
+                                  </td>
+                                  </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                      </div>
+
+                </fieldset>
+
+
+              <div class="col-md-offset-4">
+                <a href="{{ url('internal:servicerequest.create_client')}}">
+                  <button name="b_submit" type="submit" id="createButton" class="btn btn-primary"> Crear nuevo Cliente</button>
+                </a>
+                <button type="submit" id="deleteButton" class="btn btn-w-m btn-danger">Eliminar</button>
+              </div>
+             </div>
           </div>
         </div>
-      </form>
-  </div>
-</fieldset>
-
-  <table><tr><td><br><br></td></tr></table>
-  <fieldset>
-    <legend></legend>
-
-        <div class="table-responsive" style="overflow: auto; max-height: 300px;">
-          <table class="table table-striped" id="mytable">
-              <thead>
-              <tr>
-                  <th>Nombre </th>
-                  <th>Número de Documento </th>
-                  <th>Crear Solicitud</th>
-              </tr>
-              </thead>
-              <tbody>
-                {% for client in client_list %}
-                  <tr>
-                    <td>{{ client.get_full_name() or client.username }}</td>
-                    <td>{{ client.doc_number }}</td>
-                    <td>
-                      <a href="{{ url('internal:servicerequest.create', client.pk)}}">
-                        <i class="fa fa-pencil-square-o" ></i>
-                      </a>
-                    </td>
-                    </tr>
-              {% endfor %}
-              </tbody>
-          </table>
-        </div>
-
-  </fieldset>
-
-
-<div class="col-md-offset-4">
-  <a href="{{ url('internal:servicerequest.create_client')}}">
-    <button name="b_submit" type="submit" id="createButton" class="btn btn-primary"> Crear nuevo Cliente</button>
-  </a>
-  <button type="submit" id="deleteButton" class="btn btn-w-m btn-danger">Eliminar</button>
-</div>
-
+      </div>
+    </div>
+</div>  
 
 
 {% endblock page_content %}
