@@ -22,6 +22,9 @@
         <a href="{{ url('internal:servicerequest.quotation', request_id=pk) }}" class="btn btn-primary">
           Ver Cotización
         </a>
+        <a href="{{ url('internal:serviceRequest.attachmentList', id=pk) }}" class="btn btn-primary">
+          Adjuntar Archivos
+        </a>
       </div>
       <div class="ibox-content">
         {{ form.errors }}
@@ -101,9 +104,9 @@
               <a href="{{ url('internal:servicerequest.add_sample',pk)}}" class="btn btn-primary">Añadir Prueba</a>
             </div>
           </div>
-        
-        
-        
+
+
+
         </form>
         </div>
       </div>
