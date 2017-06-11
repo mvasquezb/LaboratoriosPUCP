@@ -12,3 +12,4 @@ env/
 
 # Folder only used for collectstatic
 laboratorios/staticfiles
+laboratorios/media/
