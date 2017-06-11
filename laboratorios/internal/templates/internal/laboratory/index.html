@@ -184,29 +184,52 @@ if ($('.message-container .messages li')) {
 }
 </script>
 
-<script src="//rawgithub.com/stidges/jquery-searchable/master/dist/jquery.searchable-1.0.0.min.js"></script>
-  <script type="text/javascript">
-  $(function () {
-    $( '#DataTables_Table_0' ).searchable({
-        striped: true,
-        oddRow: { 'background-color': '#f5f5f5' },
-        evenRow: { 'background-color': '#fff' },
-        searchType: 'fuzzy'
-    });
+<script src="//rawgithub.com/stidges/jquery-searchable/master/dist/jquery.searchable-1.0.0.min.js">
+</script>
+<script src="//code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript">
+//   $(function () {
+//     $( '#DataTables_Table_0' ).searchable({
+//         striped: true,
+//         oddRow: { 'background-color': '#f5f5f5' },
+//         evenRow: { 'background-color': '#fff' },
+//         searchType: 'fuzzy'
+//     });
     
-    $( '#searchable-container' ).searchable({
-        searchField: '#container-search',
-        selector: '.row',
-        childSelector: '.col-xs-4',
-        show: function( elem ) {
-            elem.slideDown(100);
-        },
-        hide: function( elem ) {
-            elem.slideUp( 100 );
-        }
-    })
-});
-  </script>
+//     $( '#searchable-container' ).searchable({
+//         searchField: '#container-search',
+//         selector: '.row',
+//         childSelector: '.col-xs-4',
+//         show: function( elem ) {
+//             elem.slideDown(100);
+//         },
+//         hide: function( elem ) {
+//             elem.slideUp( 100 );
+//         }
+//     })
+// });
+
+$(document).ready(function() {
+ 
+    // DataTable
+    var table = $('#DataTables_Table_0').DataTable();
+ 
+    // Apply the search
+    table.columns().every( function () {
+        var that = this;
+ 
+        $( '#search').on( 'keyup change', function () {
+            if ( that.search() !== this.value ) {
+                that
+                    .search( this.value )
+                    .draw();
+            }
+        } );
+    } );
+} );
+
+</script>
 
 <script>
 $( document ).ready(function() {

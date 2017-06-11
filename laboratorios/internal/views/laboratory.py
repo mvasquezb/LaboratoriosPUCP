@@ -23,7 +23,7 @@ def index(request,
     else:
         laboratory_list = Laboratory.objects.order_by ('name')
 
-    paginator = Paginator(laboratory_list, 3)
+    paginator = Paginator(laboratory_list, 5)
     page = request.GET.get('page')
     try:
         laboratorys = paginator.page (page)
