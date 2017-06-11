@@ -179,7 +179,7 @@
             </div>
             <p><strong>(*) Campos obligatorios</strong></p>
             <div class="col-md-offset-4">
-              <input type="submit" class="btn btn-primary" name="registrar" id="register_button" value="Guardar Cambios">
+              <input  type="submit" class="myBtn1 btn btn-primary"  data-toggle="modal" data-target="#myModal1" data-url="{{ url('internal:laboratory.edit', laboratory.id) }}" name="registrar" value="Guardar Cambios">
               <a href="{{ url('internal:laboratory.index') }}" class="btn btn-white">Cancelar</a>
             </div>
           </form>
@@ -187,6 +187,38 @@
 
       </div>
     </div>
+  </div>
+
+{# <div id="myModal1" class="modal inmodal confirm-modal-sm">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button class="close pull-right" type="button" data-dismiss="modal">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <h6 class="modal-title">Confirmar Eliminación de Laboratorios</h6>
+        </div>
+        <!-- Modal content -->
+        <div class="modal-body text-center">
+          <p>¿Seguro que quiere eliminarlo?</p>
+          <button type="button" class="confirm btn btn-danger">Editar</button>
+          <button type="button" class="span-close btn btn-primary">Cancelar</button>
+        </div>
+      </div>
+    </div>
+  </div> #}
+  <div id="myModal1" class="modal1">
+
+    <!-- Modal content -->
+    <div class="modal-content">
+      <span class="span-close close">&times;</span>
+      <div class="modeal-center-content">
+          <p>¿Seguro que desea modificarlo?</p>
+          <button type="button" class="confirm btn btn-danger">Editar</button>
+          <button type="button" class="span-close btn btn-primary">Cancelar</button>
+      </div>
+    </div>
+
   </div>
 
 {% endblock page_content %}
@@ -351,4 +383,25 @@
     //$(this).submit();
   });
   </script>
+
+<!-- original -->
+<script>
+$( document ).ready(function() {
+  $(".myBtn1").click(function() {
+    $("#myModal1").show();
+    //var delete_url = $(this).attr("data-url");
+    $(".confirm").click(function() {
+      $('#form').submit();
+    });
+  });
+
+  $(".span-close").click(function() {
+    $("#myModal1").hide();
+  });
+});
+$(".myBtn1").click(function(event) {
+  event.preventDefault();
+  return false;
+});
+</script>
 {% endblock custom_js %}
