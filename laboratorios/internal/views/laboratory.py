@@ -16,21 +16,6 @@ from .forms import LaboratoryForm
 def index(request,
           template='internal/laboratory/index.html',
           extra_context=None):
-    # search = request.GET.get('search')
-    # if search:
-    #     laboratory_list = Laboratory.objects.filter(
-    #         name__icontains=search).order_by ('name')
-    # else:
-    #     laboratory_list = Laboratory.objects.order_by ('name')
-
-    # paginator = Paginator(laboratory_list, 5)
-    # page = request.GET.get('page')
-    # try:
-    #     laboratorys = paginator.page (page)
-    # except PageNotAnInteger:
-    #     laboratorys = paginator.page(1)
-    # except EmptyPage:
-    #     laboratorys = paginator.page(paginator.num_pages)
     laboratorys = Laboratory.objects.all()
     context = {
         'laboratorys_list': laboratorys
