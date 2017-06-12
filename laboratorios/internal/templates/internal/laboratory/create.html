@@ -59,11 +59,13 @@
                       </thead>
                       <tbody>
                         {% for user in users %}
-                          <tr class="gradeX">
-                            <td>{{ user.username }}</td>
-                            <td>{{ user.email }}</td>
-                            <td><input type="checkbox" id="checkbox_users" name="{{ user.username }}" class="{{ user.pk }}"></td>
-                          </tr>
+                          {% if not user.laboratories.exists() %}
+                            <tr class="gradeX">
+                              <td>{{ user.username }}</td>
+                              <td>{{ user.email }}</td>
+                              <td><input type="checkbox" id="checkbox_users" name="{{   user.username }}" class="{{ user.pk }}"></td>
+                            </tr>
+                          {% endif %}
                         {% endfor %}
                       </tbody>
                       

@@ -58,21 +58,17 @@
                       </thead>
                       <tbody>
                         {% for user in all_users %}
-                          {% set reach_out = [] %}
-                          <tr class="gradeX">
-                            <td>{{ user.username }}</td>
-                            <td>{{ user.email }}</td>
-                            {% for selected_user in selected_users %}
-                              {% if user.pk == selected_user.pk %}
+                          {% if user.laboratories.filter(pk=laboratory.pk).exists() or (not user.laboratories.exists()) %}
+                            <tr class="gradeX">
+                              <td>{{ user.username }}</td>
+                              <td>{{ user.email }}</td>
+                              {% if user.laboratories.filter(pk=laboratory.pk).exists() %}
                                 <td><input type="checkbox" id="checkbox_users" name="{{ user.username }}" class="{{ user.pk }}" checked></td>
-                                {% if reach_out.append(True) %}{% endif %}
-                                {% break %}
+                              {% else %}
+                                <td><input type="checkbox" id="checkbox_users" name="{{ user.username }}" class="{{ user.pk }}"></td>
                               {% endif %}
-                            {% endfor %}
-                            {% if not reach_out %}
-                              <td><input type="checkbox" id="checkbox_users" name="{{ user.username }}" class="{{ user.pk }}"></td>
-                            {% endif %}
-                          </tr>
+                            </tr>
+                          {% endif %}
                         {% endfor %}
                       </tbody>
 
