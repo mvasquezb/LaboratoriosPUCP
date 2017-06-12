@@ -1,0 +1,76 @@
+{% extends 'internal/base_internal.html' %}
+
+{% block title %}{{ super() }} | Inicio{% endblock title %}
+
+{% block custom_css %}{% endblock custom_css %}
+
+{% block page_content %}
+<div class="row border-bottom white-bg dashboard-header">
+    <div class="col-md-6">
+        <h2><strong>Editar Empleado</strong></h2>
+    </div>
+</div>
+<div class="wrapper wrapper-content animated fadeInRight" >
+    <div class="col-lg-12">
+        <div class="ibox float-e-margins">
+            <div class="ibox-content">
+            {{ form.errors }}
+                <form id="myForm" action="{{ url('internal:employee.edit', custom_employee.id) }}" method="post" data-toggle="validator">
+                    {% csrf_token %}
+
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label>Nombre*</label>
+                                <input value="{{ custom_employee.first_name }}"  type="text" class="form-control" name="first_name" required data-error="El Nombre es obligatorio" placeholder="Luis Miguel">
+                                <div class="help-block with-errors"></div>
+                            </div>
+                            <div class="form-group">
+                                <label>Apellido*</label>
+                                <input value="{{ custom_employee.last_name }}" type="text" class="form-control" name="last_name" required data-error="El Apeliido es obligatorio" placeholder="Perez Machado">
+                                <div class="help-block with-errors"></div>
+                            </div>
+                            <div class="form-group">
+                                <label>Usuario*</label>
+                                <input value="{{ custom_employee.username }}" type="text" class="form-control" name="username" required data-error="El Nombre es obligatorio" placeholder="LuisPerez">
+                                <div class="help-block with-errors"></div>
+                            </div>
+                            <div class="form-group">
+                                <label>Correo*</label>
+                                <input value="{{ custom_employee.email }}" type="text" class="form-control" name="email" required data-error="El Correo es obligatorio" placeholder="test@test.com">
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <!--<div class="form-group">
+                                <label>Laboratorios</label>
+                                <select name="laboratories" class="form-control" multiple>
+                                {% for laboratory in laboratories %}
+                                    <option {{ 'selected' if (laboratory.id in selected_laboratories) }} value="{{ laboratory.id }}">{{ laboratory.name }}</option>
+                                {% endfor %}
+                                </select>
+                            </div>-->
+                            <div class="form-group">
+                                <label>Roles</label>
+                                <select name="roles" class="form-control" multiple>
+                                {% for role in roles %}
+                                     <option {{ 'selected' if (role.id in selected_roles) }} value="{{ role.id }}">{{ role.description }}</option>
+                                {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <input type="submit" value="Registrar" class="btn btn-primary">                            
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock page_content %}
+{% block base_js %}
+{{ super() }}
+{% endblock base_js %}
