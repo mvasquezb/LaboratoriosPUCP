@@ -3,6 +3,7 @@ from django.contrib.auth.models import (
     User as AuthUser,
     Permission
 )
+import os
 
 
 class Role(models.Model):
@@ -116,7 +117,7 @@ class EssayMethod(models.Model):
 
     def get_parameter(self, index):
         if index > 0 and index <= self.get_parameter_count():
-            return self.get_parameters()[index]
+            return self.get_parameters()[index - 1]
 
 
 class EssayMethodParameter(models.Model):
@@ -130,6 +131,7 @@ class EssayMethodParameter(models.Model):
 class EssayFill(models.Model):
     essay = models.ForeignKey(Essay)
     sample = models.ForeignKey('Sample')
+    quantity = models.PositiveIntegerField(default=0)
     quotation = models.ForeignKey(
         'Quotation',
         related_name='essay_fills',
@@ -169,6 +171,7 @@ class EssayFill(models.Model):
             obj_test.save()
 
 
+
 class EssayMethodFill(models.Model):
     essay_method = models.ForeignKey(
         EssayMethod,
@@ -206,8 +209,12 @@ class EssayMethodFill(models.Model):
 
 class EssayMethodParameterFill(models.Model):
     parameter = models.ForeignKey(EssayMethodParameter)
-    value = models.CharField(max_length=20)  # Is this always a numeric value ?
-    uncertainty = models.FloatField()
+    value = models.CharField(
+        max_length=20,
+        null=True,
+        blank=True
+    )  # Is this always a numeric value ?
+    uncertainty = models.FloatField(null=True, blank=True)
     essay_method = models.ForeignKey(
         EssayMethodFill,
         on_delete=models.CASCADE,
@@ -248,6 +255,8 @@ class ServiceRequest(models.Model):
     supervisor = models.ForeignKey(Employee)
     state = models.ForeignKey('ServiceRequestState')
     observations = models.CharField(max_length=500, null=True, blank=True)
+    expected_duration = models.IntegerField(default=10)
+    registered_date = models.DateTimeField(auto_now_add=True, auto_now=False)
 
     def __str__(self):
         return str(self.client) + ' | ' + str(self.state)
@@ -260,12 +269,16 @@ class ServiceRequestState(models.Model):
     def __str__(self):
         return self.description
 
+## Para el archivo adjunto
+def content_file_name(instance, filename):
+    return '/'.join(['requestFiles', str(instance.request.pk), filename])
+
 
 class RequestAttachment(models.Model):
     request = models.ForeignKey(ServiceRequest, on_delete=models.CASCADE)
-    description = models.CharField(max_length=100)
-    # file = models.FileField()  # Should we save the file in DB or in server,
-    # or at all ?
+    description = models.CharField(max_length=100, null=True, blank = True)
+    fileName =  models.CharField(max_length=100, null =True)
+    file = models.FileField(upload_to=content_file_name, null=True, blank = True)  # Should we save the file in DB or in server, or at all ?
 
 
 class ServiceContract(models.Model):
@@ -286,14 +299,15 @@ class Quotation(models.Model):
 class SampleType(models.Model):
     slug = models.CharField(max_length=50)
     name = models.CharField(max_length=100)
+    description = models.CharField(max_length=200)
 
     def __str__(self):
         return self.name
 
 
 class Sample(models.Model):
-    name = models.CharField(max_length=50)
     code = models.CharField(max_length=10)
+    name = models.CharField(max_length=50,default="default")
     sample_type = models.ForeignKey(SampleType)
     request = models.ForeignKey(ServiceRequest, on_delete=models.CASCADE)
     inventory = models.ForeignKey('Inventory', on_delete=models.CASCADE)
@@ -311,10 +325,16 @@ class Inventory(models.Model):
 
 
 class InventoryItem(models.Model):
-    name = models.CharField(max_length=100)
+    sample = models.ForeignKey(Sample)
+    # name = models.CharField(max_length=100)
     quantity = models.PositiveIntegerField()
-    location = models.CharField(max_length=200)
-    inventory = models.ForeignKey(Inventory, on_delete=models.CASCADE)
+    # location = models.CharField(max_length=200)
+    # inventory = models.ForeignKey(Inventory, on_delete=models.CASCADE)
+
+
+def make_inventoryItem(sample, quantity):
+    inventoryItem = InventoryItem(sample, quantity)
+    return inventoryItem
 
     def __str__(self):
         return self.name
@@ -322,6 +342,7 @@ class InventoryItem(models.Model):
 
 class InventoryOrder(models.Model):
     essay = models.ForeignKey(EssayFill)
+    unsettled = models.BooleanField()
 
 
 class InventoryOrderDefault(models.Model):

@@ -11,6 +11,8 @@
 
 {% block custom_js %}
 <script>
+var user_name = '{{ user.username }}';
+console.log(user_name);
 setTimeout(function() {
   toastr.options = {
     closeButton: true,
@@ -18,7 +20,7 @@ setTimeout(function() {
     showMethod: 'slideDown',
     timeOut: 4000
   };
-  toastr.success('Sistema de Gestión de Laboratorios IC-PUCP', 'Bienvenido');
+  toastr.success('Sistema de Gestión de Laboratorios IC-PUCP', 'Bienvenido ' + user_name);
 }, 1300);
 </script>
 {% endblock custom_js %}
