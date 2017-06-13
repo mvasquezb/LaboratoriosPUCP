@@ -29,12 +29,15 @@ from internal.models import *
 from internal.views.forms import *
 
 
-def index(request):
+def index(request,
+          template='internal/servicerequest/index.html',
+          extra_context=None):
     context = {
         'requests': ServiceRequest.objects.all()
     }
-    return render(request, 'internal/servicerequest/index.html', context)
-
+    if extra_context is not None:
+        context.update(extra_context)
+    return render(request, template, context)
 
 def create(request,
            pk,
@@ -327,16 +330,18 @@ def assign_employee(request,
 
 # Agregado
 def approve(request,
-                pk, template='internal/servicerequest/index.html'):
+            pk, template='internal/servicerequest/index.html'):
         service_request = ServiceRequest.objects.get(pk=pk)
-        state = ServiceRequestState.objects.get(description="Verificado")
+        state = ServiceRequestState.objects.get(description="Aprobado")
         service_request.state = state  # Le asignamos el estado de aprobado
         service_request.save()
         client = Client.objects.get(pk=service_request.client.id)
 
         service_contract = ServiceContract(client=client, request=service_request)
         service_contract.save()  # Guardamos el service_contract en la tabla "ServiceContract"
-        return redirect(reverse("internal:servicerequest.index"))
+        messages.success(request, 'Se ha aprobado la solicitud exitosamante!')
+        return redirect('internal:servicerequest.index')
+        #return redirect(reverse("internal:servicerequest.index"))
 
 
 def workload_view_per_request(request,

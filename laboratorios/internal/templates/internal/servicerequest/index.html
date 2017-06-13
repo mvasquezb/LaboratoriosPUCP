@@ -2,7 +2,9 @@
 
 {% block title %}{{ super() }} | Solicitudes{% endblock title %}
 
-{% block custom_css %}{% endblock custom_css %}
+{% block custom_css %}
+<link href="{{ static('vendors/footable/footable.core.css') }}" rel="stylesheet">
+{% endblock custom_css %}
 
 {% block page_content %}
 <div class="row border-bottom white-bg dashboard-header">
@@ -42,7 +44,7 @@
                </thead>
                <tbody>
                   {% for request in requests %}
-                    {% if request.state.description != "Verificado"  %}      <!--  Esto es para no mostrar las solicitudes que han sido aprobadas, pues se convierten en contratos-->
+                    {% if request.state.description != "Aprobado"  %}      <!--  Esto es para no mostrar las solicitudes que han sido aprobadas, pues se convierten en contratos-->
 
                     <tr>
                       <td>{{ request.id }}</td>
@@ -65,4 +67,106 @@
       </div>
    </div>
 </div>
+<div class="message-container hidden">
+  <ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} data-tags="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+  </ul>
+</div>
+
 {% endblock page_content %}
+
+
+{% block custom_js %}
+<script type="text/javascript">
+  var fill_Toastr = function(pMsg, pTypeMsg,pTitle){
+    toastr.options = {
+    closeButton: true,
+    progressBar: true,
+    showMethod: 'slideDown',
+    positionClass: "toast-bottom-right",
+    timeOut: 4000
+    };
+
+    switch(pTypeMsg){
+      case "success":
+      toastr.success(pMsg, '',pTitle);
+      break;
+
+      case "error":
+      toastr.error(pMsg, '',pTitle);
+      break;
+    }
+  }
+
+</script>
+<script src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.15/js/dataTables.bootstrap.min.js"></script>
+<script type="text/javascript">
+
+$(document).ready(function() {
+
+    // DataTable
+    var table = $('#DataTables_Table_0').DataTable({
+      "lengthChange": false,
+      "bsort":true,
+      "sDom": '<"top"i>rt<"bottom"lp><"clear">',
+      "columnDefs": [
+        { "orderable": false, "targets": 4 }
+      ],
+      "columnDefs": [
+        { "searchable": false, "targets": 0 }
+      ],
+      "sPaginationType": "full_numbers",
+      "pageLength": 6,
+      "oLanguage": {
+        "oPaginate": {
+                    "sPrevious": " Anterior ",
+                    "sNext" : " Siguiente ",
+                    "sFirst": "<<",
+                    "sLast": ">>"
+                    },
+        "sZeroRecords":    "No se encontraron resultados",
+        "sEmptyTable":     "Ningún dato disponible en esta tabla",
+        "sInfo":           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+        "sInfoEmpty":      "Mostrando registros del 0 al 0 de un total de 0 registros",
+        "sInfoFiltered":   "(filtrado de un total de _MAX_ registros)",
+        "oAria": {
+        "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
+        "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+    }
+
+       }
+
+    });
+
+    $('#mysearch').keyup(function(){
+      table.search($(this).val()).draw() ;
+})
+} );
+
+</script>
+
+<script>
+$( document ).ready(function() {
+  $(".myBtn1").click(function() {
+    $("#myModal1").show();
+    var delete_url = $(this).attr("data-url");
+    $(".delete-laboratory").click(function() {
+      window.location.href = delete_url;
+    });
+  });
+
+  $(".span-close").click(function() {
+    $("#myModal1").hide();
+  });
+});
+$(".myBtn1").click(function(event) {
+  event.preventDefault();
+  return false;
+});
+</script>
+
+
+{% endblock custom_js %}
