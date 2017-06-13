@@ -260,7 +260,6 @@ class ServiceRequest(models.Model):
     def __str__(self):
         return str(self.client) + ' | ' + str(self.state)
 
-
 class ServiceRequestState(models.Model):
     slug = models.CharField(max_length=20)
     description = models.CharField(max_length=20)
