@@ -65,8 +65,7 @@ class Laboratory(models.Model):
         'Inventory',
         related_name='laboratories',
         blank=True
-    )
-
+    )    
 
 class Essay(models.Model):
     name = models.CharField(max_length=100)
