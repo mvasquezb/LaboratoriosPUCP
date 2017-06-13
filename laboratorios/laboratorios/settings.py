@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_jinja',
     'safedelete',
+    'auditlog',
     'internal',
 ]
 
