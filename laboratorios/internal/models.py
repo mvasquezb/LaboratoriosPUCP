@@ -47,7 +47,7 @@ class LaboratoryServiceHours(models.Model):
 
 
 class Laboratory(models.Model):
-    name = models.CharField(max_length=50)
+    name = models.CharField(max_length=50, unique=True)
     employees = models.ManyToManyField(
         'Employee',
         related_name='laboratories',
@@ -66,6 +66,9 @@ class Laboratory(models.Model):
         related_name='laboratories',
         blank=True
     )
+    def save(self, *args, **kwargs):
+        self.validate_unique()
+        super(Laboratory,self).save(*args, **kwargs)
 
 
 class Essay(models.Model):
