@@ -47,7 +47,7 @@ class LaboratoryServiceHours(models.Model):
 
 
 class Laboratory(models.Model):
-    name = models.CharField(max_length=50)
+    name = models.CharField(max_length=50, unique=True)
     employees = models.ManyToManyField(
         'Employee',
         related_name='laboratories',
@@ -65,8 +65,7 @@ class Laboratory(models.Model):
         'Inventory',
         related_name='laboratories',
         blank=True
-    )
-
+    )    
 
 class Essay(models.Model):
     name = models.CharField(max_length=100)
