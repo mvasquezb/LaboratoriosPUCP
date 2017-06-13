@@ -65,11 +65,7 @@ class Laboratory(models.Model):
         'Inventory',
         related_name='laboratories',
         blank=True
-    )
-    def save(self, *args, **kwargs):
-        self.validate_unique()
-        super(Laboratory,self).save(*args, **kwargs)
-
+    )    
 
 class Essay(models.Model):
     name = models.CharField(max_length=100)
