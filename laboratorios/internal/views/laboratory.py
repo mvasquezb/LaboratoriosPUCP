@@ -35,7 +35,8 @@ def create(request,
             messages.success(request, 'Se ha creado el laboratorio exitosamante!')
             return redirect('internal:laboratory.index')
         else:
-            return HttpResponse(str(form.errors))
+            messages.error(request, 'Ese nombre de laboratorio ya existe')
+            return HttpResponse(status=204)
     else:
         users = Employee.objects.all()
         service_hours = LaboratoryServiceHours.objects.all()
