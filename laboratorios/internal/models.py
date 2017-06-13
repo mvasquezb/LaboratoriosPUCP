@@ -7,36 +7,46 @@ from safedelete.models import (
     SOFT_DELETE_CASCADE,
     SafeDeleteModel
 )
+from auditlog.registry import auditlog
+from auditlog.models import AuditlogHistoryField
 
 
+@auditlog.register()
 class Role(SafeDeleteModel):
     _safedelete_policy = SOFT_DELETE_CASCADE
 
+    audit_log = AuditlogHistoryField()
     permissions = models.ManyToManyField(Permission, blank=True)
     name = models.CharField(max_length=100)
     description = models.CharField(max_length=100)
 
 
+@auditlog.register()
 class BasicUser(AuthUser, SafeDeleteModel):
     _safedelete_policy = SOFT_DELETE_CASCADE
 
+    audit_log = AuditlogHistoryField()
     roles = models.ManyToManyField(Role)
 
     def __str__(self):
         return self.get_full_name() or self.username
 
 
+@auditlog.register()
 class Client(BasicUser):
     _safedelete_policy = SOFT_DELETE_CASCADE
 
+    # audit_log = AuditlogHistoryField()
     code = models.CharField(max_length=10)
     doc_number = models.IntegerField()
     phone_number = models.CharField(max_length=20)
 
 
+@auditlog.register()
 class Employee(BasicUser):
     _safedelete_policy = SOFT_DELETE_CASCADE
 
+    # audit_log = AuditlogHistoryField()
     essay_methods = models.ManyToManyField(
         'EssayMethod',
         related_name='employees',
@@ -49,9 +59,11 @@ class Employee(BasicUser):
     )
 
 
+@auditlog.register()
 class LaboratoryServiceHours(SafeDeleteModel):
     _safedelete_policy = SOFT_DELETE_CASCADE
 
+    audit_log = AuditlogHistoryField()
     start_time = models.PositiveIntegerField()
     end_time = models.PositiveIntegerField()
 
@@ -59,9 +71,11 @@ class LaboratoryServiceHours(SafeDeleteModel):
         return str(self.start_time) + ' - ' + str(self.end_time)
 
 
+@auditlog.register()
 class Laboratory(SafeDeleteModel):
     _safedelete_policy = SOFT_DELETE_CASCADE
 
+    audit_log = AuditlogHistoryField()
     name = models.CharField(max_length=50, unique=True)
     employees = models.ManyToManyField(
         'Employee',
@@ -83,9 +97,11 @@ class Laboratory(SafeDeleteModel):
     )
 
 
+@auditlog.register()
 class Essay(SafeDeleteModel):
     _safedelete_policy = SOFT_DELETE_CASCADE
 
+    audit_log = AuditlogHistoryField()
     name = models.CharField(max_length=100)
     description = models.CharField(max_length=100)
     essay_methods = models.ManyToManyField(
@@ -108,9 +124,11 @@ class Essay(SafeDeleteModel):
             return self.get_essay_methods()[index - 1]
 
 
+@auditlog.register()
 class EssayMethod(SafeDeleteModel):
     _safedelete_policy = SOFT_DELETE_CASCADE
 
+    audit_log = AuditlogHistoryField()
     name = models.CharField(max_length=100)
     description = models.CharField(max_length=100)
     price = models.FloatField()
@@ -139,9 +157,11 @@ class EssayMethod(SafeDeleteModel):
             return self.get_parameters()[index - 1]
 
 
+@auditlog.register()
 class EssayMethodParameter(SafeDeleteModel):
     _safedelete_policy = SOFT_DELETE_CASCADE
 
+    audit_log = AuditlogHistoryField()
     description = models.CharField(max_length=100)
     unit = models.CharField(max_length=20)
 
@@ -149,9 +169,11 @@ class EssayMethodParameter(SafeDeleteModel):
         return self.description + ' | ' + self.unit
 
 
+@auditlog.register()
 class EssayFill(SafeDeleteModel):
     _safedelete_policy = SOFT_DELETE_CASCADE
 
+    audit_log = AuditlogHistoryField()
     essay = models.ForeignKey(Essay)
     sample = models.ForeignKey('Sample')
     quantity = models.PositiveIntegerField(default=0)
@@ -194,9 +216,11 @@ class EssayFill(SafeDeleteModel):
             obj_test.save()
 
 
+@auditlog.register()
 class EssayMethodFill(SafeDeleteModel):
     _safedelete_policy = SOFT_DELETE_CASCADE
 
+    audit_log = AuditlogHistoryField()
     essay_method = models.ForeignKey(
         EssayMethod,
         on_delete=models.CASCADE,
@@ -231,9 +255,11 @@ class EssayMethodFill(SafeDeleteModel):
             obj_par.save()
 
 
+@auditlog.register()
 class EssayMethodParameterFill(SafeDeleteModel):
     _safedelete_policy = SOFT_DELETE_CASCADE
 
+    audit_log = AuditlogHistoryField()
     parameter = models.ForeignKey(EssayMethodParameter)
     value = models.CharField(
         max_length=20,
@@ -260,9 +286,11 @@ class EssayMethodParameterFill(SafeDeleteModel):
         self.save()
 
 
+@auditlog.register()
 class ExternalProvider(SafeDeleteModel):
     _safedelete_policy = SOFT_DELETE_CASCADE
 
+    audit_log = AuditlogHistoryField()
     name = models.CharField(max_length=100)
     description = models.CharField(max_length=200)
     services = models.ManyToManyField('ExternalProviderService', blank=True)
@@ -271,18 +299,22 @@ class ExternalProvider(SafeDeleteModel):
         return self.name
 
 
+@auditlog.register()
 class ExternalProviderService(SafeDeleteModel):
     _safedelete_policy = SOFT_DELETE_CASCADE
 
+    audit_log = AuditlogHistoryField()
     description = models.CharField(max_length=500)
 
     def __str__(self):
         return self.description
 
 
+@auditlog.register()
 class ServiceRequest(SafeDeleteModel):
     _safedelete_policy = SOFT_DELETE_CASCADE
 
+    audit_log = AuditlogHistoryField()
     client = models.ForeignKey(Client, on_delete=models.CASCADE)
     supervisor = models.ForeignKey(Employee)
     state = models.ForeignKey('ServiceRequestState')
@@ -294,9 +326,11 @@ class ServiceRequest(SafeDeleteModel):
         return str(self.client) + ' | ' + str(self.state)
 
 
+@auditlog.register()
 class ServiceRequestState(SafeDeleteModel):
     _safedelete_policy = SOFT_DELETE_CASCADE
 
+    audit_log = AuditlogHistoryField()
     slug = models.CharField(max_length=20)
     description = models.CharField(max_length=20)
 
@@ -309,39 +343,49 @@ def content_file_name(instance, filename):
     return '/'.join(['requestFiles', str(instance.request.pk), filename])
 
 
+@auditlog.register()
 class RequestAttachment(SafeDeleteModel):
     _safedelete_policy = SOFT_DELETE_CASCADE
 
+    audit_log = AuditlogHistoryField()
     request = models.ForeignKey(ServiceRequest, on_delete=models.CASCADE)
     description = models.CharField(max_length=100, null=True, blank=True)
     fileName = models.CharField(max_length=100, null=True)
     file = models.FileField(upload_to=content_file_name, null=True, blank=True)
 
 
+@auditlog.register()
 class ServiceContract(SafeDeleteModel):
     _safedelete_policy = SOFT_DELETE_CASCADE
 
+    audit_log = AuditlogHistoryField()
     client = models.ForeignKey(Client, on_delete=models.CASCADE)
     request = models.ForeignKey(ServiceRequest, on_delete=models.CASCADE)
 
 
+@auditlog.register()
 class ServiceContractModification(SafeDeleteModel):
     _safedelete_policy = SOFT_DELETE_CASCADE
 
+    audit_log = AuditlogHistoryField()
     contract = models.ForeignKey(ServiceContract, on_delete=models.CASCADE)
     description = models.CharField(max_length=100)
 
 
 # Cotización
+@auditlog.register()
 class Quotation(SafeDeleteModel):
     _safedelete_policy = SOFT_DELETE_CASCADE
 
+    audit_log = AuditlogHistoryField()
     request = models.ForeignKey(ServiceRequest, on_delete=models.CASCADE)
 
 
+@auditlog.register()
 class SampleType(SafeDeleteModel):
     _safedelete_policy = SOFT_DELETE_CASCADE
 
+    audit_log = AuditlogHistoryField()
     slug = models.CharField(max_length=50)
     name = models.CharField(max_length=100)
     description = models.CharField(max_length=200)
@@ -350,9 +394,11 @@ class SampleType(SafeDeleteModel):
         return self.name
 
 
+@auditlog.register()
 class Sample(SafeDeleteModel):
     _safedelete_policy = SOFT_DELETE_CASCADE
 
+    audit_log = AuditlogHistoryField()
     code = models.CharField(max_length=10)
     name = models.CharField(max_length=50, default="default")
     sample_type = models.ForeignKey(SampleType)
@@ -363,9 +409,11 @@ class Sample(SafeDeleteModel):
         return self.name + ' | ' + str(self.sample_type)
 
 
+@auditlog.register()
 class Inventory(SafeDeleteModel):
     _safedelete_policy = SOFT_DELETE_CASCADE
 
+    audit_log = AuditlogHistoryField()
     name = models.CharField(max_length=100)
     location = models.CharField(max_length=200)
 
@@ -373,32 +421,33 @@ class Inventory(SafeDeleteModel):
         return self.name
 
 
+@auditlog.register()
 class InventoryItem(SafeDeleteModel):
     _safedelete_policy = SOFT_DELETE_CASCADE
 
+    audit_log = AuditlogHistoryField()
     sample = models.ForeignKey(Sample)
     # name = models.CharField(max_length=100)
     quantity = models.PositiveIntegerField()
     # location = models.CharField(max_length=200)
     # inventory = models.ForeignKey(Inventory, on_delete=models.CASCADE)
 
-
-def make_inventoryItem(sample, quantity):
-    inventoryItem = InventoryItem(sample, quantity)
-    return inventoryItem
-
-    def __str__(self):
-        return self.name
+    # def __str__(self):
+    #     return self.name
 
 
+@auditlog.register()
 class InventoryOrder(SafeDeleteModel):
     _safedelete_policy = SOFT_DELETE_CASCADE
 
+    audit_log = AuditlogHistoryField()
     essay = models.ForeignKey(EssayFill)
     unsettled = models.BooleanField()
 
 
+@auditlog.register()
 class InventoryOrderDefault(SafeDeleteModel):
     _safedelete_policy = SOFT_DELETE_CASCADE
 
+    audit_log = AuditlogHistoryField()
     detail = models.CharField(max_length=100)
