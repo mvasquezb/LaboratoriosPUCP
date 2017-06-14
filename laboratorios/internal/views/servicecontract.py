@@ -27,25 +27,10 @@ from django.core.urlresolvers import reverse_lazy
 
 
 def index(request, template='internal/servicecontract/index.html', extra_context=None):
-    search = request.GET.get('search')
-    if search:
-        servicecontract_list = ServiceContract.objects.filter(
-            client__username=search)     # Filtramos por el campo client.username de la clase ServiceContract
-    else:
-        servicecontract_list = ServiceContract.objects.order_by('id')
 
-    paginator = Paginator(servicecontract_list, 3)     # Esto es para mostrar la lista en 3 paginas
-    page = request.GET.get('page')
-    try:
-        contracts = paginator.page(page)
-    except PageNotAnInteger:
-        contracts = paginator.page(1)
-    except EmptyPage:
-        contracts = paginator.page(paginator.num_pages)
-
+    contracts = ServiceContract.objects.all()
     context = {
         'servicecontract_list': contracts,
-        'paginator': paginator,
     }
 
     if extra_context is not None:
