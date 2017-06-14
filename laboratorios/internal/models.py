@@ -76,9 +76,6 @@ class Employee(BasicUser):
         blank=True
     )
 
-@auditlog.register()
-class LaboratoryServiceHours(SafeDeleteModel):
-    _safedelete_policy = SOFT_DELETE_CASCADE
 
 @auditlog.register()
 class LaboratoryServiceHours(SafeDeleteModel):
@@ -478,10 +475,6 @@ class Quotation(SafeDeleteModel):
         auto_now=False,
         blank=True
     )
-
-@auditlog.register()
-class SampleType(SafeDeleteModel):
-    _safedelete_policy = SOFT_DELETE_CASCADE
 
 @auditlog.register()
 class SampleType(SafeDeleteModel):
