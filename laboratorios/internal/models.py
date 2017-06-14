@@ -22,14 +22,15 @@ class Role(SafeDeleteModel):
 
 
 @auditlog.register()
-class BasicUser(AuthUser, SafeDeleteModel):
+class BasicUser(SafeDeleteModel):
     _safedelete_policy = SOFT_DELETE_CASCADE
 
     audit_log = AuditlogHistoryField()
+    user = models.OneToOneField(AuthUser, on_delete=models.PROTECT)
     roles = models.ManyToManyField(Role)
 
     def __str__(self):
-        return self.get_full_name() or self.username
+        return self.user.get_full_name() or self.user.username
 
 
 @auditlog.register()
