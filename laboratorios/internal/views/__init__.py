@@ -8,3 +8,4 @@ from .servicerequest import *
 from .inventoryOrder import *
 from .servicecontract import *
 from .sampleType import *
+from .essay import *

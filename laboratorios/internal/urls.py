@@ -189,5 +189,23 @@ urlpatterns = [
     url('^sampleType/delete/(?P<id>\d+)/?$',
         views.sampleType.delete,
         name='sampleType.delete'),
+    #
+    # Essay
+    #
+    url('^essay/create$',
+        views.essay.create,
+        name='essay.create'),
+    url('^essay/show/(?P<pk>\d+)$',
+        views.essay.show,
+        name='essay.show'),
+    url('^essay/edit/(?P<pk>\d+)$',
+        views.essay.edit,
+        name='essay.edit'),
+    url('^essay/index$',
+        views.essay.index,
+        name='essay.index'),
+    url('^essay/delete/(?P<pk>\d+)$',
+        views.essay.delete,
+        name='essay.delete'),    
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

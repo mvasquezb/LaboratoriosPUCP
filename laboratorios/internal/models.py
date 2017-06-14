@@ -71,6 +71,7 @@ class Laboratory(models.Model):
 class Essay(models.Model):
     name = models.CharField(max_length=100)
     description = models.CharField(max_length=100)
+    registered_date = models.DateTimeField(auto_now_add=True, auto_now=False)
     essay_methods = models.ManyToManyField(
         'EssayMethod',
         related_name='essays',
