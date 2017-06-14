@@ -19,7 +19,7 @@ def index(request,
     sample_types = SampleType.objects.order_by('name')
 
     context = {
-        'sampleType_list': sample_types,
+        'sample_types': sample_types,
     }
     if extra_context is not None:
         context.update(extra_context)
