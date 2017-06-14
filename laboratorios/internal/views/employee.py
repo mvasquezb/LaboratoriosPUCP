@@ -15,26 +15,10 @@ from internal.views.forms import EmployeeForm
 def index(request,
           template='internal/employee/index.html',
           extra_context=None):
-    search = request.GET.get('search')
-    if search:
-        employee_list = Employee.objects.filter(
-            username__icontains=search
-        ).order_by('username')
-    else:
-        employee_list = Employee.objects.order_by('username')
-
-    paginator = Paginator(employee_list, 3)
-    page = request.GET.get('page')
-    try:
-        employees = paginator.page(page)
-    except PageNotAnInteger:
-        employees = paginator.page(1)
-    except EmptyPage:
-        employees = paginator.page(paginator.num_pages)
+    employee_list = Employee.objects.order_by('user__username')
 
     context = {
-        'employees_list': employees,
-        'paginator': paginator,
+        'employees_list': employee_list,
     }
     if extra_context is not None:
         context.update(extra_context)
