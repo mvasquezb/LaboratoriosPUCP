@@ -40,6 +40,9 @@ class EmployeeForm(ModelForm):
 class UserCreationForm(auth_forms.UserCreationForm):
     def __init__(self, *args, **kwargs):
         super(UserCreationForm, self).__init__(*args, **kwargs)
+        self.fields['first_name'].required = True
+        self.fields['last_name'].required = True
+        self.fields['email'].required = True
         if self.data and self.data.get('password1'):
             self.data = copy.copy(self.data)
             self.data['password2'] = self.data['password1']
@@ -96,7 +99,7 @@ class ClientForm(ModelForm):
     class Meta:
         model = Client
         # fields = ['doc_number', 'username', 'phone_number']
-        exclude = ()
+        fields = ('doc_number', 'phone_number')
 
 
 class ServiceRequestForm(ModelForm):

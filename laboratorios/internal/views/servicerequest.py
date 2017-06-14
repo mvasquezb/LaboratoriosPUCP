@@ -63,18 +63,28 @@ def create(request,
 
 def select_client(request,
                   template='internal/servicerequest/select_client.html'):
-    types = Client.objects.all().order_by('doc_number', 'username')
-    context = {'client_list': types}
+    clients = Client.objects.all().order_by('doc_number', 'user__username')
+    context = {'client_list': clients}
     return render(request, template, context)
 
 
 def create_client(request,
                   template='internal/servicerequest/create_client.html'):
+    user_form = UserCreationForm(request.POST or None)
     form = ClientForm(request.POST or None)
-    context = {'form': form}
-    if form.is_valid():
-        new_client = form.save()
-        return redirect('internal:servicerequest.create', new_client.pk)
+    context = {
+        'form': form,
+        'user_form': user_form,
+    }
+    if request.method == 'POST':
+        if user_form.is_valid() and form.is_valid():
+            new_user = user_form.save()
+            form.instance.user = new_user
+            new_client = form.save()
+            return redirect('internal:servicerequest.create', new_client.pk)
+        else:
+            # Show errors
+            pass
     return render(request, template, context)
 
 
@@ -357,7 +367,7 @@ def workload_view_per_request(request,
 
         my_dict={
         "id": service_request_list[i].id,
-        "title": "Cliente" + service_request_list[i].client.get_full_name(),
+        "title": "Cliente" + service_request_list[i].client.user.get_full_name(),
         "start_date": date_in_service.strftime("%m/%d/%Y"),
         "end_date": date_in_service.replace(day=date_in_service.day+service_request_list[i].expected_duration).strftime("%m/%d/%Y"),
         "value": 67,
