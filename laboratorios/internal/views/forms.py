@@ -190,3 +190,13 @@ class SampleTypeForm(ModelForm):
     class Meta:
         model = SampleType
         exclude = ['slug']
+
+class InventoryOrderForm(ModelForm):
+    class Meta:
+        model = InventoryOrder
+        fields = ['essay', 'unsettled']
+
+class InventoryOrderEditForm(ModelForm):
+    class Meta:
+        model = InventoryOrder
+        fields = ('essay',)

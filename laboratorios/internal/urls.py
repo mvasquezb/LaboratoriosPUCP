@@ -83,16 +83,27 @@ urlpatterns = [
     url('^inventoryOrder/?$',
         views.inventoryOrder.index,
         name='inventoryOrder.index'),
+    url('^inventoryOrder/create/?$',
+        views.inventoryOrder.create,
+        name='inventoryOrder.create'),
+    url('^inventoryOrder/edit/(?P<pk>\d+)$',
+        views.inventoryOrder.edit,
+        name='inventoryOrder.edit'),
     url('^inventoryOrder/show/(?P<pk>\d+)$',
         views.inventoryOrder.show,
         name='inventoryOrder.show'),
+    url('^inventoryOrder/check/?$',
+        views.inventoryOrder.check,
+        name='inventoryOrder.check'),
     url('^inventoryOrder/approve/(?P<pk>\d+)$',
         views.inventoryOrder.approve,
         name='inventoryOrder.approve'),
     url('^inventoryOrder/reject/(?P<pk>\d+)$',
         views.inventoryOrder.reject,
         name='inventoryOrder.reject'),
-
+    url('^inventoryOrder/delete/(?P<pk>\d+)$',
+        views.inventoryOrder.delete,
+        name='inventoryOrder.delete'),
     #
     # ServiceRequest
     #
