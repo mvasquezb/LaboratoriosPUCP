@@ -35,9 +35,14 @@ def create(request,
             messages.success(request, 'Se ha creado un nuevo laboratorio exitosamante!')
             return redirect('internal:laboratory.index')
         else:
-            messages.error(request, 'Ya existe un laboratorio con el mismo nombre, ingrese otro')
-            #return HttpResponse(status=204)
-            return redirect('internal:laboratory.create')
+            #print(form.errors)
+            for field,errors in form.errors.items():
+                if (field=="name") and list(errors)==['Ya existe Laboratory con este Name.']:
+                    messages.error(request, 'Este nombre de laboratorio ya existe, pruebe otro')
+                    return redirect('internal:laboratory.create')
+            
+            return HttpResponse(form.errors)
+            
     else:
         users = Employee.objects.all()
         service_hours = LaboratoryServiceHours.objects.all()

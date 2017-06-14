@@ -320,11 +320,6 @@
       $form.append(essay);
     });
 
-    //usando ajax para mandar la data al view
-    $.post("{{ url('internal:laboratory.create') }}",data,function(e){
-      //aqui se manda el mensaje
-    });
-
     //$form.submit();
     //console.log($form.serialize());
   });
