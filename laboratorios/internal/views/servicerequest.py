@@ -20,10 +20,9 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.utils import timezone
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.conf import settings
-from django.core.files.storage import FileSystemStorage
-from django.http import HttpResponse, HttpResponseRedirect
-from django.contrib import messages
+# from django.conf import settings
+# from django.core.files.storage import FileSystemStorage
+from django.http import HttpResponse
 
 from internal.models import *
 from internal.views.forms import *
@@ -337,131 +336,153 @@ def assign_employee(request,
 
 # Agregado
 def approve(request,
-                pk, template='internal/servicerequest/index.html'):
+            pk, template='internal/servicerequest/index.html'):
         service_request = ServiceRequest.objects.get(pk=pk)
         state = ServiceRequestState.objects.get(description="Verificado")
         service_request.state = state  # Le asignamos el estado de aprobado
         service_request.save()
         client = Client.objects.get(pk=service_request.client.id)
 
-        service_contract = ServiceContract(client=client, request=service_request)
-        service_contract.save()  # Guardamos el service_contract en la tabla "ServiceContract"
+        service_contract = ServiceContract(
+            client=client,
+            request=service_request
+        )
+        service_contract.save()
         return redirect(reverse("internal:servicerequest.index"))
 
 
 def workload_view_per_request(request,
-    template='internal/servicerequest/workload_view_per_request.html'):
-    month_names=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre']
-    service_request_list=ServiceRequest.objects.all()
-    my_data=[]
+                              template='internal/servicerequest/' +
+                                       'workload_view_per_request.html'):
+    month_names = [
+        'Enero',
+        'Febrero',
+        'Marzo',
+        'Abril',
+        'Mayo',
+        'Junio',
+        'Julio',
+        'Agosto',
+        'Septiembre',
+        'Octubre',
+        'Noviembre',
+        'Diciembre'
+    ]
+    service_request_list = ServiceRequest.objects.all()
+    my_data = []
     now = timezone.localtime(timezone.now())
-    for i in range(0,len(service_request_list)):
+    for i in range(0, len(service_request_list)):
         date_in_service = service_request_list[i].registered_date
-        #date_in_service.strftime("%d/%m/%Y")
-        #date_in_service.replace(day=date_in_service.day+service_request_list[i].expected_duration).strftime("%d/%m/%Y")
+        # date_in_service.strftime("%d/%m/%Y")
+        # date_in_service.replace(day=date_in_service.day+service_request_list[i].expected_duration).strftime("%d/%m/%Y")
 
         # progresion calculation
+        expected_duration = service_request_list[i].expected_duration
         delta = now - date_in_service
-        total = int(100*delta.days/service_request_list[i].expected_duration)
+        total = 100 * delta.days / expected_duration
+        total = int(total)
+        end_date = date_in_service.replace(
+            day=date_in_service.day + expected_duration
+        )
+        client = service_request_list[i].client
 
-
-        my_dict={
-        "id": service_request_list[i].id,
-        "title": "Cliente" + service_request_list[i].client.user.get_full_name(),
-        "start_date": date_in_service.strftime("%m/%d/%Y"),
-        "end_date": date_in_service.replace(day=date_in_service.day+service_request_list[i].expected_duration).strftime("%m/%d/%Y"),
-        "value": 67,
-        "term": "Short Term",
-        "completion_percentage": total,
-        "color": "#770051",
+        my_dict = {
+            "id": service_request_list[i].id,
+            "title": "Cliente " + client.user.get_full_name(),
+            "start_date": date_in_service.strftime("%m/%d/%Y"),
+            "end_date": end_date.strftime("%m/%d/%Y"),
+            "value": 67,
+            "term": "Short Term",
+            "completion_percentage": total,
+            "color": "#770051",
         }
         my_data.append(my_dict)
     js_data = simplejson.dumps(my_data)
-    return render(request, template, {'js_data':js_data,'actual_month':month_names[now.month-1] + " " + str(now.year)})
+    context = {
+        'js_data': js_data,
+        'actual_month': month_names[now.month - 1] + " " + str(now.year)
+    }
+    return render(request, template, context)
 
 
-def upload(request,id):
-    if ("b_cancel" in request.POST):
-        return redirect('internal:serviceRequest.attachmentList', id)
-
-    if ("b_upload" in request.POST):
-        if (len(request.FILES) != 0):
-            if request.method == 'POST' and request.FILES['myfile']:
-                myfile = request.FILES['myfile']
-                if len(myfile.name) < 55:
-                    #fs = FileSystemStorage()
-                    sr_object = ServiceRequest.objects.get(pk=id)
-                    description = str(request.POST.get('text_description'))
-                    requestAttach= RequestAttachment.objects.create(request =sr_object,description = description,fileName="default")
-                    fs = requestAttach.file
-                    filename = fs.save(myfile.name, myfile)
-                    requestAttach.fileName = requestAttach.file.name.split('/')[-1]
-                    requestAttach.save()
-                    messages.success(request, 'Se ha subido el archivo '+'"'+ requestAttach.fileName + '"' + ' exitosamente!')
-                    return redirect('internal:serviceRequest.attachmentList', id)
-                else:
-                    messages.error(request,'El nombre del archivo que intentó subir no debe exceder los 50 caracteres!')
-                    return redirect('internal:serviceRequest.upload', id)
-        else:
+def upload(request, id):
+    if request.method == 'POST':
+        if not request.FILES.get('myfile'):
             messages.error(request, 'Debe seleccionar un archivo!')
             return redirect('internal:serviceRequest.upload', id)
-    else:
-        return render(request, 'internal/serviceRequest/attachFile.html')
-    #else:
+
+        myfile = request.FILES['myfile']
+        if len(myfile.name) >= 55:
+            messages.error(request, 'El nombre del archivo que intentó subir no debe exceder los 50 caracteres!')
+            return redirect('internal:serviceRequest.upload', id)
+
+        # fs = FileSystemStorage()
+        sr_object = ServiceRequest.objects.get(pk=id)
+        description = request.POST.get('text_description')
+        requestAttach = RequestAttachment.objects.create(
+            request=sr_object,
+            description=description,
+            fileName="default"
+        )
+        fs = requestAttach.file
+        filename = fs.save(myfile.name, myfile)
+        requestAttach.fileName = requestAttach.file.name.split('/')[-1]
+        requestAttach.save()
+        messages.success(
+            request,
+            'Se ha subido el archivo "' +
+            requestAttach.fileName +
+            '" exitosamente!'
+        )
+        return redirect('internal:serviceRequest.attachmentList', id)
+
+    return render(request, 'internal/serviceRequest/attachFile.html')
+    # else:
     #    ra = RequestAttachment.objects.get(description = 'baka5')
     #    filename = ra.file.name.split('/')[-1]
     #    response = HttpResponse(ra.file, content_type='text/plain')
     #    response['Content-Disposition'] = 'attachment; filename=%s' % filename
 
-     #   return response
- #       return render(request, 'internal/serviceRequest/attachFile.html')
+    #    return response
+    #    return render(request, 'internal/serviceRequest/attachFile.html')
 
- #   return redirect('internal:serviceRequest.attachmentList',id)
-    #return render(request, 'internal/serviceRequest/attachFile.html')
+    # return redirect('internal:serviceRequest.attachmentList',id)
+    # return render(request, 'internal/serviceRequest/attachFile.html')
 
-def attachmentList(request,id):
-    search = request.GET.get('search')
-    sr_object = ServiceRequest.objects.get(pk=id)
-    if search:
-        requestAttachment_list = RequestAttachment.objects.filter(
-            request=sr_object, fileName__icontains = search)
-    else:
-        requestAttachment_list = RequestAttachment.objects.filter(
-            request=sr_object)
 
-    paginator = Paginator(requestAttachment_list, 3)
-    pageNumber = request.GET.get('page')
-    try:
-        requestAttachmentPageCurrent = paginator.page(pageNumber)
-    except PageNotAnInteger:
-        requestAttachmentPageCurrent = paginator.page(1)
-    except EmptyPage:
-        requestAttachmentPageCurrent = paginator.page(paginator.num_pages)
+def attachmentList(request, id):
+    sr_object = get_object_or_404(ServiceRequest, pk=id)
+    requestAttachment_list = RequestAttachment.objects.filter(
+        request=sr_object
+    )
 
-    context = {'serviceRequest': sr_object,
-        'requestAttachment_list': requestAttachmentPageCurrent,
-        'paginator': paginator,
+    context = {
+        'serviceRequest': sr_object,
+        'requestAttachment_list': requestAttachment_list,
     }
     template = 'internal/serviceRequest/files.html'
     return render(request, template, context)
 
-def showAttachedFile(request,id):
+
+def showAttachedFile(request, id):
     template = 'internal/serviceRequest/showAttachedFile.html'
     context = {
         'selected_file': RequestAttachment.objects.get(pk=id),
     }
     return render(request, template, context)
 
-def deleteAttachedFile(request,id):
+
+def deleteAttachedFile(request, id):
     requestAttached = RequestAttachment.objects.get(pk=id)
     idRequest = requestAttached.request.pk
-    filename = requestAttached.fileName;
+    filename = requestAttached.fileName
     requestAttached.file.delete()
     requestAttached.delete()
-    messages.success(request, 'El archivo ' + '"' + filename + '"' +' se eliminó exitosamente!')
-    return redirect('internal:serviceRequest.attachmentList',idRequest)
+    messages.success(request, 'El archivo "' + filename + '" se eliminó exitosamente!')
+    return redirect('internal:serviceRequest.attachmentList', idRequest)
 
-def downloadAttachedFile(request,id):
+
+def downloadAttachedFile(request, id):
     requestAttachment = RequestAttachment.objects.get(pk=id)
     filename = requestAttachment.file.name.split('/')[-1]
     response = HttpResponse(requestAttachment.file, content_type='text/plain')
