@@ -83,6 +83,7 @@ def create_client(request,
             return redirect('internal:servicerequest.create', new_client.pk)
         else:
             # Show errors
+            print(user_form.errors, form.errors)
             pass
     return render(request, template, context)
 
