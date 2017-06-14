@@ -3,30 +3,60 @@ from internal.models import *
 from django import forms
 from django.utils.translation import ugettext_lazy as _
 from django.core.exceptions import NON_FIELD_ERRORS
-from django.forms import ModelForm, Textarea, CheckboxSelectMultiple, TextInput
-from django.forms import ModelMultipleChoiceField
+from django.forms import (
+    ModelForm,
+    Textarea,
+    CheckboxSelectMultiple,
+    TextInput,
+    ModelMultipleChoiceField
+)
 from django.forms import inlineformset_factory
 from django import forms
 from django.forms.models import BaseInlineFormSet
+from django.contrib.auth import forms as auth_forms
+
+import copy
 
 
 class EmployeeForm(ModelForm):
+    laboratories = forms.ModelMultipleChoiceField(
+        queryset=Laboratory.objects.all()
+    )
+
     def __init__(self, *args, **kwargs):
         super(EmployeeForm, self).__init__(*args, **kwargs)
         self.fields['roles'].required = False
-        self.fields['username'].required = True
-        self.fields['password'].required = False
+        self.fields['laboratories'].required = False
 
     class Meta:
         model = Employee
-        fields = ['username', 'email', 'roles',
-                  'password', 'first_name', 'last_name']
+        fields = ['roles']
 
-    """laboratories = forms.ModelMultipleChoiceField(queryset=Laboratory.objects.all())
+    def _save_m2m(self, *args, **kwargs):
+        super(EmployeeForm, self)._save_m2m(*args, **kwargs)
+        self.instance.laboratories.set(self.cleaned_data['laboratories'])
 
-    def save_m2m(self, *args, **kwargs):
-        super().save_m2m()
-        self.instance.laboratories.set(self.cleaned_data['laboratories'])"""
+
+class UserCreationForm(auth_forms.UserCreationForm):
+    def __init__(self, *args, **kwargs):
+        super(UserCreationForm, self).__init__(*args, **kwargs)
+        self.fields['first_name'].required = True
+        self.fields['last_name'].required = True
+        self.fields['email'].required = True
+        if self.data and self.data.get('password1'):
+            self.data = copy.copy(self.data)
+            self.data['password2'] = self.data['password1']
+
+    class Meta(auth_forms.UserCreationForm.Meta):
+        fields = ('username', 'first_name', 'last_name', 'email')
+
+
+class UserEditForm(auth_forms.UserChangeForm):
+    # Override parent class 'password' field
+    password = None
+
+    class Meta(auth_forms.UserChangeForm.Meta):
+        fields = ('username', 'first_name', 'last_name', 'email')
 
 
 class EssayFillForm(ModelForm):
@@ -68,7 +98,8 @@ class SampleForm(ModelForm):
 class ClientForm(ModelForm):
     class Meta:
         model = Client
-        fields = ['doc_number', 'username', 'phone_number']
+        # fields = ['doc_number', 'username', 'phone_number']
+        fields = ('doc_number', 'phone_number')
 
 
 class ServiceRequestForm(ModelForm):
