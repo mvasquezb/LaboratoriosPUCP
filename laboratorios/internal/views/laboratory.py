@@ -16,7 +16,7 @@ from .forms import LaboratoryForm
 def index(request,
           template='internal/laboratory/index.html',
           extra_context=None):
-    laboratorys = Laboratory.objects.all()
+    laboratorys = Laboratory.all_objects.all()
     context = {
         'laboratorys_list': laboratorys
     }
