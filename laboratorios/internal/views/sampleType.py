@@ -3,10 +3,8 @@ from django.shortcuts import (
     get_object_or_404,
     redirect,
     reverse,
-    HttpResponseRedirect
 )
 from django.contrib import messages
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from internal.models import *
 from django.utils.text import slugify
 
@@ -18,25 +16,10 @@ NOT_OPTION_SELECTED = "Selecciona una opcion"
 def index(request,
           template='internal/sampleType/index.html',
           extra_context=None):
-    search = request.GET.get('search')
-    if search:
-        sampleType_list = SampleType.objects.filter(
-            name__icontains=search).order_by('name')
-    else:
-        sampleType_list = SampleType.objects.order_by('name')
-
-    paginator = Paginator(sampleType_list, 3)
-    page = request.GET.get('page')
-    try:
-        sampletypes = paginator.page(page)
-    except PageNotAnInteger:
-        sampletypes = paginator.page(1)
-    except EmptyPage:
-        laboratorys = paginator.page(paginator.num_pages)
+    sample_types = SampleType.objects.order_by('name')
 
     context = {
-        'sampleType_list': sampletypes,
-        'paginator': paginator,
+        'sampleType_list': sample_types,
     }
     if extra_context is not None:
         context.update(extra_context)
