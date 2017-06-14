@@ -38,6 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_jinja',
+    'safedelete',
+    'auditlog',
     'internal',
 ]
 
@@ -49,7 +51,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'internal.middleware.AuthRequiredMiddleware'
+    'auditlog.middleware.AuditlogMiddleware',
+    'internal.middleware.AuthRequiredMiddleware',
 ]
 
 ROOT_URLCONF = 'laboratorios.urls'
