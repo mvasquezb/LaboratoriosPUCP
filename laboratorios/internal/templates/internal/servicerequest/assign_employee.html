@@ -8,7 +8,7 @@
       <div class="alert alert-success form-success"></div>
       {% if assigned_employee %}
         <p>Muestra asignada actualmente al empleado:
-          <strong>{{ assigned_employee.get_full_name() or assigned_employee.username }}</strong>
+          <strong>{{ assigned_employee.user.get_full_name() or assigned_employee.user.username }}</strong>
         </p>
       {% endif %}
       <form action="{{ url('internal:servicerequest.assign_employee', request_id=service_request.id, sample_id=sample.id) }}"
