@@ -30,7 +30,7 @@ from internal.views.forms import *
 
 def index(request):
     context = {
-        'requests': ServiceRequest.objects.all()
+        'requests': ServiceRequest.all_objects.filter(deleted__isnull=True)
     }
     return render(request, 'internal/servicerequest/index.html', context)
 
@@ -62,7 +62,7 @@ def create(request,
 
 def select_client(request,
                   template='internal/servicerequest/select_client.html'):
-    clients = Client.objects.all().order_by('doc_number', 'user__username')
+    clients = Client.all_objects.filter(deleted__isnull=True).order_by('doc_number', 'user__username')
     context = {'client_list': clients}
     return render(request, template, context)
 
@@ -369,7 +369,7 @@ def workload_view_per_request(request,
         'Noviembre',
         'Diciembre'
     ]
-    service_request_list = ServiceRequest.objects.all()
+    service_request_list = ServiceRequest.all_objects.filter(deleted__isnull=True)
     my_data = []
     now = timezone.localtime(timezone.now())
     for i in range(0, len(service_request_list)):

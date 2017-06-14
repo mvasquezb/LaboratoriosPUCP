@@ -28,7 +28,7 @@ import copy
 
 class EmployeeForm(ModelForm):
     laboratories = forms.ModelMultipleChoiceField(
-        queryset=Laboratory.objects.all()
+        queryset=Laboratory.all_objects.filter(deleted__isnull=True)
     )
 
     def __init__(self, *args, **kwargs):
@@ -87,7 +87,7 @@ class SampleForm(ModelForm):
     # iquery = Essay.objects.values_list('name',flat=True).distinct()
     # iquery_choices = [('', 'None')] + [(name,name) for name in iquery]
     # essay_field = forms.ChoiceField(iquery_choices,required=False, widget=forms.Select())
-    essay_field = forms.ModelChoiceField(queryset=Essay.objects.all())
+    essay_field = forms.ModelChoiceField(queryset=Essay.all_objects.filter(deleted__isnull=True))
 
     class Meta:
         model = Sample
@@ -177,7 +177,7 @@ class EssayFillSelectionForm(ModelForm):
 
 
 class ServiceAssignEmployeeForm(forms.Form):
-    employee = forms.ModelChoiceField(queryset=Employee.objects.all())
+    employee = forms.ModelChoiceField(queryset=Employee.all_objects.filter(deleted__isnull=True))
 
     def __init__(self, *args, **kwargs):
         employee = None
@@ -236,4 +236,9 @@ class LongCharField(models.CharField):
 class JSONField(forms.Form):
     js_data = forms.CharField(label='js_data')
 
+
+class EssayMethodForm(ModelForm):
+    class Meta:
+        model = EssayMethod
+        fields = ["name","description","price"]
 

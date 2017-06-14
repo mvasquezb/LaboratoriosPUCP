@@ -46,8 +46,8 @@ def create(request,
     user_form = UserCreationForm(request.POST or None)
     form = EmployeeForm(request.POST or None)
     context = {
-        'laboratories': Laboratory.objects.all(),
-        'roles': Role.objects.all(),
+        'laboratories': Laboratory.all_objects.filter(deleted__isnull=True),
+        'roles': Role.all_objects.filter(deleted__isnull=True),
         'form': form,
         'user_form': user_form,
     }
@@ -73,10 +73,10 @@ def edit(request, pk,
     user_form = UserEditForm(request.POST or None, instance=employee.user)
     form = EmployeeForm(request.POST or None, instance=employee)
     context = {
-        'laboratories': Laboratory.objects.all(),
+        'laboratories': Laboratory.all_objects.filter(deleted__isnull=True),
         'selected_laboratories': employee.laboratories.all(),
         'selected_roles': employee.roles.all(),
-        'roles': Role.objects.all(),
+        'roles': Role.all_objects.filter(deleted__isnull=True),
         'form': form,
         'custom_employee': employee,
         'user_form': user_form,

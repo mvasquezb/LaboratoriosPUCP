@@ -12,7 +12,7 @@ from internal.models import *
 def index(request,
           template='internal/inventoryOrder/index.html',
           extra_context=None):
-    # types = InventoryOrder.objects.all()
+    # types = InventoryOrder.all_objects.filter(deleted__isnull=True)
     # context = {'inventoryOrder_list': types}
 
     search = request.GET.get('search')
@@ -29,7 +29,7 @@ def index(request,
             unsettled=True
         ).order_by('essay__sample__name')
 
-    # inventoryOrder_list = InventoryOrder.objects.all()
+    # inventoryOrder_list = InventoryOrder.all_objects.filter(deleted__isnull=True)
 
     paginator = Paginator(inventoryOrder_list, 3)
     page = request.GET.get('page')
@@ -107,8 +107,8 @@ def approve(request, pk):
 #           template='internal/employee/create.html'):
 #    form = EmployeeForm(request.POST or None)
 #    context = {
-#        'laboratories': Laboratory.objects.all(),
-#        'roles': Role.objects.all(),
+#        'laboratories': Laboratory.all_objects.filter(deleted__isnull=True),
+#        'roles': Role.all_objects.filter(deleted__isnull=True),
 #        'form': form
 #    }
 #    if request.method == 'POST':
@@ -140,7 +140,7 @@ def reject(request, pk):
     #            old.aprobado = True
     #            old.save()
     #    print("flag3")
-    #    types = InventoryOrder.objects.all()
+    #    types = InventoryOrder.all_objects.filter(deleted__isnull=True)
     #    context = {'inventoryOrder_list': types}
 #    return render(request, template, context)
     # return redirect('requestStorage.index')
@@ -156,6 +156,6 @@ def reject(request, pk):
     #            old.aprobado = False
     #            old.save()
 
-    #    types = InventoryOrder.objects.all()
+    #    types = InventoryOrder.all_objects.filter(deleted__isnull=True)
 #    context = {'inventoryOrder_list': types}
 #    return render(request, template, context)

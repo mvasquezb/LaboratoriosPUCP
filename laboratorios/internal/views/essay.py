@@ -38,7 +38,7 @@ def create(request,
     #
     # Para los metodos
     #
-    for obj in EssayMethod.objects.all():
+    for obj in EssayMethod.all_objects.filter(deleted__isnull=True):
         my_dict = {
             'id':obj.id,
             'name':obj.name,            
@@ -49,7 +49,7 @@ def create(request,
     #
     # Para los parametros
     #
-    for obj in EssayMethodParameter.objects.all():
+    for obj in EssayMethodParameter.all_objects.filter(deleted__isnull=True):
         my_dict = {
             'id': obj.id,
             'description':obj.description,
@@ -102,7 +102,7 @@ def show(request,
     print(epl)
     context = {
         'selected_methods': methods_list,
-        'parameters_list': EssayMethodParameter.objects.all().order_by('id'),
+        'parameters_list': EssayMethodParameter.all_objects.filter(deleted__isnull=True).order_by('id'),
         'method_parameters_list': epl,
         'essay': essay
     }
@@ -121,7 +121,7 @@ def edit(request,
     #
     # Para los metodos
     #
-    for obj in EssayMethod.objects.all():
+    for obj in EssayMethod.all_objects.filter(deleted__isnull=True):
         my_dict = {
             'id':obj.id,
             'name':obj.name,            
@@ -132,7 +132,7 @@ def edit(request,
     #
     # Para los parametros
     #
-    for obj in EssayMethodParameter.objects.all():
+    for obj in EssayMethodParameter.all_objects.filter(deleted__isnull=True):
         my_dict = {
             'id': obj.id,
             'description':obj.description,
