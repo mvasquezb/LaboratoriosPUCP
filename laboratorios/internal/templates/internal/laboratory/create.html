@@ -152,9 +152,27 @@
     </div>
   </div>
 
+
+<div class="message-container hidden">
+  <ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} data-tags="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+  </ul>
+</div>
+
 {% endblock page_content %}
 
 {% block custom_js %}
+
+<script type="text/javascript">
+  if ($('.message-container .messages li')) {
+  var msg = $('.message-container .messages li').first();
+  $.extend(toastr.options, {"positionClass": "toast-bottom-right",});
+  toastr[msg.data('tags')](msg.text());
+}
+</script>
+
 <script type="text/javascript">
   //var selected_users = [];
   var capacity_users;
@@ -242,11 +260,11 @@
     }
   });
 
-  //cuando se clickea en el boton registrar
+  //cuando se clickea en el boton registrar primero se arma la estructura de django para que se
+  //reciba en el view
   $('#form').on('submit', function(evt){
     //evt.preventDefault();
     var $form = $(this);
-
     var name = $('<input>', {
       name: 'name',
       type: 'hidden'
@@ -267,8 +285,6 @@
       }).val($(this).attr('class'));
       $form.append(employee);
     });
-    
-
     
     if ($('#comboBox option:selected').text == '-- Ningún Responsable Seleccionado --'){
       //$form.append($('<input>').attr('name', 'supervisor').val());
@@ -302,6 +318,11 @@
         type: 'hidden'
       }).val($(this).attr('name'));
       $form.append(essay);
+    });
+
+    //usando ajax para mandar la data al view
+    $.post("{{ url('internal:laboratory.create') }}",data,function(e){
+      //aqui se manda el mensaje
     });
 
     //$form.submit();

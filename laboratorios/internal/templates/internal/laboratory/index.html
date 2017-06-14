@@ -115,6 +115,15 @@
 
 
 {% block custom_js %}
+
+<script type="text/javascript">
+  if ($('.message-container .messages li')) {
+  var msg = $('.message-container .messages li').first();
+  $.extend(toastr.options, {"positionClass": "toast-bottom-right",});
+  toastr[msg.data('tags')](msg.text());
+}
+</script>
+
 <script type="text/javascript">
   var fill_Toastr = function(pMsg, pTypeMsg,pTitle){
     toastr.options = {

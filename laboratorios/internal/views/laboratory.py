@@ -32,11 +32,12 @@ def create(request,
         form = LaboratoryForm(request.POST)
         if form.is_valid():
             form.save()
-            messages.success(request, 'Se ha creado el laboratorio exitosamante!')
+            messages.success(request, 'Se ha creado un nuevo laboratorio exitosamante!')
             return redirect('internal:laboratory.index')
         else:
-            messages.error(request, 'Ese nombre de laboratorio ya existe')
-            return HttpResponse(status=204)
+            messages.error(request, 'Ya existe un laboratorio con el mismo nombre, ingrese otro')
+            #return HttpResponse(status=204)
+            return redirect('internal:laboratory.create')
     else:
         users = Employee.objects.all()
         service_hours = LaboratoryServiceHours.objects.all()
@@ -54,8 +55,12 @@ def edit(request,
         aux_form = LaboratoryForm(request.POST or None, instance=instance)
         if aux_form.is_valid():
             aux_form.save()
-            messages.success(request, 'Se ha editado el laboratorio exitosamante!')
+            messages.success(request, 'Se ha editado el laboratorio exitosamante')
             return redirect('internal:laboratory.index')
+        else:
+            messages.error(request, 'Ya existe un laboratorio con el mismo nombre, ingrese otro')
+            #return HttpResponse(status=204)
+            return redirect('internal:laboratory.edit', pk=pk)
     else :
         laboratory = Laboratory.objects.get(pk=pk)
         #
@@ -85,7 +90,7 @@ def edit(request,
 def delete(request, pk):
     laboratory = get_object_or_404(Laboratory, pk=pk)
     laboratory.delete()
-
+    messages.success(request, 'Se ha borrado el laboratorio existosamente')
     return redirect('internal:laboratory.index')
 
 def show(request,
