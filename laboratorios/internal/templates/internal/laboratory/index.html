@@ -42,6 +42,9 @@
                   <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-label="Browser: activate to sort column ascending">
                     Capacidad
                   </th>
+                  <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-label="Browser: activate to sort column ascending">
+                    Estado
+                  </th>
                   <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-label="Browser: activate to sort column ascending">Acción</th>
                 </tr>
               </thead>
@@ -56,6 +59,13 @@
                       {% endif %}
                     </td>
                     <td>{{ laboratory.capacity }}</td>
+                    <td>
+                      {% if laboratory.deleted %}
+                        Eliminado
+                      {% else %}
+                        Activo
+                      {% endif %}
+                    </td>
                     <td class="text-left footable-visible footable-last-column">
                       <div class="btn-group">
                         <a  href="{{ url('internal:laboratory.show', laboratory.id) }}" class="btn-white btn"><i class="fa fa-eye" aria-hidden="true"></i></a>
