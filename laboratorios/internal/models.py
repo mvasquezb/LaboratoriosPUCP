@@ -132,6 +132,7 @@ class Essay(SafeDeleteModel):
     audit_log = AuditlogHistoryField()
     name = models.CharField(max_length=100)
     description = models.CharField(max_length=100)
+    registered_date = models.DateTimeField(auto_now_add=True, auto_now=False)
     essay_methods = models.ManyToManyField(
         'EssayMethod',
         related_name='essays',
@@ -435,7 +436,6 @@ class RequestAttachment(SafeDeleteModel):
         blank=True
     )
 
-
 @auditlog.register()
 class ServiceContract(SafeDeleteModel):
     _safedelete_policy = SOFT_DELETE_CASCADE
@@ -448,7 +448,6 @@ class ServiceContract(SafeDeleteModel):
         auto_now=False,
         blank=True
     )
-
 
 @auditlog.register()
 class ServiceContractModification(SafeDeleteModel):
@@ -476,7 +475,6 @@ class Quotation(SafeDeleteModel):
         auto_now=False,
         blank=True
     )
-
 
 @auditlog.register()
 class SampleType(SafeDeleteModel):
