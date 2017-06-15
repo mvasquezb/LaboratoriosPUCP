@@ -1,32 +1,16 @@
-from django.forms import ModelForm
-from internal.models import *
 from django import forms
 from django.utils.translation import ugettext_lazy as _
-from django.core.exceptions import NON_FIELD_ERRORS
 from django.forms import (
     ModelForm,
-    Textarea,
-    CheckboxSelectMultiple,
-    TextInput,
-    ModelMultipleChoiceField
 )
 from django.forms import inlineformset_factory
-from django import forms
-from django.forms.models import BaseInlineFormSet
+# from django.forms.models import BaseInlineFormSet
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth import forms as auth_forms
-from django.forms import ModelForm
-from internal.models import *
-from django.forms import ModelForm,Textarea,CheckboxSelectMultiple,TextInput
-from django.forms import ModelMultipleChoiceField
-from django.forms import inlineformset_factory
-from django import forms
-from django.forms import inlineformset_factory
-from django import forms
-from django.forms.models import BaseInlineFormSet
-from django.contrib.auth import forms as auth_forms
 
+
+from internal.models import *
 import copy
 
 
@@ -91,7 +75,8 @@ class SampleForm(ModelForm):
     # iquery = Essay.objects.values_list('name',flat=True).distinct()
     # iquery_choices = [('', 'None')] + [(name,name) for name in iquery]
     # essay_field = forms.ChoiceField(iquery_choices,required=False, widget=forms.Select())
-    essay_field = forms.ModelChoiceField(queryset=Essay.all_objects.filter(deleted__isnull=True))
+    essay_field = forms.ModelChoiceField(
+        queryset=Essay.all_objects.filter(deleted__isnull=True))
 
     class Meta:
         model = Sample
@@ -181,7 +166,9 @@ class EssayFillSelectionForm(ModelForm):
 
 
 class ServiceAssignEmployeeForm(forms.Form):
-    employee = forms.ModelChoiceField(queryset=Employee.all_objects.filter(deleted__isnull=True))
+    employee = forms.ModelChoiceField(queryset=Employee.all_objects.filter(
+        deleted__isnull=True
+    ))
 
     def __init__(self, *args, **kwargs):
         employee = None
@@ -203,17 +190,18 @@ class SampleTypeForm(ModelForm):
         model = SampleType
         exclude = ['slug']
 
+
 class EssayForm(ModelForm):
     class Meta:
         model = Essay
         exclude = ['essay_methods']
 
 
-
 class LongCharField(models.CharField):
     "A basically unlimited-length CharField."
     description = _("Unlimited-length string")
     label = 'None'
+
     def __init__(self, *args, **kwargs):
         kwargs['max_length'] = int(1e9)  # Satisfy management validation.
         self.label = kwargs['label']
@@ -232,10 +220,11 @@ class LongCharField(models.CharField):
         # but put 'varchar' so we can tell LongCharFields from TextFields
         # when we're looking at the db.
         return 'varchar'
-    
+
     def formfield(self, **kwargs):
         # Don't pass max_length to form field like CharField does.
         return super(models.CharField, self).formfield(**kwargs)
+
 
 class JSONField(forms.Form):
     js_data = forms.CharField(label='js_data')
@@ -244,5 +233,4 @@ class JSONField(forms.Form):
 class EssayMethodForm(ModelForm):
     class Meta:
         model = EssayMethod
-        fields = ["name","description","price"]
-
+        fields = ["name", "description", "price"]
