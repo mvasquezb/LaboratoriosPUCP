@@ -25,6 +25,34 @@ def index(request,
     return render(request, template, context)
 
 
+def services_index(request,
+                   pk):
+    if request.method == 'POST' and request.is_ajax():
+        dicc = dict(request.POST)
+        priorities_pk = dicc['priorities_pk[]']
+        services_pk = dicc['services_pk[]']
+        for i in range(0,len(services_pk)):
+            if priorities_pk[i] != -1:
+                service = ServiceRequest.objects.get(pk=services_pk[i])
+                service.priority = ServiceRequestPriority.objects.get(pk=priorities_pk[i])
+                service.save()
+    all_services = ServiceRequest.objects.all()
+    laboratory = Laboratory.objects.get(pk=pk)
+    all_employes = laboratory.employees.all()
+    all_priorities = ServiceRequestPriority.objects.all()
+    laboratory_services = []
+    for service in all_services:
+        service_supervisor = service.supervisor
+        for employee in all_employes:
+            if (employee == service_supervisor):
+                laboratory_services.append(service)
+                break
+    context = {'laboratory_services': laboratory_services, 'laboratory': laboratory,
+               'priorities': all_priorities}
+    template='internal/laboratory/services_index.html'
+    return render(request, template, context)
+
+
 def create(request,
           template='internal/laboratory/create.html',
           extra_content=None):

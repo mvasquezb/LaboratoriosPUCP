@@ -388,6 +388,7 @@ class ServiceRequest(SafeDeleteModel):
     state = models.ForeignKey('ServiceRequestState')
     observations = models.CharField(max_length=500, null=True, blank=True)
     expected_duration = models.IntegerField(default=10)
+    priority = models.ForeignKey('ServiceRequestPriority', null=True, blank=True)
     registered_date = models.DateTimeField(
         auto_now_add=True,
         auto_now=False,
@@ -397,6 +398,13 @@ class ServiceRequest(SafeDeleteModel):
     def __str__(self):
         return str(self.client) + ' | ' + str(self.state)
 
+@auditlog.register()
+class ServiceRequestPriority(SafeDeleteModel):
+    slug = models.CharField(max_length=20)
+    value = models.PositiveIntegerField()
+
+    def __str__(self):
+        return str(self.slug)
 
 @auditlog.register()
 class ServiceRequestState(SafeDeleteModel):

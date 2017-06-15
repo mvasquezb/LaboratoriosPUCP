@@ -174,6 +174,9 @@ urlpatterns = [
     url('^laboratory/show/(?P<pk>\d+)$',
         views.laboratory.show,
         name='laboratory.show'),
+    url('^laboratory/(?P<pk>\d+)/services/$',
+        views.laboratory.services_index,
+        name='laboratory.services_index'),
     #
     # sampleType
     #
