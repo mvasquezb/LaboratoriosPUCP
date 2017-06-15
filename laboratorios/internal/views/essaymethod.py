@@ -4,33 +4,16 @@ from django.shortcuts import (
     redirect,
     reverse,
 )
-from django.contrib import messages
-from django.db.models import (
-    Sum,
-    Q,
-    When,
-    Case,
-    Value,
-    F,
-)
 from django.urls import *
 import json
 from datetime import *
-from django.http import JsonResponse
-from django.views.decorators.csrf import ensure_csrf_cookie
-from django.utils import timezone
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.conf import settings
-from django.core.files.storage import FileSystemStorage
-from django.http import HttpResponse, HttpResponseRedirect
-from django.contrib import messages
 
 from internal.models import *
 from internal.views.forms import *
-from django.core import serializers
+
 
 def create(request,
-    template = 'internal/essaymethod/create.html'):
+           template='internal/essaymethod/create.html'):
     form = EssayMethodForm(request.POST or None)
     json_form = JSONField(request.POST or None)
     list_essay_method_parameters = []
@@ -40,102 +23,111 @@ def create(request,
     for obj in EssayMethodParameter.all_objects.filter(deleted__isnull=True):
         my_dict = {
             'id': obj.id,
-            'description':obj.description,
-            'unit':obj.unit
+            'description': obj.description,
+            'unit': obj.unit
         }
         list_essay_method_parameters.append(my_dict)
     print(EssayMethodParameter.all_objects.filter(deleted__isnull=True))
     context = {'form': form,
-    'list_parameters':json.dumps(list_essay_method_parameters),
-    'json_form':json_form}
+               'list_parameters': json.dumps(list_essay_method_parameters),
+               'json_form': json_form}
 
     if request.method == 'POST':
         if form.is_valid():
-            essaymethod_saved=form.save()
+            essaymethod_saved = form.save()
             js_data = json.loads(json_form['js_data'].value())
-            print(js_data)  
+            print(js_data)
             if js_data is not None:
-                existing_data=js_data['existing_data']
+                existing_data = js_data['existing_data']
                 for entry in existing_data:
                     print(entry)
                     parameter_id = entry['id']
                     print(parameter_id)
-                    EssayMethodParameter.objects.get(pk=parameter_id).essaymethods.add(essaymethod_saved)
-                created_data=js_data['created_data']
+                    EssayMethodParameter.objects.get(
+                        pk=parameter_id).essaymethods.add(essaymethod_saved)
+                created_data = js_data['created_data']
                 for entry in created_data:
-                    parameter_obj=EssayMethodParameter(description=entry['description'],unit=entry['unit'])
+                    parameter_obj = EssayMethodParameter(
+                        description=entry['description'], unit=entry['unit'])
                     parameter_obj.save()
                     parameter_obj.essaymethods.add(essaymethod_saved)
                     parameter_obj.save()
-        return redirect(reverse('internal:index'))
-    return render(request,template,context)
+        return redirect('internal:essaymethod.index')
+    return render(request, template, context)
 
 
 def edit(request,
-    pk,
-    template = 'internal/essaymethod/edit.html'):
-    essay_method=EssayMethod.objects.get(pk=pk)
-    form = EssayMethodForm(request.POST or None,instance=essay_method)
+         pk,
+         template='internal/essaymethod/edit.html'):
+    essay_method = EssayMethod.objects.get(pk=pk)
+    form = EssayMethodForm(request.POST or None, instance=essay_method)
     json_form = JSONField(request.POST or None)
     list_essay_method_parameters = []
-    list_method_parameters=[]
+    list_method_parameters = []
     #
     # Para los parametros
     #
-    for obj in EssayMethodParameter.all_objects.filter(deleted__isnull=True).order_by('id'):
+    essaymethod_parameters = EssayMethodParameter.all_objects.filter(
+        deleted__isnull=True
+    ).order_by('id')
+    for obj in essaymethod_parameters:
         my_dict = {
             'id': obj.id,
-            'description':obj.description,
-            'unit':obj.unit
+            'description': obj.description,
+            'unit': obj.unit
         }
         list_essay_method_parameters.append(my_dict)
         if obj in essay_method.parameters.all():
             list_method_parameters.append(my_dict['id'])
     print(EssayMethodParameter.all_objects.filter(deleted__isnull=True))
     context = {'form': form,
-    'list_parameters':json.dumps(list_essay_method_parameters),
-    'list_selected_parameters':json.dumps(list_method_parameters),
-    'json_form':json_form,
-    'pk':pk}
+               'list_parameters': json.dumps(list_essay_method_parameters),
+               'list_selected_parameters': json.dumps(list_method_parameters),
+               'json_form': json_form,
+               'pk': pk}
 
     if request.method == 'POST':
         if form.is_valid():
-            essaymethod_saved=form.save()
+            essaymethod_saved = form.save()
             js_data = json.loads(json_form['js_data'].value())
-            print(js_data)  
+            print(js_data)
             if js_data is not None:
-                existing_data=js_data['existing_data']
-                aux_existing_id=[]
+                existing_data = js_data['existing_data']
+                aux_existing_id = []
                 for entry in existing_data:
                     print(entry)
                     parameter_id = entry['id']
                     aux_existing_id.append(parameter_id)
                     print(parameter_id)
-                    EssayMethodParameter.objects.get(pk=parameter_id).essaymethods.add(essaymethod_saved)
+                    EssayMethodParameter.objects.get(
+                        pk=parameter_id).essaymethods.add(essaymethod_saved)
                 for param_id in list_method_parameters:
                     if not(param_id in aux_existing_id):
                         obj_par = EssayMethodParameter.objects.get(pk=param_id)
                         essay_method.parameters.remove(obj_par)
-                created_data=js_data['created_data']
+                created_data = js_data['created_data']
                 for entry in created_data:
-                    parameter_obj=EssayMethodParameter(description=entry['description'],unit=entry['unit'])
+                    parameter_obj = EssayMethodParameter(
+                        description=entry['description'], unit=entry['unit'])
                     parameter_obj.save()
                     parameter_obj.essaymethods.add(essaymethod_saved)
                     parameter_obj.save()
-        return redirect(reverse('internal:index'))
-    return render(request,template,context)
+        return redirect('internal:essaymethod.index')
+    return render(request, template, context)
+
 
 def show(request,
-    pk,
-    template='internal/essaymethod/show.html'):
+         pk,
+         template='internal/essaymethod/show.html'):
     essaymethod = get_object_or_404(EssayMethod, pk=pk)
     parameters_list = essaymethod.parameters.all().order_by('id')
     context = {
         'selected_parameters': parameters_list,
         'essaymethod': essaymethod,
-        'pk':pk,
+        'pk': pk,
     }
     return render(request, template, context)
+
 
 def index(request,
           template='internal/essaymethod/index.html',
@@ -148,6 +140,7 @@ def index(request,
     if extra_context is not None:
         context.update(extra_context)
     return render(request, template, context)
+
 
 def delete(request, pk):
     essaymethod = get_object_or_404(EssayMethod, pk=pk)
