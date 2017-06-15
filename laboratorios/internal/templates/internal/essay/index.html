@@ -1,6 +1,6 @@
 {% extends 'internal/base_internal.html' %}
 
-{% block title %}{{ super() }} | Inicio{% endblock title %}
+{% block title %}{{ super() }} | Ensayos{% endblock title %}
 
 {% block custom_css %}
 <link rel="stylesheet" href="https://cdn.datatables.net/1.10.15/css/jquery.dataTables.min.css">
@@ -9,7 +9,7 @@
 {% block page_content %}
 <div class="row border-bottom white-bg dashboard-header">
     <div class="col-md-6">
-        <h2><strong>Lista de Muestras Existentes</strong></h2>
+        <h2><strong>Lista de Ensayos Existentes</strong></h2>
     </div>
 </div>
 <div class="wrapper wrapper-content animated" >
@@ -19,7 +19,7 @@
         <div class="row">
           <div class="col-lg-12">
             <div class="text-right">
-              <a class="btn btn-primary" href="{{ url('internal:sampleType.create') }}">
+              <a class="btn btn-primary" href="{{ url('internal:essay.create') }}">
                 <i class="fa fa-plus"></i>
                 Agregar
               </a>
@@ -36,18 +36,21 @@
                   <th>
                     Descripcion
                   </th>
+                  <th>Fecha de creación</th>
                   <th>Acción</th>
                 </tr>
               </thead>
               <tbody>
-               {% for sampleType in sample_types %}
+               {% for essay in essay_list %}
                   <tr>
-                    <td>{{ sampleType.name }}</td>
-                    <td>{{ sampleType.description }}</td>
+                    <td>{{ essay.name }}</td>
+                    <td>{{ essay.description }}</td>
+                    <td>{{ essay.registered_date.strftime('%d/%m/%Y %H:%M:%S') }}</td>
                     <td class="text-left">
                       <div class="btn-group">
-                        <a  href="{{ url('internal:sampleType.edit', sampleType.id) }}" class="btn-white btn btn-xs"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
-                        <a class="myBtn1 btn-white btn btn-xs" data-toggle="modal" data-target="#myModal1" data-url="{{ url('internal:sampleType.delete', sampleType.id) }}"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+                        <a  href="{{ url('internal:essay.show', essay.id) }}" class="btn-white btn btn-xs"><i class="fa fa-eye" aria-hidden="true"></i></a>
+                        <a  href="{{ url('internal:essay.edit', essay.id) }}" class="btn-white btn btn-xs"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+                        <a class="myBtn1 btn-white btn btn-xs" data-toggle="modal" data-target="#myModal1" data-url="{{ url('internal:essay.delete', essay.id) }}"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
                       </div>
                     </td>
                   </tr>
@@ -72,7 +75,7 @@
       <!-- Modal content -->
       <div class="modal-body text-center">
         <p>¿Seguro que quiere eliminarlo?</p>
-        <button type="button" class="delete-sampleType btn btn-danger">Eliminar</button>
+        <button type="button" class="delete-essay btn btn-danger">Eliminar</button>
         <button type="button" class="span-close btn btn-primary">Cancelar</button>
       </div>
     </div>
@@ -85,7 +88,7 @@
     <span class="span-close close">&times;</span>
     <div class="modeal-center-content">
         <p>¿Seguro que quiere eliminarlo?</p>
-        <button type="button" class="delete-sampleType btn btn-danger">Eliminar</button>
+        <button type="button" class="delete-essay btn btn-danger">Eliminar</button>
         <button type="button" class="span-close btn btn-primary">Cancelar</button>
     </div>
   </div>
@@ -128,7 +131,7 @@ $(document).ready(function() {
   $(".myBtn1").click(function() {
     $("#myModal1").show();
     var delete_url = $(this).attr("data-url");
-    $(".delete-sampleType").click(function() {
+    $(".delete-essay").click(function() {
       window.location.href = delete_url;
     });
   });
