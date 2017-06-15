@@ -4,7 +4,7 @@
 {% block page_content %}
         <form id=essayform action="{{ url('internal:essay.create') }}" method="post">{% csrf_token %}
         {{form.as_p()}}
-        <input type="submit" id=submit_button value="Registrar" class="btn btn-primary">        
+        <input type="submit" id=submit_button value="Registrar" class="btn btn-primary">
         <div id="json_div" style="display: none;">
             <form id="json_form" novalidate>
             <p><label for="id_js_data">js_data:</label> <input type="text" name="js_data" maxlength="1024" id="id_js_data"/></p>
@@ -30,14 +30,13 @@
 
 
 {% block custom_js %}
-<script type="text/javascript" src="{{static('js/js.cookie.js')}}"></script>
 <script type="text/javascript">
 console.log(csrftoken);
 $(document).ready(function(){
     var method_list = {{list_methods |safe}};
     var parameter_list = {{list_parameters |safe}};
-    var selected_methods_list = [];  
-    
+    var selected_methods_list = [];
+
     function deleteMethodSelect(id){
         var div_name = id.replace('close','method');
         console.log(div_name);
@@ -101,26 +100,26 @@ $(document).ready(function(){
                 }
             }
         }
-        
-        method_id_gen=method_id_gen+1;                            
+
+        method_id_gen=method_id_gen+1;
         document.getElementById("selectNumber1").selectedIndex = 0;
     }
     doIt=function(){ methodDetails(method_list,'#method_details'); } // automatically global in order to be reached by onchange
     deleteMe=function(id){ deleteMethodSelect(id); }
-      
-    
-    var select = document.getElementsByClassName("selectNumber")[0]; 
+
+
+    var select = document.getElementsByClassName("selectNumber")[0];
     var options = method_list;
     for(var i = 0; i < options.length; i++){
         var opt = options[i];
         var el = document.createElement("option");
         el.textContent = opt['name'];
         el.value = opt;
-        select.appendChild(el);} 
+        select.appendChild(el);}
     console.log(method_list);
- 
+
     $('#submit_button').click(function(){
-        // read all extra_method forms        
+        // read all extra_method forms
         var method_insert_forms = document.getElementsByClassName("method_name");
         var insert_data = [];
         for(var i=0; i< method_insert_forms.length; i++){
@@ -132,7 +131,7 @@ $(document).ready(function(){
             }
         }
         console.log(insert_data);
-        document.getElementById('id_js_data').value=JSON.stringify(insert_data); 
+        document.getElementById('id_js_data').value=JSON.stringify(insert_data);
     });
     function uploadData(insert_data){
     var data = {js_data: insert_data,
@@ -140,7 +139,7 @@ $(document).ready(function(){
     $.post('/internal/essay/create', JSON.stringify(data), function(response){
         console.log(data['csrfmiddlewaretoken'])
         });
-    }    
+    }
 });
 </script>
 

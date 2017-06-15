@@ -4,7 +4,7 @@
 {% block page_content %}
         <form id=essaymethodform action="{{ url('internal:essaymethod.edit',pk) }}" method="post">{% csrf_token %}
         {{form.as_p()}}
-        <input type="submit" id=submit_button value="Guardar Cambios" class="btn btn-primary">        
+        <input type="submit" id=submit_button value="Guardar Cambios" class="btn btn-primary">
         <div id="json_div" style="display: none;">
             <form id="json_form" novalidate>
             <p><label for="id_js_data">js_data:</label> <input type="text" name="js_data" id="id_js_data"/></p>
@@ -32,7 +32,6 @@
 
 
 {% block custom_js %}
-<script type="text/javascript" src="{{static('js/js.cookie.js')}}"></script>
 <script type="text/javascript">
 console.log(csrftoken);
 $(document).ready(function(){
@@ -42,7 +41,7 @@ $(document).ready(function(){
     var parameter_list = {{list_parameters | safe}};
     var created_parameters = 0;
     var selected_parameters_list = []
-    var method_parameters_list = {{list_selected_parameters | safe}};  
+    var method_parameters_list = {{list_selected_parameters | safe}};
     //
     // END INITIAL PARAMETERS
     //
@@ -76,12 +75,12 @@ $(document).ready(function(){
                 break;
             }
         }
-        
-        
+
+
         var description=parameter_list[x-1]['description'];
         var unit=parameter_list[x-1]['unit'];
         var parameter_id_gen=parameter_list[x-1]['id'];
-    
+
         if (selected_parameters_list.length != 0){
             for(var k =0;k<selected_parameters_list.length;k++){
                 if (selected_parameters_list[k] == parameter_id_gen){
@@ -117,9 +116,9 @@ $(document).ready(function(){
                                                 +'  Unidades: '+unit
                                                 +'</small>');
 
-        
 
-        parameter_id_gen=parameter_id_gen+1;                            
+
+        parameter_id_gen=parameter_id_gen+1;
         document.getElementById("selectNumber1").selectedIndex = 0;
     }
     doIt=function(){ parameterDetails(parameter_list,'#parameter_details'); } // automatically global in order to be reached by onchange
@@ -136,7 +135,7 @@ $(document).ready(function(){
         var description=parameter_list[x-1]['description'];
         var unit=parameter_list[x-1]['unit'];
         var parameter_id_gen=parameter_list[x-1]['id'];
-    
+
         if (selected_parameters_list.length != 0){
             for(var k =0;k<selected_parameters_list.length;k++){
                 if (selected_parameters_list[k] == parameter_id_gen){
@@ -172,19 +171,19 @@ $(document).ready(function(){
                                                 +'  Unidades: '+unit
                                                 +'</small>');
 
-        
 
-        parameter_id_gen=parameter_id_gen+1;                            
+
+        parameter_id_gen=parameter_id_gen+1;
         document.getElementById("selectNumber1").selectedIndex = 0;
     }
     doIt=function(){ parameterDetails(parameter_list,'#parameter_details'); } // automatically global in order to be reached by onchange
     deleteMe=function(id){ deleteParameterSelect(id); }
     deleteCreatedMe=function(id){ deleteCreatedParameterSelect(id); }
 
-      
-    
 
-    var select = document.getElementsByClassName("selectNumber")[0]; 
+
+
+    var select = document.getElementsByClassName("selectNumber")[0];
     var options = parameter_list;
 
     for(var i = 0; i < options.length; i++){
@@ -192,7 +191,7 @@ $(document).ready(function(){
         var el = document.createElement("option");
         el.textContent = opt['description'];
         el.value = opt;
-        select.appendChild(el);} 
+        select.appendChild(el);}
 
     console.log(parameter_list);
     for(var i=0;i<method_parameters_list.length;i++){
@@ -231,7 +230,7 @@ $(document).ready(function(){
 
 
     $('#submit_button').click(function(){
-        // read all extra_parameter forms        
+        // read all extra_parameter forms
         var parameter_insert_forms = document.getElementsByClassName("parameter_name");
         var insert_data = {};
         var existing_list = [];
@@ -254,13 +253,13 @@ $(document).ready(function(){
             };
             created_list.push(my_dict);
         }
-        
+
         insert_data={
             existing_data:existing_list,
             created_data:created_list,
         }
         console.log(insert_data);
-        document.getElementById('id_js_data').value=JSON.stringify(insert_data); 
+        document.getElementById('id_js_data').value=JSON.stringify(insert_data);
     });
 
 
@@ -270,7 +269,7 @@ $(document).ready(function(){
    // $.post('/internal/essay/create', JSON.stringify(data), function(response){
     //    console.log(data['csrfmiddlewaretoken'])
    //     });
-   // }    
+   // }
 });
 </script>
 
