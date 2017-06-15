@@ -45,7 +45,7 @@
                   <tr>
                     <td>{{ essay.name }}</td>
                     <td>{{ essay.description }}</td>
-                    <td>{{ essay.registered_date }}</td>
+                    <td>{{ essay.registered_date.strftime('%d/%m/%Y %H:%M:%S') }}</td>
                     <td class="text-left">
                       <div class="btn-group">
                         <a  href="{{ url('internal:essay.show', essay.id) }}" class="btn-white btn btn-xs"><i class="fa fa-eye" aria-hidden="true"></i></a>
