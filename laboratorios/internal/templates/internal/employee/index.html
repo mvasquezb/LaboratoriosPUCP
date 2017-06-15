@@ -4,6 +4,9 @@
 
 {% block custom_css %}
 <link rel="stylesheet" href="https://cdn.datatables.net/1.10.15/css/jquery.dataTables.min.css">
+<style>
+.main-wrapper-content { padding-top: 0; }
+</style>
 {% endblock custom_css %}
 
 {% block page_content %}
@@ -12,7 +15,15 @@
         <h2><strong>Listado de Usuarios</strong></h2>
     </div>
 </div>
-<div class="wrapper wrapper-content animated" >
+<div class="wrapper wrapper-content animated fadeInRight">
+  <div class="col-lg-2 col-lg-offset-10">
+    <a class="btn btn-primary pull-right" href="{{ url('internal:employee.create') }}">
+      <i class="fa fa-plus"></i>
+      Crear Empleado
+    </a>
+  </div>
+</div>
+<div class="wrapper wrapper-content animated fadeInRight main-wrapper-content">
   <div class="col-lg-12">
     <div class="ibox float-e-margins">
       <div class="ibox-content">
