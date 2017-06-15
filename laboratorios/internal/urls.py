@@ -206,6 +206,24 @@ urlpatterns = [
         name='essay.index'),
     url('^essay/delete/(?P<pk>\d+)$',
         views.essay.delete,
-        name='essay.delete'),    
+        name='essay.delete'),
+    #
+    # EssayMethods
+    # 
+     url('^essaymethod/create$',
+        views.essaymethod.create,
+        name='essaymethod.create'),
+    url('^essaymethod/show/(?P<pk>\d+)$',
+        views.essaymethod.show,
+        name='essaymethod.show'),
+    url('^essaymethod/edit/(?P<pk>\d+)$',
+        views.essaymethod.edit,
+        name='essaymethod.edit'),
+    url('^essaymethod/index$',
+        views.essaymethod.index,
+        name='essaymethod.index'),
+    url('^essaymethod/delete/(?P<pk>\d+)$',
+        views.essaymethod.delete,
+        name='essaymethod.delete'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

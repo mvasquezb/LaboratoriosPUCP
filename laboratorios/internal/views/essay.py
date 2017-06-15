@@ -186,26 +186,10 @@ def edit(request,
 def index(request,
           template='internal/essay/index.html',
           extra_context=None):
-    search = request.GET.get('search')
-    if search:
-        essay_list = Essay.objects.filter(
-            name__icontains=search
-        ).order_by('name')
-    else:
-        essay_list = Essay.objects.order_by('name')
-
-    paginator = Paginator(essay_list, 3)
-    page = request.GET.get('page')
-    try:
-        essays = paginator.page(page)
-    except PageNotAnInteger:
-        essays = paginator.page(1)
-    except EmptyPage:
-        essays = paginator.page(paginator.num_pages)
+    essays = Essay.objects.order_by('name')
 
     context = {
-        'essays_list': essays,
-        'paginator': paginator,
+        'essay_list': essays,
     }
     if extra_context is not None:
         context.update(extra_context)
@@ -214,9 +198,8 @@ def index(request,
 
 
 
-
 def delete(request, pk):
-    essay = get_object_or_404(essay, pk=pk)
+    essay = get_object_or_404(Essay, pk=pk)
     essay.delete()
 
     return redirect('internal:essay.index')

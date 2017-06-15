@@ -1,0 +1,277 @@
+{% extends 'internal/base_internal.html' %}
+
+
+{% block page_content %}
+        <form id=essaymethodform action="{{ url('internal:essaymethod.edit',pk) }}" method="post">{% csrf_token %}
+        {{form.as_p()}}
+        <input type="submit" id=submit_button value="Guardar Cambios" class="btn btn-primary">        
+        <div id="json_div" style="display: none;">
+            <form id="json_form" novalidate>
+            <p><label for="id_js_data">js_data:</label> <input type="text" name="js_data" id="id_js_data"/></p>
+            </form>
+        </div>
+        <div id=extra_space>
+        </div>
+        <div>
+            <form id="myForm">
+            <div id=parameter_details>
+            </div>
+            <div class="col-lg-4"><div class="ibox float-e-margins"><div class="ibox-title"><h5>
+                Escoge un Parametro:
+                <select class=selectNumber id="selectNumber1" onchange='doIt()'>
+                <option>-------</option>
+            </select>
+            <br>
+            <div id=createbutton><button id=create_button class="btn btn-primary">O Cree nuevo parámetro</button></div>
+            </h5>
+            </form>
+        </div>
+        </form>
+
+{% endblock page_content %}
+
+
+{% block custom_js %}
+<script type="text/javascript" src="{{static('js/js.cookie.js')}}"></script>
+<script type="text/javascript">
+console.log(csrftoken);
+$(document).ready(function(){
+    //
+    // INITIAL PARAMETERS
+    //
+    var parameter_list = {{list_parameters | safe}};
+    var created_parameters = 0;
+    var selected_parameters_list = []
+    var method_parameters_list = {{list_selected_parameters | safe}};  
+    //
+    // END INITIAL PARAMETERS
+    //
+    function deleteParameterSelect(id){
+        var div_name = id.replace('close','parameter');
+        console.log(div_name);
+        $('#'+div_name).remove();
+        var selected_parameter_id = parseInt(id.replace('close_div',''));
+        console.log(selected_parameter_id);
+        if (selected_parameters_list.indexOf(selected_parameter_id) > -1) {
+            selected_parameters_list.splice(selected_parameters_list.indexOf(selected_parameter_id), 1);
+        }
+    }
+
+    function deleteCreatedParameterSelect(id){
+        var div_name = id.replace('close','created_parameter');
+        console.log(div_name);
+        $('#'+div_name).remove();
+        var selected_parameter_id = parseInt(id.replace('close_div',''));
+        console.log(selected_parameter_id);
+        created_parameters=created_parameters-1;
+    }
+
+
+    function insert_parameterDetails(parameter_list,selectForm,parameter_id) {
+        var x = -1
+        console.log(parameter_id);       // reflecting id of the obj source
+        for(var i=0;i<parameter_list.length;i++){
+            if (parameter_list[i]['id'] == parameter_id){
+                x = i+1;
+                break;
+            }
+        }
+        
+        
+        var description=parameter_list[x-1]['description'];
+        var unit=parameter_list[x-1]['unit'];
+        var parameter_id_gen=parameter_list[x-1]['id'];
+    
+        if (selected_parameters_list.length != 0){
+            for(var k =0;k<selected_parameters_list.length;k++){
+                if (selected_parameters_list[k] == parameter_id_gen){
+                    alert('No puede agregar un mismo parámetro más de una vez.');
+                    document.getElementById("selectNumber1").selectedIndex = 0;
+                    return;
+                }
+            }
+        }
+        selected_parameters_list.push(parameter_id_gen);
+        // Seccion de código para agregar el bloque html de un método seleccionado
+        $(selectForm).append('<div id=parameter_div'+parameter_id_gen.toString()+' class="col-lg-4"><div class="ibox float-e-margins">'
+                                +'<div class="ibox-title">'
+                                    +'<h5 class="parameter_name hidden">'+parameter_id_gen+'</h5> <span class="label label-primary"></span>'
+                                    +'<div class="ibox-tools">'
+                                        +'<a class="close-link" onclick=deleteMe(this.id) id=close_div'+parameter_id_gen.toString()+'>'
+                                            +'<i class="fa fa-times"></i>'
+                                        +'</a>'
+                                    +'</div>'
+                                +'</div>'
+                                +'<div class="ibox-content">'
+                                    +'<div>'
+                                        +'<h4 id=parameters_'+parameter_id_gen.toString()+'>Parametro:'
+                                        +'</h4>'
+                                        +'</div>'
+                                    +'</div>'
+                                +'</div>'
+                            +'</div>');
+                    // Sección de código para agregar el bloque html de un parámetro perteneciente al método seleccionado
+                    $('#parameters_'+parameter_id_gen.toString()).append('<br>'
+                                            +'<small class="m-r">'
+                                                +'Descripcion: '+description
+                                                +'  Unidades: '+unit
+                                                +'</small>');
+
+        
+
+        parameter_id_gen=parameter_id_gen+1;                            
+        document.getElementById("selectNumber1").selectedIndex = 0;
+    }
+    doIt=function(){ parameterDetails(parameter_list,'#parameter_details'); } // automatically global in order to be reached by onchange
+    deleteMe=function(id){ deleteParameterSelect(id); }
+    deleteCreatedMe=function(id){ deleteCreatedParameterSelect(id); }
+
+
+
+    function parameterDetails(parameter_list,selectForm) {
+        var x = document.getElementById("selectNumber1").selectedIndex;
+        console.log(x);
+        console.log(parameter_list[x-1]);
+        console.log(event.srcElement.id);       // reflecting id of the obj source
+        var description=parameter_list[x-1]['description'];
+        var unit=parameter_list[x-1]['unit'];
+        var parameter_id_gen=parameter_list[x-1]['id'];
+    
+        if (selected_parameters_list.length != 0){
+            for(var k =0;k<selected_parameters_list.length;k++){
+                if (selected_parameters_list[k] == parameter_id_gen){
+                    alert('No puede agregar un mismo parámetro más de una vez.');
+                    document.getElementById("selectNumber1").selectedIndex = 0;
+                    return;
+                }
+            }
+        }
+        selected_parameters_list.push(parameter_id_gen);
+        // Seccion de código para agregar el bloque html de un método seleccionado
+        $(selectForm).append('<div id=parameter_div'+parameter_id_gen.toString()+' class="col-lg-4"><div class="ibox float-e-margins">'
+                                +'<div class="ibox-title">'
+                                    +'<h5 class="parameter_name hidden">'+parameter_id_gen+'</h5> <span class="label label-primary"></span>'
+                                    +'<div class="ibox-tools">'
+                                        +'<a class="close-link" onclick=deleteMe(this.id) id=close_div'+parameter_id_gen.toString()+'>'
+                                            +'<i class="fa fa-times"></i>'
+                                        +'</a>'
+                                    +'</div>'
+                                +'</div>'
+                                +'<div class="ibox-content">'
+                                    +'<div>'
+                                        +'<h4 id=parameters_'+parameter_id_gen.toString()+'>Parametro:'
+                                        +'</h4>'
+                                        +'</div>'
+                                    +'</div>'
+                                +'</div>'
+                            +'</div>');
+                    // Sección de código para agregar el bloque html de un parámetro perteneciente al método seleccionado
+                    $('#parameters_'+parameter_id_gen.toString()).append('<br>'
+                                            +'<small class="m-r">'
+                                                +'Descripcion: '+description
+                                                +'  Unidades: '+unit
+                                                +'</small>');
+
+        
+
+        parameter_id_gen=parameter_id_gen+1;                            
+        document.getElementById("selectNumber1").selectedIndex = 0;
+    }
+    doIt=function(){ parameterDetails(parameter_list,'#parameter_details'); } // automatically global in order to be reached by onchange
+    deleteMe=function(id){ deleteParameterSelect(id); }
+    deleteCreatedMe=function(id){ deleteCreatedParameterSelect(id); }
+
+      
+    
+
+    var select = document.getElementsByClassName("selectNumber")[0]; 
+    var options = parameter_list;
+
+    for(var i = 0; i < options.length; i++){
+        var opt = options[i];
+        var el = document.createElement("option");
+        el.textContent = opt['description'];
+        el.value = opt;
+        select.appendChild(el);} 
+
+    console.log(parameter_list);
+    for(var i=0;i<method_parameters_list.length;i++){
+        insert_parameterDetails(parameter_list,'#parameter_details',method_parameters_list[i]);
+    }
+    $('#create_button').click(function(evt){
+        evt.preventDefault();
+        var selectForm = '#parameter_details'
+        $(selectForm).append('<div id=created_parameter_div'+(created_parameters+1).toString()+' class="col-lg-4"><div class="ibox float-e-margins">'
+                                +'<div class="ibox-title">'
+                                    +'<h5 class="created_parameter_name hidden">'+(created_parameters+1).toString()+'</h5> <span class="label label-primary"></span>'
+                                    +'<div class="ibox-tools">'
+                                        +'<a class="close-link" onclick=deleteCreatedMe(this.id) id=close_div'+(created_parameters+1).toString()+'>'
+                                            +'<i class="fa fa-times"></i>'
+                                        +'</a>'
+                                    +'</div>'
+                                +'</div>'
+                                +'<div class="ibox-content">'
+                                    +'<div>'
+                                        +'<h4 id=created_parameters_'+(created_parameters+1).toString()+'>Parametro:'
+                                        +'</h4>'
+                                        +'</div>'
+                                    +'</div>'
+                                +'</div>'
+                            +'</div>');
+                    // Sección de código para agregar el bloque html de un parámetro perteneciente al método seleccionado
+                    $('#created_parameters_'+(created_parameters+1).toString()).append('<br>'
+                                            +'<small class="m-r">'
+                                                +'<label for=id_created_parameter_description_'+(created_parameters+1).toString()+' >Descripción:</label>'
+                                                +'<input type="text" name="description" id=id_created_parameter_description_'+(created_parameters+1).toString()+' /><br>'
+                                                +'<label for=id_created_parameter_unit_'+(created_parameters+1).toString()+' >Unidades:</label>'
+                                                +'<input type="text" name="unit" id=id_created_parameter_unit_'+(created_parameters+1).toString()+' />'
+                                                +'</small>');
+    created_parameters=created_parameters+1;
+    });
+
+
+    $('#submit_button').click(function(){
+        // read all extra_parameter forms        
+        var parameter_insert_forms = document.getElementsByClassName("parameter_name");
+        var insert_data = {};
+        var existing_list = [];
+        var created_list = [];
+        for(var i=0; i< parameter_insert_forms.length; i++){
+            console.log(parameter_insert_forms[0].innerHTML);
+            for (var j=0; j < parameter_list.length;j++){
+                if (parameter_insert_forms[i].innerHTML == parameter_list[j]['id']){
+                    existing_list.push(parameter_list[j]);
+                }
+            }
+        }
+
+        var created_parameter_forms = document.getElementsByClassName("created_parameter_name");
+        for(var i=0; i< created_parameter_forms.length; i++){
+            var my_dict={
+                id:-1,
+                description:document.getElementById('id_created_parameter_description_'+(i+1).toString()).value,
+                unit: document.getElementById('id_created_parameter_unit_'+(i+1).toString()).value
+            };
+            created_list.push(my_dict);
+        }
+        
+        insert_data={
+            existing_data:existing_list,
+            created_data:created_list,
+        }
+        console.log(insert_data);
+        document.getElementById('id_js_data').value=JSON.stringify(insert_data); 
+    });
+
+
+   // function uploadData(insert_data){
+   // var data = {js_data: insert_data,
+   //             csrfmiddlewaretoken: csrftoken};
+   // $.post('/internal/essay/create', JSON.stringify(data), function(response){
+    //    console.log(data['csrfmiddlewaretoken'])
+   //     });
+   // }    
+});
+</script>
+
+{% endblock custom_js %}
