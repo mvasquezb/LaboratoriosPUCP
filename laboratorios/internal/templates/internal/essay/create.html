@@ -35,7 +35,7 @@
 console.log(csrftoken);
 $(document).ready(function(){
     var method_list = {{list_methods |safe}};
-    var parameter_list = {{list_parameters | safe}};
+    var parameter_list = {{list_parameters |safe}};
     var selected_methods_list = [];  
     
     function deleteMethodSelect(id){
@@ -48,8 +48,6 @@ $(document).ready(function(){
             selected_methods_list.splice(selected_methods_list.indexOf(selected_method_id), 1);
         }
     }
-
-
     function methodDetails(method_list,selectForm) {
         var x = document.getElementById("selectNumber1").selectedIndex;
         console.log(x);
@@ -87,41 +85,39 @@ $(document).ready(function(){
                                     +'</div>'
                                 +'</div>'
                             +'</div>');
+        console.log(parameter_list);
         for(var i=0;i<parameter_list.length;i++){
-            for(var j=0;j<parameter_list[i]['methods'];j++){
+            console.log(parameter_list.length);
+            for(var j=0;j<parameter_list[i]['methods'].length;j++){
+                console.log(method_list[x-1]['id']);
+                console.log(parameter_list[i]['methods'][j]);
                 if (method_list[x-1]['id'] == parameter_list[i]['methods'][j]){
                     // Sección de código para agregar el bloque html de un parámetro perteneciente al método seleccionado
                     $('#parameters_'+method_id_gen.toString()).append('<br>'
                                             +'<small class="m-r">'
-                                                +'Descripcion: '+parameter_list[i]['description']
+                                                +'Descripcion: '+parameter_list[i]['description']+'<br>'
                                                 +'  Unidades: '+parameter_list[i]['unit']
                                                 +'</small>');
                 }
             }
         }
         
-
         method_id_gen=method_id_gen+1;                            
         document.getElementById("selectNumber1").selectedIndex = 0;
     }
     doIt=function(){ methodDetails(method_list,'#method_details'); } // automatically global in order to be reached by onchange
     deleteMe=function(id){ deleteMethodSelect(id); }
-
       
     
-
     var select = document.getElementsByClassName("selectNumber")[0]; 
     var options = method_list;
-
     for(var i = 0; i < options.length; i++){
         var opt = options[i];
         var el = document.createElement("option");
         el.textContent = opt['name'];
         el.value = opt;
         select.appendChild(el);} 
-
     console.log(method_list);
-
  
     $('#submit_button').click(function(){
         // read all extra_method forms        
@@ -138,8 +134,6 @@ $(document).ready(function(){
         console.log(insert_data);
         document.getElementById('id_js_data').value=JSON.stringify(insert_data); 
     });
-
-
     function uploadData(insert_data){
     var data = {js_data: insert_data,
                 csrfmiddlewaretoken: csrftoken};

@@ -64,7 +64,7 @@ def create(request,
         #print(str(obj.id)+' '+str(methods_list))
         my_dict['methods']=methods_list
         list_essay_method_parameters.append(my_dict)
-
+    print(list_essay_method_parameters)
     context = {'form': form,
     'list_methods': json.dumps(list_methods),
     'list_parameters':json.dumps(list_essay_method_parameters),

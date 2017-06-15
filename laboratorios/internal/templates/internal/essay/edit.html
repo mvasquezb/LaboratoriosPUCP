@@ -94,7 +94,7 @@ $(document).ready(function(){
                                 +'</div>'
                             +'</div>');
         for(var i=0;i<parameter_list.length;i++){
-            for(var j=0;j<parameter_list[i]['methods'];j++){
+            for(var j=0;j<parameter_list[i]['methods'].length;j++){
                 if (method_list[x-1]['id'] == parameter_list[i]['methods'][j]){
                     // Sección de código para agregar el bloque html de un parámetro perteneciente al método seleccionado
                     $('#parameters_'+method_id_gen.toString()).append('<br>'
@@ -150,8 +150,10 @@ $(document).ready(function(){
                                     +'</div>'
                                 +'</div>'
                             +'</div>');
+        console.log(parameter_list);
         for(var i=0;i<parameter_list.length;i++){
-            for(var j=0;j<parameter_list[i]['methods'];j++){
+            console.log(parameter_list[i]['methods'].length);
+            for(var j=0;j<parameter_list[i]['methods'].length;j++){
                 if (method_list[x-1]['id'] == parameter_list[i]['methods'][j]){
                     // Sección de código para agregar el bloque html de un parámetro perteneciente al método seleccionado
                     $('#parameters_'+method_id_gen.toString()).append('<br>'

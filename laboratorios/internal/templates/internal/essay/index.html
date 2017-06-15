@@ -48,7 +48,7 @@
                     <td>{{ essay.registered_date }}</td>
                     <td class="text-left">
                       <div class="btn-group">
-                        <a  href="{{ url('internal:essay.show', essaymethod.id) }}" class="btn-white btn btn-xs"><i class="fa fa-eye" aria-hidden="true"></i></a>
+                        <a  href="{{ url('internal:essay.show', essay.id) }}" class="btn-white btn btn-xs"><i class="fa fa-eye" aria-hidden="true"></i></a>
                         <a  href="{{ url('internal:essay.edit', essay.id) }}" class="btn-white btn btn-xs"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
                         <a class="myBtn1 btn-white btn btn-xs" data-toggle="modal" data-target="#myModal1" data-url="{{ url('internal:essay.delete', essay.id) }}"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
                       </div>
