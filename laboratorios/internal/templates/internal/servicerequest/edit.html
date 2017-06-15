@@ -30,19 +30,61 @@
         {{ form.errors }}
         <form id='requestform' action="{{ url('internal:servicerequest.edit',pk=pk) }}" method="post" data-toggle="validator">
           {% csrf_token %}
-          {% for field in form %}
             <div class="row">
               <div class="col-lg-6">
-                <div class="form-group">
-                  <label>{{ field.label }} {% if field.field.required %}(*){% endif %}</label>
-                  <div required data-error="El" {{field.label}} " es obligatorio" placeholder="------">
-                    {{ field.as_widget(attrs={'data-error': "Este campo es obligatorio",'class':"form-control"}) }}
-                  </div>
-                <div class="help-block with-errors"></div>
+              <div class="form-group">
+                <label>Cliente</label>
+                <select name="client" data-error="Este campo es obligatorio" required="" id="id_client" class="form-control">
+                  {% for client in clients %}
+                      <option value="{{ client.id }}">{{ client.user.first_name }} {{ client.user.last_name }}</option>
+                  {% endfor %}
+                </select>
+                 <div class="help-block with-errors"></div>
+              </div>
+              <div class="form-group">
+                <label>Supervisor</label>
+                <select name="supervisor" data-error="Este campo es obligatorio" required="" id="id_supervisor" class="form-control">
+                  {% for employee in employees %}
+                      <option {{ 'selected' if (service_request.supervisor.id == employee.id) }} value="{{ employee.id }}">{{ employee.user.first_name }} {{ employee.user.last_name }}</option>
+                  {% endfor %}
+                </select>
+                  <div class="help-block with-errors"></div>
+              </div>
+              <div class="form-group">
+                <label>Estado</label>
+                <select name="state" data-error="Este campo es obligatorio" required="" id="id_state" class="form-control">
+                  {% for state in states %}
+                      <option {{ 'selected' if (service_request.state.id == state.id) }} value="{{ state.id }}">{{ state.description }}</option>
+                  {% endfor %}
+                </select>
+                  <div class="help-block with-errors"></div>
+              </div>
+              <div class="form-group">
+                <label>Observaciones</label>
+                <input value="{{ service_request.observations }}" type="text" name="observations" data-error="Este campo es obligatorio" required="" id="id_observations" class="form-control">
+                  <div class="help-block with-errors"></div>
+              </div>
+              <div class="form-group">
+                <label>Duracion Esperada</label>
+                <input value="{{ service_request.expected_duration }}" type="number" name="expected_duration" data-error="Este campo es obligatorio" required="" id="id_expected_duration" class="form-control">
+                  <div class="help-block with-errors"></div>
+              </div>
+            </div>
+            <div class="col-lg-6">
+              <div class="form-group">
+                <div class="i-checks"><label class=""> <div class="iradio_square-green" style="position: relative;"><input id="check_service_provider" type="checkbox" value="option1" name="a" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div> <i></i>Tercerizar Servicio</label></div>
+              </div>
+              <div class="form-group" id="servide_provider_input" style="display: none;">
+                <label>Proveedores</label>
+                <select name="external_provider" data-error="Este campo es obligatorio" required="" id="id_state" class="form-control">
+                  {% for external_provider in external_providers %}
+                      <option {{ 'selected' if (service_request.external_provider.id == external_provider.id) }} value="{{ external_provider.id }}">{{ external_provider.name }}</option>
+                  {% endfor %}
+                </select>
+                  <div class="help-block with-errors"></div>
               </div>
             </div>
           </div>
-          {% endfor %}
         {% for sample in samples %}
         <div class="row">
           <div class="col-lg-12">
@@ -120,7 +162,18 @@
 
 {% block custom_js %}
 <script>
-console.log(csrftoken);
+if($('#check_service_provider')[0].checked)
+  $('#servide_provider_input').hide();
+else
+  $('#servide_provider_input').show();
+
+$('.iradio_square-green').click(function(){
+  if($('#check_service_provider')[0].checked)
+    $('#servide_provider_input').hide();
+  else
+    $('#servide_provider_input').show();
+});
+
 $('#assign-employee-modal').on('show.bs.modal', function (e) {
   var $btn = $(e.relatedTarget);
   var $modal = $(this);

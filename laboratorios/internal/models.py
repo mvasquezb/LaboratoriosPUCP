@@ -386,6 +386,7 @@ class ServiceRequest(SafeDeleteModel):
     client = models.ForeignKey(Client, on_delete=models.CASCADE)
     supervisor = models.ForeignKey(Employee)
     state = models.ForeignKey('ServiceRequestState')
+    external_provider = models.ForeignKey('ExternalProvider', null=True, blank=True)
     observations = models.CharField(max_length=500, null=True, blank=True)
     expected_duration = models.IntegerField(default=10)
     registered_date = models.DateTimeField(

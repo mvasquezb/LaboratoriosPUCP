@@ -30,7 +30,7 @@ from internal.views.forms import *
 
 def index(request):
     context = {
-        'requests': ServiceRequest.objects.all()
+        'requests': ServiceRequest.all_objects.filter(deleted__isnull=True)
     }
     return render(request, 'internal/servicerequest/index.html', context)
 
@@ -123,11 +123,16 @@ def edit(request,
 
     context = {
         'form': service_request_form,
+        'service_request' : service_request,
         'samples': sample_list,
         'essays': essay_fill_list,
         'essays_methods': essay_methods_list,
         'essay_methods_chosen_forms': essay_methods_chosen_forms,
-        'pk': pk
+        'pk': pk,
+        'clients' : Client.all_objects.filter(deleted__isnull=True),
+        'employees' : Employee.all_objects.filter(deleted__isnull=True),
+        'states' : ServiceRequestState.all_objects.filter(deleted__isnull=True),
+        'external_providers' : ExternalProvider.all_objects.filter(deleted__isnull=True)
     }
     # verificacion
     forms_verified = 0  # Means true lol
