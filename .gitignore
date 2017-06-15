@@ -9,6 +9,7 @@
 __pycache__/
 node_modules/
 env/
+.vscode/
 
 # Folder only used for collectstatic
 laboratorios/staticfiles
