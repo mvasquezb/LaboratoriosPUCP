@@ -72,11 +72,12 @@
             </div>
             <div class="col-lg-6">
               <div class="form-group">
-                <div class="i-checks"><label class=""> <div class="iradio_square-green" style="position: relative;"><input id="check_service_provider" type="checkbox" value="option1" name="a" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div> <i></i>Tercerizar Servicio</label></div>
+                <div class="i-checks"><label class=""> <div class="iradio_square-green" style="position: relative;"><input {{ 'checked' if (service_request.external_provider) }} id="check_service_provider" type="checkbox" value="option1" name="a" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div> <i></i>Tercerizar Servicio</label></div>
               </div>
               <div class="form-group" id="servide_provider_input" style="display: none;">
                 <label>Proveedores</label>
                 <select name="external_provider" data-error="Este campo es obligatorio" required="" id="id_state" class="form-control">
+                <option value="" >---------</option>
                   {% for external_provider in external_providers %}
                       <option {{ 'selected' if (service_request.external_provider.id == external_provider.id) }} value="{{ external_provider.id }}">{{ external_provider.name }}</option>
                   {% endfor %}
@@ -163,9 +164,9 @@
 {% block custom_js %}
 <script>
 if($('#check_service_provider')[0].checked)
-  $('#servide_provider_input').hide();
-else
   $('#servide_provider_input').show();
+else
+  $('#servide_provider_input').hide();
 
 $('.iradio_square-green').click(function(){
   if($('#check_service_provider')[0].checked)
