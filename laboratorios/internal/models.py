@@ -597,13 +597,9 @@ class InventoryOrderDefault(SafeDeleteModel):
     _safedelete_policy = SOFT_DELETE_CASCADE
 
     audit_log = AuditlogHistoryField()
-<<<<<<< HEAD
-    detail = models.CharField(max_length=100)
-=======
     detail = models.CharField(max_length=100)
     registered_date = models.DateTimeField(
         auto_now_add=True,
         auto_now=False,
         blank=True
     )
->>>>>>> 890a8802527459756b970a4ee2fda2d320b2f093
