@@ -52,6 +52,8 @@
                         <a class="btn-white btn btn-xs" href="{{ url('internal:servicerequest.edit', request.id) }}">Editar</a>
                         <a class="btn-white btn btn-xs" href="{{ url('internal:servicerequest.delete', request.id) }}">Eliminar</a>
                         <a class="btn-white btn btn-xs" href="{{ url('internal:servicerequest.approve', request.id) }}">Aprobar</a>  <!--Agregado-->
+                        <a class="btn-white btn btn-xs" href="{{ url('internal:servicerequest.reportGenerator',request.id) }}">Reporte Interno</a>
+                        <a class="btn-white btn btn-xs" href="{{ url('internal:servicerequest.finalReport',request.id)}}">Informe Final</a>
                       </td>
                     </tr>
                     {% endif %}
@@ -65,4 +67,26 @@
       </div>
    </div>
 </div>
+<div class="message-container hidden">
+  <ul class="messages">
+    {% for message in messages %}
+    <li {% if message.tags %} data-tags="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+  </ul>
+</div>
 {% endblock page_content %}
+{% block custom_js %}
+<script>
+if ($('.message-container .messages li')) {
+  var msg = $('.message-container .messages li').first();
+  $.extend(toastr.options, {"positionClass": "toast-bottom-right",});
+  try {
+    toastr[msg.data('tags')](msg.text());
+  } catch (TypeError) {}
+}
+$('#attachment-table').DataTable({
+  responsive: true,
+});
+</script>
+
+{% endblock custom_js %}

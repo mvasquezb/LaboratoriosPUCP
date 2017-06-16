@@ -24,9 +24,14 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 # from django.core.files.storage import FileSystemStorage
 from django.http import HttpResponse
 
-from internal.models import *
-from internal.views.forms import *
+from ..models import *
+from ..views.forms import *
+from django.template.loader import render_to_string
 
+from io import BytesIO
+from django.http import HttpResponse
+from django.template.loader import get_template
+from xhtml2pdf import pisa
 
 def index(request):
     context = {
@@ -489,3 +494,144 @@ def downloadAttachedFile(request, id):
     response['Content-Disposition'] = 'attachment; filename=%s' % filename
 
     return response
+
+def reportGenerator(request,id):
+    template = 'internal/servicerequest/reportGeneratorView.html'
+    serviceRequest = ServiceRequest.objects.get(pk = id)
+    sample_list = Sample.all_objects.filter(deleted__isnull=True,request = serviceRequest)
+    context = {
+        'sample_list': sample_list,
+        'servicerequest': serviceRequest,
+    }
+    return render(request, template, context)
+
+
+def getEssayFillList(sample):
+    essayFillQuerySet = EssayFill.all_objects.filter(
+        deleted__isnull=True,
+        sample=sample)  ## Deberia ser solo 1 ensayo
+    essayFillList = list(essayFillQuerySet)
+    return essayFillList
+
+
+def getParameterFillList(methodFill):
+    ParameterQuerySet = EssayMethodParameterFill.all_objects.filter(deleted__isnull=True, essay_method=methodFill)
+    ParameterFillList = list(ParameterQuerySet)
+    return ParameterFillList
+
+
+def getMethodFillList(essayFill):
+    MethodsQuerySet = EssayMethodFill.all_objects.filter(deleted__isnull=True, essay=essayFill, chosen=True)
+    MethodsList = list(MethodsQuerySet)
+    return MethodsList
+
+def reportDetail(request, template='internal/servicerequest/reportDetail.html'):
+    if request.POST:
+        list_samples_id = request.POST.getlist('checks[]')
+        if  len(list_samples_id) > 0:
+            SampleCompleteList = []
+            EssayFillCompleteList = []
+            MethodFillCompleteList = []
+            ParameterFillCompleteList = []
+            for samples_id in list_samples_id:
+                sample = Sample.objects.get(pk=samples_id)
+                SampleCompleteList.append(sample)
+                essayFillList = getEssayFillList(sample)
+                EssayFillCompleteList.append(essayFillList)
+                thisSamplesMethodFillList = []
+                thisSamplesParameterFillList = []
+                for essayFill in essayFillList:
+                    MethodFillList = getMethodFillList(essayFill)
+                    thisSamplesMethodFillList.append(MethodFillList)
+                    thisEssaysParameterFillList = []
+                    for methodFill in MethodFillList:
+                        ParameterFillList = getParameterFillList(methodFill)
+                        thisEssaysParameterFillList.append(ParameterFillList)
+                    thisSamplesParameterFillList.append(thisEssaysParameterFillList)
+                MethodFillCompleteList.append(thisSamplesMethodFillList)
+                ParameterFillCompleteList.append(thisSamplesParameterFillList)
+
+            context = {
+                'SampleCompleteList': SampleCompleteList,
+                'EssayFillCompleteList': EssayFillCompleteList,
+                'MethodFillCompleteList' : MethodFillCompleteList,
+                'ParameterFillCompleteList' : ParameterFillCompleteList,
+            }
+            pdf = render_to_pdf('internal/servicerequest/reportDetailPDF.html', context)
+            return HttpResponse(pdf, content_type='application/pdf')
+            #return render(request, template, context)
+        else:
+            messages.error(
+                request,
+                'Debe seleccionar una muestra!'
+            )
+            return redirect('internal:servicerequest.reportGenerator', request.POST.get("b_reporte"))
+
+
+
+def finalReport(request,id, template='internal/servicerequest/reportDetail.html'):
+    serviceRequest = ServiceRequest.objects.get(pk=id)
+    list_samples_id = Sample.all_objects.filter(deleted__isnull=True,request=serviceRequest)
+    if len(list_samples_id) > 0:
+        SampleCompleteList = []
+        EssayFillCompleteList = []
+        MethodFillCompleteList = []
+        ParameterFillCompleteList = []
+        for samples in list_samples_id:
+            sample = Sample.objects.get(pk=samples.pk)
+            SampleCompleteList.append(sample)
+            essayFillList = getEssayFillList(sample)
+            EssayFillCompleteList.append(essayFillList)
+            thisSamplesMethodFillList = []
+            thisSamplesParameterFillList = []
+            for essayFill in essayFillList:
+                MethodFillList = getMethodFillList(essayFill)
+                thisSamplesMethodFillList.append(MethodFillList)
+                thisEssaysParameterFillList = []
+                for methodFill in MethodFillList:
+                    ParameterFillList = getParameterFillList(methodFill)
+                    thisEssaysParameterFillList.append(ParameterFillList)
+                thisSamplesParameterFillList.append(thisEssaysParameterFillList)
+            MethodFillCompleteList.append(thisSamplesMethodFillList)
+            ParameterFillCompleteList.append(thisSamplesParameterFillList)
+
+        context = {
+            'SampleCompleteList': SampleCompleteList,
+            'EssayFillCompleteList': EssayFillCompleteList,
+            'MethodFillCompleteList' : MethodFillCompleteList,
+            'ParameterFillCompleteList' : ParameterFillCompleteList,
+        }
+        pdf = render_to_pdf('internal/servicerequest/reportDetailPDF.html', context)
+        if pdf:
+            response = HttpResponse(pdf, content_type='application/pdf')
+            filename = "InformeFinal-%s.pdf" % ("Nombre del cliente")
+            filenameNoSpaces = "".join(filename.split())
+            content = "inline; filename='%s'" % (filenameNoSpaces)
+            download = request.GET.get("download")
+            if download:
+                content = "attachment; filename='%s'" % (filename)
+            response['Content-Disposition'] = content
+            return response
+        return HttpResponse("Not found")
+        #return HttpResponse(pdf, content_type='application/pdf')
+        #return render(request, template, context)
+    else:
+        messages.error(
+            request,
+            'No puede generar un informe de una solicitud que no tiene muestras'
+        )
+        return redirect(reverse('internal:servicerequest.index'),id)
+
+
+def render_to_pdf(template_src, context_dict={}):
+     template = get_template(template_src)
+     html  = template.render(context_dict)
+     result = BytesIO()
+     pdf = pisa.pisaDocument(BytesIO(html.encode("ISO-8859-1")), result)
+     if not pdf.err:
+         return HttpResponse(result.getvalue(), content_type='application/pdf')
+     return None
+
+
+def reportDetailPDF(request):
+    return
