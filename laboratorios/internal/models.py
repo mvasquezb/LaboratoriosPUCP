@@ -396,6 +396,7 @@ class ServiceRequest(SafeDeleteModel):
     audit_log = AuditlogHistoryField()
     client = models.ForeignKey(Client, on_delete=models.CASCADE)
     supervisor = models.ForeignKey(Employee)
+    priority = models.ForeignKey('ServiceRequestPriority', null=True, blank=True)
     state = models.ForeignKey('ServiceRequestState')
     external_provider = models.ForeignKey('ExternalProvider', null=True, blank=True)
     observations = models.CharField(max_length=500, null=True, blank=True)
@@ -408,6 +409,21 @@ class ServiceRequest(SafeDeleteModel):
 
     def __str__(self):
         return str(self.client) + ' | ' + str(self.state)
+
+
+@auditlog.register()
+class ServiceRequestPriority(SafeDeleteModel):
+    _safedelete_policy = SOFT_DELETE_CASCADE
+    slug = models.CharField(max_length=30)
+    value = models.PositiveIntegerField()
+    registered_date = models.DateTimeField(
+        auto_now_add=True,
+        auto_now=False,
+        blank=True
+    )
+
+    def __str__(self):
+        return self.slug
 
 
 @auditlog.register()
