@@ -46,6 +46,7 @@
                     Estado
                   </th>
                   <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-label="Browser: activate to sort column ascending">Acción</th>
+                  <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-label="Browser: activate to sort column ascending">Servicios</th>
                 </tr>
               </thead>
               <tbody>
@@ -72,6 +73,9 @@
                         <a  href="{{ url('internal:laboratory.edit', laboratory.id) }}" class="btn-white btn"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
                         <a class="myBtn1 btn-white btn" data-toggle="modal" data-target="#myModal1" data-url="{{ url('internal:laboratory.delete', laboratory.id) }}"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
                       </div>
+                    </td>
+                    <td>
+                      <a href="{{ url('internal:laboratory.services_index', laboratory.id) }}" class="btn-white btn">Ver servicios</a>
                     </td>
                   </tr>
                 {% endfor %}
@@ -161,7 +165,7 @@
 <script type="text/javascript">
 
 $(document).ready(function() {
- 
+
     // DataTable
     var table = $('#DataTables_Table_0').DataTable({
       "lengthChange": false,
@@ -191,7 +195,7 @@ $(document).ready(function() {
         "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
         "sSortDescending": ": Activar para ordenar la columna de manera descendente"
     }
-  
+
        }
 
     });
