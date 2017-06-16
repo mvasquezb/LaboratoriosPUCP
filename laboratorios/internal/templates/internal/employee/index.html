@@ -12,7 +12,15 @@
         <h2><strong>Listado de Usuarios</strong></h2>
     </div>
 </div>
-<div class="wrapper wrapper-content animated" >
+<div class="wrapper wrapper-content animated fadeInRight">
+  <div class="col-lg-2 col-lg-offset-10">
+    <a class="btn btn-primary pull-right" href="{{ url('internal:employee.create') }}">
+      <i class="fa fa-plus"></i>
+      Crear Empleado
+    </a>
+  </div>
+</div>
+<div class="wrapper wrapper-content animated fadeInRight main-wrapper-content">
   <div class="col-lg-12">
     <div class="ibox float-e-margins">
       <div class="ibox-content">
@@ -42,7 +50,7 @@
                       <div class="btn-group">
                         <a href="{{ url('internal:employee.show', employee.id) }}" class="btn-white btn"><i class="fa fa-eye" aria-hidden="true"></i></a>
                         <a href="{{ url('internal:employee.edit', employee.id) }}" class="btn-white btn"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
-                        <a class="btn-white btn" data-toggle="modal" data-target="#myModal1" data-url="{{ url('internal:employee.delete', employee.id) }}"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+                        <a class="myBtn1 btn-white btn" data-url="{{ url('internal:employee.delete', employee.id) }}"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
                       </div>
                     </td>
                   </tr>

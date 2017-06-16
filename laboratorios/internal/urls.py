@@ -83,16 +83,27 @@ urlpatterns = [
     url('^inventoryOrder/?$',
         views.inventoryOrder.index,
         name='inventoryOrder.index'),
+    url('^inventoryOrder/create/?$',
+        views.inventoryOrder.create,
+        name='inventoryOrder.create'),
+    url('^inventoryOrder/edit/(?P<pk>\d+)$',
+        views.inventoryOrder.edit,
+        name='inventoryOrder.edit'),
     url('^inventoryOrder/show/(?P<pk>\d+)$',
         views.inventoryOrder.show,
         name='inventoryOrder.show'),
+    url('^inventoryOrder/check/?$',
+        views.inventoryOrder.check,
+        name='inventoryOrder.check'),
     url('^inventoryOrder/approve/(?P<pk>\d+)$',
         views.inventoryOrder.approve,
         name='inventoryOrder.approve'),
     url('^inventoryOrder/reject/(?P<pk>\d+)$',
         views.inventoryOrder.reject,
         name='inventoryOrder.reject'),
-
+    url('^inventoryOrder/delete/(?P<pk>\d+)$',
+        views.inventoryOrder.delete,
+        name='inventoryOrder.delete'),
     #
     # ServiceRequest
     #
@@ -196,5 +207,41 @@ urlpatterns = [
     url('^sampleType/delete/(?P<id>\d+)/?$',
         views.sampleType.delete,
         name='sampleType.delete'),
+    #
+    # Essay
+    #
+    url('^essay/create$',
+        views.essay.create,
+        name='essay.create'),
+    url('^essay/(?P<pk>\d+)$',
+        views.essay.show,
+        name='essay.show'),
+    url('^essay/(?P<pk>\d+)/edit/?$',
+        views.essay.edit,
+        name='essay.edit'),
+    url('^essay/?$',
+        views.essay.index,
+        name='essay.index'),
+    url('^essay/(?P<pk>\d+)/delete/?$',
+        views.essay.delete,
+        name='essay.delete'),
+    #
+    # EssayMethods
+    #
+     url('^essaymethod/create$',
+         views.essaymethod.create,
+         name='essaymethod.create'),
+    url('^essaymethod/(?P<pk>\d+)$',
+        views.essaymethod.show,
+        name='essaymethod.show'),
+    url('^essaymethod/(?P<pk>\d+)/edit/?$',
+        views.essaymethod.edit,
+        name='essaymethod.edit'),
+    url('^essaymethod/?$',
+        views.essaymethod.index,
+        name='essaymethod.index'),
+    url('^essaymethod/(?P<pk>\d+)/delete/?$',
+        views.essaymethod.delete,
+        name='essaymethod.delete'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
