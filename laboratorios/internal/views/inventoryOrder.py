@@ -2,47 +2,25 @@ from django.shortcuts import (
     render,
     get_object_or_404,
     redirect,
-    reverse,
 )
 from django.contrib import messages
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from internal.models import *
+from internal.views.forms import (
+    InventoryOrderForm,
+    InventoryOrderEditForm
+)
 
 
 def index(request,
           template='internal/inventoryOrder/index.html',
           extra_context=None):
-    # types = InventoryOrder.all_objects.filter(deleted__isnull=True)
-    # context = {'inventoryOrder_list': types}
-
-    search = request.GET.get('search')
-    if search:
-        inventoryOrder_listAux = InventoryOrder.objects.filter(
-            essay__sample__name__icontains=search,
-            # ).order_by('username')
-        ).order_by('essay__sample__name')
-        inventoryOrder_list = inventoryOrder_listAux.filter(
-            unsettled=True
-        )
-    else:
-        inventoryOrder_list = InventoryOrder.objects.filter(
-            unsettled=True
-        ).order_by('essay__sample__name')
-
-    # inventoryOrder_list = InventoryOrder.all_objects.filter(deleted__isnull=True)
-
-    paginator = Paginator(inventoryOrder_list, 3)
-    page = request.GET.get('page')
-    try:
-        inventoryOrder = paginator.page(page)
-    except PageNotAnInteger:
-        inventoryOrder = paginator.page(1)
-    except EmptyPage:
-        inventoryOrder = paginator.page(paginator.num_pages)
+    inventoryOrders = InventoryOrder.all_objects.filter(
+        deleted__isnull=True,
+        unsettled=True
+    ).order_by('essay__sample__name')
 
     context = {
-        'inventoryOrder_list': inventoryOrder,
-        'paginator': paginator,
+        'inventoryOrder_list': inventoryOrders,
     }
     if extra_context is not None:
         context.update(extra_context)
@@ -52,50 +30,86 @@ def index(request,
 def show(request,
          pk,
          template='internal/inventoryOrder/show.html'):
-    inventoryOrder = get_object_or_404(InventoryOrder, pk=pk)
+    inventoryOrder = get_object_or_404(
+        InventoryOrder.all_objects.filter(deleted__isnull=True),
+        pk=pk
+    )
     context = {
         'inventoryOrder': inventoryOrder
     }
     return render(request, template, context)
 
-# def index(request,
-#          template='internal/inventoryOrder/index.html',
-#          extra_context=None):
-#    search = request.GET.get('search')
-#    if search:
-#        inventoryOrder_list = InventoryOrder.objects.filter(
-#            username__icontains=search
-#        ).order_by('essay.essay.name')
-#    else:
-#        inventoryOrder_list = InventoryOrder.objects.order_by('essay.essay.name')
-#
-#    paginator = Paginator(inventoryOrder_list, 3)
-#    page = request.GET.get('page')
-#    try:
-#        inventoryOrder = paginator.page(page)
-#    except PageNotAnInteger:
-#        inventoryOrder = paginator.page(1)
-#    except EmptyPage:
-#        inventoryOrder = paginator.page(paginator.num_pages)
-#
-#    context = {
-#        'inventoryOrder_list': inventoryOrder,
-#        'paginator': paginator,
-#    }
-#    if extra_context is not None:
-#        context.update(extra_context)
-#    return render(request, template, context)
+
+def check(request,
+          template='internal/inventoryOrder/indexCheck.html',
+          extra_context=None):
+    inventoryOrder_listF = InventoryOrder.objects.filter(
+        deleted__isnull=True,
+        unsettled=True
+    ).order_by('essay__sample__name')
+
+    # inventoryOrder_list = InventoryOrder..objects.filter(deleted__isnull=True)
+    context = {
+        'inventoryOrder_list': inventoryOrder_listF,
+    }
+    if extra_context is not None:
+        context.update(extra_context)
+    return render(request, template, context)
+
+
+def create(request,
+           template='internal/inventoryOrder/create.html'):
+    form = InventoryOrderForm(request.POST or None)
+    context = {
+        'essayies': EssayFill.all_objects.filter(
+            deleted__isnull=True,
+        ),
+    }
+    if request.method == 'POST':
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Se ha creado la solicitud exitosamante!')
+            return redirect('internal:inventoryOrder.index')
+    return render(request, template, context)
+
+
+def edit(request, pk,
+         template='internal/inventoryOrder/edit.html'):
+    inventoryOrder = get_object_or_404(
+        InventoryOrder.all_objects.filter(deleted__isnull=True),
+        pk=pk
+    )
+    form = InventoryOrderEditForm(request.POST or None, instance=inventoryOrder)
+    context = {
+        'inventoryOrder': inventoryOrder,
+        'essayies': EssayFill.all_objects.filter(deleted__isnull=True),
+    }
+
+    if request.method == 'POST':
+        print(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Se ha editado con exito')
+            return redirect('internal:inventoryOrder.index')
+        else:
+            messages.warning(request, 'Datos invalidos')
+    return render(request, template, context)
 
 
 def approve(request, pk):
-    inventoryOrder = get_object_or_404(InventoryOrder, pk=pk)
+    inventoryOrder = get_object_or_404(
+        InventoryOrder.all_objects.filter(deleted__isnull=True),
+        pk=pk
+    )
     inventoryOrder.unsettled = False
     # Falta crear añadir inventory item
     # stored = InventoryItem.__new__()
 
     # newInventoryItem = InventoryItem( sample = inventoryOrder.essay.sample , quantity = inventoryOrder.essay.quantity)
     newInventoryItem = InventoryItem(
-        sample=inventoryOrder.essay.sample, quantity=inventoryOrder.essay.quantity)
+        sample=inventoryOrder.essay.sample,
+        quantity=inventoryOrder.essay.quantity
+    )
     # newInventoryItem = InventoryItem( inventoryOrder.essay.sample._get_pk_val , inventoryOrder.essay.quantity)
 
     newInventoryItem.save()
@@ -120,12 +134,25 @@ def approve(request, pk):
 
 
 def reject(request, pk):
-    inventoryOrder = get_object_or_404(InventoryOrder, pk=pk)
+    inventoryOrder = get_object_or_404(
+        InventoryOrder.all_objects.filter(deleted__isnull=True),
+        pk=pk
+    )
     inventoryOrder.unsettled = False
     inventoryOrder.save()
     messages.success(request, 'Se rechazo el almacenamiento con exito!')
-    # messages.success(request, 'Se rechazo el almacenamiento!')
+    return redirect('internal:inventoryOrder.check')
+
+
+def delete(request, pk):
+    inventoryOrder = get_object_or_404(
+        InventoryOrder.all_objects.filter(deleted__isnull=True),
+        pk=pk
+    )
+    inventoryOrder.delete()
+
     return redirect('internal:inventoryOrder.index')
+
 
 # def approve(request,
 #          template='internal/inventoryOrder/index.html',

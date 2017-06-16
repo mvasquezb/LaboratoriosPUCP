@@ -76,10 +76,10 @@
               </div>
               <div class="form-group" id="servide_provider_input" style="display: none;">
                 <label>Proveedores</label>
-                <select name="external_provider" data-error="Este campo es obligatorio" required="" id="id_state" class="form-control">
-                <option value="" >---------</option>
+                <select name="external_provider" data-error="Este campo es obligatorio" id="id_state" class="form-control">
+                  <option value="" >---------</option>
                   {% for external_provider in external_providers %}
-                      <option value="{{ external_provider.id }}" {{ 'selected' if (service_request.external_provider.id == external_provider.id) }}>{{ external_provider.name }}</option>
+                      <option value="{{ external_provider.id }}" {% if service_request.external_provider.id == external_provider.id %}'selected'{% endif %}>{{ external_provider.name }}</option>
                   {% endfor %}
                 </select>
                   <div class="help-block with-errors"></div>
