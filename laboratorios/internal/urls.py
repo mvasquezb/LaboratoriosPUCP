@@ -165,6 +165,9 @@ urlpatterns = [
     url('^servicecontract/(?P<pk>\d+)/delete/?$',
         views.servicecontract.delete,
         name='servicecontract.delete'),
+    url('^servicecontract/approve/(?P<pk>\d+)$',
+        views.servicecontract.approve,
+        name='servicecontract.approve'),
     #
     # Laboratory
     #

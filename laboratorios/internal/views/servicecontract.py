@@ -24,11 +24,10 @@ from internal.models import *
 def index(request,
           template='internal/servicecontract/index.html',
           extra_context=None):
-    contracts = ServiceContract.objects.all()
+    contracts = ServiceContract.all_objects.filter(deleted__isnull=True)
     context = {
         'servicecontract_list': contracts,
     }
-
     if extra_context is not None:
         context.update(extra_context)
     return render(request, template, context)
@@ -49,13 +48,12 @@ def show(request,
         ServiceRequest.all_objects,
         pk=servicecontract.request.id
     )
-    search = servicerequest.id
-    # Filtramos por el campo request.id de la clase Sample
-    selected_samples = Sample.all_objects.filter(request__id=search)
+    #search = servicerequest.id
+    #selected_samples = Sample.objects.filter(request__id = search)     # Filtramos por el campo request.id de la clase Sample
     context = {
         'client': client,
         'servicerequest': servicerequest,
-        'selected_samples': selected_samples
+        #'selected_samples': selected_samples
     }
     return render(request, template, context)
 
@@ -63,10 +61,10 @@ def show(request,
 def delete(request, pk):
 
     servicecontract = get_object_or_404(ServiceContract.all_objects, pk=pk)
-    # servicerequest = get_object_or_404(
-    #     ServiceRequest.all_objects,
-    #     pk=servicecontract.request.pk
-    # )
+    servicerequest = get_object_or_404(
+        ServiceRequest.all_objects,
+        pk=servicecontract.request.pk
+    )
     servicecontract.delete()
 
     return redirect('internal:servicecontract.index')
@@ -83,6 +81,13 @@ def edit(request,
     service_request.save()
 
     service_contract.delete()       # Borramos el contrato
+
     return redirect("internal:servicerequest.edit", request_id)
     # return redirect(reverse("internal:servicecontract.index"))
     # return redirect(reverse_lazy("internal:servicerequest.index", request_id))
+
+
+def approve(request,
+            pk, template='internal/servicecontract/index.html'):
+
+    return redirect(reverse("internal:servicecontract.index"))
