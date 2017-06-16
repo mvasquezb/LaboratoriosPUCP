@@ -396,7 +396,7 @@ class ServiceRequest(SafeDeleteModel):
     audit_log = AuditlogHistoryField()
     client = models.ForeignKey(Client, on_delete=models.CASCADE)
     supervisor = models.ForeignKey(Employee)
-    priority = models.ForeignKey('ServiceRequestPriority', null=True)
+    priority = models.ForeignKey('ServiceRequestPriority', null=True, blank=True)
     state = models.ForeignKey('ServiceRequestState')
     external_provider = models.ForeignKey('ExternalProvider', null=True, blank=True)
     observations = models.CharField(max_length=500, null=True, blank=True)
