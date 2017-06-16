@@ -527,6 +527,8 @@ def getMethodFillList(essayFill):
 
 def reportDetail(request, template='internal/servicerequest/reportDetail.html'):
     if request.POST:
+        if "b_cancel" in request.POST:
+            return redirect('internal:servicerequest.index')
         list_samples_id = request.POST.getlist('checks[]')
         if  len(list_samples_id) > 0:
             SampleCompleteList = []
