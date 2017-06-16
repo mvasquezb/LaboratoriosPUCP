@@ -167,6 +167,9 @@ urlpatterns = [
     url('^servicerequest/view_workload_per_request/?$',
         views.servicerequest.workload_view_per_request,
         name='servicerequest.workload_view_per_request'),
+    url('^servicecontract/approve/(?P<pk>\d+)$',
+        views.servicecontract.approve,
+        name='servicecontract.approve'),
     #
     # Laboratory
     #

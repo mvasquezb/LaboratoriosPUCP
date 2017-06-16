@@ -44,7 +44,7 @@
                </thead>
                <tbody>
                   {% for request in requests %}
-                    {% if request.state.description != "Verificado"  %}      <!--  Esto es para no mostrar las solicitudes que han sido aprobadas, pues se convierten en contratos-->
+                    {% if request.state.description != "Aprobado"  %}      <!--  Esto es para no mostrar las solicitudes que han sido aprobadas, pues se convierten en contratos-->
 
                     <tr>
                       <td>{{ loop.index }}</td>

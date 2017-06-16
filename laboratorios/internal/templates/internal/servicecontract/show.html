@@ -17,26 +17,30 @@
                     <div class="row">
                         <div class="col-lg-6">
                             <div class="form-group">
-                                <label>Nombre de Usuario</label>
-                                <div class="text-primary">{{ client.username }}</div>
+                                <label>Nombre de Cliente</label>
+                                <div class="text-primary">{{ client }}</div>
                             </div>
                             <div class="form-group">
                                 <label>Número de documento</label>
                                 <div class="text-primary">{{ client.doc_number }}</div>
                             </div>
                             <div class="form-group">
-                                <label>Correo</label>
-                                <div class="text-primary">{{ client.email }}</div>
+                                <label>Número telefónico</label>
+                                <div class="text-primary">{{ client.phone_number }}</div>
                             </div>
                         </div>
                         <div class="col-lg-6">
                             <div class="form-group">
-                                <label>ID Servicio</label>
+                                <label># Servicio</label>
                                 <div class="text-primary">{{ servicerequest.id }}</div>
                             </div>
                             <div class="form-group">
                                 <label>Supervisor</label>
-                                <div class="text-primary">{{ servicerequest.supervisor.username }}</div>
+                                <div class="text-primary">{{ servicerequest.supervisor }}</div>
+                            </div>
+                          <div class="form-group">
+                                <label>Estado</label>
+                                <div class="text-primary">{{ servicerequest.state }}</div>
                             </div>
                             <div class="form-group">
                                 <label>Observaciones</label>

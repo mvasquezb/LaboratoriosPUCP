@@ -27,30 +27,14 @@ from django.core.urlresolvers import reverse_lazy
 
 
 def index(request, template='internal/servicecontract/index.html', extra_context=None):
-    search = request.GET.get('search')
-    if search:
-        servicecontract_list = ServiceContract.objects.filter(
-            client__username=search)     # Filtramos por el campo client.username de la clase ServiceContract
-    else:
-        servicecontract_list = ServiceContract.objects.order_by('id')
 
-    paginator = Paginator(servicecontract_list, 3)     # Esto es para mostrar la lista en 3 paginas
-    page = request.GET.get('page')
-    try:
-        contracts = paginator.page(page)
-    except PageNotAnInteger:
-        contracts = paginator.page(1)
-    except EmptyPage:
-        contracts = paginator.page(paginator.num_pages)
-
-    context = {
-        'servicecontract_list': contracts,
-        'paginator': paginator,
-    }
+    contracts = ServiceContract.all_objects.filter(deleted__isnull=True)
+    context = {'servicecontract_list': contracts,}
 
     if extra_context is not None:
         context.update(extra_context)
     return render(request, template, context)
+
 
 ######################################
 def show(request,
@@ -59,22 +43,23 @@ def show(request,
     servicecontract = get_object_or_404(ServiceContract, pk=pk)
     client = get_object_or_404(Client, pk = servicecontract.client.id)
     servicerequest = get_object_or_404(ServiceRequest, pk=servicecontract.request.id)
-    search = servicerequest.id
-    selected_samples = Sample.objects.filter(request__id = search)     # Filtramos por el campo request.id de la clase Sample
+    #search = servicerequest.id
+    #selected_samples = Sample.objects.filter(request__id = search)     # Filtramos por el campo request.id de la clase Sample
     context = {
         'client': client,
         'servicerequest': servicerequest,
-        'selected_samples': selected_samples
+        #'selected_samples': selected_samples
     }
     return render(request, template, context)
 
-def delete(request, pk):
 
+def delete(request, pk):
     servicecontract = get_object_or_404(ServiceContract, pk=pk)
     servicerequest = get_object_or_404(ServiceRequest, pk = servicecontract.request.pk)
     servicecontract.delete()
 
     return redirect('internal:servicecontract.index')
+
 
 def edit(request,
             pk, template='internal/servicerequest/index.html'):
@@ -91,3 +76,7 @@ def edit(request,
     #return redirect(reverse("internal:servicecontract.index"))
     #return redirect(reverse_lazy("internal:servicerequest.index", idrequest))
 
+def approve(request,
+            pk, template='internal/servicecontract/index.html'):
+
+    return redirect(reverse("internal:servicecontract.index"))
