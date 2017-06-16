@@ -34,7 +34,7 @@ def create(request,
            template='internal/role/create.html'):
     form = RoleForm(request.POST or None)
     context = {
-        'permissions': Permission.all_objects.filter(deleted__isnull=True),
+        'permissions': Permission.objects.all(),
         'form': form
     }
     if request.method == 'POST':
