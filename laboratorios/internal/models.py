@@ -132,6 +132,7 @@ class Essay(SafeDeleteModel):
     audit_log = AuditlogHistoryField()
     name = models.CharField(max_length=100)
     description = models.CharField(max_length=100)
+    registered_date = models.DateTimeField(auto_now_add=True, auto_now=False)
     essay_methods = models.ManyToManyField(
         'EssayMethod',
         related_name='essays',
@@ -147,7 +148,10 @@ class Essay(SafeDeleteModel):
         return self.name
 
     def get_essay_methods(self):
-        return EssayMethod.objects.filter(essays=self)
+        return EssayMethod.all_objects.filter(
+            deleted__isnull=True,
+            essays=self
+        )
 
     def get_essay_methods_count(self):
         return len(self.get_essay_methods())
@@ -185,7 +189,10 @@ class EssayMethod(SafeDeleteModel):
         return self.name
 
     def get_parameters(self):
-        return EssayMethodParameter.objects.filter(essaymethods=self)
+        return EssayMethodParameter.all_objects.filter(
+            deleted__isnull=True,
+            essaymethods=self
+        )
 
     def get_parameter_count(self):
         return len(self.get_parameters())
@@ -251,7 +258,10 @@ class EssayFill(SafeDeleteModel):
         if essay_insert is None:
             return
 
-        methods_to_delete = EssayMethodFill.objects.filter(essay=self)
+        methods_to_delete = EssayMethodFill.objects.filter(
+            deleted__isnull=True,
+            essay=self
+        )
         for i in range(0, len(methods_to_delete)):
             methods_to_delete[i].delete()
 
@@ -316,10 +326,10 @@ class EssayMethodParameterFill(SafeDeleteModel):
     parameter = models.ForeignKey(EssayMethodParameter)
     value = models.CharField(
         max_length=20,
-        null=True,
+        default='',
         blank=True
     )  # Is this always a numeric value ?
-    uncertainty = models.FloatField(null=True, blank=True)
+    uncertainty = models.FloatField(default=0, blank=True)
     essay_method = models.ForeignKey(
         EssayMethodFill,
         on_delete=models.CASCADE,
@@ -332,7 +342,7 @@ class EssayMethodParameterFill(SafeDeleteModel):
     )
 
     def __str__(self):
-        return str(self.parameter) + ' | ' + self.value
+        return str(self.parameter) + ' | ' + self.value or ''
 
     def create(self,
                essay_method_insert=None,
@@ -341,6 +351,7 @@ class EssayMethodParameterFill(SafeDeleteModel):
             return
         self.essay_method = essay_method_insert
         self.parameter = essay_method_param_insert
+        print(self)
         self.save()
 
 
@@ -385,7 +396,9 @@ class ServiceRequest(SafeDeleteModel):
     audit_log = AuditlogHistoryField()
     client = models.ForeignKey(Client, on_delete=models.CASCADE)
     supervisor = models.ForeignKey(Employee)
+    priority = models.ForeignKey('ServiceRequestPriority', null=True, blank=True)
     state = models.ForeignKey('ServiceRequestState')
+    external_provider = models.ForeignKey('ExternalProvider', null=True, blank=True)
     observations = models.CharField(max_length=500, null=True, blank=True)
     expected_duration = models.IntegerField(default=10)
     priority = models.ForeignKey('ServiceRequestPriority', null=True, blank=True)
@@ -398,13 +411,21 @@ class ServiceRequest(SafeDeleteModel):
     def __str__(self):
         return str(self.client) + ' | ' + str(self.state)
 
+
 @auditlog.register()
 class ServiceRequestPriority(SafeDeleteModel):
-    slug = models.CharField(max_length=20)
+    _safedelete_policy = SOFT_DELETE_CASCADE
+    slug = models.CharField(max_length=30)
     value = models.PositiveIntegerField()
+    registered_date = models.DateTimeField(
+        auto_now_add=True,
+        auto_now=False,
+        blank=True
+    )
 
     def __str__(self):
-        return str(self.slug)
+        return self.slug
+
 
 @auditlog.register()
 class ServiceRequestState(SafeDeleteModel):
@@ -443,7 +464,6 @@ class RequestAttachment(SafeDeleteModel):
         blank=True
     )
 
-
 @auditlog.register()
 class ServiceContract(SafeDeleteModel):
     _safedelete_policy = SOFT_DELETE_CASCADE
@@ -456,7 +476,6 @@ class ServiceContract(SafeDeleteModel):
         auto_now=False,
         blank=True
     )
-
 
 @auditlog.register()
 class ServiceContractModification(SafeDeleteModel):
@@ -484,7 +503,6 @@ class Quotation(SafeDeleteModel):
         auto_now=False,
         blank=True
     )
-
 
 @auditlog.register()
 class SampleType(SafeDeleteModel):
@@ -551,7 +569,7 @@ class InventoryItem(SafeDeleteModel):
     quantity = models.PositiveIntegerField()
     # location = models.CharField(max_length=200)
     # inventory = models.ForeignKey(Inventory, on_delete=models.CASCADE)
-
+    state = models.CharField(max_length=100, null=True)
     # def __str__(self):
     #     return self.name
     registered_date = models.DateTimeField(
