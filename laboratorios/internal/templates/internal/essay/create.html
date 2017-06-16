@@ -2,42 +2,66 @@
 
 
 {% block page_content %}
-        <form id=essayform action="{{ url('internal:essay.create') }}" method="post">{% csrf_token %}
-        {{form.as_p()}}
-        <input type="submit" id=submit_button value="Registrar" class="btn btn-primary">
-        <div id="json_div" style="display: none;">
-            <form id="json_form" novalidate>
-            <p><label for="id_js_data">js_data:</label> <input type="text" name="js_data" maxlength="1024" id="id_js_data"/></p>
-            </form>
-        </div>
-        <div id=extra_space>
-        </div>
-        <div>
-            <form id="myForm">
-            <div id=method_details>
+<div class="row border-bottom white-bg dashboard-header">
+    <div class="col-md-6">
+        <h2><strong>Crear Nuevo Ensayo</strong></h2>
+    </div>
+</div>
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="col-lg-12">
+        <div class="ibox float-e-margins">
+            <div class="ibox-content">
+                <form data-toggle="validator" id="essayform" action="{{ url('internal:essay.create') }}" method="post">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label>Nombre *</label>
+                                <input type="text" class="form-control" name="name" required data-error="El Nombre es obligatorio" placeholder="Nombre">
+                                <div class="help-block with-errors"></div>
+                            </div>
+                            <div class="form-group">
+                                <label>Descripción</label>
+                                <textarea class="form-control" name="description" placeholder="Descripción"></textarea>
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+                    </div>
+                <input type="submit" id="submit_button" value="Registrar" class="btn btn-primary">
+                <div id="json_div" style="display: none;">
+                    <form id="json_form" novalidate>
+                    <p><label for="id_js_data">js_data:</label> <input type="text" name="js_data" maxlength="1024" id="id_js_data"/></p>
+                    </form>
+                </div>
+                <div class="row">
+                    <form id="myForm">
+                        <div id="method_details">
+                        </div>
+                        <div class="col-lg-3">
+                            <label>Agrega un método:</label>
+                            <select class="selectNumber form-control m-b" id="selectNumber1" onchange='doIt()'>
+                                <option>-------</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                </form>
             </div>
-            <div class="col-lg-4"><div class="ibox float-e-margins"><div class="ibox-title"><h5>
-                Escoge un metodo:
-                <select class=selectNumber id="selectNumber1" onchange='doIt()'>
-                <option>-------</option>
-            </select>
-            </h5>
-            </form>
         </div>
-        </form>
+    </div>
+</div>
 
 {% endblock page_content %}
 
 
 {% block custom_js %}
 <script type="text/javascript">
-console.log(csrftoken);
 $(document).ready(function(){
     var method_list = {{list_methods |safe}};
     var parameter_list = {{list_parameters |safe}};
     var selected_methods_list = [];
 
-    function deleteMethodSelect(id){
+    function deleteMethodSelect(id) {
         var div_name = id.replace('close','method');
         console.log(div_name);
         $('#'+div_name).remove();
@@ -67,8 +91,8 @@ $(document).ready(function(){
         }
         selected_methods_list.push(method_id_gen);
         // Seccion de código para agregar el bloque html de un método seleccionado
-        $(selectForm).append('<div id=method_div'+method_id_gen.toString()+' class="col-lg-4"><div class="ibox float-e-margins">'
-                                +'<div class="ibox-title">'
+        $(selectForm).append('<div id=method_div'+method_id_gen.toString()+' class="col-lg-3"><div class="ibox float-e-margins essay_method_container">'
+                                +'<div class="ibox-title essay_method_title">'
                                     +'<h5 class=method_name>'+name+'</h5> <span class="label label-primary"></span>'
                                     +'<div class="ibox-tools">'
                                         +'<a class="close-link" onclick=deleteMe(this.id) id=close_div'+method_id_gen.toString()+'>'

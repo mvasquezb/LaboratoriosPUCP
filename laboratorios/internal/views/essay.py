@@ -156,12 +156,15 @@ def edit(request,
         list_essay_methods.append(obj.id)
 
 
-    context = {'form': form,
-    'list_methods': json.dumps(list_methods),
-    'list_parameters':json.dumps(list_essay_method_parameters),
-    'json_form':json_form,
-    'list_essay_methods':list_essay_methods,
-    'pk':pk}
+    context = {
+        'form': form,
+        'list_methods': json.dumps(list_methods),
+        'list_parameters':json.dumps(list_essay_method_parameters),
+        'json_form':json_form,
+        'list_essay_methods':list_essay_methods,
+        'pk':pk,
+        'essay' : essay
+    }
     if request.method == 'POST':
         if form.is_valid():
             essay_saved=form.save()

@@ -1,32 +1,39 @@
 {% extends 'internal/base_internal.html' %}
 
-
+ 
 {% block page_content %}
-        <form id=essaymethodform action="{{ url('internal:essaymethod.create') }}" method="post">{% csrf_token %}
-        {{form.as_p()}}
-        <input type="submit" id=submit_button value="Registrar" class="btn btn-primary">
-        <div id="json_div" style="display: none;">
-            <form id="json_form" novalidate>
-            <p><label for="id_js_data">js_data:</label> <input type="text" name="js_data" id="id_js_data"/></p>
-            </form>
-        </div>
-        <div id=extra_space>
-        </div>
-        <div>
-            <form id="myForm">
-            <div id=parameter_details>
-            </div>
-            <div class="col-lg-4"><div class="ibox float-e-margins"><div class="ibox-title"><h5>
-                Escoge un Parametro:
-                <select class=selectNumber id="selectNumber1" onchange='doIt()'>
-                <option>-------</option>
-            </select>
-            <br>
-            <div id=createbutton><button id=create_button class="btn btn-primary">O Cree nuevo parámetro</button></div>
-            </h5>
-            </form>
-        </div>
+<div class="row border-bottom white-bg dashboard-header">
+    <div class="col-md-6">
+        <h2><strong>Crear Nuevo Método de Ensayo</strong></h2>
+    </div>
+</div>
+<div class="wrapper wrapper-content animated fadeInRight">
+    <form id=essaymethodform action="{{ url('internal:essaymethod.create') }}" method="post">{% csrf_token %}
+    {{form.as_p()}}
+    <input type="submit" id=submit_button value="Registrar" class="btn btn-primary">
+    <div id="json_div" style="display: none;">
+        <form id="json_form" novalidate>
+        <p><label for="id_js_data">js_data:</label> <input type="text" name="js_data" id="id_js_data"/></p>
         </form>
+    </div>
+    <div id=extra_space>
+    </div>
+    <div>
+        <form id="myForm">
+        <div id=parameter_details>
+        </div>
+        <div class="col-lg-4"><div class="ibox float-e-margins"><div class="ibox-title"><h5>
+            Escoge un Parametro:
+            <select class=selectNumber id="selectNumber1" onchange='doIt()'>
+            <option>-------</option>
+        </select>
+        <br>
+        <div id=createbutton><button id=create_button class="btn btn-primary">O Cree nuevo parámetro</button></div>
+        </h5>
+        </form>
+    </div>
+    </form>
+</div>
 
 {% endblock page_content %}
 
