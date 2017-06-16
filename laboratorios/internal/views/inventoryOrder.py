@@ -2,10 +2,8 @@ from django.shortcuts import (
     render,
     get_object_or_404,
     redirect,
-    reverse,
 )
 from django.contrib import messages
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from internal.models import *
 from internal.views.forms import (
     InventoryOrderForm,
@@ -32,7 +30,10 @@ def index(request,
 def show(request,
          pk,
          template='internal/inventoryOrder/show.html'):
-    inventoryOrder = get_object_or_404(InventoryOrder, pk=pk)
+    inventoryOrder = get_object_or_404(
+        InventoryOrder.all_objects.filter(deleted__isnull=True),
+        pk=pk
+    )
     context = {
         'inventoryOrder': inventoryOrder
     }
@@ -47,7 +48,7 @@ def check(request,
         unsettled=True
     ).order_by('essay__sample__name')
 
-    # inventoryOrder_list = InventoryOrder.objects.all()
+    # inventoryOrder_list = InventoryOrder..objects.filter(deleted__isnull=True)
     context = {
         'inventoryOrder_list': inventoryOrder_listF,
     }
@@ -60,11 +61,12 @@ def create(request,
            template='internal/inventoryOrder/create.html'):
     form = InventoryOrderForm(request.POST or None)
     context = {
-        'essayies': EssayFill.objects.all(),
+        'essayies': EssayFill.all_objects.filter(
+            deleted__isnull=True,
+        ),
     }
     if request.method == 'POST':
         if form.is_valid():
-
             form.save()
             messages.success(request, 'Se ha creado la solicitud exitosamante!')
             return redirect('internal:inventoryOrder.index')
@@ -73,11 +75,14 @@ def create(request,
 
 def edit(request, pk,
          template='internal/inventoryOrder/edit.html'):
-    inventoryOrder = get_object_or_404(InventoryOrder, pk=pk)
+    inventoryOrder = get_object_or_404(
+        InventoryOrder.all_objects.filter(deleted__isnull=True),
+        pk=pk
+    )
     form = InventoryOrderEditForm(request.POST or None, instance=inventoryOrder)
     context = {
         'inventoryOrder': inventoryOrder,
-        'essayies': EssayFill.objects.all(),
+        'essayies': EssayFill.all_objects.filter(deleted__isnull=True),
     }
 
     if request.method == 'POST':
@@ -92,7 +97,10 @@ def edit(request, pk,
 
 
 def approve(request, pk):
-    inventoryOrder = get_object_or_404(InventoryOrder, pk=pk)
+    inventoryOrder = get_object_or_404(
+        InventoryOrder.all_objects.filter(deleted__isnull=True),
+        pk=pk
+    )
     inventoryOrder.unsettled = False
     # Falta crear añadir inventory item
     # stored = InventoryItem.__new__()
@@ -126,7 +134,10 @@ def approve(request, pk):
 
 
 def reject(request, pk):
-    inventoryOrder = get_object_or_404(InventoryOrder, pk=pk)
+    inventoryOrder = get_object_or_404(
+        InventoryOrder.all_objects.filter(deleted__isnull=True),
+        pk=pk
+    )
     inventoryOrder.unsettled = False
     inventoryOrder.save()
     messages.success(request, 'Se rechazo el almacenamiento con exito!')
@@ -134,7 +145,10 @@ def reject(request, pk):
 
 
 def delete(request, pk):
-    inventoryOrder = get_object_or_404(InventoryOrder, pk=pk)
+    inventoryOrder = get_object_or_404(
+        InventoryOrder.all_objects.filter(deleted__isnull=True),
+        pk=pk
+    )
     inventoryOrder.delete()
 
     return redirect('internal:inventoryOrder.index')
