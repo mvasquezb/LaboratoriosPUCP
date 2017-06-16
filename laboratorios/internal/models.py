@@ -484,7 +484,7 @@ class ServiceContractModification(SafeDeleteModel):
 
     audit_log = AuditlogHistoryField()
     contract = models.ForeignKey(ServiceContract, on_delete=models.CASCADE)
-    description = models.CharField(max_length=100)
+    description = models.CharField(max_length=100)      # Aqui se colocará el idServiceRequestOriginal
     registered_date = models.DateTimeField(
         auto_now_add=True,
         auto_now=False,

@@ -14,11 +14,12 @@
 from django.shortcuts import (
     render,
     get_object_or_404,
+    get_list_or_404,
     redirect,
     reverse,
 )
 from django.contrib import messages
-from internal.models import *
+from ..models import *
 
 
 def index(request,
@@ -48,46 +49,98 @@ def show(request,
         ServiceRequest.all_objects,
         pk=servicecontract.request.id
     )
-    #search = servicerequest.id
-    #selected_samples = Sample.objects.filter(request__id = search)     # Filtramos por el campo request.id de la clase Sample
+
     context = {
         'client': client,
         'servicerequest': servicerequest,
-        #'selected_samples': selected_samples
     }
     return render(request, template, context)
 
 
 def delete(request, pk):
-
     servicecontract = get_object_or_404(ServiceContract.all_objects, pk=pk)
     servicerequest = get_object_or_404(
         ServiceRequest.all_objects,
         pk=servicecontract.request.pk
     )
+
+    servicerequest.delete()
     servicecontract.delete()
 
     return redirect('internal:servicecontract.index')
 
 
 def edit(request,
-         pk, template='internal/servicerequest/index.html'):
-    service_contract = ServiceContract.objects.get(pk=pk)
-    request_id = service_contract.request.pk
-    service_request = ServiceRequest.objects.get(pk=request_id)
+         pk, template='internal/servicerequest/edit.html'):
 
-    state = ServiceRequestState.objects.get(slug="modified")
+    service_contract = get_object_or_404(ServiceContract.all_objects, pk=pk)
+    request_id = service_contract.request.pk
+    service_request = get_object_or_404(ServiceRequest.all_objects, pk=request_id)
+
+    state = get_object_or_404(ServiceRequestState.all_objects, description ="Modificado")
+
     service_request.state = state  # Le asignamos el estado de "Modificado"
     service_request.save()
 
-    service_contract.delete()       # Borramos el contrato
+    # Creamos un ServiceRequest de copia, el cual almacenará la modificación
+    service_request_mod = ServiceRequest(client = service_request.client, supervisor = service_request.supervisor,
+                                         priority = service_request.priority, state = service_request.state,
+                                         external_provider = service_request.external_provider, observations = service_request.observations,
+                                         expected_duration = service_request.expected_duration)
+    service_request_mod.save()
 
-    return redirect("internal:servicerequest.edit", request_id)
-    # return redirect(reverse("internal:servicecontract.index"))
-    # return redirect(reverse_lazy("internal:servicerequest.index", request_id))
+    # Asociamos el servicio modificado al contrato
+    service_contract.request = service_request_mod
+    service_contract.save()
+
+    # Creamos el ServiceContractModification
+    service_contract_modification = ServiceContractModification(contract = service_contract, description = request_id)
+    service_contract_modification.save()
+
+    return redirect("internal:servicerequest.edit", service_request_mod.pk)
+
 
 
 def approve(request,
             pk, template='internal/servicecontract/index.html'):
 
-    return redirect(reverse("internal:servicecontract.index"))
+    service_contracts_mod_total = ServiceContractModification.all_objects.filter(deleted__isnull=True)        # obtenemos todos las modificaciones que no han sido eliminados
+    service_contract_mod = get_list_or_404(service_contracts_mod_total, contract=pk)            # obtenemos el contrato modificado
+
+    idrequestMod = service_contract_mod[0].contract.request.pk
+    idrequestOri = int(service_contract_mod[0].description)    # Obtenemos el id del servicio original asociado al contrato
+
+    service_request_Mod = get_object_or_404(ServiceRequest.all_objects, pk=idrequestMod)
+    service_request_Ori = get_object_or_404(ServiceRequest.all_objects, pk=idrequestOri)
+
+    # Se va a aprobar la modificacion por lo cual, el estado de dicho servicio será aprobado y el otro será borrado
+    state = get_object_or_404(ServiceRequestState.all_objects, description="Aprobado")
+    service_request_Mod.state = state  # Le asignamos el estado de "Aprobado"
+    service_request_Mod.save()
+    service_request_Ori.delete              # Borramos el servicio original
+    # El modificado ya estaba asociado al contrato asi que no habrá más cambios
+
+    return redirect("internal:servicecontract.index")
+
+############################################################
+def refuse (request,
+            pk, template='internal/servicecontract/index.html'):
+    service_contracts_mod_total = ServiceContractModification.all_objects.filter(deleted__isnull=True)  # obtenemos todos las modificaciones que no han sido eliminados
+    service_contract_mod = get_list_or_404(service_contracts_mod_total, contract=pk)  # obtenemos el contrato modificado
+
+    idrequestMod = service_contract_mod[0].contract.request.pk
+    idrequestOri = int(service_contract_mod[0].description)    # Obtenemos el id del servicio original asociado al contrato
+
+    service_request_Mod = get_object_or_404(ServiceRequest.all_objects, pk=idrequestMod)
+    service_request_Ori = get_object_or_404(ServiceRequest.all_objects, pk=idrequestOri)
+
+    # Se va a rechazar la modificacion por lo cual, el estado del servicio original será aprobado y el otro será borrado
+    state = get_object_or_404(ServiceRequestState.all_objects, description="Aprobado")
+    service_request_Ori.state = state  # Le asignamos el estado de "Aprobado"
+    service_request_Ori.save()
+    service_request_Mod.delete              # Borramos el servicio modificado
+    # El original no estaba asociado al contrato asi que habrá que hacerlo
+    service_contract_mod[0].contract.request = service_request_Ori
+    service_contract_mod[0].delete         #####################################3
+
+    return redirect("internal:servicecontract.index")
