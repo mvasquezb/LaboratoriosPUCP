@@ -2,31 +2,71 @@
 
 
 {% block page_content %}
-        <form id=essaymethodform action="{{ url('internal:essaymethod.edit',pk) }}" method="post">{% csrf_token %}
-        {{form.as_p()}}
-        <input type="submit" id=submit_button value="Guardar Cambios" class="btn btn-primary">
-        <div id="json_div" style="display: none;">
-            <form id="json_form" novalidate>
-            <p><label for="id_js_data">js_data:</label> <input type="text" name="js_data" id="id_js_data"/></p>
-            </form>
-        </div>
-        <div id=extra_space>
-        </div>
-        <div>
-            <form id="myForm">
-            <div id=parameter_details>
+<div class="row border-bottom white-bg dashboard-header">
+    <div class="col-md-6">
+        <h2><strong>Editar Método de Ensayo</strong></h2>
+    </div>
+</div>
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="col-lg-12">
+        <div class="ibox float-e-margins">
+            <div class="ibox-content">
+                <form id=essaymethodform action="{{ url('internal:essaymethod.edit',pk) }}" method="post">{% csrf_token %}
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label>Nombre*</label>
+                                <input value="{{ essay_method.name }}" type="text" class="form-control" name="name" required data-error="El Nombre es obligatorio" placeholder="Nombre">
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label>Precio*</label>
+                                <input value="{{ essay_method.price }}" id="price_field" type="number" class="form-control" required name="price" placeholder="100" data-error="Ingrese un valor válido">
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label>Descripción*</label>
+                                <textarea class="form-control" name="description" placeholder="Descripción">{{ essay_method.description }}</textarea>
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <input type="submit" id=submit_button value="Guardar Cambios" class="btn btn-primary">
+                            </div>
+                        </div>
+                    </div>
+                    <div id="json_div" style="display: none;">
+                        <form id="json_form" novalidate>
+                        <p><label for="id_js_data">js_data:</label> <input type="text" name="js_data" id="id_js_data"/></p>
+                        </form>
+                    </div>
+                    <div class="row">
+                        <form id="myForm">
+                        <div id=parameter_details>
+                        </div>
+                        <div class="col-lg-3">
+                        <label>Escoge un Parametro:</label>
+                            <select class="selectNumber form-control m-b" id="selectNumber1" onchange='doIt()'>
+                            <option>-------</option>
+                        </select>
+                        <div id=createbutton><button id=create_button class="btn btn-primary">O Cree nuevo parámetro</button></div>
+                        </div>
+                        </form>
+                    </div>
+                </form>
             </div>
-            <div class="col-lg-4"><div class="ibox float-e-margins"><div class="ibox-title"><h5>
-                Escoge un Parametro:
-                <select class=selectNumber id="selectNumber1" onchange='doIt()'>
-                <option>-------</option>
-            </select>
-            <br>
-            <div id=createbutton><button id=create_button class="btn btn-primary">O Cree nuevo parámetro</button></div>
-            </h5>
-            </form>
         </div>
-        </form>
+    </div>
+</div>
 
 {% endblock page_content %}
 
@@ -92,8 +132,8 @@ $(document).ready(function(){
         }
         selected_parameters_list.push(parameter_id_gen);
         // Seccion de código para agregar el bloque html de un método seleccionado
-        $(selectForm).append('<div id=parameter_div'+parameter_id_gen.toString()+' class="col-lg-4"><div class="ibox float-e-margins">'
-                                +'<div class="ibox-title">'
+        $(selectForm).append('<div id=parameter_div'+parameter_id_gen.toString()+' class="col-lg-3"><div class="ibox float-e-margins parameter_container">'
+                                +'<div class="ibox-title essay_method_title">'
                                     +'<h5 class="parameter_name hidden">'+parameter_id_gen+'</h5> <span class="label label-primary"></span>'
                                     +'<div class="ibox-tools">'
                                         +'<a class="close-link" onclick=deleteMe(this.id) id=close_div'+parameter_id_gen.toString()+'>'
@@ -147,8 +187,8 @@ $(document).ready(function(){
         }
         selected_parameters_list.push(parameter_id_gen);
         // Seccion de código para agregar el bloque html de un método seleccionado
-        $(selectForm).append('<div id=parameter_div'+parameter_id_gen.toString()+' class="col-lg-4"><div class="ibox float-e-margins">'
-                                +'<div class="ibox-title">'
+        $(selectForm).append('<div id=parameter_div'+parameter_id_gen.toString()+' class="col-lg-3"><div class="ibox float-e-margins parameter_container">'
+                                +'<div class="ibox-title essay_method_title">'
                                     +'<h5 class="parameter_name hidden">'+parameter_id_gen+'</h5> <span class="label label-primary"></span>'
                                     +'<div class="ibox-tools">'
                                         +'<a class="close-link" onclick=deleteMe(this.id) id=close_div'+parameter_id_gen.toString()+'>'
@@ -200,8 +240,8 @@ $(document).ready(function(){
     $('#create_button').click(function(evt){
         evt.preventDefault();
         var selectForm = '#parameter_details'
-        $(selectForm).append('<div id=created_parameter_div'+(created_parameters+1).toString()+' class="col-lg-4"><div class="ibox float-e-margins">'
-                                +'<div class="ibox-title">'
+        $(selectForm).append('<div id=created_parameter_div'+(created_parameters+1).toString()+' class="col-lg-3"><div class="ibox float-e-margins parameter_container">'
+                                +'<div class="ibox-title essay_method_title">'
                                     +'<h5 class="created_parameter_name hidden">'+(created_parameters+1).toString()+'</h5> <span class="label label-primary"></span>'
                                     +'<div class="ibox-tools">'
                                         +'<a class="close-link" onclick=deleteCreatedMe(this.id) id=close_div'+(created_parameters+1).toString()+'>'

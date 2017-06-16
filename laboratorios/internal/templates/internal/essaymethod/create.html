@@ -8,33 +8,66 @@
     </div>
 </div>
 <div class="wrapper wrapper-content animated fadeInRight">
-    <form id=essaymethodform action="{{ url('internal:essaymethod.create') }}" method="post">{% csrf_token %}
-    {{form.as_p()}}
-    <input type="submit" id=submit_button value="Registrar" class="btn btn-primary">
-    <div id="json_div" style="display: none;">
-        <form id="json_form" novalidate>
-        <p><label for="id_js_data">js_data:</label> <input type="text" name="js_data" id="id_js_data"/></p>
-        </form>
-    </div>
-    <div id=extra_space>
-    </div>
-    <div>
-        <form id="myForm">
-        <div id=parameter_details>
+    <div class="col-lg-12">
+        <div class="ibox float-e-margins">
+            <div class="ibox-content">
+                <form data-toggle="validator" id=essaymethodform action="{{ url('internal:essaymethod.create') }}" method="post">
+                {% csrf_token %}
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label>Nombre*</label>
+                                <input type="text" class="form-control" name="name" required data-error="El Nombre es obligatorio" placeholder="Nombre">
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label>Precio*</label>
+                                <input id="price_field" type="number" class="form-control" required name="price" placeholder="100" data-error="Ingrese un valor válido">
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label>Descripción*</label>
+                                <textarea class="form-control" name="description" placeholder="Descripción"></textarea>
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <input type="submit" id=submit_button value="Registrar" class="btn btn-primary">
+                            </div>
+                        </div>
+                    </div>
+                    <div id="json_div" style="display: none;">
+                        <form id="json_form" novalidate>
+                            <p><label for="id_js_data">js_data:</label> <input type="text" name="js_data" id="id_js_data"/></p>
+                        </form>
+                    </div>
+                    <div class="row">
+                        <form id="myForm">
+                            <div class="col-lg-3">
+                                <label>Escoge un Parametro:</label>
+                                <select class="selectNumber form-control m-b" id="selectNumber1" onchange='doIt()'>
+                                    <option>-------</option>
+                                </select>
+                                <div id=createbutton><button id=create_button class="btn btn-primary">O Cree nuevo parámetro</button></div>
+                            </div>
+                            <div id=parameter_details>
+                            </div>
+                        </form>
+                    </div>
+                </form>
+            </div>
         </div>
-        <div class="col-lg-4"><div class="ibox float-e-margins"><div class="ibox-title"><h5>
-            Escoge un Parametro:
-            <select class=selectNumber id="selectNumber1" onchange='doIt()'>
-            <option>-------</option>
-        </select>
-        <br>
-        <div id=createbutton><button id=create_button class="btn btn-primary">O Cree nuevo parámetro</button></div>
-        </h5>
-        </form>
     </div>
-    </form>
 </div>
-
 {% endblock page_content %}
 
 
@@ -66,10 +99,6 @@ $(document).ready(function(){
         created_parameters=created_parameters-1;
     }
 
-
-
-
-
     function parameterDetails(parameter_list,selectForm) {
         var x = document.getElementById("selectNumber1").selectedIndex;
         console.log(x);
@@ -90,8 +119,8 @@ $(document).ready(function(){
         }
         selected_parameters_list.push(parameter_id_gen);
         // Seccion de código para agregar el bloque html de un método seleccionado
-        $(selectForm).append('<div id=parameter_div'+parameter_id_gen.toString()+' class="col-lg-4"><div class="ibox float-e-margins">'
-                                +'<div class="ibox-title">'
+        $(selectForm).append('<div id=parameter_div'+parameter_id_gen.toString()+' class="col-lg-3"><div class="ibox float-e-margins parameter_container">'
+                                +'<div class="ibox-title essay_method_title">'
                                     +'<h5 class="parameter_name hidden">'+parameter_id_gen+'</h5> <span class="label label-primary"></span>'
                                     +'<div class="ibox-tools">'
                                         +'<a class="close-link" onclick=deleteMe(this.id) id=close_div'+parameter_id_gen.toString()+'>'
@@ -141,8 +170,8 @@ $(document).ready(function(){
     $('#create_button').click(function(evt){
         evt.preventDefault();
         var selectForm = '#parameter_details'
-        $(selectForm).append('<div id=created_parameter_div'+(created_parameters+1).toString()+' class="col-lg-4"><div class="ibox float-e-margins">'
-                                +'<div class="ibox-title">'
+        $(selectForm).append('<div id=created_parameter_div'+(created_parameters+1).toString()+' class="col-lg-3"><div class="ibox float-e-margins parameter_container">'
+                                +'<div class="ibox-title essay_method_title">'
                                     +'<h5 class="created_parameter_name hidden">'+(created_parameters+1).toString()+'</h5> <span class="label label-primary"></span>'
                                     +'<div class="ibox-tools">'
                                         +'<a class="close-link" onclick=deleteCreatedMe(this.id) id=close_div'+(created_parameters+1).toString()+'>'
@@ -211,6 +240,28 @@ $(document).ready(function(){
         console.log(data['csrfmiddlewaretoken'])
         });
     }
+});
+
+$(document).ready(function() {
+    $("#price_field").keydown(function (e) {
+        // Allow: backspace, delete, tab, escape, enter and .
+        if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 110, 190]) !== -1 ||
+             // Allow: Ctrl/cmd+A
+            (e.keyCode == 65 && (e.ctrlKey === true || e.metaKey === true)) ||
+             // Allow: Ctrl/cmd+C
+            (e.keyCode == 67 && (e.ctrlKey === true || e.metaKey === true)) ||
+             // Allow: Ctrl/cmd+X
+            (e.keyCode == 88 && (e.ctrlKey === true || e.metaKey === true)) ||
+             // Allow: home, end, left, right
+            (e.keyCode >= 35 && e.keyCode <= 39)) {
+                 // let it happen, don't do anything
+                 return;
+        }
+        // Ensure that it is a number and stop the keypress
+        if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+            e.preventDefault();
+        }
+    });
 });
 </script>
 
