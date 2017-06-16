@@ -68,6 +68,18 @@
           </a>
         </li>
         <li>
+          <a href="{{ url('internal:essay.index') }}">
+            <i class="fa fa-flask"></i>
+            <span class="nav-label">Plantillas de Ensayo</span>
+          </a>
+        </li>
+        <li>
+          <a href="{{ url('internal:essaymethod.index') }}">
+            <i class="fa fa-flask"></i>
+            <span class="nav-label">Métodos de Ensayo</span>
+          </a>
+        </li>
+        <li>
           <a href="{{ url('internal:servicecontract.index') }}">
             <i class="fa fa-th-large"></i>
             <span class="nav-label">Contratos</span>
@@ -130,6 +142,7 @@
 <script src="//cdnjs.cloudflare.com/ajax/libs/metisMenu/2.7.0/metisMenu.min.js"></script>
 <script src="{{ static('vendors/jquery-slimscroll/jquery.slimscroll.min.js') }}"></script>
 <script src="{{ static('vendors/pace-progress/pace.min.js') }}"></script>
+<script src="{{ static('js/icheck.min.js') }}"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
 <script src="{{ static('vendors/footable/footable.all.min.js') }}"></script>
 <script src="{{ static('vendors/validator.js') }}"></script>
@@ -152,6 +165,14 @@ $.ajaxSetup({
 function goBack() {
     window.history.back();
 }
+
+$(document).ready(function () {
+    $('.i-checks').iCheck({
+        checkboxClass: 'icheckbox_square-green',
+        radioClass: 'iradio_square-green',
+    });
+});
+
 </script>
 
 <!-- Theme script -->

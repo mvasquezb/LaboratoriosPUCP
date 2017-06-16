@@ -19,7 +19,6 @@ from datetime import *
 from django.http import JsonResponse
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.utils import timezone
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 # from django.conf import settings
 # from django.core.files.storage import FileSystemStorage
 from django.http import HttpResponse
@@ -32,16 +31,17 @@ def index(request,
           template='internal/servicerequest/index.html',
           extra_context=None):
     context = {
-        'requests': ServiceRequest.objects.all()
+        'requests': ServiceRequest.all_objects.filter(deleted__isnull=True)
     }
     if extra_context is not None:
         context.update(extra_context)
     return render(request, template, context)
 
+
 def create(request,
            pk,
            template='internal/servicerequest/create.html'):
-    selected_client = Client.objects.get(pk=pk)
+    selected_client = Client.all_objects.get(pk=pk)
     service_request_form = ServiceRequestForm(
         request.POST or None,
         initial={
@@ -65,7 +65,9 @@ def create(request,
 
 def select_client(request,
                   template='internal/servicerequest/select_client.html'):
-    clients = Client.objects.all().order_by('doc_number', 'user__username')
+    clients = Client.all_objects.filter(
+        deleted__isnull=True
+    ).order_by('doc_number', 'user__username')
     context = {'client_list': clients}
     return render(request, template, context)
 
@@ -94,24 +96,31 @@ def create_client(request,
 def edit(request,
          pk,
          template='internal/servicerequest/edit.html'):
-    service_request = ServiceRequest.objects.get(pk=pk)
+    service_request = ServiceRequest.all_objects.get(pk=pk)
     service_request_form = ServiceRequestForm(
         request.POST or None, instance=service_request)
     # For all samples and their selected essayFills in list
-    sample_list = Sample.objects.filter(request=service_request)
+    sample_list = Sample.all_objects.filter(
+        deleted__isnull=True,
+        request=service_request
+    )
     essay_fill_list = []
     essay_methods_list = []  # To get all essay_methods for every sample
     essay_methods_chosen_forms = []  # To get whether each essay_method is chosen or not
 
     for i in range(0, len(sample_list)):
         sample_listed = sample_list[i]
-        essay_fill = EssayFill.objects.filter(
+        essay_fill = EssayFill.all_objects.filter(
+            deleted__isnull=True,
             sample=sample_listed
         ).first()
 
         essay_fill_list.append(essay_fill)
         essay_methods_list.append(
-            EssayMethodFill.objects.filter(essay=essay_fill)
+            EssayMethodFill.all_objects.filter(
+                deleted__isnull=True,
+                essay=essay_fill
+            )
         )
         aux_essay_methods_forms = []
         for j in range(0, len(essay_methods_list[i])):
@@ -126,11 +135,18 @@ def edit(request,
 
     context = {
         'form': service_request_form,
+        'service_request': service_request,
         'samples': sample_list,
         'essays': essay_fill_list,
         'essays_methods': essay_methods_list,
         'essay_methods_chosen_forms': essay_methods_chosen_forms,
-        'pk': pk
+        'pk': pk,
+        'clients': Client.all_objects.filter(deleted__isnull=True),
+        'employees': Employee.all_objects.filter(deleted__isnull=True),
+        'states': ServiceRequestState.all_objects.filter(deleted__isnull=True),
+        'external_providers': ExternalProvider.all_objects.filter(
+            deleted__isnull=True
+        )
     }
     # verificacion
     forms_verified = 0  # Means true lol
@@ -162,7 +178,7 @@ def edit(request,
 def add_sample(request,
                pk,
                template='internal/servicerequest/add_sample.html'):
-    service_request = ServiceRequest.objects.get(pk=pk)
+    service_request = ServiceRequest.all_objects.get(pk=pk)
     sample_form = SampleForm(
         request.POST or None,
         initial={
@@ -187,10 +203,12 @@ def edit_sample(request,
                 pk_request,
                 pk_sample,
                 template='internal/servicerequest/edit_sample.html'):
-    sample = Sample.objects.get(pk=pk_sample)
+    sample = Sample.all_objects.get(pk=pk_sample)
     sample_form = SampleEditForm(request.POST or None, instance=sample)
     essay_fill_form = EssayFillSelectionForm(
-        request.POST or None, instance=EssayFill.objects.get(sample=sample))
+        request.POST or None,
+        instance=EssayFill.all_objects.get(sample=sample)
+    )
     forms = [sample_form, essay_fill_form]
     context = {
         'forms': forms,
@@ -206,7 +224,7 @@ def edit_sample(request,
 
 def delete(request,
            pk):
-    service_request = ServiceRequest.objects.get(pk=pk)
+    service_request = ServiceRequest.all_objects.get(pk=pk)
     service_request.delete()
     return redirect(reverse("internal:servicerequest.index"))
 
@@ -214,7 +232,7 @@ def delete(request,
 def delete_sample(request,
                   pk_request,
                   pk_sample):
-    sample = Sample.objects.get(pk=pk_sample)
+    sample = Sample.all_objects.get(pk=pk_sample)
     sample.delete()
     return redirect('internal:servicerequest.edit', pk_request)
 
@@ -228,10 +246,10 @@ def quotation(request,
               template='internal/servicerequest/quotation.html',
               extra_context=None):
     service_request = get_object_or_404(ServiceRequest, pk=request_id)
-    quotation, created = Quotation.objects.get_or_create(
+    quotation, created = Quotation.all_objects.get_or_create(
         request=service_request
     )
-    essay_list = EssayFill.objects.filter(
+    essay_list = EssayFill.all_objects.filter(
         sample__in=service_request.sample_set.all(),
     )
     quotation_essays = quotation.essay_fills.all()
@@ -276,7 +294,7 @@ def assign_employee(request,
     sample = get_object_or_404(service_request.sample_set.all(), pk=sample_id)
 
     essay = sample.essayfill_set.first()
-    essay_method_list = EssayMethodFill.objects.filter(
+    essay_method_list = EssayMethodFill.all_objects.filter(
         essay=essay,
         chosen=True,
     ).distinct()
@@ -284,7 +302,7 @@ def assign_employee(request,
     employee_q = Q()
     for essay_method in essay_method_list:
         employee_q &= Q(essay_methods=essay_method.essay_method)
-    employee_list = Employee.objects.filter(employee_q)
+    employee_list = Employee.all_objects.filter(employee_q)
     form = ServiceAssignEmployeeForm(
         request.POST or None,
         employee=employee_list
@@ -341,18 +359,20 @@ def assign_employee(request,
 # Agregado
 def approve(request,
             pk, template='internal/servicerequest/index.html'):
-        service_request = ServiceRequest.objects.get(pk=pk)
-        state = ServiceRequestState.objects.get(description="Aprobado")
+        service_request = ServiceRequest.all_objects.get(pk=pk)
+        state = ServiceRequestState.all_objects.get(description="Aprobado")
         service_request.state = state  # Le asignamos el estado de aprobado
         service_request.save()
-        client = Client.objects.get(pk=service_request.client.id)
+        client = Client.all_objects.get(pk=service_request.client.id)
 
-
-        service_contract = ServiceContract(client=client, request=service_request)
-        service_contract.save()  # Guardamos el service_contract en la tabla "ServiceContract"
+        service_contract = ServiceContract(
+            client=client,
+            request=service_request
+        )
+        service_contract.save()
         messages.success(request, 'Se ha aprobado la solicitud exitosamante!')
         return redirect('internal:servicerequest.index')
-        #return redirect(reverse("internal:servicerequest.index"))
+        # return redirect(reverse("internal:servicerequest.index"))
 
 
 def workload_view_per_request(request,
@@ -372,7 +392,9 @@ def workload_view_per_request(request,
         'Noviembre',
         'Diciembre'
     ]
-    service_request_list = ServiceRequest.objects.all()
+    service_request_list = ServiceRequest.all_objects.filter(
+        deleted__isnull=True
+    )
     my_data = []
     now = timezone.localtime(timezone.now())
     for i in range(0, len(service_request_list)):
@@ -421,9 +443,9 @@ def upload(request, id):
             return redirect('internal:serviceRequest.upload', id)
 
         # fs = FileSystemStorage()
-        sr_object = ServiceRequest.objects.get(pk=id)
+        sr_object = ServiceRequest.all_objects.get(pk=id)
         description = request.POST.get('text_description')
-        requestAttach = RequestAttachment.objects.create(
+        requestAttach = RequestAttachment.all_objects.create(
             request=sr_object,
             description=description,
             fileName="default"
@@ -442,7 +464,7 @@ def upload(request, id):
 
     return render(request, 'internal/serviceRequest/attachFile.html')
     # else:
-    #    ra = RequestAttachment.objects.get(description = 'baka5')
+    #    ra = RequestAttachment.all_objects.get(description = 'baka5')
     #    filename = ra.file.name.split('/')[-1]
     #    response = HttpResponse(ra.file, content_type='text/plain')
     #    response['Content-Disposition'] = 'attachment; filename=%s' % filename
@@ -456,7 +478,7 @@ def upload(request, id):
 
 def attachmentList(request, id):
     sr_object = get_object_or_404(ServiceRequest, pk=id)
-    requestAttachment_list = RequestAttachment.objects.filter(
+    requestAttachment_list = RequestAttachment.all_objects.filter(
         request=sr_object
     )
 
@@ -471,13 +493,13 @@ def attachmentList(request, id):
 def showAttachedFile(request, id):
     template = 'internal/serviceRequest/showAttachedFile.html'
     context = {
-        'selected_file': RequestAttachment.objects.get(pk=id),
+        'selected_file': RequestAttachment.all_objects.get(pk=id),
     }
     return render(request, template, context)
 
 
 def deleteAttachedFile(request, id):
-    requestAttached = RequestAttachment.objects.get(pk=id)
+    requestAttached = RequestAttachment.all_objects.get(pk=id)
     idRequest = requestAttached.request.pk
     filename = requestAttached.fileName
     requestAttached.file.delete()
@@ -487,7 +509,7 @@ def deleteAttachedFile(request, id):
 
 
 def downloadAttachedFile(request, id):
-    requestAttachment = RequestAttachment.objects.get(pk=id)
+    requestAttachment = RequestAttachment.all_objects.get(pk=id)
     filename = requestAttachment.file.name.split('/')[-1]
     response = HttpResponse(requestAttachment.file, content_type='text/plain')
     response['Content-Disposition'] = 'attachment; filename=%s' % filename

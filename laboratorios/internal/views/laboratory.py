@@ -38,10 +38,10 @@ def create(request,
             messages.error(request, 'Ese nombre de laboratorio ya existe')
             return HttpResponse(status=204)
     else:
-        users = Employee.objects.all()
-        service_hours = LaboratoryServiceHours.objects.all()
-        inventories = Inventory.objects.all()
-        essaymethods = EssayMethod.objects.all()
+        users = Employee.all_objects.filter(deleted__isnull=True)
+        service_hours = LaboratoryServiceHours.all_objects.filter(deleted__isnull=True)
+        inventories = Inventory.all_objects.filter(deleted__isnull=True)
+        essaymethods = EssayMethod.all_objects.filter(deleted__isnull=True)
         form = LaboratoryForm()
         context = {'users': users, 'service_hours': service_hours, 'inventories': inventories,
                    'essaymethods': essaymethods, 'form': form}
@@ -59,16 +59,16 @@ def edit(request,
     else :
         laboratory = Laboratory.objects.get(pk=pk)
         #
-        all_users = Employee.objects.all()
+        all_users = Employee.all_objects.filter(deleted__isnull=True)
         selected_users = laboratory.employees.all()
         #
-        all_service_hours = LaboratoryServiceHours.objects.all()
+        all_service_hours = LaboratoryServiceHours.all_objects.filter(deleted__isnull=True)
         selected_service_hours = laboratory.service_hours
         #
-        all_inventories = Inventory.objects.all()
+        all_inventories = Inventory.all_objects.filter(deleted__isnull=True)
         selected_inventories = laboratory.inventory.all()
         #
-        all_essaymethods = EssayMethod.objects.all()
+        all_essaymethods = EssayMethod.all_objects.filter(deleted__isnull=True)
         selected_essaymethods = laboratory.essay_methods.all()
         #
         form = LaboratoryForm()
@@ -99,16 +99,16 @@ def show(request,
     else :
         laboratory = Laboratory.objects.get(pk=pk)
         #
-        all_users = Employee.objects.all()
+        all_users = Employee.all_objects.filter(deleted__isnull=True)
         selected_users = laboratory.employees.all()
         #
-        all_service_hours = LaboratoryServiceHours.objects.all()
+        all_service_hours = LaboratoryServiceHours.all_objects.filter(deleted__isnull=True)
         selected_service_hours = laboratory.service_hours
         #
-        all_inventories = Inventory.objects.all()
+        all_inventories = Inventory.all_objects.filter(deleted__isnull=True)
         selected_inventories = laboratory.inventory.all()
         #
-        all_essaymethods = EssayMethod.objects.all()
+        all_essaymethods = EssayMethod.all_objects.filter(deleted__isnull=True)
         selected_essaymethods = laboratory.essay_methods.all()
         #
         form = LaboratoryForm()
