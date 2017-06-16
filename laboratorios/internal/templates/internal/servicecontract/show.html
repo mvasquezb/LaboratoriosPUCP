@@ -17,8 +17,8 @@
                     <div class="row">
                         <div class="col-lg-6">
                             <div class="form-group">
-                                <label>Nombre de Usuario</label>
-                                <div class="text-primary">{{ client.username }}</div>
+                                <label>Cliente</label>
+                                <div class="text-primary">{{ client }}</div>
                             </div>
                             <div class="form-group">
                                 <label>Número de documento</label>
@@ -31,12 +31,12 @@
                         </div>
                         <div class="col-lg-6">
                             <div class="form-group">
-                                <label>ID Servicio</label>
+                                <label>Servicio</label>
                                 <div class="text-primary">{{ servicerequest.id }}</div>
                             </div>
                             <div class="form-group">
                                 <label>Supervisor</label>
-                                <div class="text-primary">{{ servicerequest.supervisor.username }}</div>
+                                <div class="text-primary">{{ servicerequest.supervisor }}</div>
                             </div>
                             <div class="form-group">
                                 <label>Observaciones</label>
