@@ -103,12 +103,14 @@ class ClientForm(ModelForm):
 
 
 class ServiceRequestForm(ModelForm):
-    supervisor = forms.ModelChoiceField(queryset=Employee.all_objects.filter(deleted__isnull=True))
     def __init__(self, *args, **kwargs):
         super(ServiceRequestForm, self).__init__(*args, **kwargs)
         self.fields['client'].widget.attrs['class'] = 'form-control'
         self.fields['supervisor'].widget.attrs['class'] = 'form-control'
         self.fields['state'].widget.attrs['class'] = 'form-control'
+        self.fields['supervisor'].queryset = Employee.all_objects.filter(
+            deleted__isnull=True
+        )
 
     class Meta:
         model = ServiceRequest
@@ -126,7 +128,7 @@ class RoleForm(ModelForm):
         model = Role
         fields = ['name', 'description']
     permissions = forms.ModelMultipleChoiceField(
-        queryset=Permission.all_objects.filter(deleted__isnull=True))
+        queryset=Permission.objects.all())
 
 
 class EssayMethodFillChosenForm(ModelForm):
