@@ -52,7 +52,7 @@ def create(request,
                     parameter_obj.save()
                     parameter_obj.essaymethods.add(essaymethod_saved)
                     parameter_obj.save()
-        return redirect('internal:essaymethod.index')
+            return redirect('internal:essaymethod.index')
     return render(request, template, context)
 
 
@@ -80,13 +80,17 @@ def edit(request,
         if obj in essay_method.parameters.all():
             list_method_parameters.append(my_dict['id'])
     print(EssayMethodParameter.all_objects.filter(deleted__isnull=True))
-    context = {'form': form,
-               'list_parameters': json.dumps(list_essay_method_parameters),
-               'list_selected_parameters': json.dumps(list_method_parameters),
-               'json_form': json_form,
-               'pk': pk}
+    context = {
+        'form': form,
+        'list_parameters': json.dumps(list_essay_method_parameters),
+        'list_selected_parameters': json.dumps(list_method_parameters),
+        'json_form': json_form,
+        'pk': pk,
+        'essay_method': essay_method,
+    }
 
     if request.method == 'POST':
+        print(form.is_valid())
         if form.is_valid():
             essaymethod_saved = form.save()
             js_data = json.loads(json_form['js_data'].value())
@@ -112,7 +116,7 @@ def edit(request,
                     parameter_obj.save()
                     parameter_obj.essaymethods.add(essaymethod_saved)
                     parameter_obj.save()
-        return redirect('internal:essaymethod.index')
+            return redirect('internal:essaymethod.index')
     return render(request, template, context)
 
 
