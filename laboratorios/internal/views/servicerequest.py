@@ -360,7 +360,7 @@ def assign_employee(request,
 def approve(request,
             pk, template='internal/servicerequest/index.html'):
         service_request = ServiceRequest.all_objects.get(pk=pk)
-        state = ServiceRequestState.all_objects.get(description="Aprobado")
+        state = ServiceRequestState.all_objects.get(slug="approved")
         service_request.state = state  # Le asignamos el estado de aprobado
         service_request.save()
         client = Client.all_objects.get(pk=service_request.client.id)

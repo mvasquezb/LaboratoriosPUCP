@@ -463,6 +463,7 @@ class RequestAttachment(SafeDeleteModel):
         blank=True
     )
 
+
 @auditlog.register()
 class ServiceContract(SafeDeleteModel):
     _safedelete_policy = SOFT_DELETE_CASCADE
@@ -475,6 +476,7 @@ class ServiceContract(SafeDeleteModel):
         auto_now=False,
         blank=True
     )
+
 
 @auditlog.register()
 class ServiceContractModification(SafeDeleteModel):
