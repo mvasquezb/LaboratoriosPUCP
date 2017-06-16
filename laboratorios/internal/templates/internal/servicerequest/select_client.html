@@ -1,9 +1,11 @@
 
 {% extends 'internal/base_internal.html' %}
 
-{% block title %}{{ super() }} | Inicio{% endblock title %}
+{% block title %}{{ super() }} | Solicitudes{% endblock title %}
 
-{% block custom_css %}{% endblock custom_css %}
+{% block custom_css %}
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.15/css/jquery.dataTables.min.css">
+{% endblock custom_css %}
 
 {% block page_content %}
 <style>
@@ -17,16 +19,26 @@
     </div>
 </div>
 <div class="wrapper wrapper-content animated fadeInRight">
+  <div class="col-md-12">
+    <div class="text-right">
+      <a  href="{{ url('internal:servicerequest.create_client')}}" id="createButton" class="btn btn-primary pull-right">
+        <i class="fa fa-plus"></i>
+        Crear nuevo cliente
+      </a>
+    </div>
+  </div>
+</div>
+<div class="wrapper wrapper-content animated fadeInRight main-wrapper-content">
     <div class="col-lg-12">
       <div class="ibox float-e-margins">
         <div class="ibox-content">
 
           <div class="table-responsive">
-             <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper form-inline dt-bootstrap">
-                    <input type="text"  class="input-sm form-control" placeholder="Buscar nombre" id="text_search" onkeyup="text_search_function()">
-                    <button type="button" class="btn btn-primary btn-sm"  style="margin-bottom:0px !important;" onclick="text_search_function()"> Buscar</button>
-                     <a  href="{{ url('internal:servicerequest.create_client')}}" name="b_submit" type="submit" id="createButton" class="btn btn-primary pull-right"><i class="fa fa-plus"> Crear nuevo cliente</i></a>
-                        <table class="table table-striped table-bordered" id="mytable">
+
+                    {# <input type="text"  class="input-sm form-control" placeholder="Buscar nombre" id="text_search" onkeyup="text_search_function()">
+                    <button type="button" class="btn btn-primary btn-sm"  style="margin-bottom:0px !important;" onclick="text_search_function()"> Buscar</button> #}
+
+                        <table class="table table-striped table-bordered" id="client-table">
                             <thead>
                             <tr>
                                 <th>Nombre </th>
@@ -65,41 +77,6 @@
 {% endblock %}
 
 {% block custom_js %}
-
-
-<script>
-var fill_Toastr = function(pMsg, pTypeMsg,pTitle){
-        toastr.options = {
-          closeButton: true,
-          progressBar: true,
-          showMethod: 'slideDown',
-          positionClass: "toast-bottom-right",
-          timeOut: 4000
-          };
-
-          switch(pTypeMsg){
-            case "success":
-            toastr.success(pMsg, '',pTitle);
-            break;
-
-            case "error":
-            toastr.error(pMsg, '',pTitle);
-            break;
-          }
-    }
-
-
-
-  document.getElementById("deleteButton").addEventListener("click", delete_rows);
-
-</script>
-
-    <script>
-        $(document).ready(function(){
-
-        });
-    </script>
-
 <script>
       function text_search_function() {
 
@@ -187,25 +164,20 @@ var fill_Toastr = function(pMsg, pTypeMsg,pTitle){
           }
         }
     </script>
+<script src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
+<script src="{{ static('js/datatable-config.js') }}"></script>
+<script>
+if ($('.message-container .messages li')) {
+  var msg = $('.message-container .messages li').first();
+  $.extend(toastr.options, {"positionClass": "toast-bottom-right",});
+  try {
+    toastr[msg.data('tags')](msg.text());
+  } catch (TypeError) {}
+}
+$('#client-table').DataTable({
+  responsive: true,
+});
+</script>
 
-
-        <!-- Mainly scripts -->
- <!--   <script src="js/jquery-2.1.1.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/plugins/metisMenu/jquery.metisMenu.js"></script>
-    <script src="js/plugins/slimscroll/jquery.slimscroll.min.js"></script> -->
-
-    <!-- Peity-->
- <!--    <script src="js/plugins/peity/jquery.peity.min.js"></script> ->
-
-    <!-- Custom and plugin javascript -->
- <!--    <script src="js/inspinia.js"></script>
-    <script src="js/plugins/pace/pace.min.js"></script> -->
-
-    <!-- iCheck -->
- <!--    <script src="js/plugins/iCheck/icheck.min.js"></script> -->
-
-    <!-- Peity -->
- <!--    <script src="js/demo/peity-demo.js"></script>  -->
 {% endblock custom_js %}
 
