@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'safedelete',
     'auditlog',
     'internal',
+    'xhtml2pdf',
 ]
 
 MIDDLEWARE = [

@@ -41,6 +41,18 @@ urlpatterns = [
     url('^servicerequest/downloadAttachedFile/(?P<id>\d+)$',
         views.servicerequest.downloadAttachedFile,
         name='serviceRequest.downloadAttachedFile'),
+    url('^servicerequest/reportGenerator/(?P<id>\d+)$',
+        views.servicerequest.reportGenerator,
+        name='servicerequest.reportGenerator'),
+    url('^servicerequest/reportDetail/$',
+        views.servicerequest.reportDetail,
+        name='servicerequest.reportDetail'),
+    url('^servicerequest/reportDetailPDF/$',
+        views.servicerequest.reportDetailPDF,
+        name='servicerequest.reportDetail.PDF'),
+    url('^servicerequest/finalReport/(?P<id>\d+)$',
+        views.servicerequest.finalReport,
+        name='servicerequest.finalReport'),
     #
     # Employee
     #
