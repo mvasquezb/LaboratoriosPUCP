@@ -15,6 +15,7 @@
         <div class="ibox float-e-margins">
             <div class="ibox-content">
             {{ form.errors }}
+            {{ user_form.errors }}
                 <form id="myForm" action="{{ url('internal:employee.create') }}" method="post" data-toggle="validator">
                     {% csrf_token %}
 
@@ -42,19 +43,19 @@
                             </div>
                             <div class="form-group">
                                 <label>Contraseña*</label>
-                                <input type="password" data-minlength="6" class="form-control" name="password" placeholder="*******" required>
-                                <div class="help-block with-errors">Mínimo 6 caracteres</div>
+                                <input type="password" data-minlength="8" class="form-control" name="password1" placeholder="*******" required>
+                                <div class="help-block with-errors">Mínimo 8 caracteres</div>
                             </div>
                         </div>
                         <div class="col-lg-6">
-                            <!--<div class="form-group">
+                            <div class="form-group">
                                 <label>Laboratorios</label>
                                 <select name="laboratories" class="form-control" multiple>
                                 {% for laboratory in laboratories %}
                                     <option value="{{ laboratory.id }}">{{ laboratory.name }}</option>
                                 {% endfor %}
                                 </select>
-                            </div>-->
+                            </div>
                             <div class="form-group">
                                 <label>Roles</label>
                                 <select name="roles" class="form-control" multiple>

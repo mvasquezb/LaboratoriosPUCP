@@ -1,0 +1,245 @@
+{% extends 'internal/base_internal.html' %}
+
+
+{% block page_content %}
+<div class="row border-bottom white-bg dashboard-header">
+    <div class="col-md-6">
+        <h2><strong>Editar Ensayo</strong></h2>
+    </div> 
+</div>
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="col-lg-12">
+        <div class="ibox float-e-margins">
+            <div class="ibox-content">
+                <form id=essayform action="{{ url('internal:essay.edit', pk) }}" method="post" data-toggle="validator">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label>Nombre*</label>
+                                <input value="{{ essay.name }}" type="text" class="form-control" name="name" required data-error="El Nombre es obligatorio" placeholder="Nombre">
+                                <div class="help-block with-errors"></div>
+                            </div>
+                            <div class="form-group">
+                                <label>Descripción*</label>
+                                <textarea class="form-control" name="description" placeholder="Descripción">{{ essay.description }}</textarea>
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <input type="submit" id=submit_button value="Grabar cambios" class="btn btn-primary">
+                    <div id="json_div" style="display: none;">
+                        <form id="json_form" novalidate>
+                        <p><label for="id_js_data">js_data:</label> <input type="text" name="js_data" maxlength="1024" id="id_js_data"/></p>
+                        </form>
+                    </div>
+                    <div class="row">
+                        <form id="myForm">
+                            <div id=method_details>
+                            </div>
+                            <div class="col-lg-3">
+                                <label>Agrega un método:</label>
+                                <select class="selectNumber form-control m-b" id="selectNumber1" onchange='doIt()'>
+                                    <option>-------</option>
+                                </select>
+                            </div>
+                        </form>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock page_content %}
+
+
+{% block custom_js %}
+<script type="text/javascript">
+console.log(csrftoken);
+$(document).ready(function(){
+    var method_list = {{list_methods |safe}};
+    var parameter_list = {{list_parameters | safe}};
+    var essay_methods_list = {{list_essay_methods| safe}};
+    var selected_methods_list = [];
+
+    function deleteMethodSelect(id){
+        var div_name = id.replace('close','method');
+        console.log(div_name);
+        $('#'+div_name).remove();
+        var selected_method_id = parseInt(id.replace('close_div',''));
+        console.log(selected_method_id);
+        if (selected_methods_list.indexOf(selected_method_id) > -1) {
+            selected_methods_list.splice(selected_methods_list.indexOf(selected_method_id), 1);
+        }
+    }
+
+
+
+    function insert_methodDetails(method_list,selectForm,method_id) {
+        var x = -1;
+        console.log(method_id);
+        for (var i=0;i<method_list.length;i++){
+            if (method_list[i]['id'] == method_id){
+                x = i+1;
+                break;
+            }
+        }
+        var name=method_list[x-1]['name'];
+        var description=method_list[x-1]['description'];
+        var method_id_gen=method_list[x-1]['id'];
+        var out = 0;
+        if (selected_methods_list.length != 0){
+            for(var k =0;k<selected_methods_list.length;k++){
+                if (selected_methods_list[k] == method_id_gen){
+                    alert('No puede agregar un mismo método más de una vez.');
+                    document.getElementById("selectNumber1").selectedIndex = 0;
+                    return;
+                }
+            }
+        }
+        selected_methods_list.push(method_id_gen);
+        // Seccion de código para agregar el bloque html de un método seleccionado
+        $(selectForm).append('<div id=method_div'+method_id_gen.toString()+' class="col-lg-3"><div class="ibox float-e-margins essay_method_container">'
+                                +'<div class="ibox-title essay_method_title">'
+                                    +'<h5 class=method_name>'+name+'</h5> <span class="label label-primary"></span>'
+                                    +'<div class="ibox-tools">'
+                                        +'<a class="close-link" onclick=deleteMe(this.id) id=close_div'+method_id_gen.toString()+'>'
+                                            +'<i class="fa fa-times"></i>'
+                                        +'</a>'
+                                    +'</div>'
+                                +'</div>'
+                                +'<div class="ibox-content">'
+                                    +'<div>'
+                                        +'<h4 id=parameters_'+method_id_gen.toString()+'>Parametros:'
+                                        +'</h4>'
+                                        +'</div>'
+                                    +'</div>'
+                                +'</div>'
+                            +'</div>');
+        for(var i=0;i<parameter_list.length;i++){
+            for(var j=0;j<parameter_list[i]['methods'].length;j++){
+                if (method_list[x-1]['id'] == parameter_list[i]['methods'][j]){
+                    // Sección de código para agregar el bloque html de un parámetro perteneciente al método seleccionado
+                    $('#parameters_'+method_id_gen.toString()).append('<br>'
+                                            +'<small class="m-r">'
+                                                +'Descripcion: '+parameter_list[i]['description']
+                                                +'  Unidades: '+parameter_list[i]['unit']
+                                                +'</small>');
+                }
+            }
+        }
+
+
+        method_id_gen=method_id_gen+1;
+        document.getElementById("selectNumber1").selectedIndex = 0;
+    }
+
+
+
+    function methodDetails(method_list,selectForm) {
+        var x = document.getElementById("selectNumber1").selectedIndex;
+        console.log(x);
+        console.log(method_list[x-1]);
+        console.log(event.srcElement.id);       // reflecting id of the obj source
+        var name=method_list[x-1]['name'];
+        var description=method_list[x-1]['description'];
+        var method_id_gen=method_list[x-1]['id'];
+        var out = 0;
+        if (selected_methods_list.length != 0){
+            for(var k =0;k<selected_methods_list.length;k++){
+                if (selected_methods_list[k] == method_id_gen){
+                    alert('No puede agregar un mismo método más de una vez.');
+                    document.getElementById("selectNumber1").selectedIndex = 0;
+                    return;
+                }
+            }
+        }
+        selected_methods_list.push(method_id_gen);
+        // Seccion de código para agregar el bloque html de un método seleccionado
+        $(selectForm).append('<div id=method_div'+method_id_gen.toString()+' class="col-lg-3"><div class="ibox float-e-margins essay_method_container">'
+                                +'<div class="ibox-title essay_method_title">'
+                                    +'<h5 class=method_name>'+name+'</h5> <span class="label label-primary"></span>'
+                                    +'<div class="ibox-tools">'
+                                        +'<a class="close-link" onclick=deleteMe(this.id) id=close_div'+method_id_gen.toString()+'>'
+                                            +'<i class="fa fa-times"></i>'
+                                        +'</a>'
+                                    +'</div>'
+                                +'</div>'
+                                +'<div class="ibox-content">'
+                                    +'<div>'
+                                        +'<h4 id=parameters_'+method_id_gen.toString()+'>Parametros:'
+                                        +'</h4>'
+                                        +'</div>'
+                                    +'</div>'
+                                +'</div>'
+                            +'</div>');
+        console.log(parameter_list);
+        for(var i=0;i<parameter_list.length;i++){
+            console.log(parameter_list[i]['methods'].length);
+            for(var j=0;j<parameter_list[i]['methods'].length;j++){
+                if (method_list[x-1]['id'] == parameter_list[i]['methods'][j]){
+                    // Sección de código para agregar el bloque html de un parámetro perteneciente al método seleccionado
+                    $('#parameters_'+method_id_gen.toString()).append('<br>'
+                                            +'<small class="m-r">'
+                                                +'Descripcion: '+parameter_list[i]['description']
+                                                +'  Unidades: '+parameter_list[i]['unit']
+                                                +'</small>');
+                }
+            }
+        }
+
+
+        method_id_gen=method_id_gen+1;
+        document.getElementById("selectNumber1").selectedIndex = 0;
+    }
+    doIt=function(){ methodDetails(method_list,'#method_details'); } // automatically global in order to be reached by onchange
+    deleteMe=function(id){ deleteMethodSelect(id); }
+
+
+
+
+
+    var select = document.getElementsByClassName("selectNumber")[0];
+    var options = method_list;
+
+    for(var i = 0; i < options.length; i++){
+        var opt = options[i];
+        var el = document.createElement("option");
+        el.textContent = opt['name'];
+        el.value = opt;
+        select.appendChild(el);}
+
+    console.log(method_list);
+    for(var i=0;i<essay_methods_list.length;i++){
+        insert_methodDetails(method_list,'#method_details',essay_methods_list[i]);
+    }
+
+
+    $('#submit_button').click(function(){
+        // read all extra_method forms
+        var method_insert_forms = document.getElementsByClassName("method_name");
+        var insert_data = [];
+        for(var i=0; i< method_insert_forms.length; i++){
+            console.log(method_insert_forms[0].innerHTML);
+            for (var j=0; j < method_list.length;j++){
+                if (method_insert_forms[i].innerHTML == method_list[j]['name']){
+                    insert_data.push(method_list[j]);
+                }
+            }
+        }
+        console.log(insert_data);
+        document.getElementById('id_js_data').value=JSON.stringify(insert_data);
+    });
+
+
+    function uploadData(insert_data){
+    var data = {js_data: insert_data,
+                csrfmiddlewaretoken: csrftoken};
+    $.post('/internal/essay/create', JSON.stringify(data), function(response){
+        console.log(data['csrfmiddlewaretoken'])
+        });
+    }
+});
+</script>
+
+{% endblock custom_js %}

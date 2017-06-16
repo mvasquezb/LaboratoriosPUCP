@@ -3,7 +3,7 @@
 {% block title %}{{ super() }} | Empleados{% endblock title %}
 
 {% block custom_css %}
-<link href="{{ static('vendors/footable/footable.core.css') }}" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.15/css/jquery.dataTables.min.css">
 {% endblock custom_css %}
 
 {% block page_content %}
@@ -12,79 +12,51 @@
         <h2><strong>Listado de Usuarios</strong></h2>
     </div>
 </div>
-<div class="wrapper wrapper-content animated" >
+<div class="wrapper wrapper-content animated fadeInRight">
+  <div class="col-lg-2 col-lg-offset-10">
+    <a class="btn btn-primary pull-right" href="{{ url('internal:employee.create') }}">
+      <i class="fa fa-plus"></i>
+      Crear Empleado
+    </a>
+  </div>
+</div>
+<div class="wrapper wrapper-content animated fadeInRight main-wrapper-content">
   <div class="col-lg-12">
     <div class="ibox float-e-margins">
       <div class="ibox-content">
-
         <div class="table-responsive">
-          <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper form-inline dt-bootstrap">
-            <form action="{{ url('internal:employee.index') }}" method="get" >
-              
-              <input name="search" type="text" class="form-control input-sm m-b-xs" id="filter" placeholder="Buscar">
-              <a class="btn btn-primary pull-right" href="{{ url('internal:employee.create') }}"> <i class="fa fa-plus"></i> Crear Empleado</a>
-              <input class="btn btn-primary btn-sm"  type="submit" value="Enviar">
-            </form>
-            <table class="table table-striped table-bordered table-hover dataTables-example dataTable" id="DataTables_Table_0">
+            <table class="table table-striped table-bordered" id="employee_table">
               <thead>
-                <tr role="row">
-                  <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Rendering engine: activate to sort column descending" >
+                <tr>
+                  <th>
                     Nombre
                   </th>
-                  <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Rendering engine: activate to sort column descending" >
+                  <th>
                     Usuario
                   </th>
-                  <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-label="Browser: activate to sort column ascending">
+                  <th>
                     Correo
                   </th>
-                  <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-label="Browser: activate to sort column ascending">Acción</th>
+                  <th>Acción</th>
                 </tr>
               </thead>
               <tbody>
                 {% for employee in employees_list %}
                   <tr role="row">
-                    <td>{{ employee.first_name }} {{ employee.last_name }} </td>
-                    <td>{{ employee.username }}</td>
-                    <td>{{ employee.email }}</td>
+                    <td>{{ employee.user.first_name }} {{ employee.user.last_name }} </td>
+                    <td>{{ employee.user.username }}</td>
+                    <td>{{ employee.user.email }}</td>
                     <td class="text-left footable-visible footable-last-column">
                       <div class="btn-group">
                         <a href="{{ url('internal:employee.show', employee.id) }}" class="btn-white btn"><i class="fa fa-eye" aria-hidden="true"></i></a>
                         <a href="{{ url('internal:employee.edit', employee.id) }}" class="btn-white btn"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
-                        <a class="btn-white btn" data-toggle="modal" data-target="#myModal1" data-url="{{ url('internal:employee.delete', employee.id) }}"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+                        <a class="myBtn1 btn-white btn" data-url="{{ url('internal:employee.delete', employee.id) }}"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
                       </div>
                     </td>
                   </tr>
                 {% endfor %}
               </tbody>
-              <tfoot>
-                <tr>
-                  <td colspan="5" class="footable-visible">
-                    <ul class="pagination pull-right">
-                      {% if employees_list.has_previous() %}
-                        <li class="footable-page-arrow">
-                          <a class="pagination-link" data-page="first" data-pagenum="1">«</a>
-                        </li>
-                        <li class="footable-page-arrow">
-                          <a class="pagination-link" data-page="prev" data-pagenum="{{ employees_list.previous_page_number() }}">‹</a>
-                        </li>
-                      {% endif %}
-                      <li class="footable-page">
-                        <a data-page="0">{{ employees_list.number }}</a>
-                      </li>
-                      {% if employees_list.has_next() %}
-                        <li class="footable-page-arrow">
-                          <a class="pagination-link" data-page="next" data-pagenum="{{ employees_list.next_page_number() }}">›</a>
-                        </li>
-                        <li class="footable-page-arrow">
-                          <a class="pagination-link" data-page="last" data-pagenum="{{ paginator.num_pages }}">»</a>
-                        </li>
-                      {% endif %}
-                    </ul>
-                  </td>
-                </tr>
-              </tfoot>
             </table>
-          </div>
         </div>
       </div>
     </div>
@@ -131,23 +103,18 @@ $(".myBtn1").click(function(event) {
   return false;
 });
 </script>
+<script src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
+<script src="{{ static('js/datatable-config.js') }}"></script>
 <script>
-var searchParams = new URLSearchParams(window.location.search);
-
-if (searchParams.get('search')) {
-  $('#filter').val(searchParams.get('search'));
-}
-
-$('.pagination-link').click(function (e) {
-  var page = $(e.target).data('pagenum');
-  searchParams.set('page', page);
-  window.location.search = searchParams.toString();
-});
-
 if ($('.message-container .messages li')) {
   var msg = $('.message-container .messages li').first();
   $.extend(toastr.options, {"positionClass": "toast-bottom-right",});
-  toastr[msg.data('tags')](msg.text());
+  try {
+    toastr[msg.data('tags')](msg.text());
+  } catch (TypeError) {}
 }
+$('#employee_table').DataTable({
+  responsive: true,
+});
 </script>
 {% endblock custom_js %}
