@@ -134,7 +134,7 @@ urlpatterns = [
     url('^servicerequest$',
         views.servicerequest.index,
         name='servicerequest.index'),
-    url('^servicerequest/(?P<request_id>\d+)/?$',
+    url('^servicerequest/show/(?P<pk>\d+)/?$',
         views.servicerequest.show,
         name='servicerequest.show'),
     url('^servicerequest/(?P<request_id>\d+)/quotation/?$',
@@ -185,6 +185,13 @@ urlpatterns = [
     url('^laboratory/show/(?P<pk>\d+)$',
         views.laboratory.show,
         name='laboratory.show'),
+    url('^laboratory/(?P<pk>\d+)/services/$',
+        views.laboratory.services_index,
+        name='laboratory.services_index'),
+    url('^laboratory/(?P<pk>\d+)/track_services/$',
+        views.laboratory.track_services,
+        name='laboratory.track_services'),
+
     #
     # sampleType
     #
