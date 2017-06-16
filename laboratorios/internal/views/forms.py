@@ -100,6 +100,7 @@ class ClientForm(ModelForm):
 
 
 class ServiceRequestForm(ModelForm):
+    supervisor = forms.ModelChoiceField(queryset=Employee.all_objects.filter(deleted__isnull=True))
     def __init__(self, *args, **kwargs):
         super(ServiceRequestForm, self).__init__(*args, **kwargs)
         self.fields['client'].widget.attrs['class'] = 'form-control'
