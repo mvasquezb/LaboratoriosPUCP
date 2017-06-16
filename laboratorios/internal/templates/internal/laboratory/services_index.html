@@ -54,7 +54,7 @@
                       <td>{{ service.state }}</td>
                       <td class="text-left footable-visible footable-last-column">
                         <div class="btn-group">
-                          <a  href="{{ url('internal:laboratory.show', laboratory.id) }}" class="btn-white btn"><i class="fa fa-eye" aria-hidden="true"></i></a>
+                          <a  href="{{ url('internal:servicerequest.show', service.id) }}" class="btn-white btn"><i class="fa fa-eye" aria-hidden="true"></i></a>
                           <select class="form-control m-b" id="comboBox">
                             {% if not service.priority %}
                               <option id="-1" name="" selected>------</option>
@@ -108,7 +108,7 @@ function send_priority_changes(){
 }
 
 $(document).ready(function() {
- 
+
     // DataTable
     var table = $('#DataTables_Table_0').DataTable({
       "lengthChange": false,
@@ -138,7 +138,7 @@ $(document).ready(function() {
         "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
         "sSortDescending": ": Activar para ordenar la columna de manera descendente"
     }
-  
+
        }
 
     });
