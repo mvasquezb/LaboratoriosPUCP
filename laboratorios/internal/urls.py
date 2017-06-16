@@ -177,6 +177,10 @@ urlpatterns = [
     url('^laboratory/(?P<pk>\d+)/services/$',
         views.laboratory.services_index,
         name='laboratory.services_index'),
+    url('^laboratory/(?P<pk>\d+)/track_services/$',
+        views.laboratory.track_services,
+        name='laboratory.track_services'),
+
     #
     # sampleType
     #

@@ -11,6 +11,10 @@ from internal.models import *
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from .forms import LaboratoryForm
+from django.http import JsonResponse
+from django.views.decorators.csrf import ensure_csrf_cookie
+from django.utils import timezone
+import json as simplejson
 
 
 def index(request,
@@ -68,9 +72,9 @@ def create(request,
                 if (field=="name") and list(errors)==['Ya existe Laboratory con este Name.']:
                     messages.error(request, 'Este nombre de laboratorio ya existe, pruebe otro')
                     return redirect('internal:laboratory.create')
-            
+
             return HttpResponse(form.errors)
-            
+
     else:
         users = Employee.objects.all()
         service_hours = LaboratoryServiceHours.objects.all()
@@ -158,3 +162,70 @@ def show(request,
                    'form': form}
         template = 'internal/laboratory/show.html'
         return render(request, template, context)
+
+
+def track_services(request, pk,
+                   template='internal/laboratory/' +
+                   'track_services.html'):
+    month_names = [
+        'Enero',
+        'Febrero',
+        'Marzo',
+        'Abril',
+        'Mayo',
+        'Junio',
+        'Julio',
+        'Agosto',
+        'Septiembre',
+        'Octubre',
+        'Noviembre',
+        'Diciembre'
+    ]
+
+    #get only services of the current laboratory
+    all_services = ServiceRequest.objects.all()
+    laboratory = Laboratory.objects.get(pk=pk)
+    all_employes = laboratory.employees.all()
+    service_request_list = []
+    for service in all_services:
+        service_supervisor = service.supervisor
+        for employee in all_employes:
+            if (employee == service_supervisor):
+                service_request_list.append(service)
+                break
+    #
+    my_data = []
+    now = timezone.localtime(timezone.now())
+    for i in range(0, len(service_request_list)):
+        date_in_service = service_request_list[i].registered_date
+        # date_in_service.strftime("%d/%m/%Y")
+        # date_in_service.replace(day=date_in_service.day+service_request_list[i].expected_duration).strftime("%d/%m/%Y")
+
+        # progresion calculation
+        expected_duration = service_request_list[i].expected_duration
+        delta = now - date_in_service
+        total = 100 * delta.days / expected_duration
+        total = int(total)
+        end_date = date_in_service.replace(
+            day=date_in_service.day + expected_duration
+        )
+        client = service_request_list[i].client
+
+        my_dict = {
+            "id": service_request_list[i].id,
+            "title": "Cliente " + client.user.get_full_name(),
+            "start_date": date_in_service.strftime("%m/%d/%Y"),
+            "end_date": end_date.strftime("%m/%d/%Y"),
+            "value": 67,
+            "term": "Short Term",
+            "completion_percentage": total,
+            "color": "#770051",
+        }
+        my_data.append(my_dict)
+    js_data = simplejson.dumps(my_data)
+    context = {
+        'js_data': js_data,
+        'actual_month': month_names[now.month - 1] + " " + str(now.year),
+        'laboratory' : laboratory
+    }
+    return render(request, template, context)
