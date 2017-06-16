@@ -258,8 +258,84 @@ def delete_sample(request,
     return redirect('internal:servicerequest.edit', pk_request)
 
 
-def show(request, request_id):
-    return edit(request, request_id)
+def show(request,
+         pk,
+         template='internal/servicerequest/show.html'):
+    service_request = ServiceRequest.all_objects.get(pk=pk)
+    service_request_form = ServiceRequestForm(
+        request.POST or None, instance=service_request)
+    # For all samples and their selected essayFills in list
+    sample_list = Sample.all_objects.filter(
+        deleted__isnull=True,
+        request=service_request
+    )
+    essay_fill_list = []
+    essay_methods_list = []  # To get all essay_methods for every sample
+    essay_methods_chosen_forms = []  # To get whether each essay_method is chosen or not
+
+    for i in range(0, len(sample_list)):
+        sample_listed = sample_list[i]
+        essay_fill = EssayFill.all_objects.filter(
+            deleted__isnull=True,
+            sample=sample_listed
+        ).first()
+
+        essay_fill_list.append(essay_fill)
+        essay_methods_list.append(
+            EssayMethodFill.all_objects.filter(
+                deleted__isnull=True,
+                essay=essay_fill
+            )
+        )
+        aux_essay_methods_forms = []
+        for j in range(0, len(essay_methods_list[i])):
+            aux_essay_methods_forms.append(
+                EssayMethodFillChosenForm(
+                    request.POST or None,
+                    instance=essay_methods_list[i][j],
+                    prefix='emf_' + str(essay_methods_list[i][j].pk)
+                )
+            )
+        essay_methods_chosen_forms.append(aux_essay_methods_forms)
+
+    context = {
+        'form': service_request_form,
+        'service_request' : service_request,
+        'samples': sample_list,
+        'essays': essay_fill_list,
+        'essays_methods': essay_methods_list,
+        'essay_methods_chosen_forms': essay_methods_chosen_forms,
+        'pk': pk,
+        'clients' : Client.all_objects.filter(deleted__isnull=True),
+        'employees' : Employee.all_objects.filter(deleted__isnull=True),
+        'states' : ServiceRequestState.all_objects.filter(deleted__isnull=True),
+        'external_providers' : ExternalProvider.all_objects.filter(deleted__isnull=True)
+    }
+    # verificacion
+    forms_verified = 0  # Means true lol
+
+    # loop for verifying each essay method form
+    for i in range(0, len(essay_methods_chosen_forms)):
+        for j in range(0, len(essay_methods_chosen_forms[i])):
+            if essay_methods_chosen_forms[i][j].is_valid():
+                pass
+            else:
+                forms_verified += 1
+    if service_request_form.is_valid():
+        pass
+    else:
+        forms_verified += 1
+    # end of verifying segment
+
+    if forms_verified == 0:
+        service_request_form.save()
+        # add save for each form
+        for i in range(0, len(essay_methods_chosen_forms)):
+            for j in range(0, len(essay_methods_chosen_forms[i])):
+                print(essay_methods_chosen_forms[i][j].save().chosen)
+                essay_methods_chosen_forms[i][j].save()
+        return redirect(reverse("internal:servicerequest.index"))
+    return render(request, template, context)
 
 
 def quotation(request,

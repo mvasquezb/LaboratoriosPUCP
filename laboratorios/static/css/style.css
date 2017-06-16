@@ -8437,6 +8437,12 @@ body.md-skin {
   min-height: 250px;
 }
 
+.parameter_container {
+  border: solid 2px #e7eaec;
+  border-radius: 10px;
+  min-height: 196px;
+}
+
 .ibox-title.essay_method_title {
   border-style: none;
 }

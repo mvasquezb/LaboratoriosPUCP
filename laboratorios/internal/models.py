@@ -167,7 +167,7 @@ class EssayMethod(SafeDeleteModel):
 
     audit_log = AuditlogHistoryField()
     name = models.CharField(max_length=100)
-    description = models.CharField(max_length=100)
+    description = models.CharField(max_length=100, null=True, blank=True)
     price = models.FloatField()
     parameters = models.ManyToManyField(
         'EssayMethodParameter',

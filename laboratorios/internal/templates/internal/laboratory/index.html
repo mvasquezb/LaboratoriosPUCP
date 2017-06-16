@@ -42,7 +42,11 @@
                   <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-label="Browser: activate to sort column ascending">
                     Capacidad
                   </th>
+                  <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-label="Browser: activate to sort column ascending">
+                    Estado
+                  </th>
                   <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-label="Browser: activate to sort column ascending">Acción</th>
+                  <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-label="Browser: activate to sort column ascending">Servicios</th>
                 </tr>
               </thead>
               <tbody>
@@ -56,12 +60,22 @@
                       {% endif %}
                     </td>
                     <td>{{ laboratory.capacity }}</td>
+                    <td>
+                      {% if laboratory.deleted %}
+                        Eliminado
+                      {% else %}
+                        Activo
+                      {% endif %}
+                    </td>
                     <td class="text-left footable-visible footable-last-column">
                       <div class="btn-group">
                         <a  href="{{ url('internal:laboratory.show', laboratory.id) }}" class="btn-white btn"><i class="fa fa-eye" aria-hidden="true"></i></a>
                         <a  href="{{ url('internal:laboratory.edit', laboratory.id) }}" class="btn-white btn"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
                         <a class="myBtn1 btn-white btn" data-toggle="modal" data-target="#myModal1" data-url="{{ url('internal:laboratory.delete', laboratory.id) }}"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
                       </div>
+                    </td>
+                    <td>
+                      <a href="{{ url('internal:laboratory.services_index', laboratory.id) }}" class="btn-white btn">Ver servicios</a>
                     </td>
                   </tr>
                 {% endfor %}
@@ -115,6 +129,15 @@
 
 
 {% block custom_js %}
+
+<script type="text/javascript">
+  if ($('.message-container .messages li')) {
+  var msg = $('.message-container .messages li').first();
+  $.extend(toastr.options, {"positionClass": "toast-bottom-right",});
+  toastr[msg.data('tags')](msg.text());
+}
+</script>
+
 <script type="text/javascript">
   var fill_Toastr = function(pMsg, pTypeMsg,pTitle){
     toastr.options = {
@@ -142,7 +165,7 @@
 <script type="text/javascript">
 
 $(document).ready(function() {
- 
+
     // DataTable
     var table = $('#DataTables_Table_0').DataTable({
       "lengthChange": false,
@@ -172,7 +195,7 @@ $(document).ready(function() {
         "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
         "sSortDescending": ": Activar para ordenar la columna de manera descendente"
     }
-  
+
        }
 
     });

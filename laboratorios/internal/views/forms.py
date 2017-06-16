@@ -220,6 +220,11 @@ class InventoryOrderEditForm(ModelForm):
         model = InventoryOrder
         fields = ('essay',)
 
+class InventoryItemEditForm(ModelForm):
+    class Meta:
+        model = InventoryItem
+        fields = ('state',)
+
 
 class EssayForm(ModelForm):
     class Meta:
