@@ -79,7 +79,7 @@
                 <select name="external_provider" data-error="Este campo es obligatorio" required="" id="id_state" class="form-control">
                 <option value="" >---------</option>
                   {% for external_provider in external_providers %}
-                      <option {{ 'selected' if (service_request.external_provider.id == external_provider.id) }} value="{{ external_provider.id }}">{{ external_provider.name }}</option>
+                      <option value="{{ external_provider.id }}" {{ 'selected' if (service_request.external_provider.id == external_provider.id) }}>{{ external_provider.name }}</option>
                   {% endfor %}
                 </select>
                   <div class="help-block with-errors"></div>

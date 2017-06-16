@@ -8430,3 +8430,13 @@ body.md-skin {
         background-size: 240px 24px;
     }
 }
+
+.essay_method_container {
+  border: solid 2px #e7eaec;
+  border-radius: 10px;
+  min-height: 250px;
+}
+
+.ibox-title.essay_method_title {
+  border-style: none;
+}

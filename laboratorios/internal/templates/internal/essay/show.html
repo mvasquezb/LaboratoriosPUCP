@@ -43,20 +43,13 @@
                                 <div name="methods" >
                                 {% for method in selected_methods %}
                                     {% set outer_loop = loop %}
-                                    <h3>{{ method.name }}</h3>
-                                    <p class="tab"><label>Parámetros</label></p>
-                                    {% for parameter in parameters_list %}
-                                        {% if parameter.id in method_parameters_list[outer_loop.index-1] %}
-                                            <div>Descripción: {{ parameter.description }}  Unidades: {{parameter.unit}} </div>
-                                        {% endif %}
-                                    {% endfor %}
-                                    <br>
+                                    <div class="form-group">
+                                        <label>{{ method.name }}</label>                                 
+                                    </div>
                                 {% endfor %}
                                 </div>
                             </div>
                         </div>
-                        <a  href="{{ url('internal:essay.edit', essay.id) }}" class="btn btn-xs"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>Editar</a>
-            <a href="{{ url('internal:essay.index') }}" class="btn btn-white">Regresar</a>
                     </div>
             </div>
         </div>
