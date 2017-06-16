@@ -34,7 +34,7 @@ def create(request,
            template='internal/role/create.html'):
     form = RoleForm(request.POST or None)
     context = {
-        'permissions': Permission.objects.all(),
+        'permissions': Permission.all_objects.filter(deleted__isnull=True),
         'form': form
     }
     if request.method == 'POST':
@@ -52,7 +52,7 @@ def edit(request, pk,
     role = get_object_or_404(Role, pk=pk)
     form = RoleForm(request.POST or None, instance=role)
     context = {
-        'permissions': Permission.objects.all(),
+        'permissions': Permission.all_objects.filter(deleted__isnull=True),
         'selected_permissions': role.permissions.all(),
         'form': form,
         'custom_role': role,

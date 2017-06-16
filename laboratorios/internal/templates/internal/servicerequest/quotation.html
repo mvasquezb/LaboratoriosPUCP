@@ -31,6 +31,12 @@
                 </thead>
                 <tbody>
                   {% for essay in essay_list %}
+                  <!-- Salta en caso que no se posea ningun metodo -->
+                    {% for essay_method in essay.essaymethodfill_set.filter(chosen=True) %}
+                    {% else %}
+                      {% continue %}
+                    {% endfor %}
+                  <!-- Fin de salto en caso que no se posea ningun metodo -->
                     <tr>
                       <td>
                         {{ essay.essay.name }}
