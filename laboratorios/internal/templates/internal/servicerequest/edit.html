@@ -61,7 +61,7 @@
               </div>
               <div class="form-group">
                 <label>Observaciones</label>
-                <input value="{{ service_request.observations }}" type="text" name="observations" data-error="Este campo es obligatorio" required="" id="id_observations" class="form-control">
+                <input value="{{ service_request.observations or '' }}" type="text" name="observations" data-error="Este campo es obligatorio" required="" id="id_observations" class="form-control">
                   <div class="help-block with-errors"></div>
               </div>
               <div class="form-group">
@@ -79,7 +79,7 @@
                 <select name="external_provider" data-error="Este campo es obligatorio" id="id_state" class="form-control">
                   <option value="" >---------</option>
                   {% for external_provider in external_providers %}
-                      <option value="{{ external_provider.id }}" {% if service_request.external_provider.id == external_provider.id %} selected {% endif %}>{{ external_provider.name }}</option>
+                      <option {% if service_request.external_provider.id == external_provider.id %}'selected'{% endif %} value="{{ external_provider.id }}">{{ external_provider.name }}</option>
                   {% endfor %}
                 </select>
                   <div class="help-block with-errors"></div>
@@ -167,14 +167,12 @@ if($('#check_service_provider')[0].checked)
   $('#servide_provider_input').show();
 else
   $('#servide_provider_input').hide();
-
 $('.iradio_square-green').click(function(){
   if($('#check_service_provider')[0].checked)
     $('#servide_provider_input').hide();
   else
     $('#servide_provider_input').show();
 });
-
 $('#assign-employee-modal').on('show.bs.modal', function (e) {
   var $btn = $(e.relatedTarget);
   var $modal = $(this);
@@ -186,13 +184,10 @@ $('#assign-employee-modal').on('show.bs.modal', function (e) {
     $('#assign-employee-form').validator();
   });
 });
-
 $(document).on('submit', '#assign-employee-form', function (e) {
   e.preventDefault();
-
   var $form = $(e.target);
   var $modal = $('#assign-employee-modal');
-
   $.ajax({
     url: $form.get(0).action,
     method: $form.get(0).method,
@@ -209,27 +204,22 @@ $(document).on('submit', '#assign-employee-form', function (e) {
     }, 1500);
   });
 });
-
 $('#assign-employee-modal').on('hidden.bs.modal', function () {
   var $modal = $(this);
   $modal.find('.alert').hide();
 });
-
 $('.btn-assign-employee').each(function (index, elem) {
   var $btn = $(elem);
   update_assign_btn($btn);
 });
-
 $('.essaymethod-table [type="checkbox"]').on('change', function () {
   var $btn = $(this).parents('.sample-table').find('.btn-assign-employee');
   update_assign_btn($btn);
 });
-
 function update_assign_btn($btn) {
   var $sampleTable = $btn.parents('.sample-table');
   var $essayMethodTable = $sampleTable.find('.essaymethod-table');
   var $checkedMethods = $essayMethodTable.find('[type="checkbox"]:checked');
-
   if ($checkedMethods.length == 0) {
     $btn.prop('disabled', true).find('span').tooltip({
       title: 'Debe seleccionar un método de ensayo',
