@@ -264,3 +264,8 @@ class EssayMethodForm(ModelForm):
     class Meta:
         model = EssayMethod
         fields = ["name", "description", "price"]
+
+class ParameterValueForm(ModelForm):
+    class Meta:
+        model = EssayMethodParameterFill
+        fields = ['value','uncertainty']

@@ -236,5 +236,11 @@ urlpatterns = [
     url('^essaymethod/(?P<pk>\d+)/delete/?$',
         views.essaymethod.delete,
         name='essaymethod.delete'),
+    #
+    # Parameter Fill
+    #
+    url('^fill_parameters/(?P<pk>\d+)$',
+        views.parameterfill.fill_parameters,
+        name='parameterfill.fill_parameters'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
