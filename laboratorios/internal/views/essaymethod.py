@@ -84,9 +84,9 @@ def edit(request,
         'form': form,
         'list_parameters': json.dumps(list_essay_method_parameters),
         'list_selected_parameters': json.dumps(list_method_parameters),
-       'json_form': json_form,
-       'pk': pk,
-       'essay_method' : essay_method
+        'json_form': json_form,
+        'pk': pk,
+        'essay_method' : essay_method
     }
 
     if request.method == 'POST':
