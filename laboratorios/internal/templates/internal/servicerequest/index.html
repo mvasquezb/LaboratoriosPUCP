@@ -53,7 +53,13 @@
                         <td>
                           <a class="btn-white btn btn-xs" href="{{ url('internal:servicerequest.edit', request.id) }}">Editar</a>
                           <a class="btn-white btn btn-xs" href="{{ url('internal:servicerequest.delete', request.id) }}">Eliminar</a>
-                          <a class="btn-white btn btn-xs" href="{{ url('internal:servicerequest.approve', request.id) }}">Aprobar</a>  <!--Agregado-->
+                          <a class="btn-white btn btn-xs" href="{{ url('internal:servicerequest.approve', request.id) }}">Aprobar</a>
+                          <a class="btn-white btn btn-xs" href="{{ url('internal:servicerequest.reportGenerator',request.id) }}">
+                            Reporte Interno
+                          </a>
+                          <a class="btn-white btn btn-xs" href="{{ url('internal:servicerequest.finalReport',request.id)}}">
+                            Informe Final
+                          </a>
                         </td>
                       </tr>
                       {%endif%}
