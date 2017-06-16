@@ -61,7 +61,7 @@
                           {% if user.laboratories.filter(pk=laboratory.pk).exists() or (not user.laboratories.exists()) %}
                             <tr class="gradeX">
                               <td>{{ user }}</td>
-                              <td>{{ user.email }}</td>
+                              <td>{{ user.user.email }}</td>
                               {% if user.laboratories.filter(pk=laboratory.pk).exists() %}
                                 <td><input type="checkbox" id="checkbox_users" name="{{ user.user.username }}" class="{{ user.pk }}" checked></td>
                               {% else %}
