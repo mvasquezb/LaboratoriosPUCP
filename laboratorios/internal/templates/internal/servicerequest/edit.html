@@ -61,7 +61,7 @@
               </div>
               <div class="form-group">
                 <label>Observaciones</label>
-                <input value="{{ service_request.observations }}" type="text" name="observations" data-error="Este campo es obligatorio" required="" id="id_observations" class="form-control">
+                <input value="{{ service_request.observations or '' }}" type="text" name="observations" data-error="Este campo es obligatorio" required="" id="id_observations" class="form-control">
                   <div class="help-block with-errors"></div>
               </div>
               <div class="form-group">
