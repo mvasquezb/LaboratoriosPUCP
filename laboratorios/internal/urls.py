@@ -134,7 +134,7 @@ urlpatterns = [
     url('^servicerequest$',
         views.servicerequest.index,
         name='servicerequest.index'),
-    url('^servicerequest/(?P<request_id>\d+)/?$',
+    url('^servicerequest/show/(?P<pk>\d+)/?$',
         views.servicerequest.show,
         name='servicerequest.show'),
     url('^servicerequest/(?P<request_id>\d+)/quotation/?$',
