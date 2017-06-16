@@ -8430,3 +8430,5 @@ body.md-skin {
         background-size: 240px 24px;
     }
 }
+
+.main-wrapper-content { padding-top: 0; }

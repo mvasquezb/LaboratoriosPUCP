@@ -76,7 +76,8 @@ class SampleForm(ModelForm):
     # iquery_choices = [('', 'None')] + [(name,name) for name in iquery]
     # essay_field = forms.ChoiceField(iquery_choices,required=False, widget=forms.Select())
     essay_field = forms.ModelChoiceField(
-        queryset=Essay.all_objects.filter(deleted__isnull=True))
+        queryset=Essay.all_objects.filter(deleted__isnull=True)
+    )
 
     class Meta:
         model = Sample
@@ -84,8 +85,10 @@ class SampleForm(ModelForm):
 
     def save(self, commit=True):
         sample = super(SampleForm, self).save(commit=commit)
-        essay_selected = Essay.objects.filter(
-            name=self.cleaned_data['essay_field'])[0]
+        essay_selected = Essay.all_objects.filter(
+            deleted__isnull=True,
+            name=self.cleaned_data['essay_field']
+        )[0]
         essay_fill_created = EssayFill(sample=sample)
         essay_fill_created.create(essay_selected)
         essay_fill_created.save()
@@ -100,12 +103,14 @@ class ClientForm(ModelForm):
 
 
 class ServiceRequestForm(ModelForm):
-    supervisor = forms.ModelChoiceField(queryset=Employee.all_objects.filter(deleted__isnull=True))
     def __init__(self, *args, **kwargs):
         super(ServiceRequestForm, self).__init__(*args, **kwargs)
         self.fields['client'].widget.attrs['class'] = 'form-control'
         self.fields['supervisor'].widget.attrs['class'] = 'form-control'
         self.fields['state'].widget.attrs['class'] = 'form-control'
+        self.fields['supervisor'].queryset = Employee.all_objects.filter(
+            deleted__isnull=True
+        )
 
     class Meta:
         model = ServiceRequest
@@ -146,12 +151,24 @@ class EssayFillSelectionForm(ModelForm):
     def save(self, commit=True):
         # verify that methods belong to particular essay
         myself = super(EssayFillSelectionForm, self).save(commit=commit)
-        essay = Essay.objects.get(pk=self.data['essay'])
-        methods_count = len(EssayFill.objects.filter(essay=myself.essay))
-        print(methods_count)
-        if methods_count == len(EssayMethod.objects.filter(essays=essay)):
-            essay_methods = EssayMethod.objects.filter(essays=essay)
-            essay_fill_methods = EssayFill.objects.filter(essay=myself.essay)
+        essay = Essay.all_objects.get(
+            deleted__isnull=True,
+            pk=self.data['essay']
+        )
+        EssayFill.all_objects.filter(
+            deleted__isnull=True,
+            essay=myself.essay
+        )
+        methods_count = essay_fills
+        essay_methods = EssayMethod.all_objects.filter(
+            deleted__isnull=True,
+            essays=essay
+        )
+        if methods_count == essay_methods.count():
+            essay_fill_methods = EssayFill.all_objects.filter(
+                deleted__isnull=True,
+                essay=myself.essay
+            )
             exit_loop = 0
             for i in range(0, methods_count):
                 if (essay_fill_methods[i].essay_method == essay_methods[i]):
@@ -190,6 +207,18 @@ class SampleTypeForm(ModelForm):
     class Meta:
         model = SampleType
         exclude = ['slug']
+
+
+class InventoryOrderForm(ModelForm):
+    class Meta:
+        model = InventoryOrder
+        fields = ['essay', 'unsettled']
+
+
+class InventoryOrderEditForm(ModelForm):
+    class Meta:
+        model = InventoryOrder
+        fields = ('essay',)
 
 
 class EssayForm(ModelForm):
