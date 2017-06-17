@@ -344,7 +344,7 @@ def quotation(request,
               request_id,
               template='internal/servicerequest/quotation.html',
               extra_context=None):
-    service_request = get_object_or_404(ServiceRequest, pk=request_id)
+    service_request = get_object_or_404(ServiceRequest.all_objects, pk=request_id)
     quotation, created = Quotation.all_objects.get_or_create(
         request=service_request
     )
@@ -389,7 +389,8 @@ def assign_employee(request,
                     sample_id,
                     template='internal/servicerequest/assign_employee.html',
                     extra_context=None):
-    essay_methods = request.GET.getlist('methods[]', [])
+    print(request.POST)
+    essay_methods = request.POST.getlist('methods[]')
     essay_methods = list(map(lambda x: int(x), essay_methods))
     print(essay_methods)
     service_request = get_object_or_404(ServiceRequest.all_objects, pk=request_id)
@@ -397,13 +398,16 @@ def assign_employee(request,
 
     essay_method_list = EssayMethodFill.all_objects.filter(
         pk__in=essay_methods
-    ).distinct()
-
+    )
+    for em in essay_method_list:
+        em.chosen = True
+        em.save()
     print(essay_method_list)
     employee_q = Q()
     for essay_method in essay_method_list:
         employee_q &= Q(essay_methods=essay_method.essay_method)
     employee_list = Employee.all_objects.filter(employee_q)
+    employee_list = Employee.all_objects.filter(deleted__isnull=True)
     form = ServiceAssignEmployeeForm(
         request.POST or None,
         employee=employee_list
@@ -412,24 +416,27 @@ def assign_employee(request,
     query = Q()
     for essay_method in essay_method_list:
         query &= Q(assigned_essay_methods=essay_method)
-
-    if employee_q:
+    print(query)
+    if query:
         assigned_employee = employee_list.filter(query).first()
+        print('assigned')
     else:
         assigned_employee = None
     print(assigned_employee)
     # Está cagada esta lógica
     if request.method == 'POST':
+        essay_method_list = EssayMethodFill.all_objects.filter(
+            essay__sample=sample,
+            chosen=True,
+        )
+        print(essay_method_list)
         if form.is_valid():
             # Remove previous assigned employee, if existant
             employee = form.cleaned_data['employee']
-            if assigned_employee and not employee == assigned_employee:
-                assigned_employee.assigned_essay_methods.remove(
-                    *essay_method_list
-                )
-            employee_methods = employee.assigned_essay_methods.all()
-            methods_to_add = set(essay_method_list) ^ set(employee_methods)
+            methods_to_add = set(essay_method_list)
+            print(essay_method_list)
             employee.assigned_essay_methods.set(methods_to_add)
+            print(EssayMethodFill.all_objects.filter(employees=employee))
 
             if request.is_ajax():
                 return JsonResponse({

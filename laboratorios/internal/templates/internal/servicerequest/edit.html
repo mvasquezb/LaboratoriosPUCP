@@ -179,7 +179,7 @@ $('#assign-employee-modal').on('show.bs.modal', function (e) {
   selected_methods.each(function (index, elem) {
     sel_methods.push($(elem).parents('td').data('id'));
   });
-  console.log(sel_methods);
+  console.log(url, sel_methods);
   $.ajax({
     url: url,
     data: {
@@ -194,6 +194,7 @@ $(document).on('submit', '#assign-employee-form', function (e) {
   e.preventDefault();
   var $form = $(e.target);
   var $modal = $('#assign-employee-modal');
+  console.log($form.get().data);
   $.ajax({
     url: $form.get(0).action,
     method: $form.get(0).method,
