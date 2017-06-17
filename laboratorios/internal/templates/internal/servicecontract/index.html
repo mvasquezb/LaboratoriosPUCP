@@ -9,86 +9,67 @@
 {% block page_content %}
 <div class="row border-bottom white-bg dashboard-header">
     <div class="col-md-6">
-        <h2><strong>Listado de Contratos</strong></h2>
+        <h2><strong>Lista de Contratos</strong></h2>
     </div>
 </div>
-<div class="wrapper wrapper-content animated" >
+<div class="wrapper wrapper-content animated fadeInRight" >
   <div class="col-lg-12">
     <div class="ibox float-e-margins">
       <div class="ibox-content">
-        <div class="row">
-          <div class="col-lg-12">
-
-
-
-          </div>
-        </div>
         <div class="table-responsive">
+          <form action="{{ url('internal:servicecontract.index') }}" method="get" >
+          </form>
           <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper form-inline dt-bootstrap">
-            <form action="{{ url('internal:servicecontract.index') }}" method="get" >
-              <input name="search" type="text" class="form-control input-sm m-b-xs" id="filter" placeholder="Buscar">
-              <input class="btn btn-primary"  type="submit" value="Enviar">
-            </form>
-            <table class="table table-striped table-bordered table-hover dataTables-example dataTable" id="DataTables_Table_0">
+             <div class="input-group">
+                 <input type="text" class="form-control input-sm m-b-xs" id="mysearch" placeholder="Buscar">
+                <span class="input-group-addon">
+                    <i class="fa fa-search"></i>
+                </span>
+              </div>
+            <table class="table table-striped table-bordered table-hover dataTables-example display dataTable fn.dataTable.defaults" id="DataTables_Table_0">
               <thead>
                 <tr role="row">
                   <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Rendering engine: activate to sort column descending" >
+                    N°
+                  </th>
+                  <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-label="Browser: activate to sort column ascending">
                     Cliente
                   </th>
                   <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-label="Browser: activate to sort column ascending">
-                    Id Servicio
+                    Servicio
                   </th>
                   <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-label="Browser: activate to sort column ascending">
-                    Observaciones
+                    Estado
                   </th>
-                  <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-label="Browser: activate to sort column ascending">
-                    Acción
-                  </th>
+                  <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-label="Browser: activate to sort column ascending">Acción</th>
                 </tr>
               </thead>
               <tbody>
                 {% for servicecontract in servicecontract_list %}
                   <tr role="row">
-                    <td>{{ servicecontract.client.username }}</td>
-                    <td>{{ servicecontract.request.id }}</td>
-                    <td>{{ servicecontract.request.observations }}</td>
+                    <td>{{ loop.index }}</td>
+                    <td>{{ servicecontract.client }}</td>
+                    <td>{{ servicecontract.request }}</td>
+                    <td>
+                      {% if servicecontract.deleted %}
+                        Eliminado
+                      {% else %}
+                        Activo
+                      {% endif %}
+                    </td>
                     <td class="text-left footable-visible footable-last-column">
                       <div class="btn-group">
-                        <a href="{{ url('internal:servicecontract.show', servicecontract.id) }}" class="btn-white btn btn-xs">Detalle</a>
-                        <a href="{{ url('internal:servicecontract.edit', servicecontract.id) }}" class="btn-white btn btn-xs">Modificar</a>
-                        <a class="myBtn1 btn-white btn btn-xs" data-toggle="modal" data-target="#myModal1" data-url="{{ url('internal:servicecontract.delete', servicecontract.id) }}">Eliminar</a>
+                        <a  href="{{ url('internal:servicecontract.show', servicecontract.id) }}" class="btn-white btn"><i class="fa fa-eye" aria-hidden="true"></i></a>
+                        {% if not servicecontract.deleted %}
+                        <a  href="{{ url('internal:servicecontract.edit', servicecontract.id) }}" class="btn-white btn"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+                        <a class="myBtn1 btn-white btn" data-toggle="modal" data-target="#myModal1" data-url="{{ url('internal:servicecontract.delete', servicecontract.id) }}"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+                        {% endif %}
                       </div>
                     </td>
+                    
                   </tr>
                 {% endfor %}
               </tbody>
-              <tfoot>
-                <tr>
-                  <td colspan="5" class="footable-visible">
-                    <ul class="pagination pull-right">
-                      {% if servicecontract_list.has_previous() %}
-                        <li class="footable-page-arrow">
-                          <a class="pagination-link" data-page="first" data-pagenum="1">«</a>
-                        </li>
-                        <li class="footable-page-arrow">
-                          <a class="pagination-link" data-page="prev" data-pagenum="{{ servicecontract_list.previous_page_number() }}">‹</a>
-                        </li>
-                      {% endif %}
-                      <li class="footable-page">
-                        <a data-page="0">{{ servicecontract_list.number }}</a>
-                      </li>
-                      {% if servicecontract_list.has_next() %}
-                        <li class="footable-page-arrow">
-                          <a class="pagination-link" data-page="next" data-pagenum="{{ servicecontract_list.next_page_number() }}">›</a>
-                        </li>
-                        <li class="footable-page-arrow">
-                          <a class="pagination-link" data-page="last" data-pagenum="{{ paginator.num_pages }}">»</a>
-                        </li>
-                      {% endif %}
-                    </ul>
-                  </td>
-                </tr>
-              </tfoot>
             </table>
           </div>
         </div>
@@ -96,8 +77,6 @@
     </div>
   </div>
 </div>
-
-
 <div id="myModal1" class="modal1">
   <!-- Modal content -->
   <div class="modal-content">
@@ -120,6 +99,82 @@
 {% endblock page_content %}
 
 {% block custom_js %}
+<script type="text/javascript">
+  if ($('.message-container .messages li')) {
+  var msg = $('.message-container .messages li').first();
+  $.extend(toastr.options, {"positionClass": "toast-bottom-right",});
+  toastr[msg.data('tags')](msg.text());
+}
+</script>
+
+<script type="text/javascript">
+  var fill_Toastr = function(pMsg, pTypeMsg,pTitle){
+    toastr.options = {
+    closeButton: true,
+    progressBar: true,
+    showMethod: 'slideDown',
+    positionClass: "toast-bottom-right",
+    timeOut: 4000
+    };
+
+    switch(pTypeMsg){
+      case "success":
+      toastr.success(pMsg, '',pTitle);
+      break;
+
+      case "error":
+      toastr.error(pMsg, '',pTitle);
+      break;
+    }
+  }
+
+</script>
+<script src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.15/js/dataTables.bootstrap.min.js"></script>
+<script type="text/javascript">
+
+$(document).ready(function() {
+
+    // DataTable
+    var table = $('#DataTables_Table_0').DataTable({
+      "lengthChange": false,
+      "bsort":true,
+      "sDom": '<"top"i>rt<"bottom"lp><"clear">',
+      "columnDefs": [
+        { "orderable": false, "targets": 4 }
+      ],
+      "columnDefs": [
+        { "searchable": false, "targets": 0 }
+      ],
+      "sPaginationType": "full_numbers",
+      "pageLength": 6,
+      "oLanguage": {
+        "oPaginate": {
+                    "sPrevious": " Anterior ",
+                    "sNext" : " Siguiente ",
+                    "sFirst": "<<",
+                    "sLast": ">>"
+                    },
+        "sZeroRecords":    "No se encontraron resultados",
+        "sEmptyTable":     "Ningún dato disponible en esta tabla",
+        "sInfo":           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+        "sInfoEmpty":      "Mostrando registros del 0 al 0 de un total de 0 registros",
+        "sInfoFiltered":   "(filtrado de un total de _MAX_ registros)",
+        "oAria": {
+        "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
+        "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+    }
+
+       }
+
+    });
+
+    $('#mysearch').keyup(function(){
+      table.search($(this).val()).draw() ;
+})
+} );
+
+</script>
 <script>
 $( document ).ready(function() {
   $(".myBtn1").click(function() {
@@ -138,24 +193,5 @@ $(".myBtn1").click(function(event) {
   event.preventDefault();
   return false;
 });
-</script>
-<script>
-var searchParams = new URLSearchParams(window.location.search);
-
-if (searchParams.get('search')) {
-  $('#filter').val(searchParams.get('search'));
-}
-
-$('.pagination-link').click(function (e) {
-  var page = $(e.target).data('pagenum');
-  searchParams.set('page', page);
-  window.location.search = searchParams.toString();
-});
-
-if ($('.message-container .messages li')) {
-  var msg = $('.message-container .messages li').first();
-  $.extend(toastr.options, {"positionClass": "toast-bottom-right",});
-  toastr[msg.data('tags')](msg.text());
-}
 </script>
 {% endblock custom_js %}
