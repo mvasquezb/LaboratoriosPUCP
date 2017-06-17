@@ -125,7 +125,7 @@ $(document).ready(function(){
         if (selected_parameters_list.length != 0){
             for(var k =0;k<selected_parameters_list.length;k++){
                 if (selected_parameters_list[k] == parameter_id_gen){
-                    alert('No puede agregar un mismo parámetro más de una vez.');
+                    toastr.error('No puede agregar un mismo parámetro más de una vez.');
                     document.getElementById("selectNumber1").selectedIndex = 0;
                     return;
                 }
@@ -180,7 +180,7 @@ $(document).ready(function(){
         if (selected_parameters_list.length != 0){
             for(var k =0;k<selected_parameters_list.length;k++){
                 if (selected_parameters_list[k] == parameter_id_gen){
-                    alert('No puede agregar un mismo parámetro más de una vez.');
+                    toastr.error('No puede agregar un mismo parámetro más de una vez.');
                     document.getElementById("selectNumber1").selectedIndex = 0;
                     return;
                 }

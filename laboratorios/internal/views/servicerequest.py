@@ -28,9 +28,9 @@ from ..views.forms import *
 from django.template.loader import render_to_string
 
 from io import BytesIO
-from django.http import HttpResponse
 from django.template.loader import get_template
 from xhtml2pdf import pisa
+
 
 def index(request,
           template='internal/servicerequest/index.html',
@@ -171,9 +171,6 @@ def edit(request,
         )
     }
 
-
-
-
     # verificacion
     forms_verified = 0  # Means true lol
 
@@ -305,16 +302,16 @@ def show(request,
 
     context = {
         'form': service_request_form,
-        'service_request' : service_request,
+        'service_request': service_request,
         'samples': sample_list,
         'essays': essay_fill_list,
         'essays_methods': essay_methods_list,
         'essay_methods_chosen_forms': essay_methods_chosen_forms,
         'pk': pk,
-        'clients' : Client.all_objects.filter(deleted__isnull=True),
-        'employees' : Employee.all_objects.filter(deleted__isnull=True),
-        'states' : ServiceRequestState.all_objects.filter(deleted__isnull=True),
-        'external_providers' : ExternalProvider.all_objects.filter(deleted__isnull=True)
+        'clients': Client.all_objects.filter(deleted__isnull=True),
+        'employees': Employee.all_objects.filter(deleted__isnull=True),
+        'states': ServiceRequestState.all_objects.filter(deleted__isnull=True),
+        'external_providers': ExternalProvider.all_objects.filter(deleted__isnull=True)
     }
     # verificacion
     forms_verified = 0  # Means true lol
@@ -392,15 +389,17 @@ def assign_employee(request,
                     sample_id,
                     template='internal/servicerequest/assign_employee.html',
                     extra_context=None):
-    service_request = get_object_or_404(ServiceRequest, pk=request_id)
+    essay_methods = request.GET.getlist('methods[]', [])
+    essay_methods = list(map(lambda x: int(x), essay_methods))
+    print(essay_methods)
+    service_request = get_object_or_404(ServiceRequest.all_objects, pk=request_id)
     sample = get_object_or_404(service_request.sample_set.all(), pk=sample_id)
 
-    essay = sample.essayfill_set.first()
     essay_method_list = EssayMethodFill.all_objects.filter(
-        essay=essay,
-        chosen=True,
+        pk__in=essay_methods
     ).distinct()
 
+    print(essay_method_list)
     employee_q = Q()
     for essay_method in essay_method_list:
         employee_q &= Q(essay_methods=essay_method.essay_method)
@@ -418,7 +417,7 @@ def assign_employee(request,
         assigned_employee = employee_list.filter(query).first()
     else:
         assigned_employee = None
-
+    print(assigned_employee)
     # Está cagada esta lógica
     if request.method == 'POST':
         if form.is_valid():
@@ -429,8 +428,8 @@ def assign_employee(request,
                     *essay_method_list
                 )
             employee_methods = employee.assigned_essay_methods.all()
-            methods_to_add = set(essay_method_list) - set(employee_methods)
-            employee.assigned_essay_methods.add(*methods_to_add)
+            methods_to_add = set(essay_method_list) ^ set(employee_methods)
+            employee.assigned_essay_methods.set(methods_to_add)
 
             if request.is_ajax():
                 return JsonResponse({
@@ -461,20 +460,20 @@ def assign_employee(request,
 # Agregado
 def approve(request,
             pk, template='internal/servicerequest/index.html'):
-        service_request = ServiceRequest.all_objects.get(pk=pk)
-        state = ServiceRequestState.all_objects.get(description = "Aprobado")
-        service_request.state = state  # Le asignamos el estado de aprobado
-        service_request.save()
-        client = Client.all_objects.get(pk=service_request.client.id)
+    service_request = ServiceRequest.all_objects.get(pk=pk)
+    state = ServiceRequestState.all_objects.get(description="Aprobado")
+    service_request.state = state  # Le asignamos el estado de aprobado
+    service_request.save()
+    client = Client.all_objects.get(pk=service_request.client.id)
 
-        service_contract = ServiceContract(
-            client=client,
-            request=service_request
-        )
-        service_contract.save()
-        messages.success(request, 'Se ha aprobado la solicitud exitosamante!')
-        return redirect('internal:servicerequest.index')
-        # return redirect(reverse("internal:servicerequest.index"))
+    service_contract = ServiceContract(
+        client=client,
+        request=service_request
+    )
+    service_contract.save()
+    messages.success(request, 'Se ha aprobado la solicitud exitosamante!')
+    return redirect('internal:servicerequest.index')
+    # return redirect(reverse("internal:servicerequest.index"))
 
 
 def workload_view_per_request(request,
@@ -541,7 +540,8 @@ def upload(request, id):
 
         myfile = request.FILES['myfile']
         if len(myfile.name) >= 55:
-            messages.error(request, 'El nombre del archivo que intentó subir no debe exceder los 50 caracteres!')
+            messages.error(
+                request, 'El nombre del archivo que intentó subir no debe exceder los 50 caracteres!')
             return redirect('internal:serviceRequest.upload', id)
 
         # fs = FileSystemStorage()
@@ -606,7 +606,8 @@ def deleteAttachedFile(request, id):
     filename = requestAttached.fileName
     requestAttached.file.delete()
     requestAttached.delete()
-    messages.success(request, 'El archivo "' + filename + '" se eliminó exitosamente!')
+    messages.success(request, 'El archivo "' + filename +
+                     '" se eliminó exitosamente!')
     return redirect('internal:serviceRequest.attachmentList', idRequest)
 
 
@@ -618,10 +619,12 @@ def downloadAttachedFile(request, id):
 
     return response
 
-def reportGenerator(request,id):
+
+def reportGenerator(request, id):
     template = 'internal/servicerequest/reportGeneratorView.html'
-    serviceRequest = ServiceRequest.objects.get(pk = id)
-    sample_list = Sample.all_objects.filter(deleted__isnull=True,request = serviceRequest)
+    serviceRequest = ServiceRequest.all_objects.get(pk=id)
+    sample_list = Sample.all_objects.filter(
+        deleted__isnull=True, request=serviceRequest)
     context = {
         'sample_list': sample_list,
         'servicerequest': serviceRequest,
@@ -632,34 +635,37 @@ def reportGenerator(request,id):
 def getEssayFillList(sample):
     essayFillQuerySet = EssayFill.all_objects.filter(
         deleted__isnull=True,
-        sample=sample)  ## Deberia ser solo 1 ensayo
+        sample=sample)  # Deberia ser solo 1 ensayo
     essayFillList = list(essayFillQuerySet)
     return essayFillList
 
 
 def getParameterFillList(methodFill):
-    ParameterQuerySet = EssayMethodParameterFill.all_objects.filter(deleted__isnull=True, essay_method=methodFill)
+    ParameterQuerySet = EssayMethodParameterFill.all_objects.filter(
+        deleted__isnull=True, essay_method=methodFill)
     ParameterFillList = list(ParameterQuerySet)
     return ParameterFillList
 
 
 def getMethodFillList(essayFill):
-    MethodsQuerySet = EssayMethodFill.all_objects.filter(deleted__isnull=True, essay=essayFill, chosen=True)
+    MethodsQuerySet = EssayMethodFill.all_objects.filter(
+        deleted__isnull=True, essay=essayFill, chosen=True)
     MethodsList = list(MethodsQuerySet)
     return MethodsList
+
 
 def reportDetail(request, template='internal/servicerequest/reportDetail.html'):
     if request.POST:
         if "b_cancel" in request.POST:
             return redirect('internal:servicerequest.index')
         list_samples_id = request.POST.getlist('checks[]')
-        if  len(list_samples_id) > 0:
+        if len(list_samples_id) > 0:
             SampleCompleteList = []
             EssayFillCompleteList = []
             MethodFillCompleteList = []
             ParameterFillCompleteList = []
             for samples_id in list_samples_id:
-                sample = Sample.objects.get(pk=samples_id)
+                sample = Sample.all_objects.get(pk=samples_id)
                 SampleCompleteList.append(sample)
                 essayFillList = getEssayFillList(sample)
                 EssayFillCompleteList.append(essayFillList)
@@ -672,19 +678,21 @@ def reportDetail(request, template='internal/servicerequest/reportDetail.html'):
                     for methodFill in MethodFillList:
                         ParameterFillList = getParameterFillList(methodFill)
                         thisEssaysParameterFillList.append(ParameterFillList)
-                    thisSamplesParameterFillList.append(thisEssaysParameterFillList)
+                    thisSamplesParameterFillList.append(
+                        thisEssaysParameterFillList)
                 MethodFillCompleteList.append(thisSamplesMethodFillList)
                 ParameterFillCompleteList.append(thisSamplesParameterFillList)
 
             context = {
                 'SampleCompleteList': SampleCompleteList,
                 'EssayFillCompleteList': EssayFillCompleteList,
-                'MethodFillCompleteList' : MethodFillCompleteList,
-                'ParameterFillCompleteList' : ParameterFillCompleteList,
+                'MethodFillCompleteList': MethodFillCompleteList,
+                'ParameterFillCompleteList': ParameterFillCompleteList,
             }
-            pdf = render_to_pdf('internal/servicerequest/reportDetailPDF.html', context)
+            pdf = render_to_pdf(
+                'internal/servicerequest/reportDetailPDF.html', context)
             return HttpResponse(pdf, content_type='application/pdf')
-            #return render(request, template, context)
+            # return render(request, template, context)
         else:
             messages.error(
                 request,
@@ -693,17 +701,17 @@ def reportDetail(request, template='internal/servicerequest/reportDetail.html'):
             return redirect('internal:servicerequest.reportGenerator', request.POST.get("b_reporte"))
 
 
-
-def finalReport(request,id, template='internal/servicerequest/reportDetail.html'):
-    serviceRequest = ServiceRequest.objects.get(pk=id)
-    list_samples_id = Sample.all_objects.filter(deleted__isnull=True,request=serviceRequest)
+def finalReport(request, id, template='internal/servicerequest/reportDetail.html'):
+    serviceRequest = ServiceRequest.all_objects.get(pk=id)
+    list_samples_id = Sample.all_objects.filter(
+        deleted__isnull=True, request=serviceRequest)
     if len(list_samples_id) > 0:
         SampleCompleteList = []
         EssayFillCompleteList = []
         MethodFillCompleteList = []
         ParameterFillCompleteList = []
         for samples in list_samples_id:
-            sample = Sample.objects.get(pk=samples.pk)
+            sample = Sample.all_objects.get(pk=samples.pk)
             SampleCompleteList.append(sample)
             essayFillList = getEssayFillList(sample)
             EssayFillCompleteList.append(essayFillList)
@@ -716,17 +724,19 @@ def finalReport(request,id, template='internal/servicerequest/reportDetail.html'
                 for methodFill in MethodFillList:
                     ParameterFillList = getParameterFillList(methodFill)
                     thisEssaysParameterFillList.append(ParameterFillList)
-                thisSamplesParameterFillList.append(thisEssaysParameterFillList)
+                thisSamplesParameterFillList.append(
+                    thisEssaysParameterFillList)
             MethodFillCompleteList.append(thisSamplesMethodFillList)
             ParameterFillCompleteList.append(thisSamplesParameterFillList)
 
         context = {
             'SampleCompleteList': SampleCompleteList,
             'EssayFillCompleteList': EssayFillCompleteList,
-            'MethodFillCompleteList' : MethodFillCompleteList,
-            'ParameterFillCompleteList' : ParameterFillCompleteList,
+            'MethodFillCompleteList': MethodFillCompleteList,
+            'ParameterFillCompleteList': ParameterFillCompleteList,
         }
-        pdf = render_to_pdf('internal/servicerequest/reportDetailPDF.html', context)
+        pdf = render_to_pdf(
+            'internal/servicerequest/reportDetailPDF.html', context)
         if pdf:
             response = HttpResponse(pdf, content_type='application/pdf')
             filename = "InformeFinal-%s.pdf" % ("Nombre del cliente")
@@ -738,24 +748,24 @@ def finalReport(request,id, template='internal/servicerequest/reportDetail.html'
             response['Content-Disposition'] = content
             return response
         return HttpResponse("Not found")
-        #return HttpResponse(pdf, content_type='application/pdf')
-        #return render(request, template, context)
+        # return HttpResponse(pdf, content_type='application/pdf')
+        # return render(request, template, context)
     else:
         messages.error(
             request,
             'No puede generar un informe de una solicitud que no tiene muestras'
         )
-        return redirect(reverse('internal:servicerequest.index'),id)
+        return redirect(reverse('internal:servicerequest.index'), id)
 
 
 def render_to_pdf(template_src, context_dict={}):
-     template = get_template(template_src)
-     html  = template.render(context_dict)
-     result = BytesIO()
-     pdf = pisa.pisaDocument(BytesIO(html.encode("ISO-8859-1")), result)
-     if not pdf.err:
-         return HttpResponse(result.getvalue(), content_type='application/pdf')
-     return None
+    template = get_template(template_src)
+    html = template.render(context_dict)
+    result = BytesIO()
+    pdf = pisa.pisaDocument(BytesIO(html.encode("ISO-8859-1")), result)
+    if not pdf.err:
+        return HttpResponse(result.getvalue(), content_type='application/pdf')
+    return None
 
 
 def reportDetailPDF(request):

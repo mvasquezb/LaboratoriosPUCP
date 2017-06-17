@@ -136,14 +136,11 @@
           <div class="col-lg-6 col-lg-offset-3">
             <div class="text-center">
               <a href="{{ url('internal:servicerequest.edit',pk)}}" class="btn btn-primary">Editar</a>
-              <a href="{{ url('internal:servicerequest.index')}}" class="btn btn-primary">Atrás</a>
-              <input type=button value="Previous Page" onClick="javascript:history.go(-1);">
+              {# <a href="{{ url('internal:servicerequest.index')}}" >Atrás</a> #}
+              <input type=button value="Atrás" class="btn btn-primary" onClick="javascript:history.go(-1);">
 
             </div>
           </div>
-
-
-
         </form>
         </div>
       </div>
