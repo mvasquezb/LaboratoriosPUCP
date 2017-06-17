@@ -44,9 +44,9 @@
                     <td>{{ role.description }}</td>
                     <td>
                       <div class="btn-group">
-                        <a href="{{ url('internal:role.show', role.id) }}" class="btn-white btn btn-xs">Detalle</a>
-                        <a href="{{ url('internal:role.edit', role.id) }}" class="btn-white btn btn-xs">Editar</a>
-                        <a class="myBtn1 btn-white btn btn-xs" data-toggle="modal" data-target="#myModal1" data-url="{{ url('internal:role.delete', role.id) }}">Eliminar</a>
+                        <a href="{{ url('internal:role.show', role.id) }}" class="btn-white btn btn"><i class="fa fa-eye" aria-hidden="true"></i></a>
+                        <a href="{{ url('internal:role.edit', role.id) }}" class="btn-white btn btn"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+                        <a class="myBtn1 btn-white btn btn" data-toggle="modal" data-target="#myModal1" data-url="{{ url('internal:role.delete', role.id) }}"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
                       </div>
                     </td>
                   </tr>
