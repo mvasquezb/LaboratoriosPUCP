@@ -16,17 +16,32 @@
             <div class="ibox-content">
                     <div class="row">
                         <div class="col-lg-6">
-                            <div class="form-group">
+                            {% if "." not in selected_file.fileName %}
+                              <div class="form-group">
                                 <label>Nombre de archivo</label>
                                 <div class="text-primary">{{ selected_file.fileName }}</div>
-                            </div>
+                              </div>
+                              <div class="form-group">
+                               <label>Tipo de archivo</label>
+                               <div class="text-primary">Tipo desconocido</div>
+                              </div>
+                            {% else%}
+                              <div class="form-group">
+                                <label>Nombre de archivo</label>
+                                <div class="text-primary">{{ selected_file.fileName[:(selected_file.fileName.rfind("."))] }}</div>
+                              </div>
+                              <div class="form-group">
+                                <label>Tipo de archivo</label>
+                                <div class="text-primary">{{ selected_file.fileName.split(".")[-1]}}</div>
+                              </div>
+                            {% endif %}
                             <div class="form-group">
-                                <label>Descripción</label>
-                                {% if selected_file.description %}
+                              <label>Descripción</label>
+                              {% if selected_file.description %}
                                 <div class="text-primary">{{ selected_file.description}}</div>
-                                {% else %}
+                              {% else %}
                                 <div class="text-primary">Sin descripción</div>
-                                {% endif%}
+                              {% endif%}
                             </div>
                         </div>
                     </div>

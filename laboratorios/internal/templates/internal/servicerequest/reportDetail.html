@@ -1,0 +1,72 @@
+{% extends 'internal/base_internal.html' %}
+
+{% block title %}{{ super() }} | Empleados{% endblock title %}
+
+{% block custom_css %}{% endblock custom_css %}
+
+{% block page_content %}
+<div class="row border-bottom white-bg dashboard-header">
+    <div class="col-md-6">
+        <h2><strong>Reporte</strong></h2>
+    </div>
+</div>
+<div class="wrapper wrapper-content animated fadeInRight" >
+    <div class="col-lg-12">
+        <label>Solicitud</label>
+        <div class="text-primary">{{SampleCompleteList[0].request.pk}}</div>
+        {% for i in range(SampleCompleteList|length) %}
+        {% csrf_token %}
+        <div class="ibox float-e-margins">
+            <div class="ibox-content">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <label>Nombre de Muestra</label>
+                            <div class="text-primary">{{SampleCompleteList[i].name}}</div>
+                            <br>
+                            <label>Codigo de muestra</label>
+                            <div class="text-primary">{{SampleCompleteList[i].code}}</div>
+                          {% for j in range(EssayFillCompleteList[i]|length) %}
+                            <br>
+                            <label>Ensayo {{EssayFillCompleteList[i][j].essay.name}}</label>
+                            {% for h in range(MethodFillCompleteList[i][j]|length)%}
+                              <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper form-inline dt-bootstrap">
+                              <table class="table table-striped table-bordered table-hover dataTables-example dataTable" id="DataTables_Table_0">
+                                <thead>
+                                  <tr role="row">
+                                    <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Rendering engine: activate to sort column descending" >
+                                      Método {{MethodFillCompleteList[i][j][h].pk}}
+                                    </th>
+                                    <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-label="Browser: activate to sort column ascending">
+                                      Valor
+                                    </th>
+                                    <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-label="Browser: activate to sort column ascending">
+                                      Incertidumbre
+                                    </th>
+                                  </tr>
+                                  </thead>
+                                  {% for parameterFill in ParameterFillCompleteList[i][j][h] %}
+                                  <tbody>
+                                      <tr role="row">
+                                        <td>{{parameterFill.parameter.description}}</td>
+                                        <td>{{parameterFill.value}}</td>
+                                        <td>{{parameterFill.uncertainty}}</td>
+                                      </tr>
+                                  {% endfor %}
+                                  </tbody>
+                              </table>
+                            {% endfor %}
+                          {% endfor %}
+                        </div>
+
+                    </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+</div>
+{% endblock page_content %}
+
+{% block custom_js %}
+
+{% endblock custom_js %}

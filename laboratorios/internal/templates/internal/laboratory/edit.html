@@ -60,12 +60,12 @@
                         {% for user in all_users %}
                           {% if user.laboratories.filter(pk=laboratory.pk).exists() or (not user.laboratories.exists()) %}
                             <tr class="gradeX">
-                              <td>{{ user.username }}</td>
-                              <td>{{ user.email }}</td>
+                              <td>{{ user }}</td>
+                              <td>{{ user.user.email }}</td>
                               {% if user.laboratories.filter(pk=laboratory.pk).exists() %}
-                                <td><input type="checkbox" id="checkbox_users" name="{{ user.username }}" class="{{ user.pk }}" checked></td>
+                                <td><input type="checkbox" id="checkbox_users" name="{{ user.user.username }}" class="{{ user.pk }}" checked></td>
                               {% else %}
-                                <td><input type="checkbox" id="checkbox_users" name="{{ user.username }}" class="{{ user.pk }}"></td>
+                                <td><input type="checkbox" id="checkbox_users" name="{{ user.user.username }}" class="{{ user.pk }}"></td>
                               {% endif %}
                             </tr>
                           {% endif %}
@@ -79,9 +79,9 @@
                           <option selected>-- Ningún Responsable Seleccionado --</option>
                           {% for selected_user in selected_users %}
                             {% if selected_user.pk == laboratory.supervisor.pk %}
-                              <option id="{{ selected_user.pk }}" selected>{{ selected_user.username }}</option>
+                              <option id="{{ selected_user.pk }}" selected>{{ selected_user }}</option>
                             {% else %}
-                              <option id="{{ selected_user.pk }}" >{{ selected_user.username }}</option>
+                              <option id="{{ selected_user.pk }}" >{{ selected_user }}</option>
                             {% endif %}
                           {% endfor %}
                         </select>

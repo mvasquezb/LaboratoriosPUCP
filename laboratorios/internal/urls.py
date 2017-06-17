@@ -11,10 +11,10 @@ urlpatterns = [
     #
     url(r'^login$',
         login,
-        {'template_name' : 'internal/login.html'},
+        {'template_name': 'internal/login.html'},
         name='login'),
 
-        url(r'^logout$',
+    url(r'^logout$',
         logout_then_login,
         name='logout'),
     #
@@ -24,7 +24,7 @@ urlpatterns = [
         views.main.index,
         name='index'),
     #
-    #ServiceRequest
+    # ServiceRequest
     #
     url('^servicerequest/attachFile/(?P<id>\d+)$',
         views.servicerequest.upload,
@@ -41,6 +41,18 @@ urlpatterns = [
     url('^servicerequest/downloadAttachedFile/(?P<id>\d+)$',
         views.servicerequest.downloadAttachedFile,
         name='serviceRequest.downloadAttachedFile'),
+    url('^servicerequest/reportGenerator/(?P<id>\d+)$',
+        views.servicerequest.reportGenerator,
+        name='servicerequest.reportGenerator'),
+    url('^servicerequest/reportDetail/$',
+        views.servicerequest.reportDetail,
+        name='servicerequest.reportDetail'),
+    url('^servicerequest/reportDetailPDF/$',
+        views.servicerequest.reportDetailPDF,
+        name='servicerequest.reportDetail.PDF'),
+    url('^servicerequest/finalReport/(?P<id>\d+)$',
+        views.servicerequest.finalReport,
+        name='servicerequest.finalReport'),
     #
     # Employee
     #
@@ -110,13 +122,13 @@ urlpatterns = [
     url('^servicerequest/create/(?P<pk>\d+)$',
         views.servicerequest.create,
         name='servicerequest.create'),
-    url('^servicerequest/delete/(?P<pk>\d+)$',
+    url('^servicerequest/(?P<pk>\d+)/delete/?$',
         views.servicerequest.delete,
         name='servicerequest.delete'),
-    url('^servicerequest/select_client$',
+    url('^servicerequest/select_client/?$',
         views.servicerequest.select_client,
         name='servicerequest.select_client'),
-   url('^servicerequest/edit/(?P<pk>\d+)$',
+    url('^servicerequest/(?P<pk>\d+)/edit/?$',
         views.servicerequest.edit,
         name='servicerequest.edit'),
     url('^servicerequest/add_sample/(?P<pk>\d+)$',
@@ -143,8 +155,9 @@ urlpatterns = [
     url('^servicerequest/(?P<request_id>\d+)/assign_employee/(?P<sample_id>\d+)/?$',
         views.servicerequest.assign_employee,
         name='servicerequest.assign_employee'),
-
-    # Agregado
+    url('^servicerequest/view_workload_per_request/?$',
+        views.servicerequest.workload_view_per_request,
+        name='servicerequest.workload_view_per_request'),
     url('^servicerequest/approve/(?P<pk>\d+)$',
         views.servicerequest.approve,
         name='servicerequest.approve'),
@@ -155,18 +168,21 @@ urlpatterns = [
     url('^servicecontract/?$',
         views.servicecontract.index,
         name='servicecontract.index'),
-    url('^servicecontract/edit/(?P<pk>\d+)/?$',
+    url('^servicecontract/(?P<pk>\d+)/edit/?$',
         views.servicecontract.edit,
         name='servicecontract.edit'),
-    url('^servicecontract/show/(?P<pk>\d+)/?$',
+    url('^servicecontract/(?P<service_id>\d+)/?$',
         views.servicecontract.show,
         name='servicecontract.show'),
-    url('^servicecontract/delete/(?P<pk>\d+)/?$',
+    url('^servicecontract/(?P<pk>\d+)/delete/?$',
         views.servicecontract.delete,
         name='servicecontract.delete'),
-    url('^servicerequest/view_workload_per_request/?$',
-        views.servicerequest.workload_view_per_request,
-        name='servicerequest.workload_view_per_request'),
+    url('^servicecontract/approve/(?P<pk>\d+)$',
+        views.servicecontract.approve,
+        name='servicecontract.approve'),
+    url('^servicecontract/refuse/(?P<pk>\d+)$',
+        views.servicecontract.refuse,
+        name='servicecontract.refuse'),
     #
     # Laboratory
     #
@@ -228,9 +244,9 @@ urlpatterns = [
     #
     # EssayMethods
     #
-     url('^essaymethod/create$',
-         views.essaymethod.create,
-         name='essaymethod.create'),
+    url('^essaymethod/create/?$',
+        views.essaymethod.create,
+        name='essaymethod.create'),
     url('^essaymethod/(?P<pk>\d+)$',
         views.essaymethod.show,
         name='essaymethod.show'),
@@ -243,5 +259,26 @@ urlpatterns = [
     url('^essaymethod/(?P<pk>\d+)/delete/?$',
         views.essaymethod.delete,
         name='essaymethod.delete'),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    #
 
+    # inventoryItem
+    #
+    url('^inventoryItem/?$',
+        views.inventoryItem.index,
+        name='inventoryItem.index'),
+    url('^inventoryItem/show/(?P<pk>\d+)$',
+        views.inventoryItem.show,
+        name='inventoryItem.show'),
+    url('^inventoryItem/delete/(?P<pk>\d+)$',
+        views.inventoryItem.delete,
+        name='inventoryItem.delete'),
+    url('^inventoryItem/edit/(?P<pk>\d+)$',
+        views.inventoryItem.edit,
+        name='inventoryItem.edit'),
+
+    # Parameter Fill
+    #
+    url('^fill_parameters/(?P<pk>\d+)$',
+        views.parameterfill.fill_parameters,
+        name='parameterfill.fill_parameters'),
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

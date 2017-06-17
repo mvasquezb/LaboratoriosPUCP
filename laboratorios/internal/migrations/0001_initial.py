@@ -35,7 +35,6 @@ class Migration(migrations.Migration):
                 ('deleted', models.DateTimeField(editable=False, null=True)),
                 ('name', models.CharField(max_length=100)),
                 ('description', models.CharField(max_length=100)),
-                ('registered_date', models.DateTimeField(auto_now_add=True)),
             ],
             options={
                 'abstract': False,
@@ -47,7 +46,6 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('deleted', models.DateTimeField(editable=False, null=True)),
                 ('quantity', models.PositiveIntegerField(default=0)),
-                ('registered_date', models.DateTimeField(auto_now_add=True)),
                 ('essay', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='internal.Essay')),
             ],
             options={
@@ -62,7 +60,7 @@ class Migration(migrations.Migration):
                 ('name', models.CharField(max_length=100)),
                 ('description', models.CharField(max_length=100)),
                 ('price', models.FloatField()),
-                ('registered_date', models.DateTimeField(auto_now_add=True)),
+        
             ],
             options={
                 'abstract': False,
@@ -74,7 +72,6 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('deleted', models.DateTimeField(editable=False, null=True)),
                 ('chosen', models.BooleanField(default=False)),
-                ('registered_date', models.DateTimeField(auto_now_add=True)),
                 ('essay', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='internal.EssayFill')),
                 ('essay_method', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='essay_methods', to='internal.EssayMethod')),
             ],
@@ -89,7 +86,7 @@ class Migration(migrations.Migration):
                 ('deleted', models.DateTimeField(editable=False, null=True)),
                 ('description', models.CharField(max_length=100)),
                 ('unit', models.CharField(max_length=20)),
-                ('registered_date', models.DateTimeField(auto_now_add=True)),
+                 
             ],
             options={
                 'abstract': False,
@@ -102,7 +99,6 @@ class Migration(migrations.Migration):
                 ('deleted', models.DateTimeField(editable=False, null=True)),
                 ('value', models.CharField(blank=True, max_length=20, null=True)),
                 ('uncertainty', models.FloatField(blank=True, null=True)),
-                ('registered_date', models.DateTimeField(auto_now_add=True)),
                 ('essay_method', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='parameters', to='internal.EssayMethodFill')),
                 ('parameter', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='internal.EssayMethodParameter')),
             ],
@@ -117,7 +113,6 @@ class Migration(migrations.Migration):
                 ('deleted', models.DateTimeField(editable=False, null=True)),
                 ('name', models.CharField(max_length=100)),
                 ('description', models.CharField(max_length=200)),
-                ('registered_date', models.DateTimeField(auto_now_add=True)),
             ],
             options={
                 'abstract': False,
@@ -129,7 +124,6 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('deleted', models.DateTimeField(editable=False, null=True)),
                 ('description', models.CharField(max_length=500)),
-                ('registered_date', models.DateTimeField(auto_now_add=True)),
             ],
             options={
                 'abstract': False,
@@ -142,7 +136,6 @@ class Migration(migrations.Migration):
                 ('deleted', models.DateTimeField(editable=False, null=True)),
                 ('name', models.CharField(max_length=100)),
                 ('location', models.CharField(max_length=200)),
-                ('registered_date', models.DateTimeField(auto_now_add=True)),
             ],
             options={
                 'abstract': False,
@@ -154,7 +147,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('deleted', models.DateTimeField(editable=False, null=True)),
                 ('quantity', models.PositiveIntegerField()),
-                ('registered_date', models.DateTimeField(auto_now_add=True)),
+                
             ],
             options={
                 'abstract': False,
@@ -166,7 +159,6 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('deleted', models.DateTimeField(editable=False, null=True)),
                 ('unsettled', models.BooleanField()),
-                ('registered_date', models.DateTimeField(auto_now_add=True)),
                 ('essay', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='internal.EssayFill')),
             ],
             options={
@@ -179,7 +171,6 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('deleted', models.DateTimeField(editable=False, null=True)),
                 ('detail', models.CharField(max_length=100)),
-                ('registered_date', models.DateTimeField(auto_now_add=True)),
             ],
             options={
                 'abstract': False,
@@ -192,7 +183,6 @@ class Migration(migrations.Migration):
                 ('deleted', models.DateTimeField(editable=False, null=True)),
                 ('name', models.CharField(max_length=50, unique=True)),
                 ('capacity', models.PositiveIntegerField()),
-                ('registered_date', models.DateTimeField(auto_now_add=True)),
                 ('essay_methods', models.ManyToManyField(blank=True, related_name='laboratories', to='internal.EssayMethod')),
                 ('inventory', models.ManyToManyField(blank=True, related_name='laboratories', to='internal.Inventory')),
             ],
@@ -207,7 +197,6 @@ class Migration(migrations.Migration):
                 ('deleted', models.DateTimeField(editable=False, null=True)),
                 ('start_time', models.PositiveIntegerField()),
                 ('end_time', models.PositiveIntegerField()),
-                ('registered_date', models.DateTimeField(auto_now_add=True)),
             ],
             options={
                 'abstract': False,
@@ -218,7 +207,6 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('deleted', models.DateTimeField(editable=False, null=True)),
-                ('registered_date', models.DateTimeField(auto_now_add=True)),
             ],
             options={
                 'abstract': False,
@@ -232,7 +220,6 @@ class Migration(migrations.Migration):
                 ('description', models.CharField(blank=True, max_length=100, null=True)),
                 ('fileName', models.CharField(max_length=100, null=True)),
                 ('file', models.FileField(blank=True, null=True, upload_to=internal.models.content_file_name)),
-                ('registered_date', models.DateTimeField(auto_now_add=True)),
             ],
             options={
                 'abstract': False,
@@ -245,7 +232,6 @@ class Migration(migrations.Migration):
                 ('deleted', models.DateTimeField(editable=False, null=True)),
                 ('name', models.CharField(max_length=100)),
                 ('description', models.CharField(max_length=100)),
-                ('registered_date', models.DateTimeField(auto_now_add=True)),
                 ('permissions', models.ManyToManyField(blank=True, to='auth.Permission')),
             ],
             options={
@@ -259,7 +245,6 @@ class Migration(migrations.Migration):
                 ('deleted', models.DateTimeField(editable=False, null=True)),
                 ('code', models.CharField(max_length=10)),
                 ('name', models.CharField(default='default', max_length=50)),
-                ('registered_date', models.DateTimeField(auto_now_add=True)),
                 ('inventory', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='internal.Inventory')),
             ],
             options={
@@ -274,7 +259,6 @@ class Migration(migrations.Migration):
                 ('slug', models.CharField(max_length=50)),
                 ('name', models.CharField(max_length=100)),
                 ('description', models.CharField(max_length=200)),
-                ('registered_date', models.DateTimeField(auto_now_add=True)),
             ],
             options={
                 'abstract': False,
@@ -285,7 +269,6 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('deleted', models.DateTimeField(editable=False, null=True)),
-                ('registered_date', models.DateTimeField(auto_now_add=True)),
             ],
             options={
                 'abstract': False,
@@ -297,7 +280,6 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('deleted', models.DateTimeField(editable=False, null=True)),
                 ('description', models.CharField(max_length=100)),
-                ('registered_date', models.DateTimeField(auto_now_add=True)),
                 ('contract', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='internal.ServiceContract')),
             ],
             options={
@@ -311,7 +293,6 @@ class Migration(migrations.Migration):
                 ('deleted', models.DateTimeField(editable=False, null=True)),
                 ('observations', models.CharField(blank=True, max_length=500, null=True)),
                 ('expected_duration', models.IntegerField(default=10)),
-                ('registered_date', models.DateTimeField(auto_now_add=True)),
             ],
             options={
                 'abstract': False,
@@ -324,7 +305,6 @@ class Migration(migrations.Migration):
                 ('deleted', models.DateTimeField(editable=False, null=True)),
                 ('slug', models.CharField(max_length=20)),
                 ('description', models.CharField(max_length=20)),
-                ('registered_date', models.DateTimeField(auto_now_add=True)),
             ],
             options={
                 'abstract': False,
@@ -337,7 +317,6 @@ class Migration(migrations.Migration):
                 ('code', models.CharField(max_length=10)),
                 ('doc_number', models.IntegerField()),
                 ('phone_number', models.CharField(max_length=20)),
-                ('registered_date', models.DateTimeField(auto_now_add=True)),
             ],
             options={
                 'abstract': False,
@@ -348,7 +327,6 @@ class Migration(migrations.Migration):
             name='Employee',
             fields=[
                 ('basicuser_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='internal.BasicUser')),
-                ('registered_date', models.DateTimeField(auto_now_add=True)),
             ],
             options={
                 'abstract': False,
