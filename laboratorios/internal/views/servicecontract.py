@@ -22,6 +22,8 @@ from django.shortcuts import (
 )
 from django.contrib import messages
 from ..models import *
+from ..views.forms import ClientForm, EmployeeForm
+from django.core.urlresolvers import reverse_lazy
 
 
 def index(request,
