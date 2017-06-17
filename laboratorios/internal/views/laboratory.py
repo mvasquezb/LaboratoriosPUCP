@@ -36,7 +36,7 @@ def services_index(request,
         priorities_pk = dicc['priorities_pk[]']
         services_pk = dicc['services_pk[]']
         for i in range(0, len(services_pk)):
-            if priorities_pk[i] != -1:
+            if services_pk[i] and priorities_pk[i] and priorities_pk[i] != -1:
                 service = ServiceRequest.all_objects.get(
                     deleted__isnull=True,
                     pk=services_pk[i]

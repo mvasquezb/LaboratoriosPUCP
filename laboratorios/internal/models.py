@@ -258,7 +258,7 @@ class EssayFill(SafeDeleteModel):
         if essay_insert is None:
             return
 
-        methods_to_delete = EssayMethodFill.objects.filter(
+        methods_to_delete = EssayMethodFill.all_objects.filter(
             deleted__isnull=True,
             essay=self
         )
