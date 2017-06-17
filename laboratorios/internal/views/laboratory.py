@@ -117,7 +117,7 @@ def edit(request,
             return redirect('internal:laboratory.edit', pk=pk)
     else:
         laboratory = Laboratory.all_objects.get(
-            deleted_isnull=True,
+            deleted__isnull=True,
             pk=pk
         )
         #
@@ -157,7 +157,7 @@ def show(request,
          pk):
     if request.method == 'POST':
         instance = Laboratory.all_objects.get(
-            deleted_isnull=True,
+            deleted__isnull=True,
             pk=pk
         )
         aux_form = LaboratoryForm(request.POST or None, instance=instance)
@@ -166,7 +166,7 @@ def show(request,
             return redirect('internal:laboratory.index')
     else:
         laboratory = Laboratory.all_objects.get(
-            deleted_isnull=True,
+            deleted__isnull=True,
             pk=pk
         )
         #
