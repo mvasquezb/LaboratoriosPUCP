@@ -36,12 +36,12 @@
                 <span class="help-block m-b-none">Hasta 50 caracteres permitidos</span>
                 <div class="help-block with-errors"></div>
               </div>
-              
+
               <div class="form-group">
                 <label>Capacidad máxima de empleados (*)</label>
                 <input class="form-control" name="laboratory_capacity" id="capacity" type="number" min="5" max="10" value="5" onkeydown="return FilterNmberInput(event)" onpaste="handlePaste(event)" required data-error="Ingrese un valor válido para capacidad de personal">
                 <span class="help-block m-b-none">Mínima cantidad será cinco (5) y máxima será diez (10)</span>
-                <div class="help-block with-errors"></div>              
+                <div class="help-block with-errors"></div>
               </div>
             </div>
             <div class="row">
@@ -61,14 +61,14 @@
                         {% for user in users %}
                           {% if not user.laboratories.exists() %}
                             <tr class="gradeX">
-                              <td>{{ user.username }}</td>
-                              <td>{{ user.email }}</td>
-                              <td><input type="checkbox" id="checkbox_users" name="{{   user.username }}" class="{{ user.pk }}"></td>
+                              <td>{{ user }}</td>
+                              <td>{{ user.user.email }}</td>
+                              <td><input type="checkbox" id="checkbox_users" name="{{ user.user.username }}" class="{{ user.pk }}"></td>
                             </tr>
                           {% endif %}
                         {% endfor %}
                       </tbody>
-                      
+
                     </table>
                     <div class="form-group">
                       <label>Responsable del laboratorio</label>
@@ -90,7 +90,7 @@
                   </select>
               </div>
             </div>
-            
+
             <div class="row">
               <label>Seleccione los inventarios </label>
               <div class="table-responsive">
@@ -147,7 +147,7 @@
             </div>
           </form>
         </div>
-        
+
       </div>
     </div>
   </div>
@@ -277,7 +277,7 @@
     }).val($('#capacity').val());
     $form.append(capacity);
 
-    
+
     $('input:checkbox[id^="checkbox_users"]:checked').each(function(){
       var employee = $('<input>', {
         name: 'employees',
@@ -285,7 +285,7 @@
       }).val($(this).attr('class'));
       $form.append(employee);
     });
-    
+
     if ($('#comboBox option:selected').text == '-- Ningún Responsable Seleccionado --'){
       //$form.append($('<input>').attr('name', 'supervisor').val());
     } else {
@@ -295,14 +295,14 @@
       }).val($('#comboBox option:selected').attr('id'));
       $form.append(supervisor);
     }
-    
+
     var service_hours = $('<input>', {
       name: 'service_hours',
       type: 'hidden'
     }).val($('#comboBox_service_hours option:selected').attr('id'));
     $form.append(service_hours);
 
-    
+
     $('input:checkbox[id^="checkbox_inventory"]:checked').each(function(){
       var inventory = $('<input>', {
         name: 'inventory',
@@ -310,7 +310,7 @@
       }).val($(this).attr('name'));
       $form.append(inventory);
     });
-    
+
 
     $('input:checkbox[id^="checkbox_essay"]:checked').each(function(){
       var essay = $('<input>', {

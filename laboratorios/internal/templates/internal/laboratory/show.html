@@ -49,8 +49,8 @@
                       <tbody>
                         {% for selected_user in selected_users %}
                           <tr class="gradeX">
-                            <td>{{ selected_user.username }}</td>
-                            <td>{{ selected_user.email }}</td>
+                            <td>{{ selected_user }}</td>
+                            <td>{{ selected_user.user.email }}</td>
                           </tr>
                         {% endfor %}
                       </tbody>
@@ -62,9 +62,9 @@
                           <option selected>-- Ningún Responsable Seleccionado --</option>
                           {% for selected_user in selected_users %}
                             {% if selected_user.pk == laboratory.supervisor.pk %}
-                              <option id="{{ selected_user.pk }}" selected>{{ selected_user.username }}</option>
+                              <option id="{{ selected_user.pk }}" selected>{{ selected_user }}</option>
                             {% else %}
-                              <option id="{{ selected_user.pk }}" >{{ selected_user.username }}</option>
+                              <option id="{{ selected_user.pk }}" >{{ selected_user }}</option>
                             {% endif %}
                           {% endfor %}
                         </select>
