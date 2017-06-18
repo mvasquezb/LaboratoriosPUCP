@@ -13,7 +13,8 @@
     </div>
 </div>
 <div class="wrapper wrapper-content animated fadeInRight" >
-  <div class="col-lg-12">
+  <div class="row">
+    <div class="col-lg-12">
     <div class="ibox float-e-margins">
       <div class="ibox-content">
         <div class="row">
@@ -94,6 +95,7 @@
       </div>
     </div>
   </div>
+  </div>
 </div>
 
 
@@ -105,12 +107,9 @@
   if ($('.message-container .messages li')) {
   var msg = $('.message-container .messages li').first();
   $.extend(toastr.options, {"positionClass": "toast-bottom-right",});
-  toastr[msg.data('tags')](msg.text());
+  fill_Toastr(msg.text(), msg.data('tags'));
 }
-</script>
-
-<script type="text/javascript">
-  var fill_Toastr = function(pMsg, pTypeMsg,pTitle){
+  function fill_Toastr(pMsg, pTypeMsg,pTitle){
     toastr.options = {
     closeButton: true,
     progressBar: true,
@@ -133,47 +132,25 @@
 </script>
 <script src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.10.15/js/dataTables.bootstrap.min.js"></script>
+<script src="{{ static('js/datatable-config.js') }}"></script>
+
 <script type="text/javascript">
 
 $(document).ready(function() {
+  var table = $('#DataTables_Table_0').DataTable({
+    "columnDefs": [
+      { "orderable": false, "targets": 4 }
+    ],
+    "columnDefs": [
+      { "searchable": false, "targets": 0 }
+    ],
+    "sPaginationType": "full_numbers",
 
-    // DataTable
-    var table = $('#DataTables_Table_0').DataTable({
-      "lengthChange": false,
-      "bsort":true,
-      "sDom": '<"top"i>rt<"bottom"lp><"clear">',
-      "columnDefs": [
-        { "orderable": false, "targets": 4 }
-      ],
-      "columnDefs": [
-        { "searchable": false, "targets": 0 }
-      ],
-      "sPaginationType": "full_numbers",
-      "pageLength": 6,
-      "oLanguage": {
-        "oPaginate": {
-                    "sPrevious": " Anterior ",
-                    "sNext" : " Siguiente ",
-                    "sFirst": "<<",
-                    "sLast": ">>"
-                    },
-        "sZeroRecords":    "No se encontraron resultados",
-        "sEmptyTable":     "Ningún dato disponible en esta tabla",
-        "sInfo":           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
-        "sInfoEmpty":      "Mostrando registros del 0 al 0 de un total de 0 registros",
-        "sInfoFiltered":   "(filtrado de un total de _MAX_ registros)",
-        "oAria": {
-        "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
-        "sSortDescending": ": Activar para ordenar la columna de manera descendente"
-    }
+  });
 
-       }
-
-    });
-
-    $('#mysearch').keyup(function(){
-      table.search($(this).val()).draw() ;
-})
+  $('#mysearch').keyup(function(){
+    table.search($(this).val()).draw() ;
+  })
 } );
 
 </script>
@@ -200,10 +177,3 @@ $(".myBtn1").click(function(event) {
 
 
 {% endblock custom_js %}
-
-
-
-
-
-
-

@@ -3,6 +3,8 @@ if (typeof($.fn.dataTable.moment) !== "undefined"){
 }
 
 $.extend( $.fn.dataTable.defaults, {
+  "ordering": true,
+  "dom": '<"dt-top"l>rt<"bottom"<"col-md-6"p><"col-md-6 text-right dt-pagination"i>><"clear">',
   'language': {
     "sProcessing":     "Procesando...",
     "sLengthMenu":     "Mostrar _MENU_ registros",
@@ -17,8 +19,8 @@ $.extend( $.fn.dataTable.defaults, {
     "sInfoThousands":  ",",
     "sLoadingRecords": "Cargando...",
     "oPaginate": {
-        "sFirst":    "Primero",
-        "sLast":     "Último",
+        "sFirst":    "<<",
+        "sLast":     ">>",
         "sNext":     "Siguiente",
         "sPrevious": "Anterior"
     },
