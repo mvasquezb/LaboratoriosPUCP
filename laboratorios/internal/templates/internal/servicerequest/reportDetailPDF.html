@@ -1,12 +1,12 @@
 
 {% block page_content %}
-<font size = "5" face="Arial">
 <div class="row border-bottom white-bg dashboard-header">
     <div class="col-md-6">
         <strong><font size = 7><center>Reporte</center></font></strong>
     </div>
 </div>
 <div class="wrapper wrapper-content animated fadeInRight" >
+  <div class="row">
     <div class="col-lg-12">
         <label><b>Solicitud</b></label>
         <div>Fecha de registro: {{SampleCompleteList[0].request.registered_date.strftime('%d/%m/%Y')}}</div>
@@ -77,10 +77,5 @@
     </div>
 </div>
 </div>
-  </font>
+</div>
 {% endblock page_content %}
-
-{% block custom_js %}
-
-{% endblock custom_js %}
-

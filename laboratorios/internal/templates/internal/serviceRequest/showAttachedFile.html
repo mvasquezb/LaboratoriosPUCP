@@ -11,6 +11,7 @@
     </div>
 </div>
 <div class="wrapper wrapper-content animated fadeInRight" >
+  <div class="row">
     <div class="col-lg-12">
         <div class="ibox float-e-margins">
             <div class="ibox-content">
@@ -45,16 +46,13 @@
                             </div>
                         </div>
                     </div>
-              <div class="col-md-offset-0">
+              <div>
                 <a href="{{ url('internal:serviceRequest.attachmentList', selected_file.request.pk) }}" style = "color: #818587; text-decoration: none;"><button name="b_cancel" id="cancel" class="btn btn-w-m btn-white" ><span class="bold" >Regresar</span></button></a>
                 <a href="{{ url('internal:serviceRequest.downloadAttachedFile', selected_file.pk) }}"><button name="b_download" id="descargar" class="btn btn-primary" ><i class="fa fa-download"></i>&nbsp;&nbsp;<span class="bold">Descargar</span></button></a>
               </div>
             </div>
         </div>
     </div>
+  </div>
 </div>
 {% endblock page_content %}
-
-{% block custom_js %}
-
-{% endblock custom_js %}

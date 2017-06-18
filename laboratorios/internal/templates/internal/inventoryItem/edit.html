@@ -11,13 +11,15 @@
     </div>
 </div>
 <div class="wrapper wrapper-content animated fadeInRight" >
+  <div class="row">
     <div class="col-lg-12">
         <div class="ibox float-e-margins">
             <div class="ibox-content">
-
-                       <div class="form-group">
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="form-group">
                               <label>Codigo de la Muestra</label>
-                              <div class="text-primary">{{ inventoryItem.sample.code }}</div>
+                              <div class="text-primary">{{ inventoryItem.sample.code or '-' }}</div>
                             </div>
                             <div class="form-group">
                               <label>Nombre de la Muestra</label>
@@ -47,7 +49,7 @@
                         <div class="col-lg-6">
                             <div class="form-group">
                                 <label>Estado de la muestra</label>
-                                <input value="{{ inventoryItem.state }}"  type="text" class="form-control" name="state" required data-error="El Estado es obligatorio" placeholder="None">
+                                <input value="{{ inventoryItem.state or '' }}"  type="text" class="form-control" name="state" required data-error="El Estado es obligatorio" placeholder="Estado">
                                 <div class="help-block with-errors"></div>
                             </div>
 
@@ -56,17 +58,16 @@
                     </div>
 
                     <div class="row">
-                          <div class="col-lg-12">
-                              <input type="submit" value="Registrar" class="btn btn-primary" style="margin-right: 1.5cm;">
+                          <div class="col-lg-12 text-center">
+                              <input type="submit" value="Registrar" class="btn btn-primary">
                           </div>
-
                     </div>
                 </form>
+                </div>
+              </div>
             </div>
         </div>
     </div>
+  </div>
 </div>
 {% endblock page_content %}
-{% block base_js %}
-{{ super() }}
-{% endblock base_js %}

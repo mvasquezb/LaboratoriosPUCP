@@ -11,6 +11,7 @@
     </div>
 </div>
 <div class="wrapper wrapper-content animated fadeInRight" >
+  <div class="row">
     <div class="col-lg-12">
         <div class="ibox float-e-margins">
             <div class="ibox-content">
@@ -36,7 +37,7 @@
                                 <label>Permisos</label>
                                 <select name="permissions" class="form-control" multiple>
                                 {% for permission in permissions %}
-                                    <option {% if (permission in selected_permissions) %}'selected' {% endif %} value="{{ permission.id }}">{{ permission.name }}</option>
+                                    <option {% if (permission in selected_permissions) %}selected{% endif %} value="{{ permission.id }}">{{ permission.name }}</option>
                                 {% endfor %}
                                 </select>
                             </div>
@@ -44,15 +45,13 @@
                     </div>
                     <div class="row">
                         <div class="col-lg-12">
-                            <input type="submit" value="Registrar" class="btn btn-primary">                            
+                            <input type="submit" value="Registrar" class="btn btn-primary">
                         </div>
                     </div>
                 </form>
             </div>
         </div>
     </div>
+  </div>
 </div>
 {% endblock page_content %}
-{% block base_js %}
-{{ super() }}
-{% endblock base_js %}

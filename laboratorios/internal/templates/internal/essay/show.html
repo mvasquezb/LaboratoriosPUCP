@@ -17,6 +17,7 @@
     </div>
 </div>
 <div class="wrapper wrapper-content animated fadeInRight" >
+  <div class="row">
     <div class="col-lg-12">
         <div class="ibox float-e-margins">
             <div class="ibox-content">
@@ -44,7 +45,7 @@
                                 {% for method in selected_methods %}
                                     {% set outer_loop = loop %}
                                     <div class="form-group">
-                                        <label>{{ method.name }}</label>                                 
+                                        <label>{{ method.name }}</label>
                                     </div>
                                 {% endfor %}
                                 </div>
@@ -54,8 +55,6 @@
             </div>
         </div>
     </div>
+  </div>
 </div>
 {% endblock page_content %}
-{% block base_js %}
-{{ super() }}
-{% endblock base_js %}
