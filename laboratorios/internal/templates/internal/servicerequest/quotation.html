@@ -15,7 +15,7 @@
   <div class="col-md-12">
     <div class="ibox float-e-margins">
       <div class="ibox-title">
-        <h4>Cotización para el cliente <strong>{{ service_request.client.user.get_full_name() }}</strong></h4>
+        <h4>Cotización para el cliente <strong>{{ service_request.client }}</strong></h4>
       </div>
       <div class="ibox-content">
         <div class="row">
@@ -76,7 +76,7 @@
         </div>
       </div>
       <div class="ibox-footer">
-        <a href="{{ url('internal:servicerequest.show', request_id=service_request.id) }}" class="btn btn-success">
+        <a class="btn btn-success js-back-btn">
           <i class="fa fa-arrow-left"></i>
           Volver
         </a>
