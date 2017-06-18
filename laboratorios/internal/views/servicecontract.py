@@ -66,8 +66,8 @@ def edit(request,
     )
 
     state = get_object_or_404(
-        ServiceRequestState.all_objects,
-        description="Modificado"
+        ServiceRequestState.all_objects.filter(deleted__isnull=True),
+        slug="modified"
     )
 
     service_request_mod.state = state  # Le asignamos el estado de "Modificado"
@@ -87,7 +87,9 @@ def edit(request,
 
     # Creamos el ServiceContractModification
     service_contract_modification = ServiceContractModification(
-        contract=service_contract, description=service_request_ori.pk)
+        contract=service_contract,
+        description=service_request_ori.pk
+    )
     service_contract_modification.save()
 
     return redirect("internal:servicerequest.edit", request_id_mod)
@@ -142,7 +144,9 @@ def refuse(request,
     # Se va a rechazar la modificacion por lo cual, pasaremos todos los datos
     # del original al modificado
     state = get_object_or_404(
-        ServiceRequestState.all_objects, description="Aprobado")
+        ServiceRequestState.all_objects.filter(deleted__isnull=True),
+        slug="approved"
+    )
     service_request_Ori.state = state  # Le asignamos el estado de "Aprobado"
 
     service_request_Mod.client = service_request_Ori.client
