@@ -294,3 +294,13 @@ function WinMove() {
         })
         .disableSelection();
 }
+
+$('.js-back-btn').on('click', function (e) {
+  e.preventDefault();
+  var url = $(this).data('url');
+  if (typeof(url) !== 'undefined' && url) {
+    window.location.assign(url);
+  } else {
+    window.history.back();
+  }
+});
