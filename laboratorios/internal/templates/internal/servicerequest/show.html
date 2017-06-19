@@ -11,21 +11,13 @@
 {% block page_content %}
 <div class="row border-bottom white-bg dashboard-header">
   <div class="col-md-6">
-    <h2><strong>Modificar Solicitud</strong></h2>
+    <h2><strong>Detalle Solicitud</strong></h2>
   </div>
 </div>
 
 <div class="wrapper wrapper-content animated fadeInRight">
   <div class="col-lg-12">
     <div class="ibox float-e-margins">
-      <div class="ibox-title">
-        <a href="{{ url('internal:servicerequest.quotation', request_id=pk) }}" class="btn btn-primary">
-          Ver Cotización
-        </a>
-        <a href="{{ url('internal:serviceRequest.attachmentList', id=pk) }}" class="btn btn-primary">
-          Adjuntar Archivos
-        </a>
-      </div>
       <div class="ibox-content">
         {{ form.errors }}
         <form id='requestform' action="{{ url('internal:servicerequest.edit',pk=pk) }}" method="post" data-toggle="validator">
@@ -34,7 +26,7 @@
               <div class="col-lg-6">
               <div class="form-group">
                 <label>Cliente</label>
-                <select name="client" data-error="Este campo es obligatorio" required="" id="id_client" class="form-control">
+                <select disabled name="client" data-error="Este campo es obligatorio" required="" id="id_client" class="form-control">
                   {% for client in clients %}
                       <option value="{{ client.id }}">{{ client.user.first_name }} {{ client.user.last_name }}</option>
                   {% endfor %}
@@ -43,7 +35,7 @@
               </div>
               <div class="form-group">
                 <label>Supervisor</label>
-                <select name="supervisor" data-error="Este campo es obligatorio" required="" id="id_supervisor" class="form-control">
+                <select disabled name="supervisor" data-error="Este campo es obligatorio" required="" id="id_supervisor" class="form-control">
                   {% for employee in employees %}
                       <option {{ 'selected' if (service_request.supervisor.id == employee.id) }} value="{{ employee.id }}">{{ employee.user.first_name }} {{ employee.user.last_name }}</option>
                   {% endfor %}
@@ -52,7 +44,7 @@
               </div>
               <div class="form-group">
                 <label>Estado</label>
-                <select name="state" data-error="Este campo es obligatorio" required="" id="id_state" class="form-control">
+                <select disabled name="state" data-error="Este campo es obligatorio" required="" id="id_state" class="form-control">
                   {% for state in states %}
                       <option {{ 'selected' if (service_request.state.id == state.id) }} value="{{ state.id }}">{{ state.description }}</option>
                   {% endfor %}
@@ -61,25 +53,25 @@
               </div>
               <div class="form-group">
                 <label>Observaciones</label>
-                <input value="{{ service_request.observations or '' }}" type="text" name="observations" data-error="Este campo es obligatorio" required="" id="id_observations" class="form-control">
+                <input disabled value="{{ service_request.observations }}" type="text" name="observations" data-error="Este campo es obligatorio" required="" id="id_observations" class="form-control">
                   <div class="help-block with-errors"></div>
               </div>
               <div class="form-group">
                 <label>Duracion Esperada</label>
-                <input value="{{ service_request.expected_duration }}" type="number" name="expected_duration" data-error="Este campo es obligatorio" required="" id="id_expected_duration" class="form-control">
+                <input disabled value="{{ service_request.expected_duration }}" type="number" name="expected_duration" data-error="Este campo es obligatorio" required="" id="id_expected_duration" class="form-control">
                   <div class="help-block with-errors"></div>
               </div>
             </div>
             <div class="col-lg-6">
               <div class="form-group">
-                <div class="i-checks"><label class=""> <div class="iradio_square-green" style="position: relative;"><input {{ 'checked' if (service_request.external_provider) }} id="check_service_provider" type="checkbox" value="option1" name="a" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div> <i></i>Tercerizar Servicio</label></div>
+                <div hidden="True" class="i-checks"><label class=""> <div class="iradio_square-green" style="position: relative;"><input  {{ 'checked' if (service_request.external_provider) }} id="check_service_provider" type="checkbox" value="option1" name="a" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div> <i></i>Tercerizar Servicio</label></div>
               </div>
               <div class="form-group" id="servide_provider_input" style="display: none;">
                 <label>Proveedores</label>
-                <select name="external_provider" data-error="Este campo es obligatorio" id="id_state" class="form-control">
+                <select disabled name="external_provider" data-error="Este campo es obligatorio" id="id_state" class="form-control">
                   <option value="" >---------</option>
                   {% for external_provider in external_providers %}
-                      <option {% if service_request.external_provider.id == external_provider.id %}'selected'{% endif %} value="{{ external_provider.id }}">{{ external_provider.name }}</option>
+                      <option value="{{ external_provider.id }}" {% if service_request.external_provider.id == external_provider.id %} selected{% endif %}>{{ external_provider.name }}</option>
                   {% endfor %}
                 </select>
                   <div class="help-block with-errors"></div>
@@ -143,8 +135,10 @@
         <div class="row">
           <div class="col-lg-6 col-lg-offset-3">
             <div class="text-center">
-              <input type="submit" value="Registrar" class="btn btn-primary" form="requestform">
-              <a href="{{ url('internal:servicerequest.add_sample',pk)}}" class="btn btn-primary">Añadir Prueba</a>
+              <a href="{{ url('internal:servicerequest.edit',pk)}}" class="btn btn-primary">Editar</a>
+              <a href="{{ url('internal:servicerequest.index')}}" class="btn btn-primary">Atrás</a>
+              <input type=button value="Previous Page" onClick="javascript:history.go(-1);">
+
             </div>
           </div>
 
@@ -167,12 +161,14 @@ if($('#check_service_provider')[0].checked)
   $('#servide_provider_input').show();
 else
   $('#servide_provider_input').hide();
+
 $('.iradio_square-green').click(function(){
   if($('#check_service_provider')[0].checked)
     $('#servide_provider_input').hide();
   else
     $('#servide_provider_input').show();
 });
+
 $('#assign-employee-modal').on('show.bs.modal', function (e) {
   var $btn = $(e.relatedTarget);
   var $modal = $(this);
@@ -184,10 +180,13 @@ $('#assign-employee-modal').on('show.bs.modal', function (e) {
     $('#assign-employee-form').validator();
   });
 });
+
 $(document).on('submit', '#assign-employee-form', function (e) {
   e.preventDefault();
+
   var $form = $(e.target);
   var $modal = $('#assign-employee-modal');
+
   $.ajax({
     url: $form.get(0).action,
     method: $form.get(0).method,
@@ -204,22 +203,27 @@ $(document).on('submit', '#assign-employee-form', function (e) {
     }, 1500);
   });
 });
+
 $('#assign-employee-modal').on('hidden.bs.modal', function () {
   var $modal = $(this);
   $modal.find('.alert').hide();
 });
+
 $('.btn-assign-employee').each(function (index, elem) {
   var $btn = $(elem);
   update_assign_btn($btn);
 });
+
 $('.essaymethod-table [type="checkbox"]').on('change', function () {
   var $btn = $(this).parents('.sample-table').find('.btn-assign-employee');
   update_assign_btn($btn);
 });
+
 function update_assign_btn($btn) {
   var $sampleTable = $btn.parents('.sample-table');
   var $essayMethodTable = $sampleTable.find('.essaymethod-table');
   var $checkedMethods = $essayMethodTable.find('[type="checkbox"]:checked');
+
   if ($checkedMethods.length == 0) {
     $btn.prop('disabled', true).find('span').tooltip({
       title: 'Debe seleccionar un método de ensayo',
@@ -229,4 +233,5 @@ function update_assign_btn($btn) {
   }
 }
 </script>
+
 {% endblock custom_js %}
