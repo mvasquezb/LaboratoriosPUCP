@@ -8448,3 +8448,10 @@ body.md-skin {
 }
 
 .main-wrapper-content { padding-top: 0; }
+
+.dt-pagination {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.dataTables_paginate ul.pagination { margin: 0; }

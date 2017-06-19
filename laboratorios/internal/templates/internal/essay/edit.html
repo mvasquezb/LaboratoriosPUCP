@@ -5,10 +5,11 @@
 <div class="row border-bottom white-bg dashboard-header">
     <div class="col-md-6">
         <h2><strong>Editar Ensayo</strong></h2>
-    </div> 
+    </div>
 </div>
 <div class="wrapper wrapper-content animated fadeInRight">
-    <div class="col-lg-12">
+    <div class="row">
+      <div class="col-lg-12">
         <div class="ibox float-e-margins">
             <div class="ibox-content">
                 <form id=essayform action="{{ url('internal:essay.edit', pk) }}" method="post" data-toggle="validator">
@@ -48,6 +49,7 @@
                 </form>
             </div>
         </div>
+    </div>
     </div>
 </div>
 {% endblock page_content %}
@@ -91,7 +93,7 @@ $(document).ready(function(){
         if (selected_methods_list.length != 0){
             for(var k =0;k<selected_methods_list.length;k++){
                 if (selected_methods_list[k] == method_id_gen){
-                    alert('No puede agregar un mismo método más de una vez.');
+                    toastr.error('No puede agregar un mismo método más de una vez.');
                     document.getElementById("selectNumber1").selectedIndex = 0;
                     return;
                 }
@@ -148,7 +150,7 @@ $(document).ready(function(){
         if (selected_methods_list.length != 0){
             for(var k =0;k<selected_methods_list.length;k++){
                 if (selected_methods_list[k] == method_id_gen){
-                    alert('No puede agregar un mismo método más de una vez.');
+                    toastr.error('No puede agregar un mismo método más de una vez.');
                     document.getElementById("selectNumber1").selectedIndex = 0;
                     return;
                 }

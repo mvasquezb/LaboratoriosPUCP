@@ -98,3 +98,19 @@ def delete(request, pk):
     employee.delete()
 
     return redirect('internal:employee.index')
+
+
+def samples_dashboard(request, template = 'internal/employee/samples_dashboard.html'):
+    employee = Employee.objects.get(pk=request.user.basicuser.id)
+    essay_method_fill_list = EssayMethodFill.objects.filter(request=employee).order_by('registered_date','id')
+    sample_list = []
+    for i in range(0,len(essay_method_fill_list[i])):
+        sample = Sample.all_objects.get(deleted_isnull=True,pk=essay_method_fill_list[i].essay.sample.id)
+        parameters_list = EssayMethodParameterFill.all_objects.filter(deleted__isnull=True,essay_method=essay_method_fill_list[i],value__isnull=True)
+        sample_list.append({'sample':sample,
+                            'filled':not parameters_list.exists()})
+    context = {
+        'methods_list':  essay_method_fill_list,
+        'sample_list':essay_method_fill_forms
+    }
+    return render(request,template,context)
