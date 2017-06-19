@@ -119,7 +119,7 @@ urlpatterns = [
     #
     # ServiceRequest
     #
-    url('^servicerequest/create/(?P<pk>\d+)$',
+    url('^servicerequest/create/(?P<pk>\d+)/?$',
         views.servicerequest.create,
         name='servicerequest.create'),
     url('^servicerequest/(?P<pk>\d+)/delete/?$',
@@ -140,10 +140,10 @@ urlpatterns = [
     url('^servicerequest/(?P<pk_request>\d+)/delete_sample/(?P<pk_sample>\d+)/?$',
         views.servicerequest.delete_sample,
         name='servicerequest.delete_sample'),
-    url('^servicerequest/create_client$',
+    url('^servicerequest/create_client/?$',
         views.servicerequest.create_client,
         name='servicerequest.create_client'),
-    url('^servicerequest$',
+    url('^servicerequest/?$',
         views.servicerequest.index,
         name='servicerequest.index'),
     url('^servicerequest/(?P<pk>\d+)/?$',
