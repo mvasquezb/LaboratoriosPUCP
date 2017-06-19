@@ -59,8 +59,63 @@ def services_index(request,
             if (employee == service_supervisor):
                 laboratory_services.append(service)
                 break
-    context = {'laboratory_services': laboratory_services, 'laboratory': laboratory,
-               'priorities': all_priorities}
+
+    # get data for track service's graphic
+    month_names = [
+        'Enero',
+        'Febrero',
+        'Marzo',
+        'Abril',
+        'Mayo',
+        'Junio',
+        'Julio',
+        'Agosto',
+        'Septiembre',
+        'Octubre',
+        'Noviembre',
+        'Diciembre'
+    ]
+
+    # get only services of the current laboratory
+    service_request_list = laboratory_services
+
+    my_data = []
+    now = timezone.localtime(timezone.now())
+    for i in range(0, len(service_request_list)):
+        date_in_service = service_request_list[i].registered_date
+        # date_in_service.strftime("%d/%m/%Y")
+        # date_in_service.replace(day=date_in_service.day+service_request_list[i].expected_duration).strftime("%d/%m/%Y")
+
+        # progresion calculation
+        expected_duration = service_request_list[i].expected_duration
+        delta = now - date_in_service
+        total = 100 * delta.days / expected_duration
+        total = int(total)
+        end_date = date_in_service.replace(
+            day=date_in_service.day + expected_duration
+        )
+        client = service_request_list[i].client
+
+        my_dict = {
+            "id": service_request_list[i].id,
+            "title": "Cliente " + client.user.get_full_name(),
+            "start_date": date_in_service.strftime("%m/%d/%Y"),
+            "end_date": end_date.strftime("%m/%d/%Y"),
+            "value": 67,
+            "term": "Short Term",
+            "completion_percentage": total,
+            "color": "#770051",
+        }
+        my_data.append(my_dict)
+    js_data = simplejson.dumps(my_data)
+
+    context = {
+        'js_data': js_data,
+        'actual_month': month_names[now.month - 1] + " " + str(now.year),
+        'laboratory_services': laboratory_services,
+        'laboratory': laboratory,
+        'priorities': all_priorities
+    }
     template = 'internal/laboratory/services_index.html'
     return render(request, template, context)
 
