@@ -2,18 +2,13 @@ from django.shortcuts import (
     render,
     get_object_or_404,
     redirect,
-    reverse,
-    HttpResponseRedirect
 )
 from django.contrib import messages
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from internal.models import *
-from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from .forms import LaboratoryForm
-from django.http import JsonResponse
-from django.views.decorators.csrf import ensure_csrf_cookie
 from django.utils import timezone
+
+from internal.models import *
+from .forms import LaboratoryForm
 import json as simplejson
 
 
@@ -46,19 +41,16 @@ def services_index(request,
                     pk=priorities_pk[i]
                 )
                 service.save()
-    all_services = ServiceRequest.all_objects.filter(
-        deleted__isnull=True
+    laboratory = get_object_or_404(
+        Laboratory.all_objects.filter(deleted__isnull=True),
+        pk=pk
     )
-    laboratory = Laboratory.all_objects.get(deleted__isnull=True, pk=pk)
-    all_employes = laboratory.employees.all()
-    all_priorities = ServiceRequestPriority.all_objects.filter(deleted__isnull=True)
-    laboratory_services = []
-    for service in all_services:
-        service_supervisor = service.supervisor
-        for employee in all_employes:
-            if (employee == service_supervisor):
-                laboratory_services.append(service)
-                break
+    all_priorities = ServiceRequestPriority.all_objects.filter(
+        deleted__isnull=True)
+    laboratory_services = ServiceRequest.all_objects.filter(
+        deleted__isnull=True,
+        supervisor__in=laboratory.employees.all()
+    )
 
     # get data for track service's graphic
     month_names = [
@@ -138,17 +130,22 @@ def create(request,
                         request, 'Este nombre de laboratorio ya existe, pruebe otro')
                     return redirect('internal:laboratory.create')
 
-            return HttpResponse(form.errors)
-
+            # return HttpResponse(form.errors)
     else:
         users = Employee.all_objects.filter(deleted__isnull=True)
         service_hours = LaboratoryServiceHours.all_objects.filter(
-            deleted__isnull=True)
+            deleted__isnull=True
+        )
         inventories = Inventory.all_objects.filter(deleted__isnull=True)
         essaymethods = EssayMethod.all_objects.filter(deleted__isnull=True)
         form = LaboratoryForm()
-        context = {'users': users, 'service_hours': service_hours, 'inventories': inventories,
-                   'essaymethods': essaymethods, 'form': form}
+        context = {
+            'users': users,
+            'service_hours': service_hours,
+            'inventories': inventories,
+            'essaymethods': essaymethods,
+            'form': form
+        }
         return render(request, template, context)
 
 
@@ -251,8 +248,8 @@ def show(request,
 
 
 def track_services(request, pk,
-                   template='internal/laboratory/' +
-                   'track_services.html'):
+                   template=('internal/laboratory/' +
+                             'track_services.html')):
     month_names = [
         'Enero',
         'Febrero',
