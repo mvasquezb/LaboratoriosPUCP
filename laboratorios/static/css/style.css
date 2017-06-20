@@ -8455,3 +8455,8 @@ body.md-skin {
 }
 
 .dataTables_paginate ul.pagination { margin: 0; }
+
+.navbar-top-links li a.navbar-top-btn:hover {
+  color: #666;
+  /*background-color: #ddd;*/
+}
