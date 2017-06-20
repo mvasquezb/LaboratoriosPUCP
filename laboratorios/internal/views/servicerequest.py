@@ -47,7 +47,7 @@ def create(request,
            pk,
            template='internal/servicerequest/create.html'):
     selected_client = Client.all_objects.get(pk=pk)
-    service_request_form = ServiceRequestForm(
+    service_request_form = ServiceRequestCreateForm(
         request.POST or None,
         initial={
             'client': selected_client
@@ -59,11 +59,24 @@ def create(request,
     }
     if request.method == 'POST':
         if service_request_form.is_valid():
-            created_service_request = service_request_form.save()
+            created_service_request = service_request_form.save(commit=False)
             messages.success(
                 request,
                 'Se ha creado la solicitud exitosamante!'
             )
+            # creating an initial state if not existing yet
+            init_state = ServiceRequestState.all_objects.filter(
+                deleted__isnull=True,
+                slug='initial'
+            ).first()
+            if init_state is None:
+                init_state = ServiceRequestState(
+                    slug='initial',
+                    description='Estado Inicial'
+                )
+                init_state.save()
+            created_service_request.state = init_state
+            created_service_request.save()
             return redirect(reverse('internal:servicerequest.index'))
     return render(request, template, context)
 

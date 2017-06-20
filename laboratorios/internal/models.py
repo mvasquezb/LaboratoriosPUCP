@@ -107,7 +107,7 @@ class Laboratory(SafeDeleteModel):
     )
     capacity = models.PositiveIntegerField()
     supervisor = models.ForeignKey('Employee', null=True, blank=True)
-    service_hours = models.ForeignKey(LaboratoryServiceHours)
+    service_hours = models.ForeignKey(LaboratoryServiceHours, null=True, blank=True)
     essay_methods = models.ManyToManyField(
         'EssayMethod',
         related_name='laboratories',

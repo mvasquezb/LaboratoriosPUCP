@@ -8460,3 +8460,10 @@ body.md-skin {
   color: #666;
   /*background-color: #ddd;*/
 }
+
+.table-responsive .permission_table {
+  max-height: 200px;
+  display: inline-block;
+  width: inherit;
+  overflow: auto;
+}
