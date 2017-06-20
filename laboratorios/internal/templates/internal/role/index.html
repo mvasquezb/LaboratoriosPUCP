@@ -3,52 +3,85 @@
 {% block title %}{{ super() }} | Roles{% endblock title %}
 
 {% block custom_css %}
-<link rel="stylesheet" href="https://cdn.datatables.net/1.10.15/css/jquery.dataTables.min.css">
+<link href="{{ static('vendors/footable/footable.core.css') }}" rel="stylesheet">
 {% endblock custom_css %}
 
 {% block page_content %}
 <div class="row border-bottom white-bg dashboard-header">
     <div class="col-md-6">
-        <h2><strong>Listado de Roles</strong></h2>
+        <h2><strong>Lista de Roles</strong></h2>
     </div>
 </div>
 <div class="wrapper wrapper-content animated fadeInRight" >
+  <div class="row">
   <div class="col-lg-12">
     <div class="ibox float-e-margins">
       <div class="ibox-content">
+        <div class="row">
+            <div class="col-md-3">
+              <div class="input-group">
+                <input type="text" class="form-control input-sm m-b-xs" id="mysearch" placeholder="Buscar">
+                <span class="input-group-addon">
+                  <i class="fa fa-search"></i>
+                </span>
+              </div>
+            </div>
+            <div class="col-md-2 col-md-offset-7 text-right">
+              <a class="btn btn-primary " href="{{ url('internal:role.create') }}">
+                <i class="fa fa-plus"></i>
+                Crear Rol
+              </a>
+            </div>
+          </div>
         <div class="table-responsive">
             <table class="table table-striped table-bordered" id="role-table">
               <thead>
-                <tr role="row">
+                <tr>
+                  <th>
+                    N°
+                  </th>
                   <th>
                     Nombre
                   </th>
                   <th>
-                    Descripcion
+                    Descripción
                   </th>
-                  <th>Acción</th>
+                  <th>
+                    Estado
+                  </th>
+                  <th>Acciones</th>
                 </tr>
               </thead>
               <tbody>
                 {% for role in role_list %}
                   <tr role="row">
+                    <td>{{ loop.index }}</td>
                     <td>{{ role.name }}</td>
                     <td>{{ role.description }}</td>
                     <td>
+                      {% if role.deleted %}
+                        Eliminado
+                      {% else %}
+                        Activo
+                      {% endif %}
+                    </td>
+                    <td class="text-left footable-visible footable-last-column">
                       <div class="btn-group">
-                        <a href="{{ url('internal:role.show', role.id) }}" class="btn-white btn btn-xs">Detalle</a>
-                        <a href="{{ url('internal:role.edit', role.id) }}" class="btn-white btn btn-xs">Editar</a>
-                        <a class="myBtn1 btn-white btn btn-xs" data-toggle="modal" data-target="#myModal1" data-url="{{ url('internal:role.delete', role.id) }}">Eliminar</a>
+                        <a  href="{{ url('internal:role.show', role.id) }}" class="btn-white btn"><i class="fa fa-eye" aria-hidden="true"></i></a>
+                        {% if not role.deleted %}
+                        <a  href="{{ url('internal:role.edit', role.id) }}" class="btn-white btn"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+                        <a class="myBtn1 btn-white btn" data-toggle="modal" data-target="#myModal1" data-url="{{ url('internal:role.delete', role.id) }}"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+                        {% endif %}
                       </div>
                     </td>
                   </tr>
                 {% endfor %}
               </tbody>
             </table>
-          </div>
         </div>
       </div>
     </div>
+  </div>
   </div>
 </div>
 <div id="myModal1" class="modal1">
@@ -73,6 +106,28 @@
 {% endblock page_content %}
 
 {% block custom_js %}
+<script type="text/javascript">
+if ($('.message-container .messages li')) {
+  var msg = $('.message-container .messages li').first();
+  $.extend(toastr.options, {"positionClass": "toast-bottom-right",});
+  showToastr(msg.text(), msg.data('tags'));
+}
+</script>
+<script src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.15/js/dataTables.bootstrap.min.js"></script>
+<script src="{{ static('js/datatable-config.js') }}"></script>
+<script type="text/javascript">
+var table = $('#role-table').DataTable({
+  columnDefs: [
+    { orderable: false, targets: 4 },
+    { searchable: false, targets: 0 }
+  ],
+});
+
+$('#mysearch').keyup(function() {
+  table.search($(this).val()).draw() ;
+});
+</script>
 <script>
 $( document ).ready(function() {
   $(".myBtn1").click(function() {
@@ -91,19 +146,5 @@ $(".myBtn1").click(function(event) {
   event.preventDefault();
   return false;
 });
-</script>
-<script src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
-<script src="{{ static('js/datatable-config.js') }}"></script>
-<script>
-if ($('.message-container .messages li')) {
-  var msg = $('.message-container .messages li').first();
-  $.extend(toastr.options, {"positionClass": "toast-bottom-right",});
-  try {
-    toastr[msg.data('tags')](msg.text());
-  } catch (TypeError) {}
-}
-$('#role-table').DataTable({
-  responsive: true,
-})
 </script>
 {% endblock custom_js %}

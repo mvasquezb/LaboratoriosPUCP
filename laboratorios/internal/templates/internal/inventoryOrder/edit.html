@@ -1,49 +1,48 @@
 {% extends 'internal/base_internal.html' %}
 
-{% block title %}{{ super() }} | Inicio{% endblock title %}
+{% block title %}{{ super() }} | Solicitudes de Almacenamiento{% endblock title %}
 
 {% block custom_css %}{% endblock custom_css %}
 
 {% block page_content %}
 <div class="row border-bottom white-bg dashboard-header">
-    <div class="col-md-6">
-        <h2><strong>Editar Solicitud de Almacenamiento</strong></h2>
-    </div>
+  <div class="col-md-6">
+    <h2><strong>Editar Solicitud de Almacenamiento</strong></h2>
+  </div>
 </div>
+
 <div class="wrapper wrapper-content animated fadeInRight" >
+  <div class="row">
     <div class="col-lg-12">
-        <div class="ibox float-e-margins">
-            <div class="ibox-content">
-            <form id="myForm" action="{{ url('internal:inventoryOrder.edit', inventoryOrder.id) }}" method="post" data-toggle="validator">
-                    {% csrf_token %}
-
-                    <div class="row">
-                        <div class="col-lg-6">
-                            <label>Ensayo realizable - Muestra</label>
-                            <select class="form-control m-b" name="essay">
-                              {% for actualEssay in essayies %}
-                                  <option value="{{ actualEssay.id }}">{{actualEssay.essay.name}} - {{actualEssay.sample.name}}</option>
-                              {% endfor %}
-                            </select>
-                          <!--ABSOLUTAMENTE NECESARIO, POR NADA DEL MUNDO BORRAR-->
-                          <input name="unsettled" value=True type="hidden"></input>
-
-                        </div>
-
-                    </div>
-
-                    <div class="row">
-                          <div class="col-lg-12">
-                              <input type="submit" value="Registrar" class="btn btn-primary" style="margin-right: 1.5cm;">
-                          </div>
-
-                    </div>
-                </form>
+      <div class="ibox float-e-margins">
+        <div class="ibox-content">
+          <div class="row">
+            <div class="col-md-12">
+              <form id="myForm" action="{{ url('internal:inventoryOrder.edit', inventoryOrder.id) }}" method="post" data-toggle="validator">
+                {% csrf_token %}
+                <div class="row">
+                  <div class="col-lg-6">
+                    <label>Ensayo realizable - Muestra</label>
+                    <select class="form-control m-b" name="essay">
+                      {% for actualEssay in essayies %}
+                        <option value="{{ actualEssay.id }}">{{actualEssay.essay.name}} - {{actualEssay.sample.name}}</option>
+                      {% endfor %}
+                    </select>
+                    <!--ABSOLUTAMENTE NECESARIO, POR NADA DEL MUNDO BORRAR-->
+                    <input name="unsettled" value=True type="hidden"></input>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-lg-12">
+                    <input type="submit" value="Registrar" class="btn btn-primary" style="margin-right: 1.5cm;">
+                  </div>
+                </div>
+              </form>
             </div>
+          </div>
         </div>
+      </div>
     </div>
+  </div>
 </div>
 {% endblock page_content %}
-{% block base_js %}
-{{ super() }}
-{% endblock base_js %}

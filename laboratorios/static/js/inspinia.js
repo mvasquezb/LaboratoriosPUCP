@@ -294,3 +294,36 @@ function WinMove() {
         })
         .disableSelection();
 }
+
+$('.js-back-btn').on('click', function (e) {
+  e.preventDefault();
+  var url = $(this).data('url');
+  if (typeof(url) !== 'undefined' && url) {
+    window.location.assign(url);
+  } else {
+    window.history.back();
+  }
+});
+
+function showToastr(pMsg, pTypeMsg, pTitle, options) {
+  toastr.options = {
+    closeButton: true,
+    progressBar: true,
+    showMethod: 'slideDown',
+    positionClass: "toast-bottom-right",
+    timeOut: 4000
+  };
+  if (typeof(options) === 'object') {
+    toastr.options = $.extend(toastr.options, options);
+  }
+
+  switch(pTypeMsg){
+    case "success":
+      toastr.success(pMsg, '', pTitle);
+      break;
+
+    case "error":
+      toastr.error(pMsg, '', pTitle);
+      break;
+  }
+}

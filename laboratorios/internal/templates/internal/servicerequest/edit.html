@@ -16,6 +16,7 @@
 </div>
 
 <div class="wrapper wrapper-content animated fadeInRight">
+  <div class="row">
   <div class="col-lg-12">
     <div class="ibox float-e-margins">
       <div class="ibox-title">
@@ -45,7 +46,7 @@
                 <label>Supervisor</label>
                 <select name="supervisor" data-error="Este campo es obligatorio" required="" id="id_supervisor" class="form-control">
                   {% for employee in employees %}
-                      <option {{ 'selected' if (service_request.supervisor.id == employee.id) }} value="{{ employee.id }}">{{ employee.user.first_name }} {{ employee.user.last_name }}</option>
+                      <option {% if service_request.supervisor.id == employee.id %}selected{% endif %} value="{{ employee.id }}">{{ employee.user.first_name }} {{ employee.user.last_name }}</option>
                   {% endfor %}
                 </select>
                   <div class="help-block with-errors"></div>
@@ -54,7 +55,7 @@
                 <label>Estado</label>
                 <select name="state" data-error="Este campo es obligatorio" required="" id="id_state" class="form-control">
                   {% for state in states %}
-                      <option {{ 'selected' if (service_request.state.id == state.id) }} value="{{ state.id }}">{{ state.description }}</option>
+                      <option {% if service_request.state.id == state.id %}selected{% endif %} value="{{ state.id }}">{{ state.description }}</option>
                   {% endfor %}
                 </select>
                   <div class="help-block with-errors"></div>
@@ -79,7 +80,7 @@
                 <select name="external_provider" data-error="Este campo es obligatorio" id="id_state" class="form-control">
                   <option value="" >---------</option>
                   {% for external_provider in external_providers %}
-                      <option {% if service_request.external_provider.id == external_provider.id %}'selected'{% endif %} value="{{ external_provider.id }}">{{ external_provider.name }}</option>
+                      <option {% if service_request.external_provider.id == external_provider.id %}selected{% endif %} value="{{ external_provider.id }}">{{ external_provider.name }}</option>
                   {% endfor %}
                 </select>
                   <div class="help-block with-errors"></div>
@@ -116,7 +117,7 @@
                       <tbody>
                         <tr>
                           {% for essay_method_active in essay_methods_chosen_forms[loop.index-1] %}
-                          <td>{{ essay_method_active.as_p() }}</td>
+                            <td data-id="{{ essay_method_active.instance.id }}">{{ essay_method_active.as_p() }}</td>
                           {% endfor%}
                         </tr>
                       </tbody>
@@ -152,6 +153,7 @@
       </div>
     </div>
   </div>
+  </div>
 </div>
 
 <div class="modal inmodal" id="assign-employee-modal" tabindex="-1" role="dialog" aria-hidden="true">
@@ -174,8 +176,17 @@ $('#assign-employee-modal').on('show.bs.modal', function (e) {
   var $btn = $(e.relatedTarget);
   var $modal = $(this);
   var url = $btn.data('url');
+  var selected_methods = $btn.parents('tr').find('.essaymethod-table td input:checked');
+  var sel_methods = [];
+  selected_methods.each(function (index, elem) {
+    sel_methods.push($(elem).parents('td').data('id'));
+  });
+  console.log(url, sel_methods);
   $.ajax({
     url: url,
+    data: {
+      methods: sel_methods,
+    },
   }).done(function (response) {
     $modal.html(response);
     $('#assign-employee-form').validator();
@@ -185,6 +196,7 @@ $(document).on('submit', '#assign-employee-form', function (e) {
   e.preventDefault();
   var $form = $(e.target);
   var $modal = $('#assign-employee-modal');
+  console.log($form.get().data);
   $.ajax({
     url: $form.get(0).action,
     method: $form.get(0).method,

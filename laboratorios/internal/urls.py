@@ -1,20 +1,20 @@
 from django.conf.urls import url
 from . import views
 from django.contrib.auth.views import login, logout_then_login
-
 from django.conf import settings
 from django.conf.urls.static import static
+
 
 urlpatterns = [
     #
     # Login
     #
-    url(r'^login$',
+    url(r'^login/?$',
         login,
         {'template_name': 'internal/login.html'},
         name='login'),
 
-    url(r'^logout$',
+    url(r'^logout/?$',
         logout_then_login,
         name='logout'),
     #
@@ -62,13 +62,13 @@ urlpatterns = [
     url('^employee/create$',
         views.employee.create,
         name='employee.create'),
-    url('^employee/edit/(?P<pk>\d+)$',
+    url('^employee/(?P<pk>\d+)/edit/?$',
         views.employee.edit,
         name='employee.edit'),
-    url('^employee/show/(?P<pk>\d+)$',
+    url('^employee/(?P<pk>\d+)$',
         views.employee.show,
         name='employee.show'),
-    url('^employee/delete/(?P<pk>\d+)$',
+    url('^employee/(?P<pk>\d+)/delete/?$',
         views.employee.delete,
         name='employee.delete'),
     #
@@ -77,16 +77,16 @@ urlpatterns = [
     url('^role/$',
         views.role.index,
         name='role.index'),
-    url('^role/show/(?P<pk>\d+)$',
+    url('^role/(?P<pk>\d+)$',
         views.role.show,
         name='role.show'),
     url('^role/create$',
         views.role.create,
         name='role.create'),
-    url('^role/edit/(?P<pk>\d+)$',
+    url('^role/(?P<pk>\d+)/edit/?$',
         views.role.edit,
         name='role.edit'),
-    url('^role/delete/(?P<pk>\d+)$',
+    url('^role/(?P<pk>\d+)/delete/?$',
         views.role.delete,
         name='role.delete'),
     #
@@ -98,28 +98,28 @@ urlpatterns = [
     url('^inventoryOrder/create/?$',
         views.inventoryOrder.create,
         name='inventoryOrder.create'),
-    url('^inventoryOrder/edit/(?P<pk>\d+)$',
+    url('^inventoryOrder/(?P<pk>\d+)/edit/?$',
         views.inventoryOrder.edit,
         name='inventoryOrder.edit'),
-    url('^inventoryOrder/show/(?P<pk>\d+)$',
+    url('^inventoryOrder/(?P<pk>\d+)$',
         views.inventoryOrder.show,
         name='inventoryOrder.show'),
     url('^inventoryOrder/check/?$',
         views.inventoryOrder.check,
         name='inventoryOrder.check'),
-    url('^inventoryOrder/approve/(?P<pk>\d+)$',
+    url('^inventoryOrder/(?P<pk>\d+)/approve/?$',
         views.inventoryOrder.approve,
         name='inventoryOrder.approve'),
-    url('^inventoryOrder/reject/(?P<pk>\d+)$',
+    url('^inventoryOrder/(?P<pk>\d+)/reject/?$',
         views.inventoryOrder.reject,
         name='inventoryOrder.reject'),
-    url('^inventoryOrder/delete/(?P<pk>\d+)$',
+    url('^inventoryOrder/(?P<pk>\d+)/delete/?$',
         views.inventoryOrder.delete,
         name='inventoryOrder.delete'),
     #
     # ServiceRequest
     #
-    url('^servicerequest/create/(?P<pk>\d+)$',
+    url('^servicerequest/create/(?P<pk>\d+)/?$',
         views.servicerequest.create,
         name='servicerequest.create'),
     url('^servicerequest/(?P<pk>\d+)/delete/?$',
@@ -131,22 +131,22 @@ urlpatterns = [
     url('^servicerequest/(?P<pk>\d+)/edit/?$',
         views.servicerequest.edit,
         name='servicerequest.edit'),
-    url('^servicerequest/add_sample/(?P<pk>\d+)$',
+    url('^servicerequest/(?P<pk>\d+)/add_sample/?$',
         views.servicerequest.add_sample,
         name='servicerequest.add_sample'),
-    url('^servicerequest/edit_sample/(?P<pk_request>\d+)/(?P<pk_sample>\d+)$',
+    url('^servicerequest/(?P<pk_request>\d+)/edit_sample/(?P<pk_sample>\d+)/?$',
         views.servicerequest.edit_sample,
         name='servicerequest.edit_sample'),
-    url('^servicerequest/delete_sample/(?P<pk_request>\d+)/(?P<pk_sample>\d+)$',
+    url('^servicerequest/(?P<pk_request>\d+)/delete_sample/(?P<pk_sample>\d+)/?$',
         views.servicerequest.delete_sample,
         name='servicerequest.delete_sample'),
-    url('^servicerequest/create_client$',
+    url('^servicerequest/create_client/?$',
         views.servicerequest.create_client,
         name='servicerequest.create_client'),
-    url('^servicerequest$',
+    url('^servicerequest/?$',
         views.servicerequest.index,
         name='servicerequest.index'),
-    url('^servicerequest/show/(?P<pk>\d+)/?$',
+    url('^servicerequest/(?P<pk>\d+)/?$',
         views.servicerequest.show,
         name='servicerequest.show'),
     url('^servicerequest/(?P<request_id>\d+)/quotation/?$',
@@ -158,7 +158,7 @@ urlpatterns = [
     url('^servicerequest/view_workload_per_request/?$',
         views.servicerequest.workload_view_per_request,
         name='servicerequest.workload_view_per_request'),
-    url('^servicerequest/approve/(?P<pk>\d+)$',
+    url('^servicerequest/(?P<pk>\d+)/approve/?$',
         views.servicerequest.approve,
         name='servicerequest.approve'),
 
@@ -192,13 +192,13 @@ urlpatterns = [
     url('^laboratory/create$',
         views.laboratory.create,
         name='laboratory.create'),
-    url('^laboratory/edit/(?P<pk>\d+)$',
+    url('^laboratory/(?P<pk>\d+)/edit/?$',
         views.laboratory.edit,
         name='laboratory.edit'),
-    url('^laboratory/delete/(?P<pk>\d+)$',
+    url('^laboratory/(?P<pk>\d+)/delete/?$',
         views.laboratory.delete,
         name='laboratory.delete'),
-    url('^laboratory/show/(?P<pk>\d+)$',
+    url('^laboratory/(?P<pk>\d+)$',
         views.laboratory.show,
         name='laboratory.show'),
     url('^laboratory/(?P<pk>\d+)/services/$',
@@ -217,10 +217,10 @@ urlpatterns = [
     url('^sampleType/create/?$',
         views.sampleType.create,
         name='sampleType.create'),
-    url('^sampleType/edit/(?P<id>\d+)/$',
+    url('^sampleType/(?P<id>\d+)/edit/?$',
         views.sampleType.edit,
         name='sampleType.edit'),
-    url('^sampleType/delete/(?P<id>\d+)/?$',
+    url('^sampleType/(?P<id>\d+)/delete/?$',
         views.sampleType.delete,
         name='sampleType.delete'),
     #
@@ -260,19 +260,25 @@ urlpatterns = [
         views.essaymethod.delete,
         name='essaymethod.delete'),
     #
+
     # inventoryItem
     #
     url('^inventoryItem/?$',
         views.inventoryItem.index,
         name='inventoryItem.index'),
-    url('^inventoryItem/show/(?P<pk>\d+)$',
+    url('^inventoryItem/(?P<pk>\d+)$',
         views.inventoryItem.show,
         name='inventoryItem.show'),
-    url('^inventoryItem/delete/(?P<pk>\d+)$',
+    url('^inventoryItem/(?P<pk>\d+)/delete/?$',
         views.inventoryItem.delete,
         name='inventoryItem.delete'),
-    url('^inventoryItem/edit/(?P<pk>\d+)$',
+    url('^inventoryItem/(?P<pk>\d+)/edit/?$',
         views.inventoryItem.edit,
         name='inventoryItem.edit'),
 
+    # Parameter Fill
+    #
+    url('^fill_parameters/(?P<pk>\d+)$',
+        views.parameterfill.fill_parameters,
+        name='parameterfill.fill_parameters'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
