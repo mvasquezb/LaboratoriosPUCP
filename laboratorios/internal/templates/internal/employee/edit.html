@@ -43,21 +43,26 @@
                             </div>
                         </div>
                         <div class="col-lg-6">
-                              <div class="form-group">
-                                <label>Laboratorios</label>
-                                <select name="laboratories" class="form-control" multiple>
-                                {% for laboratory in laboratories %}
-                                    <option {% if laboratory.id in selected_laboratories %}selected{% endif %} value="{{ laboratory.id }}">{{ laboratory.name }}</option>
-                                {% endfor %}
-                                </select>
-                            </div>
                             <div class="form-group">
-                                <label>Roles</label>
-                                <select name="roles" class="form-control" multiple>
-                                {% for role in roles %}
-                                     <option {% if role.id in selected_roles %}selected{% endif %} value="{{ role.id }}">{{ role.description }}</option>
-                                {% endfor %}
-                                </select>
+                                <label>Seleccione los roles: </label>
+                                <div class="table-responsive">
+                                    <table class="table table-striped table-bordered table-hover dataTables-example permission_table">
+                                      <thead>
+                                        <tr>
+                                          <th>Nombre de permiso</th>
+                                          <th>Selección</th>
+                                        </tr>
+                                      </thead>
+                                      <tbody>
+                                        {% for role in roles %}
+                                          <tr class="gradeX">
+                                            <td>{{ role.name }}</td>
+                                            <td><input {% if role in selected_roles %}checked{% endif %} type="checkbox" id="checkbox_role" name="{{ role.pk }}" class="i-checks"></td>
+                                          </tr>
+                                        {% endfor %}
+                                      </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -73,3 +78,16 @@
     </div>
 </div>
 {% endblock page_content %}
+{% block custom_js %}
+<script type="text/javascript">
+  $('#myForm').on('submit', function(evt){
+    $('input:checkbox[id^="checkbox_role"]:checked').each(function(){
+      var role = $('<input>', {
+        name: 'roles',
+        type: 'hidden'
+      }).val($(this).attr('name'));
+      $('#myForm').append(role);
+    });
+  });
+</script>
+{% endblock custom_js %}

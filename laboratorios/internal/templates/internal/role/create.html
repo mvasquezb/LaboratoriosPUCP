@@ -33,13 +33,24 @@
                             </div>
                         </div>
                         <div class="col-lg-6">
-                            <div class="form-group">
-                                <label>Permisos</label>
-                                <select name="permissions" class="form-control" multiple>
-                                {% for permission in permissions %}
-                                    <option value="{{ permission.id }}">{{ permission.name }}</option>
-                                {% endfor %}
-                                </select>
+                            <label>Seleccione los permisos: </label>
+                            <div class="table-responsive">
+                                <table class="table table-striped table-bordered table-hover dataTables-example permission_table">
+                                  <thead>
+                                    <tr>
+                                      <th>Nombre de permiso</th>
+                                      <th>Selección</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    {% for permission in permissions %}
+                                      <tr class="gradeX">
+                                        <td>{{ permission.name }}</td>
+                                        <td><input type="checkbox" id="checkbox_permission" name="{{ permission.pk }}" class="i-checks"></td>
+                                      </tr>
+                                    {% endfor %}
+                                  </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>
@@ -55,3 +66,16 @@
   </div>
 </div>
 {% endblock page_content %}
+{% block custom_js %}
+<script type="text/javascript">
+  $('#myForm').on('submit', function(evt){
+    $('input:checkbox[id^="checkbox_permission"]:checked').each(function(){
+      var permission = $('<input>', {
+        name: 'permissions',
+        type: 'hidden'
+      }).val($(this).attr('name'));
+      $('#myForm').append(permission);
+    });
+  });
+</script>
+{% endblock custom_js %}

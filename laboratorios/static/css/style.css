@@ -8455,3 +8455,11 @@ body.md-skin {
 }
 
 .dataTables_paginate ul.pagination { margin: 0; }
+
+
+.table-responsive .permission_table {
+  height: 200px;
+  display: inline-block;
+  width: inherit;
+  overflow: auto;
+}
