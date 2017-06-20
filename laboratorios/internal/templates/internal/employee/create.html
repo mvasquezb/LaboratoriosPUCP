@@ -52,18 +52,20 @@
                             <div class="form-group">
                                 <label>Seleccione los roles: </label>
                                 <div class="table-responsive">
-                                    <table class="table table-striped table-bordered table-hover dataTables-example permission_table">
+                                    <table class="table table-striped table-bordered permission_table">
                                       <thead>
                                         <tr>
-                                          <th>Nombre de permiso</th>
+                                          <th>Nombre de Rol</th>
+                                          <th>Descripción</th>
                                           <th>Selección</th>
                                         </tr>
                                       </thead>
                                       <tbody>
                                         {% for role in roles %}
-                                          <tr class="gradeX">
+                                          <tr>
                                             <td>{{ role.name }}</td>
-                                            <td><input type="checkbox" id="checkbox_role" name="{{ role.pk }}" class="i-checks"></td>
+                                            <td>{{ role.description }}</td>
+                                            <td><input type="checkbox" name="{{ role.pk }}" class="i-checks checkbox_role"></td>
                                           </tr>
                                         {% endfor %}
                                       </tbody>

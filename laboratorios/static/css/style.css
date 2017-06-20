@@ -8458,7 +8458,7 @@ body.md-skin {
 
 
 .table-responsive .permission_table {
-  height: 200px;
+  max-height: 200px;
   display: inline-block;
   width: inherit;
   overflow: auto;

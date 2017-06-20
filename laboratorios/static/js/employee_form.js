@@ -1,5 +1,5 @@
 $('#myForm').on('submit', function(evt){
-  $('input:checkbox[id^="checkbox_role"]:checked').each(function(){
+  $('input.checkbox_role:checkbox:checked').each(function() {
     var role = $('<input>', {
       name: 'roles',
       type: 'hidden'

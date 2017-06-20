@@ -49,15 +49,17 @@
                                     <table class="table table-striped table-bordered table-hover dataTables-example permission_table">
                                       <thead>
                                         <tr>
-                                          <th>Nombre de permiso</th>
+                                          <th>Nombre de Rol</th>
+                                          <th>Descripción</th>
                                           <th>Selección</th>
                                         </tr>
                                       </thead>
                                       <tbody>
                                         {% for role in roles %}
-                                          <tr class="gradeX">
+                                          <tr>
                                             <td>{{ role.name }}</td>
-                                            <td><input {% if role in selected_roles %}checked{% endif %} type="checkbox" id="checkbox_role" name="{{ role.pk }}" class="i-checks"></td>
+                                            <td>{{ role.description }}</td>
+                                            <td><input {% if role in selected_roles %}checked{% endif %} type="checkbox" name="{{ role.pk }}" class="i-checks checkbox_role"></td>
                                           </tr>
                                         {% endfor %}
                                       </tbody>
