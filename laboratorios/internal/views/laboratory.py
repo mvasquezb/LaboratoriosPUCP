@@ -115,8 +115,8 @@ def services_index(request,
 def create(request,
            template='internal/laboratory/create.html',
            extra_content=None):
+    form = LaboratoryForm(request.POST or None)
     if request.method == 'POST':
-        form = LaboratoryForm(request.POST)
         if form.is_valid():
             form.save()
             messages.success(
@@ -138,7 +138,6 @@ def create(request,
         )
         inventories = Inventory.all_objects.filter(deleted__isnull=True)
         essaymethods = EssayMethod.all_objects.filter(deleted__isnull=True)
-        form = LaboratoryForm()
         context = {
             'users': users,
             'service_hours': service_hours,
