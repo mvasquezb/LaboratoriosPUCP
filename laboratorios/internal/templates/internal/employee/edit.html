@@ -79,15 +79,5 @@
 </div>
 {% endblock page_content %}
 {% block custom_js %}
-<script type="text/javascript">
-  $('#myForm').on('submit', function(evt){
-    $('input:checkbox[id^="checkbox_role"]:checked').each(function(){
-      var role = $('<input>', {
-        name: 'roles',
-        type: 'hidden'
-      }).val($(this).attr('name'));
-      $('#myForm').append(role);
-    });
-  });
-</script>
+<script src="{{ static('js/employee_form.js') }}"></script>
 {% endblock custom_js %}
