@@ -102,6 +102,21 @@ class ClientForm(ModelForm):
         fields = ('doc_number', 'phone_number')
 
 
+
+class ServiceRequestCreateForm(ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(ServiceRequestCreateForm, self).__init__(*args, **kwargs)
+        self.fields['client'].widget.attrs['class'] = 'form-control'
+        self.fields['supervisor'].widget.attrs['class'] = 'form-control'
+        self.fields['supervisor'].queryset = Employee.all_objects.filter(
+            deleted__isnull=True
+        )
+
+    class Meta:
+        model = ServiceRequest
+        exclude = ('state',)    # we will automatically set it to the first state
+
+
 class ServiceRequestForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super(ServiceRequestForm, self).__init__(*args, **kwargs)
