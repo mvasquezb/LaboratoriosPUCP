@@ -28,7 +28,7 @@
                 <label>Cliente</label>
                 <select disabled name="client" data-error="Este campo es obligatorio" required="" id="id_client" class="form-control">
                   {% for client in clients %}
-                      <option value="{{ client.id }}">{{ client.user.first_name }} {{ client.user.last_name }}</option>
+                      <option value="{{ client.id }}">{{ client }}</option>
                   {% endfor %}
                 </select>
                  <div class="help-block with-errors"></div>
@@ -37,7 +37,9 @@
                 <label>Supervisor</label>
                 <select disabled name="supervisor" data-error="Este campo es obligatorio" required="" id="id_supervisor" class="form-control">
                   {% for employee in employees %}
-                      <option {% if service_request.supervisor.id == employee.id %}selected{% endif %} value="{{ employee.id }}">{{ employee.user.first_name }} {{ employee.user.last_name }}</option>
+                      <option {% if service_request.supervisor.id == employee.id %}selected{% endif %} value="{{ employee.id }}">
+                        {{ employee }}
+                      </option>
                   {% endfor %}
                 </select>
                   <div class="help-block with-errors"></div>
@@ -46,7 +48,9 @@
                 <label>Estado</label>
                 <select disabled name="state" data-error="Este campo es obligatorio" required="" id="id_state" class="form-control">
                   {% for state in states %}
-                      <option {% if service_request.state.id == state.id %}selected{% endif %} value="{{ state.id }}">{{ state.description }}</option>
+                      <option {% if service_request.state.id == state.id %}selected{% endif %} value="{{ state.id }}">
+                        {{ state.description }}
+                      </option>
                   {% endfor %}
                 </select>
                   <div class="help-block with-errors"></div>
@@ -75,7 +79,9 @@
                 <select disabled name="external_provider" data-error="Este campo es obligatorio" id="id_state" class="form-control">
                   <option value="" >---------</option>
                   {% for external_provider in external_providers %}
-                      <option value="{{ external_provider.id }}" {% if service_request.external_provider.id == external_provider.id %}selected{% endif %}>{{ external_provider.name }}</option>
+                      <option value="{{ external_provider.id }}" {% if service_request.external_provider.id == external_provider.id %}selected{% endif %}>
+                        {{ external_provider.name }}
+                      </option>
                   {% endfor %}
                 </select>
                   <div class="help-block with-errors"></div>
