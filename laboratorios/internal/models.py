@@ -548,7 +548,7 @@ class Inventory(SafeDeleteModel):
     _safedelete_policy = SOFT_DELETE_CASCADE
 
     audit_log = AuditlogHistoryField()
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, unique=True)
     location = models.CharField(max_length=200)
     registered_date = models.DateTimeField(
         auto_now_add=True,
@@ -588,7 +588,7 @@ class Equipment(InventoryArticle):
 class Supply(InventoryArticle):
     _safedelete_policy = SOFT_DELETE_CASCADE
 
-    metric_unit = models.PositiveIntegerField()
+    metric_unit = models.CharField(max_length=20)
     expiration_date = models.DateTimeField(null=True, blank=True)
     registered_date = models.DateTimeField(
         auto_now_add=True,
