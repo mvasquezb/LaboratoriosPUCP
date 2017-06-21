@@ -59,7 +59,7 @@ $('#capacity').on('keyup change click', function () {
 });
 
 //cuando se clickea en los checkboxes de usuarios de laboratorio
-$('input.checkbox_users:checkbox').on('change', function () {
+$('input.checkbox_users:checkbox').on('ifChanged', function () {
   if ($(this).is(':checked')) {
     //selected_users.push(String(this.id));
     if ((counting + 1) <= capacity_users) {
