@@ -554,6 +554,8 @@ def workload_view_per_request(request,
 
 def upload(request, id):
     if request.method == 'POST':
+        if "b_cancel" in request.POST:
+            return redirect('internal:serviceRequest.attachmentList', id)
         if not request.FILES.get('myfile'):
             messages.error(request, 'Debe seleccionar un archivo!')
             return redirect('internal:serviceRequest.upload', id)
@@ -576,8 +578,15 @@ def upload(request, id):
         fs = requestAttach.file
         filename = fs.save(myfile.name, myfile)
         if name:
-            requestAttach.fileName = name + requestAttach.file.name[requestAttach.file.name.rfind("."):]
-            requestAttach.save()
+            nameWithExtension = name + requestAttach.file.name[requestAttach.file.name.rfind("."):]
+            matches = RequestAttachment.all_objects.filter(deleted__isnull=True,fileName = nameWithExtension )
+            if len(list(matches)) == 0:
+                requestAttach.fileName = nameWithExtension
+                requestAttach.save()
+            else:
+                messages.error(
+                    request, 'El nombre del archivo que intentó subir ya existe')
+                return redirect('internal:serviceRequest.upload', id)
         else:
             requestAttach.fileName = requestAttach.file.name.split('/')[-1]
             requestAttach.save()
@@ -605,7 +614,7 @@ def upload(request, id):
 
 def attachmentList(request, id):
     sr_object = get_object_or_404(ServiceRequest, pk=id)
-    requestAttachment_list = RequestAttachment.all_objects.filter(
+    requestAttachment_list = RequestAttachment.all_objects.filter(deleted__isnull=True,
         request=sr_object
     )
 
@@ -761,7 +770,7 @@ def finalReport(request, id, template='internal/servicerequest/reportDetail.html
             'ParameterFillCompleteList': ParameterFillCompleteList,
         }
         pdf = render_to_pdf(
-            'internal/servicerequest/reportDetailPDF.html', context)
+            'internal/servicerequest/finalReportPDF.html', context)
         if pdf:
             response = HttpResponse(pdf, content_type='application/pdf')
             filename = "InformeFinal-%s.pdf" % ("Nombre del cliente")
