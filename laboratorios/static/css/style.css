@@ -8457,8 +8457,12 @@ body.md-skin {
 .dataTables_paginate ul.pagination { margin: 0; }
 
 .table-responsive .permission_table {
-  max-height: 200px;
+  max-height: 175px;
   display: inline-block;
   width: inherit;
   overflow: auto;
+}
+
+.first-table-column {
+  width: 175px;
 }
