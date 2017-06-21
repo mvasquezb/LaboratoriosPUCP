@@ -86,7 +86,7 @@ def create(request,
             return HttpResponse(form.errors)
 
     else:
-        users = Employee.all_objects.filter(deleted__isnull=True)
+        users = Employee.all_objects.filter(deleted__isnull=True,laboratories__isnull=True) #just active users
         service_hours = LaboratoryServiceHours.all_objects.filter(
             deleted__isnull=True)
         inventories = Inventory.all_objects.filter(deleted__isnull=True)

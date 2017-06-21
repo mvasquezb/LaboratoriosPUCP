@@ -21,7 +21,6 @@
 <input type="submit" value="submit">
   </form>
 -->
-
   <div class="wrapper wrapper-content animated fadeInRight" >
     <div class="row">
       <div class="col-lg-12">
@@ -54,6 +53,7 @@
                       <thead>
                         <tr>
                           <th>Nombre del empleado</th>
+                          <th>Nombre de usuario</th>
                           <th>Correo</th>
                           <th>Selección</th>
                         </tr>
@@ -63,8 +63,9 @@
                           {% if not user.laboratories.exists() %}
                             <tr class="gradeX">
                               <td>{{ user }}</td>
+                              <td>{{ user.user.username }}</td>
                               <td>{{ user.user.email }}</td>
-                              <td><input type="checkbox" id="checkbox_users" name="{{ user.user.username }}" class="{{ user.pk }}"></td>
+                              <td><input type="checkbox" data-id="checkbox_users" name="{{ user.user.username }}" data-pk="{{ user.pk }}"></td>
                             </tr>
                           {% endif %}
                         {% endfor %}
@@ -205,9 +206,9 @@
   //cuando se invalida data
   $('#capacity').on('invalid.bs.validator', function(){
     //$('#users_selection').hide();
-    $('input:checkbox[id^="checkbox_users"]').prop('checked', false);
+    $('input:checkbox[data-id^="checkbox_users"]').prop('checked', false);
     //selected_users.length = 0;
-    $('input:checkbox[id^="checkbox_users"]').attr('disabled', 'true');
+    $('input:checkbox[data-id^="checkbox_users"]').attr('disabled', 'true');
     counting = 0;
     //borrar todos los campos en responsable de laboratorio
     $('#comboBox').empty();
@@ -219,14 +220,14 @@
   //cuando se valida la data
   $('#form').on('valid.bs.validator', function(){
     //$('#users_selection').show();
-    $('input:checkbox[id^="checkbox_users"]').removeAttr('disabled');
+    $('input:checkbox[data-id^="checkbox_users"]').removeAttr('disabled');
     capacity_users = document.getElementById("capacity").value;
   });
 
   var value = $('#capacity').val();
   $('#capacity').bind('keyup change click',function(){
     if (this.value !== value){
-      $('input:checkbox[id^="checkbox_users"]').prop('checked', false);
+      $('input:checkbox[data-id^="checkbox_users"]').prop('checked', false);
       counting = 0;
       $('#comboBox').empty();
       $('#comboBox').append($('<option>', {
@@ -237,7 +238,8 @@
   });
 
   //cuando se clickea en los checkboxes de usuarios de laboratorio
-  $('input:checkbox[id^="checkbox_users"]').click(function() {
+  $('input:checkbox[data-id="checkbox_users"]').on('change',function() {
+    alert("sd");
     if($(this).is(':checked')) {
       //selected_users.push(String(this.id));
       if ((counting + 1) <= capacity_users){
@@ -245,8 +247,8 @@
         //selected_users.push(String(this.id)); //añadimos en el arreglo los ids de los usuarios //seleccionados
         $('#comboBox').append($('<option>', {
           text: String(this.name)
-        }).attr('id',String(this.className)));
-        console.log(String(this.name));
+        }).attr('id',$(this).data('pk')));
+        //console.log(String(this.name));
       } else {
         this.checked = false;
       }
@@ -280,11 +282,11 @@
     $form.append(capacity);
 
 
-    $('input:checkbox[id^="checkbox_users"]:checked').each(function(){
+    $('input:checkbox[data-id="checkbox_users"]:checked').each(function(){
       var employee = $('<input>', {
         name: 'employees',
         type: 'hidden'
-      }).val($(this).attr('class'));
+      }).val($(this).data('pk'));
       $form.append(employee);
     });
 
