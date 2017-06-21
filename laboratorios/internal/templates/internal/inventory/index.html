@@ -1,6 +1,6 @@
 {% extends 'internal/base_internal.html' %}
 
-{% block title %}{{ super() }} | Laboratorios{% endblock title %}
+{% block title %}{{ super() }} | Inventarios{% endblock title %}
 
 {% block custom_css %}
 {% endblock custom_css %}
@@ -8,7 +8,7 @@
 {% block page_content %}
 <div class="row border-bottom white-bg dashboard-header">
     <div class="col-md-6">
-        <h2><strong>Lista de Laboratorios Existentes</strong></h2>
+        <h2><strong>Inventario</strong></h2>
     </div>
 </div>
 <div class="wrapper wrapper-content animated fadeInRight" ><div class="row">
@@ -26,9 +26,9 @@
               </div>
           </div>
           <div class="col-md-2 col-md-offset-7">
-            <a class="btn btn-primary pull-right" href="{{ url('internal:laboratory.create') }}">
+            <a class="btn btn-primary pull-right" href="{{ url('internal:inventory.create') }}">
             <i class="fa fa-plus"></i>
-            Crear laboratorio
+            Crear Inventario
           </a>
           </div>
 
@@ -44,47 +44,25 @@
                     Nombre
                   </th>
                   <th>
-                    Supervisor
-                  </th>
-                  <th>
-                    Capacidad
-                  </th>
-                  <th>
-                    Estado
+                    Localización
                   </th>
                   <th>Acciones</th>
-                  <th>Servicios</th>
                 </tr>
               </thead>
               <tbody>
-                {% for laboratory in laboratorys_list %}
+                {% for inventory in inventorys_list %}
                   <tr role="row">
                     <td>{{ loop.index }}</td>
-                    <td>{{ laboratory.name }}</td>
-                    <td>
-                      {% if laboratory.supervisor %}
-                        {{ laboratory.supervisor}}
-                      {% endif %}
-                    </td>
-                    <td>{{ laboratory.capacity }}</td>
-                    <td>
-                      {% if laboratory.deleted %}
-                        Eliminado
-                      {% else %}
-                        Activo
-                      {% endif %}
-                    </td>
+                    <td>{{ inventory.name }}</td>
+                    <td>{{ inventory.location }}</td>
                     <td class="text-left footable-visible footable-last-column">
                       <div class="btn-group">
-                        <a  href="{{ url('internal:laboratory.show', laboratory.id) }}" class="btn-white btn"><i class="fa fa-eye" aria-hidden="true"></i></a>
-                        {% if not laboratory.deleted %}
-                        <a  href="{{ url('internal:laboratory.edit', laboratory.id) }}" class="btn-white btn"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
-                        <a class="myBtn1 btn-white btn" data-toggle="modal" data-target="#myModal1" data-url="{{ url('internal:laboratory.delete', laboratory.id) }}"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+                        <a  href="{{ url('internal:inventory.show', inventory.id) }}" class="btn-white btn"><i class="fa fa-eye" aria-hidden="true"></i></a>
+                        {% if not inventory.deleted %}
+                        <a  href="{{ url('internal:inventory.edit', inventory.id) }}" class="btn-white btn"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+                        <a class="myBtn1 btn-white btn" data-toggle="modal" data-target="#myModal1" data-url="{{ url('internal:inventory.delete', inventory.id) }}"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
                         {% endif %}
                       </div>
-                    </td>
-                    <td>
-                      <a href="{{ url('internal:laboratory.services_index', laboratory.id) }}" class="btn-white btn">Ver servicios</a>
                     </td>
                   </tr>
                 {% endfor %}
@@ -104,13 +82,13 @@
         <button class="close pull-right" type="button" data-dismiss="modal">
           <span aria-hidden="true">&times;</span>
         </button>
-        <h6 class="modal-title">Confirmar Eliminación de Laboratorios</h6>
+        <h6 class="modal-title">Confirmar Eliminación de Inventarios</h6>
       </div>
       <!-- Modal content -->
       <div class="modal-body text-center">
         <p>¿Seguro que quiere eliminarlo?</p>
-        <button type="button" class="delete-laboratory btn btn-danger">Eliminar</button>
-        <button type="button" class="span-close btn btn-primary">Cancelar</button>
+        <button type="button" class="delete-inventory btn btn-primary">Eliminar</button>
+        <button type="button" class="span-close btn btn-white">Cancelar</button>
       </div>
     </div>
   </div>
@@ -122,7 +100,7 @@
     <span class="span-close close">&times;</span>
     <div class="modeal-center-content">
         <p>¿Seguro que quiere eliminarlo?</p>
-        <button type="button" class="delete-laboratory btn btn-danger">Eliminar</button>
+        <button type="button" class="delete-inventory btn btn-danger">Eliminar</button>
         <button type="button" class="span-close btn btn-primary">Cancelar</button>
     </div>
   </div>
@@ -174,7 +152,7 @@ $( document ).ready(function() {
   $(".myBtn1").click(function() {
     $("#myModal1").show();
     var delete_url = $(this).attr("data-url");
-    $(".delete-laboratory").click(function() {
+    $(".delete-inventory").click(function() {
       window.location.href = delete_url;
     });
   });

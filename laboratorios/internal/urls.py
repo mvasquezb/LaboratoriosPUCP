@@ -1,20 +1,20 @@
 from django.conf.urls import url
 from . import views
 from django.contrib.auth.views import login, logout_then_login
-
 from django.conf import settings
 from django.conf.urls.static import static
+
 
 urlpatterns = [
     #
     # Login
     #
-    url(r'^login$',
+    url(r'^login/?$',
         login,
         {'template_name': 'internal/login.html'},
         name='login'),
 
-    url(r'^logout$',
+    url(r'^logout/?$',
         logout_then_login,
         name='logout'),
     #
@@ -74,13 +74,13 @@ urlpatterns = [
     #
     # Role
     #
-    url('^role/$',
+    url('^role/?$',
         views.role.index,
         name='role.index'),
-    url('^role/(?P<pk>\d+)$',
+    url('^role/(?P<pk>\d+)/?$',
         views.role.show,
         name='role.show'),
-    url('^role/create$',
+    url('^role/create/?$',
         views.role.create,
         name='role.create'),
     url('^role/(?P<pk>\d+)/edit/?$',
@@ -119,7 +119,7 @@ urlpatterns = [
     #
     # ServiceRequest
     #
-    url('^servicerequest/create/(?P<pk>\d+)$',
+    url('^servicerequest/create/(?P<pk>\d+)/?$',
         views.servicerequest.create,
         name='servicerequest.create'),
     url('^servicerequest/(?P<pk>\d+)/delete/?$',
@@ -140,10 +140,10 @@ urlpatterns = [
     url('^servicerequest/(?P<pk_request>\d+)/delete_sample/(?P<pk_sample>\d+)/?$',
         views.servicerequest.delete_sample,
         name='servicerequest.delete_sample'),
-    url('^servicerequest/create_client$',
+    url('^servicerequest/create_client/?$',
         views.servicerequest.create_client,
         name='servicerequest.create_client'),
-    url('^servicerequest$',
+    url('^servicerequest/?$',
         views.servicerequest.index,
         name='servicerequest.index'),
     url('^servicerequest/(?P<pk>\d+)/?$',
@@ -281,4 +281,22 @@ urlpatterns = [
     url('^fill_parameters/(?P<pk>\d+)$',
         views.parameterfill.fill_parameters,
         name='parameterfill.fill_parameters'),
+    #
+    # Inventory
+    #
+    url('^inventory/create$',
+        views.inventory.create,
+        name='inventory.create'),
+    url('^inventory/(?P<pk>\d+)$',
+        views.inventory.show,
+        name='inventory.show'),
+    url('^inventory/(?P<pk>\d+)/edit/?$',
+        views.inventory.edit,
+        name='inventory.edit'),
+    url('^inventory/?$',
+        views.inventory.index,
+        name='inventory.index'),
+    url('^inventory/(?P<pk>\d+)/delete/?$',
+        views.inventory.delete,
+        name='inventory.delete'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
