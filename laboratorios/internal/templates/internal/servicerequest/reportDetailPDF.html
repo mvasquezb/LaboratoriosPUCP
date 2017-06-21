@@ -1,5 +1,5 @@
 {% block page_content %}
-<font size = "5" face="Arial">
+<font size = "5">
 <div class="row border-bottom white-bg dashboard-header">
     <div class="col-md-6">
       <strong><font size = 7><center><u>REPORTE INTERNO</u></center></font></strong><br>
@@ -11,7 +11,7 @@
       <label><b>1. <u>INFORMACIÓN DE LA SOLICITUD</u></b></label>
       <div style="padding-left: 1.7em;">
         <label>Fecha de Registro: {{SampleCompleteList[0].request.registered_date.strftime('%d/%m/%Y')}}</label> <br>
-        {% if SampleCompleteList[0].request.client is not None %}
+        {% if SampleCompleteList[0].request.client != None %}
         <label>Nombre del Cliente: {{SampleCompleteList[0].request.client}}</label>
         {% else %}
         <label>Nombre del Cliente: No registrado </label>
