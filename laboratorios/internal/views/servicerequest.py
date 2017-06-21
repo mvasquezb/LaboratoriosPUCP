@@ -14,22 +14,23 @@ from django.db.models import (
     F,
 )
 from django.urls import *
-import json as simplejson
-from datetime import *
 from django.http import JsonResponse
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.utils import timezone
 # from django.conf import settings
 # from django.core.files.storage import FileSystemStorage
 from django.http import HttpResponse
-
-from ..models import *
-from ..views.forms import *
 from django.template.loader import render_to_string
+from django.template.loader import get_template
+
+from internal.models import *
+from internal.views.forms import *
+from internal import utils
 
 from io import BytesIO
-from django.template.loader import get_template
 from xhtml2pdf import pisa
+import json as simplejson
+from datetime import *
 
 
 def index(request,
@@ -402,25 +403,42 @@ def assign_employee(request,
                     sample_id,
                     template='internal/servicerequest/assign_employee.html',
                     extra_context=None):
-    print(request.POST)
-    essay_methods = request.POST.getlist('methods[]')
-    essay_methods = list(map(lambda x: int(x), essay_methods))
-    print(essay_methods)
-    service_request = get_object_or_404(ServiceRequest.all_objects, pk=request_id)
-    sample = get_object_or_404(service_request.sample_set.all(), pk=sample_id)
+    if request.method == 'GET':
+        essay_methods = request.GET.get('methods', {})
+    elif request.method == 'POST':
+        essay_methods = request.POST.getlist('methods[]')
 
+    essay_methods = simplejson.loads(essay_methods)
+    keys = [key for key in essay_methods.keys() if utils.is_integer(key)]
+    essay_methods = [essay_methods[key] for key in keys]
+    essay_methods = {
+        em['id']: em['checked']
+        for em in essay_methods
+    }
+
+    service_request = get_object_or_404(
+        ServiceRequest.all_objects.filter(deleted__isnull=True),
+        pk=request_id
+    )
+    sample = get_object_or_404(service_request.sample_set.all(), pk=sample_id)
     essay_method_list = EssayMethodFill.all_objects.filter(
-        pk__in=essay_methods
+        pk__in=list(essay_methods.keys())
     )
     for em in essay_method_list:
-        em.chosen = True
+        em.chosen = essay_methods[em.pk]
         em.save()
+    essay_method_list = essay_method_list.filter(
+        chosen=True
+    )
     print(essay_method_list)
     employee_q = Q()
     for essay_method in essay_method_list:
         employee_q &= Q(essay_methods=essay_method.essay_method)
-    employee_list = Employee.all_objects.filter(employee_q)
-    employee_list = Employee.all_objects.filter(deleted__isnull=True)
+    employee_list = Employee.all_objects.filter(
+        employee_q,
+        deleted__isnull=True
+    )
+
     form = ServiceAssignEmployeeForm(
         request.POST or None,
         employee=employee_list
@@ -438,11 +456,6 @@ def assign_employee(request,
     print(assigned_employee)
     # Está cagada esta lógica
     if request.method == 'POST':
-        essay_method_list = EssayMethodFill.all_objects.filter(
-            essay__sample=sample,
-            chosen=True,
-        )
-        print(essay_method_list)
         if form.is_valid():
             # Remove previous assigned employee, if existant
             employee = form.cleaned_data['employee']
@@ -455,6 +468,10 @@ def assign_employee(request,
                 return JsonResponse({
                     'success': True,
                     'message': 'Se asignó la muestra correctamente',
+                    'redirect': reverse(
+                        'internal:servicerequest.edit',
+                        args=(service_request.id,)
+                    ),
                 }, json_dumps_params={
                     'ensure_ascii': False,
                 })

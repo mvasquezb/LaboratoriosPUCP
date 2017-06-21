@@ -125,7 +125,9 @@
                       <tbody>
                         <tr>
                           {% for essay_method_active in essay_methods_chosen_forms[loop.index-1] %}
-                            <td data-id="{{ essay_method_active.instance.id }}">{{ essay_method_active.as_p() }}</td>
+                            <td data-id="{{ essay_method_active.instance.id }}">
+                              {{ essay_method_active.as_p() }}
+                            </td>
                           {% endfor%}
                         </tr>
                       </tbody>
@@ -184,16 +186,21 @@ $('#assign-employee-modal').on('show.bs.modal', function (e) {
   var $btn = $(e.relatedTarget);
   var $modal = $(this);
   var url = $btn.data('url');
-  var selected_methods = $btn.parents('tr').find('.essaymethod-table td input:checked');
-  var sel_methods = [];
-  selected_methods.each(function (index, elem) {
-    sel_methods.push($(elem).parents('td').data('id'));
+  var allMethods = $btn.parents('tr').find('.essaymethod-table td');
+  console.log(allMethods);
+  var methods = allMethods.map(function (index, elem) {
+    console.log(elem);
+    // return 1;
+    return {
+      id: $(elem).data('id'),
+      checked: $(elem).find('input').is(':checked'),
+    }
   });
-  console.log(url, sel_methods);
+  console.log(methods);
   $.ajax({
     url: url,
     data: {
-      methods: sel_methods,
+      methods: JSON.stringify(methods),
     },
   }).done(function (response) {
     $modal.html(response);
