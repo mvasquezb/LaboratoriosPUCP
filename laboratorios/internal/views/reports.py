@@ -34,16 +34,21 @@ def report_parameters(request,
     # so clearly, context would carry most of the data, so then its a JSON
     # First criteria is range of dates, which doesnt need any from db
     # Second criteria is client, which we do have
-    client_list = Client.all_objects.filter(deleted__isnull=True)
-    
+    client_list =[o.user for o in Client.all_objects.filter(deleted__isnull=True).order_by('user','id')[::1]]
+    print(client_list)
     # Third  criteria is sample type, which we also have
-    sample_type_list = SampleType.all_objects.filter(deleted__isnull=True)
-
+    sample_type_list = [o.name for o in SampleType.all_objects.filter(deleted__isnull=True).order_by('name','id')[::1]]
+    print(sample_type_list)
     # Should be also clear that laboratory must be a criteria
-    laboratory_list = Laboratory.all_objects.filter(deleted__isnull=True)
-
+    laboratory_list = [o.name for o in Laboratory.all_objects.filter(deleted__isnull=True).order_by('name','id')[::1]]
+    print(laboratory_list)
     # as we do not want to mantain later the logic bc of more fitlers,
     # lets use a dictionary
+    data_list={
+        'client':client_list,
+        'sample_type':sample_type_list,
+        'laboratory':laboratory_list,
+    }
 
     # Because we wont always check for all criterias, we should have a
     # register which expose so
@@ -75,9 +80,7 @@ def report_parameters(request,
     context = {
         'criteria':criteria_selection,
         'criteria_string':criteria_selection_string,
-        'clients':client_list,
-        'sample_types':sample_type_list,
-        'laboratories':laboratory_list,
+        'data_list':data_list,
         }
     if request == 'POST' and 'js_data' in request.body:
         ## processing of shit right here
