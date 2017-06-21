@@ -9,6 +9,6 @@ from django.core.urlresolvers import reverse_lazy
 
 class AuthRequiredMiddleware(MiddlewareMixin):
     def process_request(self, request):
-        if not request.user.is_authenticated() and request.path != '/internal/login':
-            return redirect('internal:login')
+        #if not request.user.is_authenticated() and request.path != '/internal/login':
+        #    return redirect('internal:login')
         return None

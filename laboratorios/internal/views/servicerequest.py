@@ -111,22 +111,6 @@ def edit(request,
          pk,
          template='internal/servicerequest/edit.html'):
     service_request = ServiceRequest.all_objects.get(pk=pk)
-    #
-    # if service_request.state.description == "Modificado":
-    #     # Creamos un ServiceRequest de copia, el cual almacenará la modificación
-    #     service_request = ServiceRequest(client=service_request.client, supervisor=service_request.supervisor,
-    #                                          priority=service_request.priority, state=service_request.state,
-    #                                          external_provider=service_request.external_provider,
-    #                                          observations=service_request.observations,
-    #                                          expected_duration=service_request.expected_duration)
-    #     service_request_mod.save()
-    #
-    #     # Asociamos el servicio modificado al contrato
-    #     service_contract.request = service_request_mod
-    #     service_contract.save()
-    #
-    # else:
-    #   service_request = service_request_aux
 
     service_request_form = ServiceRequestForm(
         request.POST or None, instance=service_request)

@@ -158,7 +158,7 @@ urlpatterns = [
     url('^servicerequest/view_workload_per_request/?$',
         views.servicerequest.workload_view_per_request,
         name='servicerequest.workload_view_per_request'),
-    url('^servicerequest/(?P<pk>\d+)/approve/?$',
+    url('^servicerequest/approve/(?P<pk>\d+)$',
         views.servicerequest.approve,
         name='servicerequest.approve'),
 
