@@ -574,7 +574,7 @@ class InventoryArticle(SafeDeleteModel):
 class Equipment(InventoryArticle):
     _safedelete_policy = SOFT_DELETE_CASCADE
     
-    servicelife_unit = models.PositiveIntegerField()
+    servicelife_unit = models.CharField(max_length=50)
     servicelife = models.PositiveIntegerField()
     error_range = models.FloatField()
     registered_date = models.DateTimeField(
@@ -589,7 +589,7 @@ class Supply(InventoryArticle):
     _safedelete_policy = SOFT_DELETE_CASCADE
 
     metric_unit = models.PositiveIntegerField()
-    expiration_date = models.DateTimeField()
+    expiration_date = models.DateTimeField(null=True, blank=True)
     registered_date = models.DateTimeField(
         auto_now_add=True,
         auto_now=False,
@@ -597,7 +597,7 @@ class Supply(InventoryArticle):
     )
 
 @auditlog.register()
-class InventoryFilledWithArticle(SafeDeleteModel):
+class ArticleInventory(SafeDeleteModel):
     _safedelete_policy = SOFT_DELETE_CASCADE
 
     audit_log = AuditlogHistoryField()
