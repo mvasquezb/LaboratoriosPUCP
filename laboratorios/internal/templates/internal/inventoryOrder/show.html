@@ -45,6 +45,10 @@
                           </div>
                           <div class="ibox-content">
                             <div class="form-group">
+                              <label>Codigo de la Muestra</label>
+                              <div class="text-primary">{{ inventoryOrder.essay.sample.code }}</div>
+                            </div>
+                            <div class="form-group">
                               <label>Nombre de la Muestra</label>
                               <div class="text-primary">{{ inventoryOrder.essay.sample.name }}</div>
                             </div>
@@ -54,11 +58,11 @@
                             </div>
                             <div class="form-group">
                               <label>Cantidad</label>
-                              <div class="text-primary">{{ inventoryOrder.essay.sample.sample_type.name }}</div>
+                              <div class="text-primary">{{ inventoryOrder.essay.quantity }}</div>
                             </div>
                             <div class="form-group">
                               <label>Laboratorio</label>
-                              <div class="text-primary">{{ inventoryOrder.essay.quantity }}</div>
+                              <div class="text-primary">{{ inventoryOrder.essay.sample.inventory.name }}</div>
                             </div>
                           </div>
                         </div>
