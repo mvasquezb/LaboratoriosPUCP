@@ -1,20 +1,20 @@
 from django.conf.urls import url
 from . import views
 from django.contrib.auth.views import login, logout_then_login
-
 from django.conf import settings
 from django.conf.urls.static import static
+
 
 urlpatterns = [
     #
     # Login
     #
-    url(r'^login$',
+    url(r'^login/?$',
         login,
         {'template_name': 'internal/login.html'},
         name='login'),
 
-    url(r'^logout$',
+    url(r'^logout/?$',
         logout_then_login,
         name='logout'),
     #
@@ -74,13 +74,13 @@ urlpatterns = [
     #
     # Role
     #
-    url('^role/$',
+    url('^role/?$',
         views.role.index,
         name='role.index'),
-    url('^role/(?P<pk>\d+)$',
+    url('^role/(?P<pk>\d+)/?$',
         views.role.show,
         name='role.show'),
-    url('^role/create$',
+    url('^role/create/?$',
         views.role.create,
         name='role.create'),
     url('^role/(?P<pk>\d+)/edit/?$',

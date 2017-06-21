@@ -65,13 +65,17 @@ def create(request,
                 'Se ha creado la solicitud exitosamante!'
             )
             # creating an initial state if not existing yet
-            initial_service_state=ServiceRequestState.all_objects.filter(deleted__isnull=True,slug='settingup')
-            if len(initial_service_state) == 0:
-                initial_service_state = ServiceRequestState(slug='0',description='Estado Inicial')
-                initial_service_state.save()
-            else:
-                initial_service_state=initial_service_state[0]
-            created_service_request.state = initial_service_state
+            init_state = ServiceRequestState.all_objects.filter(
+                deleted__isnull=True,
+                slug='initial'
+            ).first()
+            if init_state is None:
+                init_state = ServiceRequestState(
+                    slug='initial',
+                    description='Estado Inicial'
+                )
+                init_state.save()
+            created_service_request.state = init_state
             created_service_request.save()
             return redirect(reverse('internal:servicerequest.index'))
     return render(request, template, context)
@@ -547,6 +551,7 @@ def upload(request, id):
         # fs = FileSystemStorage()
         sr_object = ServiceRequest.all_objects.get(pk=id)
         description = request.POST.get('text_description')
+        name = request.POST.get('text_name')
         requestAttach = RequestAttachment.all_objects.create(
             request=sr_object,
             description=description,
@@ -554,8 +559,12 @@ def upload(request, id):
         )
         fs = requestAttach.file
         filename = fs.save(myfile.name, myfile)
-        requestAttach.fileName = requestAttach.file.name.split('/')[-1]
-        requestAttach.save()
+        if name:
+            requestAttach.fileName = name + requestAttach.file.name[requestAttach.file.name.rfind("."):]
+            requestAttach.save()
+        else:
+            requestAttach.fileName = requestAttach.file.name.split('/')[-1]
+            requestAttach.save()
         messages.success(
             request,
             'Se ha subido el archivo "' +
