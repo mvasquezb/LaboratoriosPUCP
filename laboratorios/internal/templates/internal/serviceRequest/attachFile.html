@@ -23,6 +23,10 @@
                     <br>
                     <input type="file" name="myfile">
                   <br>
+                    <label>Nombre</label>
+                    <input  type="text" class="form-control" name="text_name" maxlength="95" placeholder="Nombre del archivo">
+                    <span class="help-block m-b-none">Si desea puede agregar un nombre diferente al archivo</span>
+                  <br>
                     <label>Descripción</label>
                   <br>
                   <input onblur="textCounter(this,this.form.counter,95);" onkeydown="textCounter(this,this.form.counter,95);" onkeyup="textCounter(this,this.form.counter,95);" type="text" class="form-control" name="text_description" maxlength="95" placeholder="Breve descripción del archivo">
