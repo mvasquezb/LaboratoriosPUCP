@@ -201,13 +201,13 @@ def edit(request,
         form = LaboratoryForm()
         context = {
             'laboratory': laboratory,
-            'all_users': all_users,
+            'users': all_users,
             'selected_users': selected_users,
             'all_service_hours': all_service_hours,
             'selected_service_hours': selected_service_hours,
-            'all_inventories': all_inventories,
+            'inventories': all_inventories,
             'selected_inventories': selected_inventories,
-            'all_essaymethods': all_essaymethods,
+            'essaymethods': all_essaymethods,
             'selected_essaymethods': selected_essaymethods,
             'form': form
         }
