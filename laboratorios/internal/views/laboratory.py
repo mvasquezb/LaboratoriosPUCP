@@ -148,7 +148,7 @@ def create(request,
             'service_hours': service_hours,
             'inventories': inventories,
             'essaymethods': essaymethods,
-            'form': form
+            'form': form,
         }
         return render(request, template, context)
 
