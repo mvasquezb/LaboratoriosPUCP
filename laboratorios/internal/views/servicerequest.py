@@ -567,6 +567,7 @@ def upload(request, id):
         # fs = FileSystemStorage()
         sr_object = ServiceRequest.all_objects.get(pk=id)
         description = request.POST.get('text_description')
+        name = request.POST.get('text_name')
         requestAttach = RequestAttachment.all_objects.create(
             request=sr_object,
             description=description,
@@ -574,8 +575,12 @@ def upload(request, id):
         )
         fs = requestAttach.file
         filename = fs.save(myfile.name, myfile)
-        requestAttach.fileName = requestAttach.file.name.split('/')[-1]
-        requestAttach.save()
+        if name:
+            requestAttach.fileName = name + requestAttach.file.name[requestAttach.file.name.rfind("."):]
+            requestAttach.save()
+        else:
+            requestAttach.fileName = requestAttach.file.name.split('/')[-1]
+            requestAttach.save()
         messages.success(
             request,
             'Se ha subido el archivo "' +
