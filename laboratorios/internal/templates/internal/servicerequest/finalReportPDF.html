@@ -75,10 +75,10 @@
                             {% for h in range(MethodFillCompleteList[i][j]|length)%}
                           <br>
                           <label><b>2.{{i+1}}.{{j+1}}.{{h+1}}. <u>Método de Ensayo "{{MethodFillCompleteList[i][j][h].essay_method.name}}"</u></b></label>
-                            <br>
+                            {% if True %} <center><img src="media/pictures/inacal.png" style="width:170px;height:50px;"></center><br>
+                            {% else %} <br> {% endif %}
                             <div style="padding-left: 1.7em;"><label><b>Descripción del Método: </b>{{MethodFillCompleteList[i][j][h].essay_method.description}}</label>
-                            <br><br>
-                              <label><b>Resultados del Método:</b></label></div>
+                              <br><br><label><b>Resultados del Método:</b></label></div>
                               <table border=1 cellpadding= 6>
                                 <thead>
                                   <tr role="row">
