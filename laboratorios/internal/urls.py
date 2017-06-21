@@ -74,13 +74,13 @@ urlpatterns = [
     #
     # Role
     #
-    url('^role/$',
+    url('^role/?$',
         views.role.index,
         name='role.index'),
-    url('^role/(?P<pk>\d+)$',
+    url('^role/(?P<pk>\d+)/?$',
         views.role.show,
         name='role.show'),
-    url('^role/create$',
+    url('^role/create/?$',
         views.role.create,
         name='role.create'),
     url('^role/(?P<pk>\d+)/edit/?$',
