@@ -1,8 +1,9 @@
 //var selected_users = [];
-var capacity_users;
-var counting = $('.checkbox_users:checked').length;
-var to_out;
+//var capacity_users;
+//var counting = $('.checkbox_users:checked').length;
+//var to_out;
 
+/*
 function handlePaste(e) {
   var clipboardData, pastedData;
 
@@ -24,6 +25,8 @@ function FilterNmberInput(event) {
   return !isNotWanted;
 };
 
+*/  
+  /*
 //cuando se invalida data
 $('#capacity').on('invalid.bs.validator', function () {
   //$('#users_selection').hide();
@@ -37,14 +40,17 @@ $('#capacity').on('invalid.bs.validator', function () {
     text: "-- Ningún Responsable Seleccionado --"
   }));
 });
-
+  */
+  /*
 //cuando se valida la data
 $('#form').on('valid.bs.validator', function () {
   //$('#users_selection').show();
   $('input.checkbox_users:checkbox').prop('disabled', false);
   capacity_users = $("#capacity").val();
 });
+*/
 
+/*
 var value = $('#capacity').val();
 $('#capacity').on('keyup change click', function () {
   if (this.value !== value) {
@@ -57,7 +63,9 @@ $('#capacity').on('keyup change click', function () {
     capacity_users = $(this).val();
   }
 });
+*/
 
+/*
 //cuando se clickea en los checkboxes de usuarios de laboratorio
 $('input.checkbox_users:checkbox').on('ifChanged', function () {
   if ($(this).is(':checked')) {
@@ -82,6 +90,7 @@ $('input.checkbox_users:checkbox').on('ifChanged', function () {
     $(to_remove).remove();
   }
 });
+*/
 
 //cuando se clickea en el boton registrar primero se arma la estructura de django para que se
 //reciba en el view
@@ -95,13 +104,15 @@ $('#form').on('submit', function (evt) {
   });
   $form.append(name);
 
+  /*
   var capacity = $('<input>', {
     name: 'capacity',
     type: 'hidden',
     value: $('#capacity').val(),
   });
   $form.append(capacity);
-
+  */
+  
   $('input.checkbox_users:checkbox:checked').each(function () {
     var employee = $('<input>', {
       name: 'employees',
@@ -110,7 +121,8 @@ $('#form').on('submit', function (evt) {
     });
     $form.append(employee);
   });
-
+  
+  /*
   if ($('#comboBox option:selected').text() == '-- Ningún Responsable Seleccionado --') {
     //$form.append($('<input>').attr('name', 'supervisor').val());
   } else {
@@ -121,6 +133,7 @@ $('#form').on('submit', function (evt) {
     });
     $form.append(supervisor);
   }
+  */
 
   $('input.checkbox_inventory:checkbox:checked').each(function () {
     var inventory = $('<input>', {

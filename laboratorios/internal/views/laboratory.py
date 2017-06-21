@@ -128,7 +128,7 @@ def create(request,
                 request, 'Se ha creado un nuevo laboratorio exitosamante!')
             return redirect('internal:laboratory.index')
         else:
-            # print(form.errors)
+            print(form.errors)
             for field, errors in form.errors.items():
                 if (field == "name") and list(errors) == ['Ya existe Laboratory con este Name.']:
                     messages.error(
