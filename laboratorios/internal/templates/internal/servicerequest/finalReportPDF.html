@@ -1,16 +1,16 @@
-
 {% block page_content %}
 <font size = "5" face="Arial">
 <div class="row border-bottom white-bg dashboard-header">
     <div class="col-md-6">
-        <strong><font size = 7><center>Informe</center></font></strong>
+      <strong><font size = 7><center><u>INFORME FINAL</u></center></font></strong><br>
     </div>
 </div>
 <div class="wrapper wrapper-content animated fadeInRight" >
   <div class="row">
     <div class="col-lg-12">
-        <label><b>Solicitud</b></label>
-        <div>Fecha de registro: {{SampleCompleteList[0].request.registered_date.strftime('%d/%m/%Y')}}</div>
+      <label><b>1. <u>INFORMACIÓN DE LA SOLICITUD</u></b></label>
+      <div style="padding-left: 1.7em;">
+        <label>Fecha de Registro: {{SampleCompleteList[0].request.registered_date.strftime('%d/%m/%Y')}}</label> <br>
         {% if SampleCompleteList[0].request.client != None %}
         <label>Nombre del Cliente: {{SampleCompleteList[0].request.client}}</label>
         {% else %}
@@ -29,20 +29,56 @@
         <label>Observaciones: Sin observaciones</label>
         {% endif %}
         <br>
+        </div>
+        <br>
+        <label><b>2. <u>MUESTRAS</u></b></label>
+        <table border=1 cellpadding= 6>
+          <thead>
+            <tr role="row">
+              <th>
+                Código del Solicitante
+              </th>
+              <th>
+                Código del Laboratorio
+              </th>
+              <th>
+                Descripción
+              </th>
+            </tr>
+            </thead>
+            {% for sample in SampleCompleteList  %}
+            <tbody>
+                <tr role="row">
+                  <td align="center">{{sample.name}}</td>
+                  <td align="center">{{sample.code}}</td>
+                  <td align="center">sample.description</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
         {% for i in range(SampleCompleteList|length) %}
+        <br>
         <div class="ibox float-e-margins">
             <div class="ibox-content">
                     <div class="row">
                         <div class="col-lg-6">
-                          <label><b>Nombre de Muestra</b></label>
-                            <div class="text-primary">{{SampleCompleteList[i].name}}</div>
-
-                            <label><b>Codigo de muestra</b></label>
-                            <div class="text-primary">{{SampleCompleteList[i].code}}</div>
+                          <label><b>2.{{i+1}}. <u>Muestra "{{SampleCompleteList[i].code}}"</u></b></label>
+                          <br>
+                           <div style="padding-left: 1.7em;"><label><b>Observaciones: </b> SampleCompleteList[i].observations</label></div>
                           {% for j in range(EssayFillCompleteList[i]|length) %}
                             <br>
-                            <label><b>Ensayo</b> {{EssayFillCompleteList[i][j].essay.name}}</label>
+                            <label><b>2.{{i+1}}.{{j+1}}. <u>Ensayo "{{EssayFillCompleteList[i][j].essay.name}}"</u></b></label>
+                            <br>
+                           <div style="padding-left: 1.7em;"><label><b>Descripción del Ensayo:</b> {{EssayFillCompleteList[i][j].essay.description}}</label>
+                            <br>
+                             <label><b>Observaciones del Ensayo: </b> EssayFillCompleteList[i][j].observations</label></div>
                             {% for h in range(MethodFillCompleteList[i][j]|length)%}
+                          <br>
+                          <label><b>2.{{i+1}}.{{j+1}}.{{h+1}}. <u>Método de Ensayo "{{MethodFillCompleteList[i][j][h].essay_method.name}}"</u></b></label>
+                            <br>
+                            <div style="padding-left: 1.7em;"><label><b>Descripción del Método: </b>{{MethodFillCompleteList[i][j][h].essay_method.description}}</label>
+                            <br><br>
+                              <label><b>Resultados del Método:</b></label></div>
                               <table border=1 cellpadding= 6>
                                 <thead>
                                   <tr role="row">
@@ -68,6 +104,7 @@
                                   </tbody>
                               </table>
                           <br>
+                              <div style="padding-left: 1.7em;"><label><b>Observaciones:</b> MethodFillCompleteList[i][j][h].observations </label></div>
                             {% endfor %}
                           {% endfor %}
                     </div>

@@ -733,7 +733,8 @@ def reportDetail(request, template='internal/servicerequest/reportDetail.html'):
                 'Debe seleccionar una muestra!'
             )
             return redirect('internal:servicerequest.reportGenerator', request.POST.get("b_reporte"))
-
+    else:
+        return redirect('internal:servicerequest.index')
 
 def finalReport(request, id, template='internal/servicerequest/reportDetail.html'):
     serviceRequest = ServiceRequest.all_objects.get(pk=id)
