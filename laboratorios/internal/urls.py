@@ -223,6 +223,45 @@ urlpatterns = [
     url('^sampleType/(?P<id>\d+)/delete/?$',
         views.sampleType.delete,
         name='sampleType.delete'),
+
+    #
+    #Supply
+    #
+    url('^supply/create$',
+        views.supply.create,
+        name='supply.create'),
+    url('^supply/(?P<pk>\d+)$',
+        views.supply.show,
+        name='supply.show'),
+    url('^supply/(?P<pk>\d+)/edit/?$',
+        views.supply.edit,
+        name='supply.edit'),
+    url('^supply/?$',
+        views.supply.index,
+        name='supply.index'),
+    url('^supply/(?P<pk>\d+)/delete/?$',
+        views.supply.delete,
+        name='supply.delete'),
+
+    #
+    #Equipment
+    #
+    url('^equipment/create$',
+        views.equipment.create,
+        name='equipment.create'),
+    url('^equipment/(?P<pk>\d+)$',
+        views.equipment.show,
+        name='equipment.show'),
+    url('^equipment/(?P<pk>\d+)/edit/?$',
+        views.equipment.edit,
+        name='equipment.edit'),
+    url('^equipment/?$',
+        views.equipment.index,
+        name='equipment.index'),
+    url('^equipment/(?P<pk>\d+)/delete/?$',
+        views.equipment.delete,
+        name='equipment.delete'),
+
     #
     # Essay
     #

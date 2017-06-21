@@ -276,3 +276,15 @@ class ParameterValueForm(ModelForm):
     class Meta:
         model = EssayMethodParameterFill
         fields = ['value','uncertainty']
+
+
+class SupplyForm(ModelForm):
+    class Meta:
+        model = Supply
+        fields = ['name', 'description','metric_unit', 'expiration_date']
+
+class EquipmentForm(ModelForm):
+    class Meta:
+        model = Equipment
+        fields = ['name', 'description', 'servicelife_unit', 'servicelife', 'error_range']
+
