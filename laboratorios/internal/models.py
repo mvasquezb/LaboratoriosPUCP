@@ -76,24 +76,6 @@ class Employee(BasicUser):
         blank=True
     )
 
-
-@auditlog.register()
-class LaboratoryServiceHours(SafeDeleteModel):
-    _safedelete_policy = SOFT_DELETE_CASCADE
-
-    audit_log = AuditlogHistoryField()
-    start_time = models.PositiveIntegerField()
-    end_time = models.PositiveIntegerField()
-    registered_date = models.DateTimeField(
-        auto_now_add=True,
-        auto_now=False,
-        blank=True
-    )
-
-    def __str__(self):
-        return str(self.start_time) + ' - ' + str(self.end_time)
-
-
 @auditlog.register()
 class Laboratory(SafeDeleteModel):
     _safedelete_policy = SOFT_DELETE_CASCADE
@@ -105,9 +87,7 @@ class Laboratory(SafeDeleteModel):
         related_name='laboratories',
         blank=True
     )
-    capacity = models.PositiveIntegerField()
     supervisor = models.ForeignKey('Employee', null=True, blank=True)
-    service_hours = models.ForeignKey(LaboratoryServiceHours, null=True, blank=True)
     essay_methods = models.ManyToManyField(
         'EssayMethod',
         related_name='laboratories',
