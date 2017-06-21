@@ -27,6 +27,11 @@
               </div>
             </div>
             <div class="row">
+              {% if users|length == 0 %}
+                <div class="form-group">
+                  <p>No hay empleados creados, puede crearlos <a href="{{ url('internal:employee.create') }}"><strong>aquí</strong></a></p>
+                </div>
+              {% else %}
               <div class="form-group">
                 <label>Seleccione al personal para el nuevo laboratorio</label><br>
                 <span>Podrá seleccionar tantos usuarios como la capacidad máxima se lo permita</span>
@@ -35,6 +40,7 @@
                     <thead>
                       <tr>
                         <th>Nombre del Empleado</th>
+                        <th>Nombre de Usuario</th>
                         <th>Correo</th>
                         <th>Selección</th>
                       </tr>
@@ -43,6 +49,7 @@
                       {% for user in users %}
                         <tr>
                           <td>{{ user }}</td>
+                          <td>{{ user.user.username }}</td>
                           <td>{{ user.user.email }}</td>
                           <td>
                             <input type="checkbox" class="i-checks checkbox_users" data-name="{{ user }}" data-id="{{ user.pk }}"
@@ -66,8 +73,14 @@
                   </div>
                 </div>
               </div>
+              {% endif %}
             </div>
             <div class="row">
+              {% if inventories|length == 0 %}
+                <div class="form-group">
+                  <p>No hay inventarios creados, puede crearlos <a href="#"><strong>aquí</strong></a></p>
+                </div>
+              {% else %}
               <div class="col-md-12">
                 <label>Seleccione los inventarios</label>
                 <div class="table-responsive">
@@ -94,8 +107,14 @@
                   </table>
                 </div>
               </div>
+              {% endif %}
             </div>
             <div class="row">
+              {% if essaymethods|length == 0 %}
+                <div class="form-group">
+                  <p>No hay métodos de ensayos creados, puede crearlos <a href="{{ url('internal:essaymethod.create') }}"><strong>aquí</strong></a></p>
+                </div>
+              {% else %}
               <div class="col-md-12">
                 <label>Seleccione los tipos de pruebas realizables para este laboratorio </label>
                 <div class="table-responsive">
@@ -124,8 +143,11 @@
                   </table>
                 </div>
               </div>
+              {% endif %}
             </div>
-            <p><strong>(*) Campos obligatorios</strong></p>
+            <div class="row form-group">
+              <p><strong>(*) Campos obligatorios</strong></p>
+            </div>
             <div class="row">
               <div class="col-md-offset-4 col-md-4 text-center">
                 <input type="submit" class="btn btn-primary" name="registrar"

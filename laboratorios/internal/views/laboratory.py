@@ -118,10 +118,11 @@ def create(request,
     form = LaboratoryForm(request.POST or None)
     if request.method == 'POST':
         if form.is_valid():
-            #for employee in form.cleaned_data['employees']:
-
-            #    for essay_method in form.cleaned_data['essay_methods']:
-
+            #here we add essay_methods to every employee of the new laboratory
+            for employee in form.cleaned_data['employees']:
+                for essay_method in form.cleaned_data['essay_methods']:
+                    employee.essay_methods.add(essay_method)
+                employee.save()
             form.save()
             messages.success(
                 request, 'Se ha creado un nuevo laboratorio exitosamante!')
