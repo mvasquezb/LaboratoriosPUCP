@@ -2,18 +2,13 @@ from django.shortcuts import (
     render,
     get_object_or_404,
     redirect,
-    reverse,
-    HttpResponseRedirect
 )
 from django.contrib import messages
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from internal.models import *
-from django.shortcuts import render, redirect
-from django.http import HttpResponse
-from .forms import LaboratoryForm
-from django.http import JsonResponse
-from django.views.decorators.csrf import ensure_csrf_cookie
 from django.utils import timezone
+from django.db.models import Q, Count
+
+from internal.models import *
+from .forms import LaboratoryForm
 import json as simplejson
 
 
@@ -46,21 +41,73 @@ def services_index(request,
                     pk=priorities_pk[i]
                 )
                 service.save()
-    all_services = ServiceRequest.all_objects.filter(
-        deleted__isnull=True
+    laboratory = get_object_or_404(
+        Laboratory.all_objects.filter(deleted__isnull=True),
+        pk=pk
     )
-    laboratory = Laboratory.all_objects.get(deleted__isnull=True, pk=pk)
-    all_employes = laboratory.employees.all()
-    all_priorities = ServiceRequestPriority.all_objects.filter(deleted__isnull=True)
-    laboratory_services = []
-    for service in all_services:
-        service_supervisor = service.supervisor
-        for employee in all_employes:
-            if (employee == service_supervisor):
-                laboratory_services.append(service)
-                break
-    context = {'laboratory_services': laboratory_services, 'laboratory': laboratory,
-               'priorities': all_priorities}
+    all_priorities = ServiceRequestPriority.all_objects.filter(
+        deleted__isnull=True)
+    laboratory_services = ServiceRequest.all_objects.filter(
+        deleted__isnull=True,
+        supervisor__in=laboratory.employees.all()
+    )
+
+    # get data for track service's graphic
+    month_names = [
+        'Enero',
+        'Febrero',
+        'Marzo',
+        'Abril',
+        'Mayo',
+        'Junio',
+        'Julio',
+        'Agosto',
+        'Septiembre',
+        'Octubre',
+        'Noviembre',
+        'Diciembre'
+    ]
+
+    # get only services of the current laboratory
+    service_request_list = laboratory_services
+
+    my_data = []
+    now = timezone.localtime(timezone.now())
+    for i in range(0, len(service_request_list)):
+        date_in_service = service_request_list[i].registered_date
+        # date_in_service.strftime("%d/%m/%Y")
+        # date_in_service.replace(day=date_in_service.day+service_request_list[i].expected_duration).strftime("%d/%m/%Y")
+
+        # progresion calculation
+        expected_duration = service_request_list[i].expected_duration
+        delta = now - date_in_service
+        total = 100 * delta.days / expected_duration
+        total = int(total)
+        end_date = date_in_service.replace(
+            day=date_in_service.day + expected_duration
+        )
+        client = service_request_list[i].client
+
+        my_dict = {
+            "id": service_request_list[i].id,
+            "title": "Cliente " + client.user.get_full_name(),
+            "start_date": date_in_service.strftime("%m/%d/%Y"),
+            "end_date": end_date.strftime("%m/%d/%Y"),
+            "value": 67,
+            "term": "Short Term",
+            "completion_percentage": total,
+            "color": "#770051",
+        }
+        my_data.append(my_dict)
+    js_data = simplejson.dumps(my_data)
+
+    context = {
+        'js_data': js_data,
+        'actual_month': month_names[now.month - 1] + " " + str(now.year),
+        'laboratory_services': laboratory_services,
+        'laboratory': laboratory,
+        'priorities': all_priorities
+    }
     template = 'internal/laboratory/services_index.html'
     return render(request, template, context)
 
@@ -68,8 +115,8 @@ def services_index(request,
 def create(request,
            template='internal/laboratory/create.html',
            extra_content=None):
+    form = LaboratoryForm(request.POST or None)
     if request.method == 'POST':
-        form = LaboratoryForm(request.POST)
         if form.is_valid():
             #for employee in form.cleaned_data['employees']:
 
@@ -87,17 +134,27 @@ def create(request,
                         request, 'Este nombre de laboratorio ya existe, pruebe otro')
                     return redirect('internal:laboratory.create')
 
-            return HttpResponse(form.errors)
-
+            # return HttpResponse(form.errors)
     else:
-        users = Employee.all_objects.filter(deleted__isnull=True,laboratories__isnull=True) #just active users
+        #users = Employee.all_objects.filter(deleted__isnull=True,laboratories__isnull=True) #just active users
+        users = Employee.all_objects.annotate(
+            labs=Count('laboratories')
+        ).filter(
+            Q(labs=0),
+            deleted__isnull=True,
+        )
         service_hours = LaboratoryServiceHours.all_objects.filter(
-            deleted__isnull=True)
+            deleted__isnull=True
+        )
         inventories = Inventory.all_objects.filter(deleted__isnull=True)
         essaymethods = EssayMethod.all_objects.filter(deleted__isnull=True)
-        form = LaboratoryForm()
-        context = {'users': users, 'service_hours': service_hours, 'inventories': inventories,
-                   'essaymethods': essaymethods, 'form': form}
+        context = {
+            'users': users,
+            'service_hours': service_hours,
+            'inventories': inventories,
+            'essaymethods': essaymethods,
+            'form': form,
+        }
         return render(request, template, context)
 
 
@@ -125,7 +182,14 @@ def edit(request,
             pk=pk
         )
         #
-        all_users = Employee.all_objects.filter(deleted__isnull=True)
+        all_users = Employee.all_objects.annotate(
+            labs=Count('laboratories')
+        ).filter(
+            # Get employees that do not belong to a laboratory
+            # Or that belong to this laboratory
+            Q(labs=0) | Q(laboratories=laboratory.id),
+            deleted__isnull=True,
+        )
         selected_users = laboratory.employees.all()
         #
         all_service_hours = LaboratoryServiceHours.all_objects.filter(
@@ -140,12 +204,18 @@ def edit(request,
         selected_essaymethods = laboratory.essay_methods.all()
         #
         form = LaboratoryForm()
-        context = {'laboratory': laboratory, 'all_users': all_users,
-                   'selected_users': selected_users, 'all_service_hours': all_service_hours,
-                   'selected_service_hours': selected_service_hours,
-                   'all_inventories': all_inventories, 'selected_inventories': selected_inventories,
-                   'all_essaymethods': all_essaymethods, 'selected_essaymethods': selected_essaymethods,
-                   'form': form}
+        context = {
+            'laboratory': laboratory,
+            'users': all_users,
+            'selected_users': selected_users,
+            'all_service_hours': all_service_hours,
+            'selected_service_hours': selected_service_hours,
+            'inventories': all_inventories,
+            'selected_inventories': selected_inventories,
+            'essaymethods': all_essaymethods,
+            'selected_essaymethods': selected_essaymethods,
+            'form': form
+        }
         template = 'internal/laboratory/edit.html'
         return render(request, template, context)
 
@@ -200,8 +270,8 @@ def show(request,
 
 
 def track_services(request, pk,
-                   template='internal/laboratory/' +
-                   'track_services.html'):
+                   template=('internal/laboratory/' +
+                             'track_services.html')):
     month_names = [
         'Enero',
         'Febrero',
