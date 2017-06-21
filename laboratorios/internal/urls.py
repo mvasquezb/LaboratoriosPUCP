@@ -281,4 +281,14 @@ urlpatterns = [
     url('^fill_parameters/(?P<pk>\d+)$',
         views.parameterfill.fill_parameters,
         name='parameterfill.fill_parameters'),
+    #
+    # Reports
+    #
+    url('^reports/start$',
+        views.reports.report_parameters,
+        name='reports.start'),
+    url('^reports/results/(?P<criteria_string>[\w\-]+)$',
+        views.reports.processing_parameters,
+        name='reports.results')
+
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
