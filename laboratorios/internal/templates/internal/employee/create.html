@@ -50,13 +50,12 @@
                         </div>
                         <div class="col-lg-6">
                             <div class="form-group">
-                                <label>Seleccione los roles: </label>
+                                <label>Roles: </label>
                                 <div class="table-responsive">
                                     <table class="table table-striped table-bordered permission_table">
                                       <thead>
                                         <tr>
-                                          <th>Nombre de Rol</th>
-                                          <th>Descripción</th>
+                                          <th class="first-table-column">Nombre</th>
                                           <th>Selección</th>
                                         </tr>
                                       </thead>
@@ -64,8 +63,28 @@
                                         {% for role in roles %}
                                           <tr>
                                             <td>{{ role.name }}</td>
-                                            <td>{{ role.description }}</td>
                                             <td><input type="checkbox" name="{{ role.pk }}" class="i-checks checkbox_role"></td>
+                                          </tr>
+                                        {% endfor %}
+                                      </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Laboratorios: </label>
+                                <div class="table-responsive">
+                                    <table class="table table-striped table-bordered permission_table">
+                                      <thead>
+                                        <tr>
+                                          <th class="first-table-column">Nombre</th>
+                                          <th>Selección</th>
+                                        </tr>
+                                      </thead>
+                                      <tbody>
+                                        {% for laboratory in laboratories %}
+                                          <tr>
+                                            <td>{{ laboratory.name }}</td>
+                                            <td><input type="checkbox" name="{{ laboratory.pk }}" class="i-checks checkbox_laboratory"></td>
                                           </tr>
                                         {% endfor %}
                                       </tbody>

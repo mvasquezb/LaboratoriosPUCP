@@ -1,6 +1,6 @@
 {% extends 'internal/base_internal.html' %}
 
-{% block title %}{{ super() }} | Inicio{% endblock title %}
+{% block title %}{{ super() }} | Solicitudes{% endblock title %}
 
 {% block custom_css %}
 {% endblock custom_css %}
@@ -34,10 +34,16 @@
                   <span>Caracteres restantes: </span>
                   <input onblur="textCounter(this.form.recipients,this,95);" disabled  onfocus="this.blur();" tabindex="-1" maxlength="2" size="2" value="95" name="counter">
                 </div>
-                <div>
-                  <br>
-                  <button type="submit" name="b_upload" class="btn btn-w-m btn-primary"><i class="fa fa-upload"></i>&nbsp;&nbsp;<span class="bold">Almacenar</span></button>
-                  <button name="b_cancel" id="cancel" class="btn btn-w-m btn-white" >Cancelar</button>
+                <div class="row">
+                  <div class="col-md-12">
+                    <button type="submit" name="b_upload" class="btn btn-w-m btn-primary">
+                      <i class="fa fa-upload"></i>
+                      Almacenar
+                    </button>
+                    <a href="{{ url('internal:serviceRequest.attachmentList', servicerequest.id) }}" class="btn btn-w-m btn-white">
+                      Cancelar
+                    </a>
+                  </div>
                 </div>
               </form>
             </div>
@@ -56,22 +62,20 @@
 
 {% block custom_js %}
 <script>
-  if ($('.message-container .messages li')) {
+if ($('.message-container .messages li')) {
   var msg = $('.message-container .messages li').first();
-  $.extend(toastr.options, {"positionClass": "toast-bottom-right",});
-  toastr[msg.data('tags')](msg.text());
+  showToastr(msg.text(), msg.data('tags'));
 }
 </script>
 <script>
-  function textCounter( field, countfield, maxlimit ) {
- if ( field.value.length > maxlimit ) {
-  field.value = field.value.substring( 0, maxlimit );
-  field.blur();
-  field.focus();
-  return false;
- } else {
+function textCounter( field, countfield, maxlimit ) {
+  if ( field.value.length > maxlimit ) {
+    field.value = field.value.substring( 0, maxlimit );
+    field.blur();
+    field.focus();
+    return false;
+  }
   countfield.value = maxlimit - field.value.length;
- }
 }
 </script>
 {% endblock custom_js %}
