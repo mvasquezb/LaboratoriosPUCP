@@ -58,12 +58,8 @@ def edit(request,
         if aux_form.is_valid():
             aux_form.save()
             messages.success(
-                request, 'Se ha editado el inventario exitosamante')
+                request, 'Se ha editado el inventario exitosamente')
             return redirect('internal:inventory.index')
-        else:
-            messages.error(
-                request, 'Ya existe un inventario con el mismo nombre, ingrese otro')
-            return redirect('internal:inventory.edit', pk=pk)
     else:
         instance = Inventory.all_objects.get(
             deleted__isnull=True,

@@ -34,26 +34,15 @@
                     <p><strong>(*) Campos obligatorios</strong></p>
                     <div class="row">
                       <div class="col-md-offset-4 col-md-4 text-center">
-                        <a class="myBtn1 btn btn-primary" name="editar"
+                        <input type="submit" class="myBtn1 btn btn-primary" name="editar"
                           data-toggle="modal" data-target="#myModal1"
-                          id="register_button"> Editar </a>
+                          id="register_button" value="Editar">
                         <a href="{{ url('internal:inventory.index') }}" class="btn btn-white">Cancelar</a>
                       </div>
                     </div>
                 </form>
             </div>
         </div>
-    </div>
-  </div>
-</div>
-<div id="myModal1" class="modal1">
-  <!-- Modal content -->
-  <div class="modal-content">
-    <span class="span-close close">&times;</span>
-    <div class="modeal-center-content">
-      <p>¿Seguro que desea modificarlo?</p>
-      <button type="button" class="confirm btn btn-primary">Editar</button>
-      <button type="button" class="span-close btn btn-white">Cancelar</button>
     </div>
   </div>
 </div>
@@ -67,24 +56,6 @@
 {% endblock page_content %}
 
 {% block custom_js %}
-<script>
-$( document ).ready(function() {
-  $(".myBtn1").click(function() {
-    $("#myModal1").show();
-    //var delete_url = $(this).attr("data-url");
-    $(".confirm").click(function() {
-      $('#form').submit();
-    });
-  });
 
-  $(".span-close").click(function() {
-    $("#myModal1").hide();
-  });
-});
-$(".myBtn1").click(function(event) {
-  event.preventDefault();
-  return false;
-});
-</script>
 
 {% endblock custom_js %}
