@@ -4,42 +4,81 @@
 
 {% block custom_css %}{% endblock custom_css %}
 
+
 {% block page_content %}
 <div class="row border-bottom white-bg dashboard-header">
     <div class="col-md-6">
-        <h2><strong>Detalle del Usuario</strong></h2>
+        <h2><strong>Detalle de Empleado</strong></h2>
     </div>
 </div>
 <div class="wrapper wrapper-content animated fadeInRight" >
-  <div class="row">
-    <div class="col-lg-12">
-        <div class="ibox float-e-margins">
-            <div class="ibox-content">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-content">
                     <div class="row">
                         <div class="col-lg-6">
                             <div class="form-group">
-                                <label>Nombre de Usuario</label>
-                                <div class="text-primary">{{ employee.user.username }}</div>
+                                <label>Nombre*</label>
+                                <input value="{{ custom_employee.user.first_name }}"  type="text" class="form-control" name="first_name" disabled>
                             </div>
                             <div class="form-group">
-                                <label>Correo</label>
-                                <div class="text-primary">{{ employee.user.email }}</div>
+                                <label>Apellido*</label>
+                                <input value="{{ custom_employee.user.last_name }}" type="text" class="form-control" name="last_name" disabled>
+                            </div>
+                            <div class="form-group">
+                                <label>Usuario*</label>
+                                <input value="{{ custom_employee.user.username }}" type="text" class="form-control" name="username" disabled>
+                            </div>
+                            <div class="form-group">
+                                <label>Correo*</label>
+                                <input value="{{ custom_employee.user.email }}" type="text" class="form-control" name="email" disabled>
                             </div>
                         </div>
                         <div class="col-lg-6">
                             <div class="form-group">
-                                <label>Roles</label>
-                                <select name="roles" class="form-control" multiple>
-                                {% for role in selected_roles %}
-                                     <option value="{{ role.id }}">{{ role.description }}</option>
-                                {% endfor %}
-                                </select>
+                                <label>Seleccione los roles: </label>
+                                <div class="table-responsive">
+                                    <table class="table table-striped table-bordered table-hover dataTables-example permission_table">
+                                      <thead>
+                                        <tr>
+                                          <th class="first-table-column">Nombre</th>
+                                        </tr>
+                                      </thead>
+                                      <tbody>
+                                        {% for role in selected_roles %}
+                                          <tr>
+                                            <td>{{ role.name }}</td>                                            
+                                          </tr>
+                                        {% endfor %}
+                                      </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Laboratorios: </label>
+                                <div class="table-responsive">
+                                    <table class="table table-striped table-bordered permission_table">
+                                      <thead>
+                                        <tr>
+                                          <th class="first-table-column">Nombre</th>
+                                        </tr>
+                                      </thead>
+                                      <tbody>
+                                        {% for laboratory in selected_laboratories %}
+                                          <tr>
+                                            <td>{{ laboratory.name }}</td>
+                                          </tr>
+                                        {% endfor %}
+                                      </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
+                </div>
             </div>
         </div>
     </div>
-  </div>
 </div>
 {% endblock page_content %}
