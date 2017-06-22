@@ -19,7 +19,7 @@
                     {% csrf_token %}
                     {% for field in user_form|list + form|list if field.name != 'password2' %}
                       <div class="form-group">
-                        <label>{{field.label}} {% if field.field.required %}*{% endif %}</label>
+                        <label>{% if field.label == 'Doc number' %} Nro de documento {% elif field.label == 'Phone number' %} Telefono {% else %}{{field.label}} {% endif %} {% if field.field.required %}*{% endif %}</label>
                         <div data-error="El {{field.label}} es obligatorio" aria-placeholder="-----">
                           {{ field.as_widget(attrs={'data-error':"Este campo es obligatorio",'class':"form-control"})}}
                         </div>
