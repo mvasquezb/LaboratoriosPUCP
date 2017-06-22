@@ -8466,3 +8466,12 @@ body.md-skin {
 .first-table-column {
   width: 175px;
 }
+
+.form-control.small-parameter-input {
+  font-size: 11px;
+  height: 20px;
+}
+
+.ibox-content.small-ibox {
+  padding-bottom: 0;
+}
