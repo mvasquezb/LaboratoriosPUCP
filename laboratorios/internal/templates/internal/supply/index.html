@@ -61,7 +61,7 @@
                     <td>{{ loop.index }}</td>
                     <td>{{ supply.name }}</td>
                     <td>{{ supply.description }}</td>
-                    <td>{{ supply.expiration_date }}</td>
+                    <td>{{ supply.expiration_date.strftime('%d-%m-%Y') }}</td>
                     <td>
                       {% if supply.deleted %}
                         Eliminado

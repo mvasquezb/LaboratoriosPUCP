@@ -77,8 +77,7 @@ def edit(request, pk,
             messages.success(request, 'Se ha editado el suministro exitosamante!')
             return redirect('internal:supply.index')
         else:
-            print(form.errors, form.errors)
-            messages.warning(request, 'Please correct the error below.')
+            messages.warning(request, 'Corregir los errores mostrados.')
     return render(request, template, context)
 
 

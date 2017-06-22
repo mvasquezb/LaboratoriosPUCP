@@ -15,48 +15,43 @@
       <div class="col-lg-12">
         <div class="ibox float-e-margins">
             <div class="ibox-content">
-            {{ form.errors }}
-                <form id="myForm" action="{{ url('internal:equipment.show', equipment.id) }}" method="post" data-toggle="validator">
-                    {% csrf_token %}
-
-                    <div class="row">
-                        <div class="col-lg-12">
-                            <div class="form-group">
-                                <label>Nombre*</label>
-                                <input type="text" value="{{ equipment.name}}" class="form-control" name="name" required data-error="El Nombre es obligatorio" placeholder="Nombre del equipo">
-                                <div class="help-block with-errors"></div>
-                            </div>
-                            <div class="form-group">
-                                <label>Descripcion*</label>
-                                <input type="text" value="{{ equipment.description}}" class="form-control" name="description" required data-error="La descripcion es obligatoria" placeholder="Descripcion del equipo">
-                                <div class="help-block with-errors"></div>
-                            </div>
-                            <div class="form-group">
-                                <label>Unidades de tiempo de servicio*</label>
-                                <input type="text" value="{{ equipment.servicelife_unit}}" class="form-control" name="servicelife_unit" required data-error="La unidad de tiempo de servicio es obligatorio" placeholder="Horas, Segundos, etc.">
-                                <div class="help-block with-errors"></div>
-                            </div>
-                            <div class="form-group">
-                                <label>Tiempo de servicio*</label>
-                                <input type="number" value="{{ equipment.servicelife}}" class="form-control" name="servicelife" required data-error="El tiempo de servicio es obligatorio" placeholder="20">
-                                <div class="help-block with-errors"></div>
-                            </div>
-                            <div class="form-group">
-                                <label>Rango de error*</label>
-                                <input type="number" value="{{ equipment.error_range}}"  step="any" class="form-control" name="error_range" required data-error="El rango de error es obligatorio" placeholder="0.8">
-                                <div class="help-block with-errors"></div>
-                            </div>
-                        </div>
-                        <p><strong>(*) Campos obligatorios</strong></p>
-                    </div>
+              <div class="row">
+                  <div class="col-lg-12">
+                      <div class="form-group">
+                          <label>Nombre*</label>
+                          <input type="text" value="{{ equipment.name}}" class="form-control" name="name" required data-error="El Nombre es obligatorio" placeholder="Nombre del equipo">
+                          <div class="help-block with-errors"></div>
+                      </div>
+                      <div class="form-group">
+                          <label>Descripcion*</label>
+                          <input type="text" value="{{ equipment.description}}" class="form-control" name="description" required data-error="La descripcion es obligatoria" placeholder="Descripcion del equipo">
+                          <div class="help-block with-errors"></div>
+                      </div>
+                      <div class="form-group">
+                          <label>Unidades de tiempo de servicio*</label>
+                          <input type="text" value="{{ equipment.servicelife_unit}}" class="form-control" name="servicelife_unit" required data-error="La unidad de tiempo de servicio es obligatorio" placeholder="Horas, Segundos, etc.">
+                          <div class="help-block with-errors"></div>
+                      </div>
+                      <div class="form-group">
+                          <label>Tiempo de servicio*</label>
+                          <input type="number" value="{{ equipment.servicelife}}" class="form-control" name="servicelife" required data-error="El tiempo de servicio es obligatorio" placeholder="20">
+                          <div class="help-block with-errors"></div>
+                      </div>
+                      <div class="form-group">
+                          <label>Rango de error*</label>
+                          <input type="number" value="{{ equipment.error_range}}"  step="any" class="form-control" name="error_range" required data-error="El rango de error es obligatorio" placeholder="0.8">
+                          <div class="help-block with-errors"></div>
+                      </div>
+                  </div>
+                  <p><strong>(*) Campos obligatorios</strong></p>
+              </div>
 
 
-                    <div class="col-md-offset-4">
-                      <a  href="{{ url('internal:equipment.edit', equipment.id) }}"  class="btn btn-primary"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>Editar</a>
-                      <a href="{{ url('internal:equipment.index') }}" class="btn btn-white">Regresar</a>
-                    </div>
+              <div class="col-md-offset-4">
+                <a  href="{{ url('internal:equipment.edit', equipment.id) }}"  class="btn btn-primary"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>Editar</a>
+                <a href="{{ url('internal:equipment.index') }}" class="btn btn-white">Regresar</a>
+              </div>
 
-                </form>
             </div>
         </div>
     </div>
