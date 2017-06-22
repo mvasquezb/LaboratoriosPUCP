@@ -29,7 +29,7 @@
             <div class="col-md-2 col-md-offset-7 text-right">
               <a class="btn btn-primary " href="{{ url('internal:supply.create') }}">
                 <i class="fa fa-plus"></i>
-                Crear Rol
+                Crear Suministro
               </a>
             </div>
           </div>
@@ -47,9 +47,6 @@
                     Descripción
                   </th>
                   <th>
-                    Expiración
-                  </th>
-                  <th>
                     Estado
                   </th>
                   <th>Acciones</th>
@@ -61,7 +58,6 @@
                     <td>{{ loop.index }}</td>
                     <td>{{ supply.name }}</td>
                     <td>{{ supply.description }}</td>
-                    <td>{{ supply.expiration_date.strftime('%d-%m-%Y') }}</td>
                     <td>
                       {% if supply.deleted %}
                         Eliminado
