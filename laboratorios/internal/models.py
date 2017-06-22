@@ -530,6 +530,7 @@ class Inventory(SafeDeleteModel):
     audit_log = AuditlogHistoryField()
     name = models.CharField(max_length=100, unique=True)
     location = models.CharField(max_length=200)
+    inventory_type = models.CharField(max_length=50) #SupplyInventory or EquipmentInventory
     registered_date = models.DateTimeField(
         auto_now_add=True,
         auto_now=False,
@@ -545,7 +546,7 @@ class InventoryArticle(SafeDeleteModel):
 
     audit_log = AuditlogHistoryField()
     name = models.CharField(max_length=100)
-    description = models.CharField(max_length=100)
+    description = models.CharField(max_length=150)
 
     def __str__(self):
         return self.name
@@ -569,7 +570,6 @@ class Supply(InventoryArticle):
     _safedelete_policy = SOFT_DELETE_CASCADE
 
     metric_unit = models.CharField(max_length=20)
-    expiration_date = models.DateTimeField(null=True, blank=True)
     registered_date = models.DateTimeField(
         auto_now_add=True,
         auto_now=False,
@@ -583,6 +583,7 @@ class ArticleInventory(SafeDeleteModel):
     audit_log = AuditlogHistoryField()
     inventory = models.ForeignKey(Inventory)
     article = models.ForeignKey(InventoryArticle)
+    expiration_date = models.DateTimeField(null=True, blank=True)
     quantity = models.PositiveIntegerField()
     registered_date = models.DateTimeField(
         auto_now_add=True,
