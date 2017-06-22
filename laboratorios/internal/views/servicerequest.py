@@ -633,6 +633,35 @@ def showAttachedFile(request, id):
     }
     return render(request, template, context)
 
+def editAttachedFile(request, id):
+    if request.method == 'POST':
+        fileAttach = RequestAttachment.all_objects.get(pk=id)
+        if "b_cancel" in request.POST:
+            return redirect('internal:serviceRequest.attachmentList', fileAttach.request.pk)
+        description = request.POST.get('descripcionInput')
+        name = request.POST.get('nombreArchivoInput')
+        if len(name) == 0:
+            messages.error(request, 'No puede dejar el nombre vacío!')
+            return redirect('internal:serviceRequest.editAttachedFile', id)
+        nameWithExtension = name + fileAttach.file.name[fileAttach.file.name.rfind("."):]
+        if (fileAttach.fileName == nameWithExtension) and (fileAttach.description == description):
+            return redirect('internal:serviceRequest.attachmentList', fileAttach.request.pk)
+        matches = RequestAttachment.all_objects.filter(deleted__isnull=True,fileName = nameWithExtension).exclude(pk=id)
+        if len(list(matches)) == 0:
+            fileAttach.fileName = nameWithExtension
+            fileAttach.save()
+        else:
+            messages.error(request, 'Ya existe un archivo con ese nombre!')
+            return redirect('internal:serviceRequest.editAttachedFile', id)
+        fileAttach.description = description
+        fileAttach.save()
+        messages.success(request, 'Se han actualizado los datos del archivo exitosamente!')
+        return redirect('internal:serviceRequest.attachmentList', fileAttach.request.pk)
+    template = 'internal/serviceRequest/editAttachedFile.html'
+    context = {
+        'selected_file': RequestAttachment.all_objects.get(pk=id),
+    }
+    return render(request, template, context)
 
 def deleteAttachedFile(request, id):
     requestAttached = RequestAttachment.all_objects.get(pk=id)
@@ -690,6 +719,8 @@ def getMethodFillList(essayFill):
 
 def reportDetail(request, template='internal/servicerequest/reportDetail.html'):
     if request.POST:
+        if "b_cancel" in request.POST:
+            return redirect('internal:servicerequest.index')
         list_samples_id = request.POST.getlist('checks[]')
         if len(list_samples_id) > 0:
             SampleCompleteList = []

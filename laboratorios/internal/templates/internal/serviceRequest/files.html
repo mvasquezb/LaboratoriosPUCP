@@ -13,7 +13,7 @@
         <h2><strong>Listado de Archivos de la Solicitud</strong></h2>
     </div>
 </div>
-<div class="wrapper wrapper-content animated" >
+<div class="wrapper wrapper-content animated fadeInRight" >
   <div class="row">
     <div class="col-lg-12">
     <div class="ibox float-e-margins">
@@ -52,6 +52,7 @@
                       <div class="btn-group">
                         <a href="{{ url('internal:serviceRequest.downloadAttachedFile', requestAttachment.pk) }}" class="btn-white btn btn-xs"><i class="fa fa-download" aria-hidden="true"></i></a>
                         <a href="{{ url('internal:serviceRequest.showAttachedFile', requestAttachment.pk) }}" class="btn-white btn btn-xs"><i class="fa fa-eye" aria-hidden="true"></i></a>
+                        <a href="{{ url('internal:serviceRequest.editAttachedFile', requestAttachment.pk) }}" class="btn-white btn btn-xs"><i class="fa fa-edit" aria-hidden="true"></i></a>
                         <a class="myBtn1 btn-white btn btn-xs" data-toggle="modal" data-target="#myModal1" data-url="{{ url('internal:serviceRequest.deleteAttachedFile', requestAttachment.pk) }}"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
                       </div>
                     </td>

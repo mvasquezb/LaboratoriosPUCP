@@ -1,33 +1,403 @@
 {% extends 'internal/base_internal.html' %}
 
-{% block title %}{{ super() }} | Laboratorios{% endblock title %}
+{% block title %}{{ super() }} | Inicio{% endblock title %}
 
 {% block custom_css %}
 
 {% endblock custom_css %}
 
 {% block page_content %}
-{# template-variables #}
-{% set form_action_url = url('internal:laboratory.edit', laboratory.pk) %}
-{% set page_header = 'Editar Laboratorio' %}
 
-{# /template-variables #}
-{% include 'internal/laboratory/create.base.html' %}
-<div id="myModal1" class="modal1">
-  <!-- Modal content -->
-  <div class="modal-content">
-    <span class="span-close close">&times;</span>
-    <div class="modeal-center-content">
-      <p>¿Seguro que desea modificarlo?</p>
-      <button type="button" class="confirm btn btn-danger">Editar</button>
-      <button type="button" class="span-close btn btn-primary">Cancelar</button>
+<div class="row border-bottom white-bg dashboard-header">
+    <div class="col-md-3">
+        <h2><strong>Editar Laboratorio</strong></h2>
+    </div>
+</div>
+
+<!--
+<form id="djform" action="{{ url('internal:laboratory.create') }}" method="POST">
+{% csrf_token %}
+{{ form.as_p() }}
+<input type="submit" value="submit">
+</form>
+-->
+
+  <div class="wrapper wrapper-content animated fadeInRight" >
+    <div class="col-lg-12">
+      <div class="ibox float-e-margins">
+        <div class="ibox-content">
+          {{ form.errors }}
+          <form action="{{ url('internal:laboratory.edit', pk=laboratory.pk) }}" data-toggle="validator" id="form" method="POST">
+            <div class="row">
+              {% csrf_token %}
+              <div class="form-group">
+                <label>Nombre de laboratorio (*)</label>
+                <input type="text" maxlength="50" class="form-control" id="laboratory_name" required data-error="El nombre es obligatorio" placeholder="Ingrese nombre de laboratorio" value="{{ laboratory.name }}">
+                <span class="help-block m-b-none">Hasta 50 caracteres permitidos</span>
+                <div class="help-block with-errors"></div>
+              </div>
+
+              <div class="form-group">
+                <label>Capacidad máxima de empleados (*)</label>
+                <input class="form-control" name="laboratory_capacity" onkeydown="return FilterNmberInput(event)" onpaste="handlePaste(event)" id="capacity" type="number" min="5" max="10" value="{{ laboratory.capacity }}" required data-error="Ingrese un valor válido para capacidad de personal">
+                <span class="help-block m-b-none">Mínima cantidad será cinco (5) y máxima será diez (10)</span>
+                <div class="help-block with-errors"></div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="form-group">
+                  <label>Seleccione al personal para el laboratorio</label>
+                  <div class="table-responsive">
+                    <table class="table table-striped table-bordered table-hover dataTables-example" >
+                      <thead>
+                        <tr>
+                          <th>Nombre del empleado</th>
+                          <th>Correo</th>
+                          <th>Selección</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for user in all_users %}
+                          {% if user.laboratories.filter(pk=laboratory.pk).exists() or (not user.laboratories.exists()) %}
+                            <tr class="gradeX">
+                              <td>{{ user }}</td>
+                              <td>{{ user.user.email }}</td>
+                              {% if user.laboratories.filter(pk=laboratory.pk).exists() %}
+                                <td><input type="checkbox" id="checkbox_users" name="{{ user.user.username }}" class="{{ user.pk }}" checked></td>
+                              {% else %}
+                                <td><input type="checkbox" id="checkbox_users" name="{{ user.user.username }}" class="{{ user.pk }}"></td>
+                              {% endif %}
+                            </tr>
+                          {% endif %}
+                        {% endfor %}
+                      </tbody>
+
+                    </table>
+                    <div class="form-group">
+                      <label>Responsable del laboratorio</label>
+                        <select class="form-control m-b" id="comboBox">
+                          <option selected>-- Ningún Responsable Seleccionado --</option>
+                          {% for selected_user in selected_users %}
+                            {% if selected_user.pk == laboratory.supervisor.pk %}
+                              <option id="{{ selected_user.pk }}" selected>{{ selected_user }}</option>
+                            {% else %}
+                              <option id="{{ selected_user.pk }}" >{{ selected_user }}</option>
+                            {% endif %}
+                          {% endfor %}
+                        </select>
+                    </div>
+                  </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="form-group">
+                <label>Horas de servicio (*)</label>
+                  <select class="form-control m-b" id="comboBox_service_hours">
+                    {% for service_hour in all_service_hours %}
+                      {% if selected_service_hours.pk == service_hour.pk %}
+                        <option id="{{ service_hour.pk }}" selected>De {{ service_hour.start_time }} a {{ service_hour.end_time }}</option>
+                      {% else %}
+                        <option id="{{ service_hour.pk }}">De {{ service_hour.start_time }} a {{ service_hour.end_time }}</option>
+                      {% endif %}
+                    {% endfor %}
+                  </select>
+              </div>
+            </div>
+
+            <div class="row">
+              <label>Seleccione los inventarios </label>
+              <div class="table-responsive">
+                <table class="table table-striped table-bordered table-hover dataTables-example" >
+                  <thead>
+                    <tr>
+                      <th>Nombre de inventario</th>
+                      <th>Ubicación</th>
+                      <th>Selección</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for inventory in all_inventories %}
+                      {% set reach_out = [] %}
+                      <tr class="gradeX">
+                        <td>{{ inventory.name }}</td>
+                        <td>{{ inventory.location }}</td>
+                        {% for selected_inventory in selected_inventories %}
+                          {% if inventory.pk==selected_inventory.pk %}
+                            <td><input type="checkbox" id="checkbox_inventory" name="{{ inventory.pk }}" class="i-checks" checked=""></td>
+                            {% if reach_out.append(True) %}{% endif %}
+                            {% break %}
+                          {% endif %}
+                        {% endfor %}
+                        {% if not reach_out %}
+                          <td><input type="checkbox" id="checkbox_inventory" name="{{ inventory.pk }}" class="i-checks" ></td>
+                        {% endif %}
+                      </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="row">
+              <label>Seleccione las pruebas realizables para este laboratorio </label>
+              <div class="table-responsive">
+                <table class="table table-striped table-bordered table-hover dataTables-example" >
+                  <thead>
+                    <tr>
+                      <th>Nombre de prueba</th>
+                      <th>Descripción</th>
+                      <th>Precio(S/.)</th>
+                      <th>Selección</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for essaymethod in all_essaymethods %}
+                      {% set reach_out = [] %}
+                      <tr class="gradeX">
+                        <td>{{ essaymethod.name }}</td>
+                        <td>{{ essaymethod.description }}</td>
+                        <td>{{ essaymethod.price }}</td>
+                        {% for selected_essaymethod in selected_essaymethods %}
+                          {% if essaymethod.pk == selected_essaymethod.pk %}
+                            <td><input type="checkbox" id="checkbox_essay" name="{{ essaymethod.pk }}" class="i-checks" checked></td>
+                            {% if reach_out.append(True) %}{% endif %}
+                            {% break %}
+                          {% endif %}
+                        {% endfor %}
+                        {% if not reach_out %}
+                          <td><input type="checkbox" id="checkbox_essay" name="{{ essaymethod.pk }}" class="i-checks"></td>
+                        {% endif %}
+                      </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <p><strong>(*) Campos obligatorios</strong></p>
+            <div class="col-md-offset-4">
+              <input  type="submit" class="myBtn1 btn btn-primary"  data-toggle="modal" data-target="#myModal1" data-url="{{ url('internal:laboratory.edit', laboratory.id) }}" name="registrar" value="Guardar Cambios">
+              <a href="{{ url('internal:laboratory.index') }}" class="btn btn-white">Cancelar</a>
+            </div>
+          </form>
+        </div>
+
+      </div>
     </div>
   </div>
+
+{# <div id="myModal1" class="modal inmodal confirm-modal-sm">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button class="close pull-right" type="button" data-dismiss="modal">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <h6 class="modal-title">Confirmar Eliminación de Laboratorios</h6>
+        </div>
+        <!-- Modal content -->
+        <div class="modal-body text-center">
+          <p>¿Seguro que quiere eliminarlo?</p>
+          <button type="button" class="confirm btn btn-danger">Editar</button>
+          <button type="button" class="span-close btn btn-primary">Cancelar</button>
+        </div>
+      </div>
+    </div>
+  </div> #}
+  <div id="myModal1" class="modal1">
+
+    <!-- Modal content -->
+    <div class="modal-content">
+      <span class="span-close close">&times;</span>
+      <div class="modeal-center-content">
+          <p>¿Seguro que desea modificarlo?</p>
+          <button type="button" class="confirm btn btn-danger">Editar</button>
+          <button type="button" class="span-close btn btn-primary">Cancelar</button>
+      </div>
+    </div>
+
+  </div>
+
+<div class="message-container hidden">
+  <ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} data-tags="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+  </ul>
 </div>
+
 {% endblock page_content %}
 
 {% block custom_js %}
-<script src="{{ static('js/laboratory.form.js') }}"></script>
+
+<script type="text/javascript">
+  if ($('.message-container .messages li')) {
+  var msg = $('.message-container .messages li').first();
+  $.extend(toastr.options, {"positionClass": "toast-bottom-right",});
+  toastr[msg.data('tags')](msg.text());
+}
+</script>
+
+<script type="text/javascript">
+  //var selected_users = [];
+  var capacity_users;
+  var counting = {{ selected_users|length }};
+  var to_out;
+
+  function handlePaste (e) {
+    var clipboardData, pastedData;
+
+    // Get pasted data via clipboard API
+    clipboardData = e.clipboardData || window.clipboardData;
+    pastedData = clipboardData.getData('Text').toUpperCase();
+
+    if(pastedData.indexOf('E')>-1) {
+        //alert('found an E');
+        e.stopPropagation();
+        e.preventDefault();
+    }
+};
+
+  function FilterNmberInput(event) {
+    var keyCode = ('which' in event) ? event.which : event.keyCode;
+
+    isNotWanted = (keyCode == 69 || keyCode == 101);
+    return !isNotWanted;
+};
+
+  //cuando se invalida data
+  $('#capacity').on('invalid.bs.validator', function(){
+    //$('#users_selection').hide();
+    $('input:checkbox[id^="checkbox_users"]').prop('checked', false);
+    //selected_users.length = 0;
+    $('input:checkbox[id^="checkbox_users"]').attr('disabled', 'true');
+    counting = 0;
+    //borrar todos los campos en responsable de laboratorio
+    $('#comboBox').empty();
+    $('#comboBox').append($('<option>', {
+          text: "-- Ningún Responsable Seleccionado --"
+        }));
+  });
+
+  //cuando se valida la data
+  $('#form').on('valid.bs.validator', function(){
+    //$('#users_selection').show();
+    $('input:checkbox[id^="checkbox_users"]').removeAttr('disabled');
+    capacity_users = document.getElementById("capacity").value;
+  });
+
+  var value = $('#capacity').val();
+  $('#capacity').bind('keyup change click',function(){
+    if (this.value < value){
+      $('input:checkbox[id^="checkbox_users"]').prop('checked', false);
+      counting = 0;
+      $('#comboBox').empty();
+      $('#comboBox').append($('<option>', {
+          text: "-- Ningún Responsable Seleccionado --"
+        }));
+      capacity_users = document.getElementById("capacity").value;
+      }
+  });
+
+  //cuando se clickea en los checkboxes de usuarios de laboratorio
+  $('input:checkbox[id^="checkbox_users"]').click(function() {
+    if($(this).is(':checked')) {
+      //selected_users.push(String(this.id));
+      if ((counting + 1) <= capacity_users){
+        counting = counting + 1;
+        //selected_users.push(String(this.id)); //añadimos en el arreglo los ids de los usuarios //seleccionados
+        $('#comboBox').append($('<option>', {
+          text: String(this.name)
+        }).attr('id',String(this.className)));
+        console.log(String(this.name));
+      } else {
+        this.checked = false;
+      }
+    } else { //si el checkbox es unchecked
+      //selected_users.splice(selected_users.indexOf(String(this.id)), 1); //quitamos del arreglo los ids de los usuarios los cuales fueron unchecked
+      counting = counting - 1;
+      to_out = String(this.name);
+      $('#comboBox option').each(function(){
+        if ($(this).text() == to_out){
+          $(this).remove();
+        }
+      });
+    }
+  });
+
+  //cuando se clickea en el boton registrar
+  $('#form').on('submit', function(evt){
+    //evt.preventDefault();
+    var $form = $(this);
+
+    var name = $('<input>', {
+      name: 'name',
+      type: 'hidden'
+    }).val($('#laboratory_name').val());
+    $form.append(name);
+
+    var capacity = $('<input>', {
+      name: 'capacity',
+      type: 'hidden'
+    }).val($('#capacity').val());
+    $form.append(capacity);
+
+
+    $('input:checkbox[id^="checkbox_users"]:checked').each(function(){
+      var employee = $('<input>', {
+        name: 'employees',
+        type: 'hidden'
+      }).val($(this).attr('class'));
+      $form.append(employee);
+    });
+
+
+
+    if ($('#comboBox option:selected').text == '-- Ningún Responsable Seleccionado --'){
+      //$form.append($('<input>').attr('name', 'supervisor').val());
+    } else {
+      var supervisor = $('<input>', {
+        name: 'supervisor',
+        type: 'hidden'
+      }).val($('#comboBox option:selected').attr('id'));
+      $form.append(supervisor);
+    }
+
+    var service_hours = $('<input>', {
+      name: 'service_hours',
+      type: 'hidden'
+    }).val($('#comboBox_service_hours option:selected').attr('id'));
+    $form.append(service_hours);
+
+
+    $('input:checkbox[id^="checkbox_inventory"]:checked').each(function(){
+      var inventory = $('<input>', {
+        name: 'inventory',
+        type: 'hidden'
+      }).val($(this).attr('name'));
+      $form.append(inventory);
+    });
+
+
+    $('input:checkbox[id^="checkbox_essay"]:checked').each(function(){
+      var essay = $('<input>', {
+        name: 'essay_methods',
+        type: 'hidden'
+      }).val($(this).attr('name'));
+      $form.append(essay);
+    });
+
+    //$form.submit();
+    //console.log($form.serialize());
+  });
+
+  $('#djform').on('submit', function(e) {
+    //e.preventDefault();
+    //console.log($(this).serialize());
+    //$(this).submit();
+  });
+  </script>
+
+<!-- original -->
 <script>
 $( document ).ready(function() {
   $(".myBtn1").click(function() {

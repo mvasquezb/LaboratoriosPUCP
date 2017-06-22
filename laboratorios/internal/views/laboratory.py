@@ -4,8 +4,8 @@ from django.shortcuts import (
     redirect,
 )
 from django.contrib import messages
+from django.http import HttpResponse
 from django.utils import timezone
-from django.db.models import Q, Count
 
 from internal.models import *
 from .forms import LaboratoryForm
@@ -132,12 +132,7 @@ def create(request,
 
             # return HttpResponse(form.errors)
     else:
-        users = Employee.all_objects.annotate(
-            labs=Count('laboratories')
-        ).filter(
-            Q(labs=0),
-            deleted__isnull=True,
-        )
+        users = Employee.all_objects.filter(deleted__isnull=True)
         service_hours = LaboratoryServiceHours.all_objects.filter(
             deleted__isnull=True
         )
@@ -148,7 +143,7 @@ def create(request,
             'service_hours': service_hours,
             'inventories': inventories,
             'essaymethods': essaymethods,
-            'form': form,
+            'form': form
         }
         return render(request, template, context)
 
@@ -177,14 +172,7 @@ def edit(request,
             pk=pk
         )
         #
-        all_users = Employee.all_objects.annotate(
-            labs=Count('laboratories')
-        ).filter(
-            # Get employees that do not belong to a laboratory
-            # Or that belong to this laboratory
-            Q(labs=0) | Q(laboratories=laboratory.id),
-            deleted__isnull=True,
-        )
+        all_users = Employee.all_objects.filter(deleted__isnull=True)
         selected_users = laboratory.employees.all()
         #
         all_service_hours = LaboratoryServiceHours.all_objects.filter(
@@ -199,18 +187,12 @@ def edit(request,
         selected_essaymethods = laboratory.essay_methods.all()
         #
         form = LaboratoryForm()
-        context = {
-            'laboratory': laboratory,
-            'users': all_users,
-            'selected_users': selected_users,
-            'all_service_hours': all_service_hours,
-            'selected_service_hours': selected_service_hours,
-            'inventories': all_inventories,
-            'selected_inventories': selected_inventories,
-            'essaymethods': all_essaymethods,
-            'selected_essaymethods': selected_essaymethods,
-            'form': form
-        }
+        context = {'laboratory': laboratory, 'all_users': all_users,
+                   'selected_users': selected_users, 'all_service_hours': all_service_hours,
+                   'selected_service_hours': selected_service_hours,
+                   'all_inventories': all_inventories, 'selected_inventories': selected_inventories,
+                   'all_essaymethods': all_essaymethods, 'selected_essaymethods': selected_essaymethods,
+                   'form': form}
         template = 'internal/laboratory/edit.html'
         return render(request, template, context)
 

@@ -31,7 +31,6 @@
     {% endif %}
     <form method="post">
       {% csrf_token %}
-      <input type="hidden" name="next" value="{{ next or '/internal' }}">
       <div class="form-group">
         <input type="text" name="username" class="form-control" placeholder="Username" required="">
       </div>
