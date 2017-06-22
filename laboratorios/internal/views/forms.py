@@ -15,13 +15,21 @@ import copy
 
 
 class EmployeeForm(ModelForm):
+    laboratories = forms.ModelMultipleChoiceField(
+        queryset=Laboratory.all_objects.filter(deleted__isnull=True)
+    )
     def __init__(self, *args, **kwargs):
         super(EmployeeForm, self).__init__(*args, **kwargs)
         self.fields['roles'].required = False
+        self.fields['laboratories'].required = False
 
     class Meta:
         model = Employee
-        fields = ['roles']
+        fields = ['roles', 'laboratories']
+
+    def _save_m2m(self, *args, **kwargs):
+        super(EmployeeForm, self)._save_m2m(*args, **kwargs)
+        self.instance.laboratories.set(self.cleaned_data['laboratories'])
 
 
 class UserCreationForm(auth_forms.UserCreationForm):
