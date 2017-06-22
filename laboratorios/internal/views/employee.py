@@ -36,7 +36,7 @@ def show(request,
     context = {
         'selected_laboratories': employee.laboratories.all(),
         'selected_roles': employee.roles.all(),
-        'employee': employee
+        'custom_employee': employee
     }
     return render(request, template, context)
 

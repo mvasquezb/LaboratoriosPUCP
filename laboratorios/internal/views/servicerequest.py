@@ -537,19 +537,22 @@ def workload_view_per_request(request,
 
 
 def upload(request, id):
+    sr_object = get_object_or_404(
+        ServiceRequest,
+        pk=id
+    )
     if request.method == 'POST':
-        if not request.FILES.get('myfile'):
+        myfile = request.FILES.get('myfile')
+        if not myfile:
             messages.error(request, 'Debe seleccionar un archivo!')
             return redirect('internal:serviceRequest.upload', id)
 
-        myfile = request.FILES['myfile']
         if len(myfile.name) >= 55:
             messages.error(
                 request, 'El nombre del archivo que intentó subir no debe exceder los 50 caracteres!')
             return redirect('internal:serviceRequest.upload', id)
 
         # fs = FileSystemStorage()
-        sr_object = ServiceRequest.all_objects.get(pk=id)
         description = request.POST.get('text_description')
         name = request.POST.get('text_name')
         requestAttach = RequestAttachment.all_objects.create(
@@ -560,8 +563,15 @@ def upload(request, id):
         fs = requestAttach.file
         filename = fs.save(myfile.name, myfile)
         if name:
-            requestAttach.fileName = name + requestAttach.file.name[requestAttach.file.name.rfind("."):]
-            requestAttach.save()
+            nameWithExtension = name + requestAttach.file.name[requestAttach.file.name.rfind("."):]
+            matches = RequestAttachment.all_objects.filter(deleted__isnull=True,fileName = nameWithExtension )
+            if len(list(matches)) == 0:
+                requestAttach.fileName = nameWithExtension
+                requestAttach.save()
+            else:
+                messages.error(
+                    request, 'El nombre del archivo que intentó subir ya existe')
+                return redirect('internal:serviceRequest.upload', id)
         else:
             requestAttach.fileName = requestAttach.file.name.split('/')[-1]
             requestAttach.save()
@@ -573,7 +583,10 @@ def upload(request, id):
         )
         return redirect('internal:serviceRequest.attachmentList', id)
 
-    return render(request, 'internal/serviceRequest/attachFile.html')
+    context = {
+        'servicerequest': sr_object,
+    }
+    return render(request, 'internal/serviceRequest/attachFile.html', context)
     # else:
     #    ra = RequestAttachment.all_objects.get(description = 'baka5')
     #    filename = ra.file.name.split('/')[-1]
@@ -589,7 +602,7 @@ def upload(request, id):
 
 def attachmentList(request, id):
     sr_object = get_object_or_404(ServiceRequest, pk=id)
-    requestAttachment_list = RequestAttachment.all_objects.filter(
+    requestAttachment_list = RequestAttachment.all_objects.filter(deleted__isnull=True,
         request=sr_object
     )
 
@@ -665,8 +678,6 @@ def getMethodFillList(essayFill):
 
 def reportDetail(request, template='internal/servicerequest/reportDetail.html'):
     if request.POST:
-        if "b_cancel" in request.POST:
-            return redirect('internal:servicerequest.index')
         list_samples_id = request.POST.getlist('checks[]')
         if len(list_samples_id) > 0:
             SampleCompleteList = []
@@ -708,7 +719,8 @@ def reportDetail(request, template='internal/servicerequest/reportDetail.html'):
                 'Debe seleccionar una muestra!'
             )
             return redirect('internal:servicerequest.reportGenerator', request.POST.get("b_reporte"))
-
+    else:
+        return redirect('internal:servicerequest.index')
 
 def finalReport(request, id, template='internal/servicerequest/reportDetail.html'):
     serviceRequest = ServiceRequest.all_objects.get(pk=id)
@@ -745,7 +757,7 @@ def finalReport(request, id, template='internal/servicerequest/reportDetail.html
             'ParameterFillCompleteList': ParameterFillCompleteList,
         }
         pdf = render_to_pdf(
-            'internal/servicerequest/reportDetailPDF.html', context)
+            'internal/servicerequest/finalReportPDF.html', context)
         if pdf:
             response = HttpResponse(pdf, content_type='application/pdf')
             filename = "InformeFinal-%s.pdf" % ("Nombre del cliente")
@@ -771,7 +783,7 @@ def render_to_pdf(template_src, context_dict={}):
     template = get_template(template_src)
     html = template.render(context_dict)
     result = BytesIO()
-    pdf = pisa.pisaDocument(BytesIO(html.encode("ISO-8859-1")), result)
+    pdf = pisa.pisaDocument(BytesIO(html.encode("utf-8")), result)
     if not pdf.err:
         return HttpResponse(result.getvalue(), content_type='application/pdf')
     return None

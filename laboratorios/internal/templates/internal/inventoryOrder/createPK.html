@@ -1,9 +1,11 @@
-<!-- Aun no o3o -->
+<!-- No sabotear pls -->
 {% extends 'internal/base_internal.html' %}
 
-{% block title %}{{ super() }} | Solicitudes de Almacenamiento{% endblock title %}
+{% block title %}{{ super() }} | Solicitud de Almacenamiento{% endblock title %}
 
 {% block custom_css %}{% endblock custom_css %}
+
+
 
 {% block page_content %}
 <div class="row border-bottom white-bg dashboard-header">
@@ -16,98 +18,112 @@
     <div class="col-lg-12">
         <div class="ibox float-e-margins">
             <div class="ibox-content">
+
+              <!--
+              <div class="row">
+                <div class="col-lg-12">
+                  <div class="text-right">
+                    <form action="../" style="display: inline;">
+                      <button type="submit" value="Cancelar" class="btn btn-w-m btn-default" enable>Regresar</button>
+                    </form>
+
+                  </div>
+                </div>
+              </div>
+               -->
                 <form id="myForm" action="{{ url('internal:inventoryOrder.create') }}" method="post" data-toggle="validator">
                     {% csrf_token %}
+
                     <div class="row">
+
                         <div class="col-lg-6">
                             <label>Ensayo realizable - Muestra</label>
-                          <select class="form-control m-b" name="essay" onchange="fillLabels(this.value)">
-                              <option selected disabled>Escoja una opcion</option>
+                          <select class="form-control m-b" name="Fakeessay" value="{{actualInventoryOrder.id}}" onchange="fillLabels(this.value)">
+                              <option selected disabled></option>
                               {% for actualEssay in essayies %}
                                   <option value="{{ actualEssay.id }}">{{actualEssay.essay.name}} - {{actualEssay.sample.name}}</option>
                               {% endfor %}
                             </select>
                           <!--ABSOLUTAMENTE NECESARIO, POR NADA DEL MUNDO BORRAR-->
+                          <input name="essay" value="{{ actualInventoryOrder.id }}" type="hidden"></input>
                           <input name="unsettled" value=True type="hidden"></input>
+
                         </div>
+
                     </div>
+
                   <!-- Si deseas mostrar los datos de la selecccion no se puede, Django no lo permite :( -->
                         <div class="ibox">
                           <div class="ibox-title">
                             Ensayo
                           </div>
-                          {# <div class="ibox-content">
-                            <!--
+                          <div class="ibox-content">
                             <div class="form-group">
                               <label>Nombre del Ensayo</label>
-                              <div class="text-primary" id="try1"></div>
+                              <div class="text-primary" id="try1">{{actualInventoryOrder.essay.name}}</div>
                             </div>
                             <div class="form-group">
                               <label>Descripción del Ensayo</label>
-                              <div class="text-primary" id="try2"></div>
+                              <div class="text-primary" id="try2">{{actualInventoryOrder.essay.description}}</div>
                             </div>
-                            -->
                           </div>
-                        </div> #}
+                        </div>
 
                         <div class="ibox">
                           <div class="ibox-title">
                             Muestra
                           </div>
-                          {# <div class="ibox-content">
-                            <!--
+                          <div class="ibox-content">
                             <div class="form-group">
                               <label>Codigo de la Muestra</label>
-                              <div class="text-primary"></div>
+                              <div class="text-primary">{{ actualInventoryOrder.sample.code }}</div>
                             </div>
                             <div class="form-group">
                               <label>Nombre de la Muestra</label>
-                              <div class="text-primary"></div>
+                              <div class="text-primary">{{ actualInventoryOrder.sample.name }}</div>
                             </div>
                             <div class="form-group">
                               <label>Tipo de la Muestra</label>
-                              <div class="text-primary"></div>
+                              <div class="text-primary">{{ actualInventoryOrder.sample.sample_type.name }}</div>
                             </div>
                             <div class="form-group">
                               <label>Cantidad</label>
-                              <div class="text-primary"></div>
+                              <div class="text-primary">{{ actualInventoryOrder.quantity }}</div>
                             </div>
                             <div class="form-group">
                               <label>Laboratorio</label>
-                              <div class="text-primary"></div>
+                              <div class="text-primary">{{ actualInventoryOrder.sample.inventory.name }}</div>
                             </div>
-                            -->
-                          </div> #}
+                          </div>
                         </div>
 
                         <div class="ibox">
                           <div class="ibox-title">
                             Solicitud
                           </div>
-                          {# <div class="ibox-content">
-                            <!--
+                          <div class="ibox-content">
                             <div class="form-group">
                               <label>Cliente</label>
-                              <div class="text-primary"></div>
+                              <div class="text-primary">{{ actualInventoryOrder.sample.request.client }}</div>
                             </div>
                             <div class="form-group">
                               <label>Supervisor</label>
-                              <div class="text-primary"></div>
+                              <div class="text-primary">{{ actualInventoryOrder.sample.request.supervisor }}</div>
                             </div>
                             <div class="form-group">
                               <label>Estado de la solicitud</label>
-                              <div class="text-primary"></div>
+                              <div class="text-primary">{{ actualInventoryOrder.sample.request.state }}</div>
                             </div>
                             <div class="form-group">
                               <label>Observaciones</label>
-                              <div class="text-primary"></div>
+                              <div class="text-primary">{{ actualInventoryOrder.sample.request.observations or '-' }}</div>
                             </div>
-                            -->
-                          </div> #}
+                          </div>
                         </div>
+
                     <div class="row">
                           <div class="col-md-offset-4">
-                              <input type="submit" value="Registrar" class="btn btn-primary"  disabled="True">
+                              <input type="submit" value="Registrar" class="btn btn-primary">
                               <a class="btn btn-w-m btn-white js-back-btn">Cancelar</a>
                           </div>
                     </div>
@@ -122,7 +138,7 @@
 {% block custom_js %}
 <script type="text/javascript">
 function fillLabels(pkActual){
-  var lol = "create/" + pkActual;
+  var lol = pkActual;
   window.location.replace(lol);
 }
 </script>
