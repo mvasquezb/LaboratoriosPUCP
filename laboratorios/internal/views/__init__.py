@@ -11,5 +11,10 @@ from .sampleType import *
 from .essay import *
 from .inventoryItem import *
 from .parameterfill import *
+<<<<<<< HEAD
 from .reports import *
 
+=======
+from .supply import *
+from .equipment import *
+>>>>>>> 9c2865dbdbe78688b2b34d54c01b3ab8854f99f4

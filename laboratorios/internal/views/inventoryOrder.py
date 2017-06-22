@@ -57,6 +57,7 @@ def check(request,
     return render(request, template, context)
 
 
+
 def create(request,
            template='internal/inventoryOrder/create.html'):
     form = InventoryOrderForm(request.POST or None)
@@ -72,16 +73,42 @@ def create(request,
             return redirect('internal:inventoryOrder.index')
     return render(request, template, context)
 
+def createPK(request,
+           pk,
+           template='internal/inventoryOrder/createPK.html'):
+    actualInventoryOrder = get_object_or_404(
+        EssayFill.all_objects.filter(deleted__isnull=True),
+        pk=pk
+    )
+    form = InventoryOrderForm(request.POST or None)
+    context = {
+        'essayies': EssayFill.all_objects.filter(
+            deleted__isnull=True,
+        ),
+        'actualInventoryOrder': actualInventoryOrder,
+    }
+    if request.method == 'POST':
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Se ha creado la solicitud exitosamante!')
+            return redirect('internal:inventoryOrder.index')
+    return render(request, template, context)
 
-def edit(request, pk,
+
+def edit(request, pk1, pk,
          template='internal/inventoryOrder/edit.html'):
     inventoryOrder = get_object_or_404(
         InventoryOrder.all_objects.filter(deleted__isnull=True),
+        pk=pk1
+    )
+    newinventoryOrder = get_object_or_404(
+        EssayFill.all_objects.filter(deleted__isnull=True),
         pk=pk
     )
     form = InventoryOrderEditForm(request.POST or None, instance=inventoryOrder)
     context = {
         'inventoryOrder': inventoryOrder,
+        'newinventoryOrder': newinventoryOrder,
         'essayies': EssayFill.all_objects.filter(deleted__isnull=True),
     }
 
@@ -141,7 +168,7 @@ def reject(request, pk):
     inventoryOrder.unsettled = False
     inventoryOrder.save()
     messages.success(request, 'Se rechazo el almacenamiento con exito!')
-    return redirect('internal:inventoryOrder.check')
+    return redirect('internal:inventoryOrder.index')
 
 
 def delete(request, pk):

@@ -1,0 +1,62 @@
+{% extends 'internal/base_internal.html' %}
+
+{% block title %}{{ super() }} | equipment{% endblock title %}
+
+{% block custom_css %}{% endblock custom_css %}
+
+{% block page_content %}
+<div class="row border-bottom white-bg dashboard-header">
+    <div class="col-md-6">
+        <h2><strong>Detalle de equipment</strong></h2>
+    </div>
+</div>
+<div class="wrapper wrapper-content animated fadeInRight" >
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="ibox float-e-margins">
+            <div class="ibox-content">
+              <div class="row">
+                  <div class="col-lg-12">
+                      <div class="form-group">
+                          <label>Nombre*</label>
+                          <input type="text" value="{{ equipment.name}}" class="form-control" name="name" required data-error="El Nombre es obligatorio" placeholder="Nombre del equipo">
+                          <div class="help-block with-errors"></div>
+                      </div>
+                      <div class="form-group">
+                          <label>Descripcion*</label>
+                          <input type="text" value="{{ equipment.description}}" class="form-control" name="description" required data-error="La descripcion es obligatoria" placeholder="Descripcion del equipo">
+                          <div class="help-block with-errors"></div>
+                      </div>
+                      <div class="form-group">
+                          <label>Unidades de tiempo de servicio*</label>
+                          <input type="text" value="{{ equipment.servicelife_unit}}" class="form-control" name="servicelife_unit" required data-error="La unidad de tiempo de servicio es obligatorio" placeholder="Horas, Segundos, etc.">
+                          <div class="help-block with-errors"></div>
+                      </div>
+                      <div class="form-group">
+                          <label>Tiempo de servicio*</label>
+                          <input type="number" value="{{ equipment.servicelife}}" class="form-control" name="servicelife" required data-error="El tiempo de servicio es obligatorio" placeholder="20">
+                          <div class="help-block with-errors"></div>
+                      </div>
+                      <div class="form-group">
+                          <label>Rango de error*</label>
+                          <input type="number" value="{{ equipment.error_range}}"  step="any" class="form-control" name="error_range" required data-error="El rango de error es obligatorio" placeholder="0.8">
+                          <div class="help-block with-errors"></div>
+                      </div>
+                  </div>
+                  <p><strong>(*) Campos obligatorios</strong></p>
+              </div>
+
+
+              <div class="col-md-offset-4">
+                <a  href="{{ url('internal:equipment.edit', equipment.id) }}"  class="btn btn-primary"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>Editar</a>
+                <a href="{{ url('internal:equipment.index') }}" class="btn btn-white">Regresar</a>
+              </div>
+
+            </div>
+        </div>
+    </div>
+    </div>
+</div>
+{% endblock page_content %}
+{% block custom_js %}
+{% endblock custom_js %}

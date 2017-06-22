@@ -34,7 +34,7 @@ def report_parameters(request,
     # so clearly, context would carry most of the data, so then its a JSON
     # First criteria is range of dates, which doesnt need any from db
     # Second criteria is client, which we do have
-    client_list =[o.user for o in Client.all_objects.filter(deleted__isnull=True).order_by('user','id')[::1]]
+    client_list =[o.__str__() for o in Client.all_objects.filter(deleted__isnull=True).order_by('user','id')[::1]]
     print(client_list)
     # Third  criteria is sample type, which we also have
     sample_type_list = [o.name for o in SampleType.all_objects.filter(deleted__isnull=True).order_by('name','id')[::1]]
