@@ -15,7 +15,7 @@ import json as simplejson
 def index(request,
           template='internal/inventory/index.html',
           extra_context=None):
-    inventorys = Inventory.objects.all()
+    inventorys = Inventory.all_objects.all()
     context = {
         'inventorys_list': inventorys
     }
@@ -33,17 +33,14 @@ def create(request,
         if form.is_valid():
             form.save()
             messages.success(
-                request, 'Se ha creado un nuevo laboratorio exitosamante!')
+                request, 'Se ha creado un nuevo inventario exitosamante!')
             return redirect('internal:inventory.index')
         else:
-            # print(form.errors)
             for field, errors in form.errors.items():
                 if (field == "name") and list(errors) == ['Ya existe inventory con este Name.']:
                     messages.error(
-                        request, 'Este nombre de laboratorio ya existe, pruebe otro')
+                        request, 'Este nombre de inventario ya existe, pruebe otro')
                     return redirect('internal:inventory.create')
-
-            # return HttpResponse(form.errors)
     else:
         inventories = Inventory.all_objects.filter(deleted__isnull=True)
         context = { 'inventories': inventories,'form': form }
@@ -53,7 +50,7 @@ def create(request,
 def edit(request,
          pk):
     if request.method == 'POST':
-        instance = inventory.all_objects.get(
+        instance = Inventory.all_objects.get(
             deleted__isnull=True,
             pk=pk
         )
@@ -61,24 +58,28 @@ def edit(request,
         if aux_form.is_valid():
             aux_form.save()
             messages.success(
-                request, 'Se ha editado el laboratorio exitosamante')
+                request, 'Se ha editado el inventario exitosamante')
             return redirect('internal:inventory.index')
         else:
             messages.error(
-                request, 'Ya existe un laboratorio con el mismo nombre, ingrese otro')
-            # return HttpResponse(status=204)
+                request, 'Ya existe un inventario con el mismo nombre, ingrese otro')
             return redirect('internal:inventory.edit', pk=pk)
     else:
+        instance = Inventory.all_objects.get(
+            deleted__isnull=True,
+            pk=pk
+        )
+        form = InventoryForm()
         inventories = Inventory.all_objects.filter(deleted__isnull=True)
-        context = { 'inventories': inventories,'form': form }
+        context = { 'inventories': inventories,'form': form , 'inventory':instance}
         template = 'internal/inventory/edit.html'
         return render(request, template, context)
 
 
 def delete(request, pk):
-    inventory = get_object_or_404(inventory, pk=pk)
+    inventory = get_object_or_404(Inventory, pk=pk)
     inventory.delete()
-    messages.success(request, 'Se ha borrado el laboratorio existosamente')
+    messages.success(request, 'Se ha borrado el inventario existosamente')
     return redirect('internal:inventory.index')
 
 
