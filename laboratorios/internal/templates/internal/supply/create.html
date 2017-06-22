@@ -36,11 +36,11 @@
                                 <input type="text" class="form-control" name="metric_unit" required data-error="El campo unidades es obligatorio" placeholder="Kilos, Toneladas, etc.">
                                 <div class="help-block with-errors"></div>
                             </div>
-                            <div class="form-group">
+                            {# <div class="form-group">
                                 <label>Fecha de expiracion*</label>
                                 <input type="date" class="form-control" name="expiration_date" required data-error="La fecha de expiracion es obligatorio">
                                 <div class="help-block with-errors"></div>
-                            </div>
+                            </div> #}
                         </div>
                         <p><strong>(*) Campos obligatorios</strong></p>
                     </div>
@@ -56,6 +56,3 @@
     </div>
 </div>
 {% endblock page_content %}
-{% block custom_js %}
-<script src="{{ static('js/employee_form.js') }}"></script>
-{% endblock custom_js %}
