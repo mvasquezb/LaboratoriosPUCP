@@ -199,7 +199,7 @@
                   <div class="col-lg-12">
                     <input type="submit" value="Registrar" class="btn btn-primary">
 
-                    <button id="regresar" type="button" class="btn btn-w-m btn-default" enable>Cancelar</button>
+                    <a class="btn btn-w-m btn-white js-back-btn">Cancelar</a>
                   </div>
                 </div>
               </form>
@@ -213,18 +213,10 @@
 {% endblock page_content %}
 
 {% block custom_js %}
-
 <script type="text/javascript">
 function fillLabels(pkActual){
   var lol = pkActual;
   window.location.replace(lol);
 }
 </script>
-
-<script type="text/javascript">
-    document.getElementById("regresar").onclick = function () {
-        location.href = "../../";
-    };
-</script>
-
 {% endblock custom_js %}
