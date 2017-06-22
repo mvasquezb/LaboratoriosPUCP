@@ -83,8 +83,9 @@
                         <a class="myBtn1 btn-white btn" data-toggle="modal" data-target="#myModal1" data-url="{{ url('internal:servicerequest.delete', servicerequest.id) }}">
                           <i class="fa fa-trash-o" aria-hidden="true"></i>
                         </a>
-                        <a class="btn-white btn btn-xs" href="{{ url('internal:servicerequest.approve', servicerequest.id) }}">Aprobar</a>  {# Agregado #}
-
+                        <a class="btn-white btn" href="{{ url('internal:servicerequest.approve', servicerequest.id) }}">
+                          Aprobar
+                        </a>
                         {% endif %}
                       </div>
                     </td>
