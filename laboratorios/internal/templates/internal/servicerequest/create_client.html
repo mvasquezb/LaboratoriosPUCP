@@ -14,7 +14,7 @@
   <div class="row">
     <div class="col-lg-12">
         <div class="ibox float-e-margins">
-            <div class="ibox-content">
+            <div class="ibox-content" >
                 <form id='clientform' action="{{ url('internal:servicerequest.create_client') }}" method="post">
                     {% csrf_token %}
                     {% for field in user_form|list + form|list if field.name != 'password2' %}
