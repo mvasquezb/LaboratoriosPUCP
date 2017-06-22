@@ -31,7 +31,7 @@
             <div class="row">
               {% if users|length == 0 %}
                 <div class="form-group">
-                  <p>No hay empleados creados, puede crearlos <a href="{{ url('internal:employee.create') }}"><strong>aquí</strong></a></p>
+                  <p><strong>No hay empleados creados, puede crearlos </strong><a href="{{ url('internal:employee.create') }}"><strong>aquí</strong></a></p>
                 </div>
               {% else %}
               <div class="col-md-12">
@@ -82,8 +82,8 @@
             </div>
             <div class="row">
               {% if inventories|length == 0 %}
-                <div class="form-group">
-                  <p>No hay inventarios creados, puede crearlos <a href="#"><strong>aquí</strong></a></p>
+                <div class="col-md-12 form-group">
+                  <p><strong>No hay inventarios creados, puede crearlos </strong><a href="#"><strong>aquí</strong></a></p>
                 </div>
               {% else %}
               <div class="col-md-12">
@@ -116,8 +116,8 @@
             </div>
             <div class="row">
               {% if essaymethods|length == 0 %}
-                <div class="form-group">
-                  <p>No hay métodos de ensayos creados, puede crearlos <a href="{{ url('internal:essaymethod.create') }}"><strong>aquí</strong></a></p>
+                <div class="col-md-12 form-group">
+                  <p><strong>No hay métodos de ensayos creados, puede crearlos </strong><a href="{{ url('internal:essaymethod.create') }}"><strong>aquí</strong></a></p>
                 </div>
               {% else %}
               <div class="col-md-12">
@@ -150,7 +150,7 @@
               </div>
               {% endif %}
             </div>
-            <div class="row form-group">
+            <div class="col-md-12 row form-group">
               <p><strong>(*) Campos obligatorios</strong></p>
             </div>
             <div class="row">
