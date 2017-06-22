@@ -1,7 +1,7 @@
 <!-- No sabotear pls -->
 {% extends 'internal/base_internal.html' %}
 
-{% block title %}{{ super() }} | Inicio{% endblock title %}
+{% block title %}{{ super() }} | Solicitud de Almacenamiento{% endblock title %}
 
 {% block custom_css %}{% endblock custom_css %}
 
@@ -124,37 +124,22 @@
                     <div class="row">
                           <div class="col-md-offset-4">
                               <input type="submit" value="Registrar" class="btn btn-primary">
-
-                              <button id="regresar" type="button" class="btn btn-w-m btn-default" enable>Cancelar</button>
-
+                              <a class="btn btn-w-m btn-white js-back-btn">Cancelar</a>
                           </div>
                     </div>
                 </form>
-
             </div>
         </div>
     </div>
   </div>
 </div>
-
-
-
 {% endblock page_content %}
 
-
 {% block custom_js %}
-
 <script type="text/javascript">
 function fillLabels(pkActual){
   var lol = pkActual;
   window.location.replace(lol);
 }
 </script>
-
-<script type="text/javascript">
-    document.getElementById("regresar").onclick = function () {
-        location.href = "../";
-    };
-</script>
-
 {% endblock custom_js %}
