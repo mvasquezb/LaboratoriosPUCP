@@ -70,14 +70,14 @@
                     {% if servicecontract.request.state.description == "Aprobado" %}
                     <a href="{{ url('internal:servicecontract.edit', servicecontract.id) }}" class="btn-white btn"><i
                       class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
-                    <a class="myBtn1 btn-white btn btn-xs" data-toggle="modal" data-target="#myModal1"
+                    <a class="myBtn1 btn-white btn" data-toggle="modal" data-target="#myModal1"
                        data-url="{{ url('internal:servicecontract.delete', servicecontract.id) }}"><i
                       class="fa fa-trash-o" aria-hidden="true"></i></a>
 
                     {% else %}
-                    <a class="btn-white btn btn-xs"
+                    <a class="btn-white btn"
                        href="{{ url('internal:servicecontract.approve', servicecontract.id) }}">Aprobar</a>
-                    <a class="btn-white btn btn-xs"
+                    <a class="btn-white btn"
                        href="{{ url('internal:servicecontract.refuse', servicecontract.id) }}">Rechazar</a>
 
                     {% endif %}
