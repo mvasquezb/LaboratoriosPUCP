@@ -14,7 +14,17 @@ from internal.views.forms import (
     UserCreationForm,
     UserEditForm
 )
+from django.contrib.auth.decorators import user_passes_test
+import functools
+from internal.permissions.employee import *
 
+
+'''def permission_check(user, permission):
+    if not hasattr(user, 'basicuser'):
+        return False
+    return permission in user.basicuser.permission()
+
+create_employee_check = functools.partial(permission_check, permission='Can add employee')'''
 
 def index(request,
           template='internal/employee/index.html',
@@ -41,6 +51,7 @@ def show(request,
     return render(request, template, context)
 
 
+@user_passes_test(create_employee_check, login_url='internal:index')
 def create(request,
            template='internal/employee/create.html'):
     user_form = UserCreationForm(request.POST or None)
