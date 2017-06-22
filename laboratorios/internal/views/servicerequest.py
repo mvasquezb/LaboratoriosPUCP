@@ -553,21 +553,22 @@ def workload_view_per_request(request,
 
 
 def upload(request, id):
+    sr_object = get_object_or_404(
+        ServiceRequest,
+        pk=id
+    )
     if request.method == 'POST':
-        if "b_cancel" in request.POST:
-            return redirect('internal:serviceRequest.attachmentList', id)
-        if not request.FILES.get('myfile'):
+        myfile = request.FILES.get('myfile')
+        if not myfile:
             messages.error(request, 'Debe seleccionar un archivo!')
             return redirect('internal:serviceRequest.upload', id)
 
-        myfile = request.FILES['myfile']
         if len(myfile.name) >= 55:
             messages.error(
                 request, 'El nombre del archivo que intentó subir no debe exceder los 50 caracteres!')
             return redirect('internal:serviceRequest.upload', id)
 
         # fs = FileSystemStorage()
-        sr_object = ServiceRequest.all_objects.get(pk=id)
         description = request.POST.get('text_description')
         name = request.POST.get('text_name')
         requestAttach = RequestAttachment.all_objects.create(
@@ -598,7 +599,10 @@ def upload(request, id):
         )
         return redirect('internal:serviceRequest.attachmentList', id)
 
-    return render(request, 'internal/serviceRequest/attachFile.html')
+    context = {
+        'servicerequest': sr_object,
+    }
+    return render(request, 'internal/serviceRequest/attachFile.html', context)
     # else:
     #    ra = RequestAttachment.all_objects.get(description = 'baka5')
     #    filename = ra.file.name.split('/')[-1]
