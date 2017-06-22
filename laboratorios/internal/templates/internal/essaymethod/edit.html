@@ -53,14 +53,14 @@
                     </div>
                     <div class="row">
                         <form id="myForm">
-                        <div id="parameter_details">
-                        </div>
                         <div class="col-lg-3">
-                        <label>Escoge un Parametro:</label>
-                            <select class="selectNumber form-control m-b" id="selectNumber1" onchange='doIt()'>
-                            <option>-------</option>
-                        </select>
-                        <div id="createbutton"><button id=create_button class="btn btn-primary">O Cree nuevo parámetro</button></div>
+                            <label>Escoge un Parametro:</label>
+                                <select class="selectNumber form-control m-b" id="selectNumber1" onchange='doIt()'>
+                                <option>-------</option>
+                            </select>
+                            <div id="createbutton"><button id=create_button class="btn btn-primary">O Cree nuevo parámetro</button></div>
+                        </div>
+                        <div id="parameter_details">
                         </div>
                         </form>
                     </div>
@@ -146,17 +146,18 @@ $(document).ready(function(){
                                 +'</div>'
                                 +'<div class="ibox-content">'
                                     +'<div>'
-                                        +'<h4 id=parameters_'+parameter_id_gen.toString()+'>Parametro:'
+                                        +'<h4 id=parameters_'+parameter_id_gen.toString()+'>'
                                         +'</h4>'
                                         +'</div>'
                                     +'</div>'
                                 +'</div>'
                             +'</div>');
                     // Sección de código para agregar el bloque html de un parámetro perteneciente al método seleccionado
-                    $('#parameters_'+parameter_id_gen.toString()).append('<br>'
-                                            +'<small class="m-r">'
-                                                +'Descripcion: '+description
-                                                +'  Unidades: '+unit
+                    $('#parameters_'+parameter_id_gen.toString()).append('<small class="m-r">'
+                                                +'<label>Descripción:</label>'
+                                                +'<input class="form-control small-parameter-input" disabled value="'+description+'">'
+                                                +'<label>Unidades:</label>'
+                                                +'<input class="form-control small-parameter-input" disabled value="'+unit+'">'
                                                 +'</small>');
 
 
@@ -201,17 +202,18 @@ $(document).ready(function(){
                                 +'</div>'
                                 +'<div class="ibox-content">'
                                     +'<div>'
-                                        +'<h4 id=parameters_'+parameter_id_gen.toString()+'>Parametro:'
+                                        +'<h4 id=parameters_'+parameter_id_gen.toString()+'>'
                                         +'</h4>'
                                         +'</div>'
                                     +'</div>'
                                 +'</div>'
                             +'</div>');
                     // Sección de código para agregar el bloque html de un parámetro perteneciente al método seleccionado
-                    $('#parameters_'+parameter_id_gen.toString()).append('<br>'
-                                            +'<small class="m-r">'
-                                                +'Descripcion: '+description
-                                                +'  Unidades: '+unit
+                    $('#parameters_'+parameter_id_gen.toString()).append('<small class="m-r">'
+                                                +'<label>Descripción:</label>'
+                                                +'<input class="form-control small-parameter-input" disabled value="'+description+'">'
+                                                +'<label>Unidades:</label>'
+                                                +'<input class="form-control small-parameter-input" disabled value="'+unit+'">'
                                                 +'</small>');
 
 
@@ -252,21 +254,20 @@ $(document).ready(function(){
                                         +'</a>'
                                     +'</div>'
                                 +'</div>'
-                                +'<div class="ibox-content">'
+                                +'<div class="ibox-content small-ibox">'
                                     +'<div>'
-                                        +'<h4 id=created_parameters_'+(created_parameters+1).toString()+'>Parametro:'
+                                        +'<h4 id=created_parameters_'+(created_parameters+1).toString()+'>'
                                         +'</h4>'
                                         +'</div>'
                                     +'</div>'
                                 +'</div>'
                             +'</div>');
                     // Sección de código para agregar el bloque html de un parámetro perteneciente al método seleccionado
-                    $('#created_parameters_'+(created_parameters+1).toString()).append('<br>'
-                                            +'<small class="m-r">'
+                    $('#created_parameters_'+(created_parameters+1).toString()).append('<small class="m-r">'
                                                 +'<label for=id_created_parameter_description_'+(created_parameters+1).toString()+' >Descripción:</label>'
-                                                +'<input type="text" name="description" id=id_created_parameter_description_'+(created_parameters+1).toString()+' /><br>'
+                                                +'<input class="form-control small-parameter-input" type="text" name="description" id=id_created_parameter_description_'+(created_parameters+1).toString()+' /><br>'
                                                 +'<label for=id_created_parameter_unit_'+(created_parameters+1).toString()+' >Unidades:</label>'
-                                                +'<input type="text" name="unit" id=id_created_parameter_unit_'+(created_parameters+1).toString()+' />'
+                                                +'<input class="form-control small-parameter-input" type="text" name="unit" id=id_created_parameter_unit_'+(created_parameters+1).toString()+' />'
                                                 +'</small>');
     created_parameters=created_parameters+1;
     });
