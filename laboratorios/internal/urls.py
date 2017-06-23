@@ -323,4 +323,22 @@ urlpatterns = [
     url('^fill_parameters/(?P<pk>\d+)$',
         views.parameterfill.fill_parameters,
         name='parameterfill.fill_parameters'),
+    #
+    # Inventory
+    #
+    url('^inventory/create$',
+        views.inventory.create,
+        name='inventory.create'),
+    url('^inventory/(?P<pk>\d+)$',
+        views.inventory.show,
+        name='inventory.show'),
+    url('^inventory/(?P<pk>\d+)/edit/?$',
+        views.inventory.edit,
+        name='inventory.edit'),
+    url('^inventory/?$',
+        views.inventory.index,
+        name='inventory.index'),
+    url('^inventory/(?P<pk>\d+)/delete/?$',
+        views.inventory.delete,
+        name='inventory.delete'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

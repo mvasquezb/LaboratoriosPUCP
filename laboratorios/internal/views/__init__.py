@@ -13,3 +13,4 @@ from .inventoryItem import *
 from .parameterfill import *
 from .supply import *
 from .equipment import *
+from .inventory import *
