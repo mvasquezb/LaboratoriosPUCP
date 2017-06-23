@@ -31,7 +31,7 @@
             </div>
             <div class="row">
               {% if users|length == 0 %}
-                <div class="form-group">
+                <div class="col-md-12 form-group">
                   <p><strong>No hay empleados creados, puede crearlos </strong><a href="{{ url('internal:employee.create') }}"><strong>aquí</strong></a></p>
                 </div>
               {% else %}
@@ -187,8 +187,12 @@
           <div class="inner inventory_name"></div>
         </div>
         <div class="container">
-          <h4>PKs</h4>
-          <div class="inner inventory_pk"></div>
+          <h4>Ubicación</h4>
+          <div class="inner inventory_location"></div>
+        </div>
+        <div class="container">
+          <h4>Tipo de Inventario</h4>
+          <div class="inner inventory_type"></div>
         </div>
       </div>
       <div class="modal-footer">

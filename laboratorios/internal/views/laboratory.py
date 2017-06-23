@@ -31,11 +31,20 @@ def inventory_modal(request):
         inventory_pk = dicc['inventory_pk'][0]
         #print(inventory_pk)
         inventory = Inventory.all_objects.get(pk=inventory_pk)
+        article_inventory = ArticleInventory.all_objects.get(inventory=inventory)
+        matches_list = []
+        for match in article_inventory:
+            article_name = match.article.name
+            article_quantity = match.article.quantity
+            matches_list.append((article_name,article_quantity))
         data = {
-            'inventory_name': inventory.name
+            'inventory_name': inventory.name,
+            'inventory_location': inventory.location,
+            'inventory_type': inventory.inventory_type,
+            'inventory_matches': matches_list
         }
         return JsonResponse(data)
-    return HttpResponse("sjdn")
+    return HttpResponse("GG")
 
 def services_index(request,
                    pk):

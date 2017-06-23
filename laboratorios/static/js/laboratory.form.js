@@ -160,6 +160,8 @@ $('#form').on('submit', function (evt) {
     var url = $(".page_title").data("url");
     $.get(url, {'inventory_pk': inventory_pk},function(data){
       $('div.inventory_name').replaceWith("<div class='inner inventory_name'>" + data['inventory_name'] +"</div>");
+      $('div.inventory_location').replaceWith("<div class='inner inventory_location'>" + data['inventory_location'] + "</div>");
+      $('div.inventory_type').replaceWith("<div class='inner inventory_type'>" + data['inventory_type'] + "</div>");
     });
     //console.log("pasa el ajax")
     //
