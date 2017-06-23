@@ -115,6 +115,14 @@ class ServiceRequestCreateForm(ModelForm):
         model = ServiceRequest
         # we will automatically set it to the first state
         exclude = ('state',)
+        labels = {
+            'client':'Cliente',
+            'supervisor':'Supervisor',
+            'priority':'Prioridad',
+            'external_provider':'Proveedor Externo',
+            'expected_duration':'Duración esperada',
+            'observations':'Observacions'
+        }
 
 
 class ServiceRequestForm(ModelForm):
@@ -130,6 +138,14 @@ class ServiceRequestForm(ModelForm):
     class Meta:
         model = ServiceRequest
         exclude = ()
+        labels = {
+            'client':'Cliente',
+            'supervisor':'Supervisor',
+            'priority':'Prioridad',
+            'external_provider':'Proveedor Externo',
+            'expected_duration':'Duración esperada',
+            'observations':'Observacions'
+        }
 
 
 class RoleForm(ModelForm):
