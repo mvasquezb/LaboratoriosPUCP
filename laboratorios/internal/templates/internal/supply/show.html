@@ -30,9 +30,11 @@
                   <input value="{{ supply.metric_unit }}" type="text" class="form-control" name="metric_unit" required data-error="El campo unidades es obligatorio" placeholder="Kilos, Toneladas, etc.">
                   <div class="help-block with-errors"></div>
               </div>
-              <div class="col-md-offset-4">
-                <a  href="{{ url('internal:supply.edit', supply.id) }}"  class="btn btn-primary"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>Editar</a>
-                <a href="{{ url('internal:supply.index') }}" class="btn btn-white">Regresar</a>
+              <div class="row">
+                <div class="col-lg-12">
+                  <a  href="{{ url('internal:supply.edit', supply.id) }}"  class="btn btn-primary"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>Editar</a>
+                  <a href="{{ url('internal:supply.index') }}" class="btn btn-white">Regresar</a>
+                </div>
               </div>
 
             </div>
