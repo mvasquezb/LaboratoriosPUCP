@@ -404,35 +404,41 @@ def assign_employee(request,
                     template='internal/servicerequest/assign_employee.html',
                     extra_context=None):
     if request.method == 'GET':
-        essay_methods = request.GET.get('methods', {})
+        essay_methods = request.GET.get('methods', '')
     elif request.method == 'POST':
-        essay_methods = request.POST.getlist('methods[]')
+        essay_methods = request.POST.get('methods', '')
 
-    essay_methods = simplejson.loads(essay_methods)
-    keys = [key for key in essay_methods.keys() if utils.is_integer(key)]
-    essay_methods = [essay_methods[key] for key in keys]
+    try:
+        essay_methods = simplejson.loads(essay_methods)
+    except simplejson.decoder.JSONDecodeError:
+        return JsonResponse({
+            'success': False,
+            'errors': 'Ocurrió un error al procesar su solicitud'
+        }, json_dumps_params={'ensure_ascii': False})
+
     essay_methods = {
         em['id']: em['checked']
         for em in essay_methods
     }
-
+    chosen_ems = {
+        id: checked
+        for id, checked in essay_methods.items() if checked
+    }
     service_request = get_object_or_404(
         ServiceRequest.all_objects.filter(deleted__isnull=True),
         pk=request_id
     )
     sample = get_object_or_404(service_request.sample_set.all(), pk=sample_id)
     essay_method_list = EssayMethodFill.all_objects.filter(
-        pk__in=list(essay_methods.keys())
+        pk__in=list(essay_methods.keys()),
     )
-    for em in essay_method_list:
-        em.chosen = essay_methods[em.pk]
-        em.save()
-    essay_method_list = essay_method_list.filter(
-        chosen=True
+    chosen_ems = EssayMethodFill.all_objects.filter(
+        deleted__isnull=True,
+        pk__in=chosen_ems.keys()
     )
-    print(essay_method_list)
+
     employee_q = Q()
-    for essay_method in essay_method_list:
+    for essay_method in chosen_ems:
         employee_q &= Q(essay_methods=essay_method.essay_method)
     employee_list = Employee.all_objects.filter(
         employee_q,
@@ -445,22 +451,31 @@ def assign_employee(request,
     )
 
     query = Q()
-    for essay_method in essay_method_list:
-        query &= Q(assigned_essay_methods=essay_method)
-    print(query)
+    for essay_method in chosen_ems:
+        query &= Q(assigned_essay_methods__in=[essay_method])
+
     if query:
         assigned_employee = employee_list.filter(query).first()
-        print('assigned')
     else:
         assigned_employee = None
     print(assigned_employee)
     # Está cagada esta lógica
     if request.method == 'POST':
         if form.is_valid():
-            # Remove previous assigned employee, if existant
-            employee = form.cleaned_data['employee']
-            methods_to_add = set(essay_method_list)
+            # Save essay method fill
             print(essay_method_list)
+            for em in essay_method_list:
+                print(em, em.id, essay_methods[em.pk])
+                em.chosen = essay_methods[em.id]
+                em.save()
+            # Remove previous assigned employee, if existant
+            if assigned_employee:
+                assigned_employee.assigned_essay_methods.remove(*chosen_ems)
+            employee = form.cleaned_data['employee']
+            print(employee)
+            emp_methods = employee.assigned_essay_methods.all()
+            methods_to_add = set(chosen_ems) ^ set(emp_methods)
+            print(methods_to_add)
             employee.assigned_essay_methods.set(methods_to_add)
             print(EssayMethodFill.all_objects.filter(employees=employee))
 

@@ -139,10 +139,9 @@
                     <a class="btn btn-white btn-xs btn-assign-employee"
                        data-toggle="modal"
                        data-target="#assign-employee-modal"
-                       data-url="{{ url('internal:servicerequest.assign_employee', request_id=pk, sample_id=sample.id) }}">
-                       <span>
-                        Asignar Empleado
-                       </span>
+                       data-url="{{ url('internal:servicerequest.assign_employee', request_id=pk, sample_id=sample.id) }}"
+                       data-row="{{ loop.index0 }}">
+                      Asignar Empleado
                     </a>
                   </td>
                 </tr>
@@ -196,15 +195,20 @@ $('#assign-employee-modal').on('show.bs.modal', function (e) {
       checked: $(elem).find('input').is(':checked'),
     }
   });
-  console.log(methods);
+  var methodStr = JSON.stringify($(methods).get());
+  $btn.data('methods', methodStr);
   $.ajax({
     url: url,
     data: {
-      methods: JSON.stringify(methods),
+      methods: methodStr,
     },
   }).done(function (response) {
     $modal.html(response);
     $('#assign-employee-form').validator();
+    $modal
+      .find('.method-container')
+      .data('methods', methodStr)
+      .data('row', $btn.data('row'));
   });
 });
 $(document).on('submit', '#assign-employee-form', function (e) {
@@ -212,6 +216,23 @@ $(document).on('submit', '#assign-employee-form', function (e) {
   var $form = $(e.target);
   var $modal = $('#assign-employee-modal');
   console.log($form.get().data);
+  var $methodContainer = $modal.find('.method-container');
+  var $table = $($('.essaymethod-table')[$methodContainer.data('row')]);
+  var allMethods = $table.find('td');
+  var methods = allMethods.map(function (index, elem) {
+    console.log(elem);
+    // return 1;
+    return {
+      id: $(elem).data('id'),
+      checked: $(elem).find('input').is(':checked'),
+    }
+  });
+  var methodStr = JSON.stringify($(methods).get());
+  $form.append($('<input>', {
+    type: 'hidden',
+    name: 'methods',
+    value: methodStr,
+  }));
   $.ajax({
     url: $form.get(0).action,
     method: $form.get(0).method,
@@ -223,6 +244,7 @@ $(document).on('submit', '#assign-employee-form', function (e) {
       return;
     }
     $modal.find('.form-success').html(response.message).fadeIn();
+    // $modal.find)
     setTimeout(function () {
       // $modal.modal('hide');
       if (response.redirect) {
