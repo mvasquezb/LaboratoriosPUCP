@@ -29,6 +29,8 @@ def create(request,
            template='internal/inventory/create.html',
            extra_content=None):
     form = InventoryForm(request.POST or None)
+    suplies=Supply.all_objects.filter(deleted__isnull=True)
+    equipments=Equipment.all_objects.filter(deleted__isnull=True)
     if request.method == 'POST':
         if form.is_valid():
             form.save()
@@ -43,7 +45,10 @@ def create(request,
                     return redirect('internal:inventory.create')
     else:
         inventories = Inventory.all_objects.filter(deleted__isnull=True)
-        context = { 'inventories': inventories,'form': form }
+        inventory_types= Inventory.TYPE_CHOICES
+        context = { 'inventories': inventories,'form': form ,
+                    'inventory_types':inventory_types,
+                    'supply_list':suplies,'equipments':equipments}
         return render(request, template, context)
 
 
@@ -95,27 +100,9 @@ def show(request,
             deleted__isnull=True,
             pk=pk
         )
-        #
-        all_users = Employee.all_objects.filter(deleted__isnull=True)
-        selected_users = inventory.employees.all()
-        #
-        all_service_hours = inventoryServiceHours.all_objects.filter(
-            deleted__isnull=True
-        )
-        selected_service_hours = inventory.service_hours
-        #
-        all_inventories = Inventory.all_objects.filter(deleted__isnull=True)
-        selected_inventories = inventory.inventory.all()
-        #
-        all_essaymethods = EssayMethod.all_objects.filter(deleted__isnull=True)
-        selected_essaymethods = inventory.essay_methods.all()
-        #
+        
         form = InventoryForm()
-        context = {'inventory': inventory, 'all_users': all_users,
-                   'selected_users': selected_users, 'all_service_hours': all_service_hours,
-                   'selected_service_hours': selected_service_hours,
-                   'all_inventories': all_inventories, 'selected_inventories': selected_inventories,
-                   'all_essaymethods': all_essaymethods, 'selected_essaymethods': selected_essaymethods,
+        context = {'inventory': inventory,
                    'form': form}
         template = 'internal/inventory/show.html'
         return render(request, template, context)
