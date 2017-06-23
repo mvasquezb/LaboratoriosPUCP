@@ -1,20 +1,20 @@
 from django.conf.urls import url
 from . import views
 from django.contrib.auth.views import login, logout_then_login
-
 from django.conf import settings
 from django.conf.urls.static import static
+
 
 urlpatterns = [
     #
     # Login
     #
-    url(r'^login$',
+    url(r'^login/?$',
         login,
         {'template_name': 'internal/login.html'},
         name='login'),
 
-    url(r'^logout$',
+    url(r'^logout/?$',
         logout_then_login,
         name='logout'),
     #
@@ -74,13 +74,13 @@ urlpatterns = [
     #
     # Role
     #
-    url('^role/$',
+    url('^role/?$',
         views.role.index,
         name='role.index'),
-    url('^role/(?P<pk>\d+)$',
+    url('^role/(?P<pk>\d+)/?$',
         views.role.show,
         name='role.show'),
-    url('^role/create$',
+    url('^role/create/?$',
         views.role.create,
         name='role.create'),
     url('^role/(?P<pk>\d+)/edit/?$',
@@ -98,7 +98,10 @@ urlpatterns = [
     url('^inventoryOrder/create/?$',
         views.inventoryOrder.create,
         name='inventoryOrder.create'),
-    url('^inventoryOrder/(?P<pk>\d+)/edit/?$',
+    url('^inventoryOrder/create/(?P<pk>\d+)$',
+        views.inventoryOrder.createPK,
+        name='inventoryOrder.createPK'),
+    url('^inventoryOrder/(?P<pk1>\d+)/edit/(?P<pk>\d+)$',
         views.inventoryOrder.edit,
         name='inventoryOrder.edit'),
     url('^inventoryOrder/(?P<pk>\d+)$',
@@ -119,7 +122,7 @@ urlpatterns = [
     #
     # ServiceRequest
     #
-    url('^servicerequest/create/(?P<pk>\d+)$',
+    url('^servicerequest/create/(?P<pk>\d+)/?$',
         views.servicerequest.create,
         name='servicerequest.create'),
     url('^servicerequest/(?P<pk>\d+)/delete/?$',
@@ -140,10 +143,10 @@ urlpatterns = [
     url('^servicerequest/(?P<pk_request>\d+)/delete_sample/(?P<pk_sample>\d+)/?$',
         views.servicerequest.delete_sample,
         name='servicerequest.delete_sample'),
-    url('^servicerequest/create_client$',
+    url('^servicerequest/create_client/?$',
         views.servicerequest.create_client,
         name='servicerequest.create_client'),
-    url('^servicerequest$',
+    url('^servicerequest/?$',
         views.servicerequest.index,
         name='servicerequest.index'),
     url('^servicerequest/(?P<pk>\d+)/?$',
@@ -223,6 +226,45 @@ urlpatterns = [
     url('^sampleType/(?P<id>\d+)/delete/?$',
         views.sampleType.delete,
         name='sampleType.delete'),
+
+    #
+    #Supply
+    #
+    url('^supply/create$',
+        views.supply.create,
+        name='supply.create'),
+    url('^supply/(?P<pk>\d+)$',
+        views.supply.show,
+        name='supply.show'),
+    url('^supply/(?P<pk>\d+)/edit/?$',
+        views.supply.edit,
+        name='supply.edit'),
+    url('^supply/?$',
+        views.supply.index,
+        name='supply.index'),
+    url('^supply/(?P<pk>\d+)/delete/?$',
+        views.supply.delete,
+        name='supply.delete'),
+
+    #
+    #Equipment
+    #
+    url('^equipment/create$',
+        views.equipment.create,
+        name='equipment.create'),
+    url('^equipment/(?P<pk>\d+)$',
+        views.equipment.show,
+        name='equipment.show'),
+    url('^equipment/(?P<pk>\d+)/edit/?$',
+        views.equipment.edit,
+        name='equipment.edit'),
+    url('^equipment/?$',
+        views.equipment.index,
+        name='equipment.index'),
+    url('^equipment/(?P<pk>\d+)/delete/?$',
+        views.equipment.delete,
+        name='equipment.delete'),
+
     #
     # Essay
     #

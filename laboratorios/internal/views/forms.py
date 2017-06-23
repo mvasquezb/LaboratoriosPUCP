@@ -26,7 +26,7 @@ class EmployeeForm(ModelForm):
 
     class Meta:
         model = Employee
-        fields = ['roles']
+        fields = ['roles', 'laboratories']
 
     def _save_m2m(self, *args, **kwargs):
         super(EmployeeForm, self)._save_m2m(*args, **kwargs)
@@ -102,6 +102,21 @@ class ClientForm(ModelForm):
         fields = ('doc_number', 'phone_number')
 
 
+class ServiceRequestCreateForm(ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(ServiceRequestCreateForm, self).__init__(*args, **kwargs)
+        self.fields['client'].widget.attrs['class'] = 'form-control'
+        self.fields['supervisor'].widget.attrs['class'] = 'form-control'
+        self.fields['supervisor'].queryset = Employee.all_objects.filter(
+            deleted__isnull=True
+        )
+
+    class Meta:
+        model = ServiceRequest
+        # we will automatically set it to the first state
+        exclude = ('state',)
+
+
 class ServiceRequestForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super(ServiceRequestForm, self).__init__(*args, **kwargs)
@@ -120,15 +135,11 @@ class ServiceRequestForm(ModelForm):
 class RoleForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super(RoleForm, self).__init__(*args, **kwargs)
-        self.fields['permissions'].required = True
-        self.fields['name'].required = True
         self.fields['description'].required = False
 
     class Meta:
         model = Role
-        fields = ['name', 'description']
-    permissions = forms.ModelMultipleChoiceField(
-        queryset=Permission.objects.all())
+        exclude = []
 
 
 class EssayMethodFillChosenForm(ModelForm):
@@ -220,6 +231,7 @@ class InventoryOrderEditForm(ModelForm):
         model = InventoryOrder
         fields = ('essay',)
 
+
 class InventoryItemEditForm(ModelForm):
     class Meta:
         model = InventoryItem
@@ -270,7 +282,21 @@ class EssayMethodForm(ModelForm):
         model = EssayMethod
         fields = ["name", "description", "price"]
 
+
 class ParameterValueForm(ModelForm):
     class Meta:
         model = EssayMethodParameterFill
-        fields = ['value','uncertainty']
+        fields = ['value', 'uncertainty']
+
+
+class SupplyForm(ModelForm):
+    class Meta:
+        model = Supply
+        fields = ['name', 'description', 'metric_unit']
+
+
+class EquipmentForm(ModelForm):
+    class Meta:
+        model = Equipment
+        fields = ['name', 'description', 'servicelife_unit',
+                  'servicelife', 'error_range']

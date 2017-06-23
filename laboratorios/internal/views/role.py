@@ -25,7 +25,7 @@ def show(request, pk, template='internal/role/show.html'):
     role = get_object_or_404(Role, pk=pk)
     context = {
         'selected_permissions': role.permissions.all(),
-        'role': role
+        'custom_role': role
     }
     return render(request, template, context)
 
@@ -39,9 +39,7 @@ def create(request,
     }
     if request.method == 'POST':
         if form.is_valid():
-            new_role = form.save(commit=False)
-            new_role.save()
-            form.save_m2m()
+            new_role = form.save()
             messages.success(request, 'Se ha creado el rol correctamente')
             return redirect('internal:role.index')
     return render(request, template, context)

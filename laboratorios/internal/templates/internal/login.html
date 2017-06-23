@@ -4,17 +4,34 @@
 
 {% block body_class %}gray-bg{% endblock body_class %}
 
+{% block custom_css %}
+<style>
+.errorlist {
+  list-style: none;
+  padding-left: 0;
+}
+</style>
+{% endblock custom_css %}
+
 {% block base_content %}
 <h1 class="logo-name text-center">IC-PUCP</h1>
 <div class="middle-box text-center loginscreen animated fadeInDown">
   <div>
     <h3>Bienvenido al Instituto para la Calidad - PUCP</h3>
-    <p>
+    {# <p>
       Perfectly designed and precisely prepared admin theme with over 50 pages with extra new web app views.
-    </p>
-    <p>Login in. To see it in action.</p>
+    </p> #}
+    {# <p>Login in. To see it in action.</p> #}
+    {% if form.errors %}
+      <div class="alert alert-danger form-errors">
+        {% for key, error in form.errors.items() %}
+          {{ error }}
+        {% endfor %}
+      </div>
+    {% endif %}
     <form method="post">
       {% csrf_token %}
+      <input type="hidden" name="next" value="{{ next or '/internal' }}">
       <div class="form-group">
         <input type="text" name="username" class="form-control" placeholder="Username" required="">
       </div>

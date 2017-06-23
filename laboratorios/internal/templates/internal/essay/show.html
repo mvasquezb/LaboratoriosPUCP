@@ -2,18 +2,10 @@
 
 {% block title %}{{ super() }} | Ensayos{% endblock title %}
 
-{% block custom_css %}
-<style type="text/css">
-
-.tab { margin-left: 40px; }
-
-</style>
-{% endblock custom_css %}
-
 {% block page_content %}
 <div class="row border-bottom white-bg dashboard-header">
     <div class="col-md-6">
-        <h2><strong>Detalle del Ensayo</strong></h2>
+        <h2><strong>Detalle de Ensayo</strong></h2>
     </div>
 </div>
 <div class="wrapper wrapper-content animated fadeInRight" >
@@ -21,37 +13,41 @@
     <div class="col-lg-12">
         <div class="ibox float-e-margins">
             <div class="ibox-content">
-                    <div class="row">
-                        <div class="col-lg-6">
-                            <h2> Detalles Básicos</h2>
-                            <div class="form-group">
-                                <label>Nombre de Ensayo:</label>
-                                <div class="text-primary">{{ essay.name }}</div>
-                            </div>
-                            <div class="form-group">
-                                <label>Descripción:</label>
-                                <div class="text-primary">{{ essay.description }}</div>
-                            </div>
-                            <div class="form-group">
-                                <label>Fecha de creación: </label>
-                                <div class="text-primary">{{ essay.registered_date }}</div>
-                            </div>
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label>Nombre</label>
+                            <input value="{{ essay.name }}"  type="text" class="form-control" name="name" disabled>
+                            <div class="help-block with-errors"></div>
                         </div>
-                        <div class="col-lg-6">
-                            <div id=methods_div class="form-group">
-                                <h2>Métodos</h2>
-                                <br>
-                                <div name="methods" >
-                                {% for method in selected_methods %}
-                                    {% set outer_loop = loop %}
-                                    <div class="form-group">
-                                        <label>{{ method.name }}</label>
-                                    </div>
-                                {% endfor %}
-                                </div>
-                            </div>
+                        <div class="form-group">
+                            <label>Descripción</label>
+                            <textarea value="{{ essay.description }}" type="text" class="form-control" name="description"  disabled>{{ essay.description }}</textarea>
+                            <div class="help-block with-errors"></div>
                         </div>
                     </div>
+                    <div class="col-lg-6">
+                        <label>Métodos: </label>
+                        <div class="table-responsive">
+                            <table class="table table-striped table-bordered permission_table">
+                              <thead>
+                                <tr>
+                                  <th class="first-table-column">Nombre</th>
+                                  <th>Cantidad de parámetros</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {% for method in selected_methods %}
+                                  <tr>
+                                    <td>{{ method.name }}</td>
+                                    <td>{{ method.parameters.count() }}</td>
+                                  </tr>
+                                {% endfor %}
+                              </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

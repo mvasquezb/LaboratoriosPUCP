@@ -78,23 +78,6 @@ class Employee(BasicUser):
 
 
 @auditlog.register()
-class LaboratoryServiceHours(SafeDeleteModel):
-    _safedelete_policy = SOFT_DELETE_CASCADE
-
-    audit_log = AuditlogHistoryField()
-    start_time = models.PositiveIntegerField()
-    end_time = models.PositiveIntegerField()
-    registered_date = models.DateTimeField(
-        auto_now_add=True,
-        auto_now=False,
-        blank=True
-    )
-
-    def __str__(self):
-        return str(self.start_time) + ' - ' + str(self.end_time)
-
-
-@auditlog.register()
 class Laboratory(SafeDeleteModel):
     _safedelete_policy = SOFT_DELETE_CASCADE
 
@@ -105,9 +88,7 @@ class Laboratory(SafeDeleteModel):
         related_name='laboratories',
         blank=True
     )
-    capacity = models.PositiveIntegerField()
     supervisor = models.ForeignKey('Employee', null=True, blank=True)
-    service_hours = models.ForeignKey(LaboratoryServiceHours)
     essay_methods = models.ManyToManyField(
         'EssayMethod',
         related_name='laboratories',
@@ -396,9 +377,11 @@ class ServiceRequest(SafeDeleteModel):
     audit_log = AuditlogHistoryField()
     client = models.ForeignKey(Client, on_delete=models.CASCADE)
     supervisor = models.ForeignKey(Employee)
-    priority = models.ForeignKey('ServiceRequestPriority', null=True, blank=True)
+    priority = models.ForeignKey(
+        'ServiceRequestPriority', null=True, blank=True)
     state = models.ForeignKey('ServiceRequestState')
-    external_provider = models.ForeignKey('ExternalProvider', null=True, blank=True)
+    external_provider = models.ForeignKey(
+        'ExternalProvider', null=True, blank=True)
     observations = models.CharField(max_length=500, null=True, blank=True)
     expected_duration = models.IntegerField(default=10)
     registered_date = models.DateTimeField(
@@ -484,7 +467,8 @@ class ServiceContractModification(SafeDeleteModel):
 
     audit_log = AuditlogHistoryField()
     contract = models.ForeignKey(ServiceContract, on_delete=models.CASCADE)
-    description = models.CharField(max_length=100)      # Aqui se colocará el idServiceRequestOriginal
+    # Aqui se colocará el idServiceRequestOriginal
+    description = models.CharField(max_length=100)
     registered_date = models.DateTimeField(
         auto_now_add=True,
         auto_now=False,
@@ -504,6 +488,7 @@ class Quotation(SafeDeleteModel):
         auto_now=False,
         blank=True
     )
+
 
 @auditlog.register()
 class SampleType(SafeDeleteModel):
@@ -547,9 +532,23 @@ class Sample(SafeDeleteModel):
 class Inventory(SafeDeleteModel):
     _safedelete_policy = SOFT_DELETE_CASCADE
 
+    SUPPLY_TYPE = 'SupplyInventory'
+    EQUIPMENT_TYPE = 'EquipmentInventory'
+    SAMPLE_TYPE = 'SampleInventory'
+    TYPE_CHOICES = (
+        (SUPPLY_TYPE, 'Insumos'),
+        (EQUIPMENT_TYPE, 'Equipos'),
+        (SAMPLE_TYPE, 'Muestras'),
+    )
     audit_log = AuditlogHistoryField()
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, unique=True)
     location = models.CharField(max_length=200)
+    # SupplyInventory or EquipmentInventory
+    inventory_type = models.CharField(
+        max_length=50,
+        choices=TYPE_CHOICES,
+        default=SUPPLY_TYPE
+    )
     registered_date = models.DateTimeField(
         auto_now_add=True,
         auto_now=False,
@@ -558,6 +557,60 @@ class Inventory(SafeDeleteModel):
 
     def __str__(self):
         return self.name
+
+
+@auditlog.register()
+class InventoryArticle(SafeDeleteModel):
+    _safedelete_policy = SOFT_DELETE_CASCADE
+
+    audit_log = AuditlogHistoryField()
+    name = models.CharField(max_length=100)
+    description = models.CharField(max_length=150)
+
+    def __str__(self):
+        return self.name
+
+
+@auditlog.register()
+class Equipment(InventoryArticle):
+    _safedelete_policy = SOFT_DELETE_CASCADE
+
+    servicelife_unit = models.CharField(max_length=50)
+    servicelife = models.PositiveIntegerField()
+    error_range = models.FloatField()
+    registered_date = models.DateTimeField(
+        auto_now_add=True,
+        auto_now=False,
+        blank=True
+    )
+
+
+@auditlog.register()
+class Supply(InventoryArticle):
+    _safedelete_policy = SOFT_DELETE_CASCADE
+
+    metric_unit = models.CharField(max_length=20)
+    registered_date = models.DateTimeField(
+        auto_now_add=True,
+        auto_now=False,
+        blank=True
+    )
+
+
+@auditlog.register()
+class ArticleInventory(SafeDeleteModel):
+    _safedelete_policy = SOFT_DELETE_CASCADE
+
+    audit_log = AuditlogHistoryField()
+    inventory = models.ForeignKey(Inventory)
+    article = models.ForeignKey(InventoryArticle)
+    expiration_date = models.DateTimeField(null=True, blank=True)
+    quantity = models.PositiveIntegerField()
+    registered_date = models.DateTimeField(
+        auto_now_add=True,
+        auto_now=False,
+        blank=True
+    )
 
 
 @auditlog.register()

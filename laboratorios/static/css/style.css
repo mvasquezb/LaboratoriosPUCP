@@ -8455,3 +8455,23 @@ body.md-skin {
 }
 
 .dataTables_paginate ul.pagination { margin: 0; }
+
+.table-responsive .permission_table {
+  max-height: 175px;
+  display: inline-block;
+  width: inherit;
+  overflow: auto;
+}
+
+.first-table-column {
+  width: 175px;
+}
+
+.form-control.small-parameter-input {
+  font-size: 11px;
+  height: 20px;
+}
+
+.ibox-content.small-ibox {
+  padding-bottom: 0;
+}

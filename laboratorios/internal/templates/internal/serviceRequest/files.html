@@ -3,7 +3,6 @@
 {% block title %}{{ super() }} | Solicitudes{% endblock title %}
 
 {% block custom_css %}
-<link rel="stylesheet" href="https://cdn.datatables.net/1.10.15/css/jquery.dataTables.min.css">
 {% endblock custom_css %}
 
 {% block page_content %}
@@ -19,7 +18,15 @@
     <div class="ibox float-e-margins">
       <div class="ibox-content">
         <div class="row">
-          <div class="col-lg-12">
+          <div class="col-md-3">
+            <div class="input-group">
+              <input type="text" class="form-control input-sm m-b-xs" id="mysearch" placeholder="Buscar">
+              <span class="input-group-addon">
+                <i class="fa fa-search"></i>
+              </span>
+            </div>
+          </div>
+          <div class="col-md-2 col-md-offset-7">
             <div class="text-right">
               <a class="btn btn-primary" href="{{ url('internal:serviceRequest.upload',serviceRequest.pk) }}">Añadir Archivo</a>
             </div>
@@ -48,11 +55,17 @@
                     <td>{{ requestAttachment.fileName[:(requestAttachment.fileName.rfind("."))] }}</td>
                     <td>{{ requestAttachment.fileName.split(".")[-1]}}</td>
                     {% endif %}
-                    <td class="text-left footable-visible footable-last-column">
+                    <td class="text-left">
                       <div class="btn-group">
-                        <a href="{{ url('internal:serviceRequest.downloadAttachedFile', requestAttachment.pk) }}" class="btn-white btn btn-xs"><i class="fa fa-download" aria-hidden="true"></i></a>
-                        <a href="{{ url('internal:serviceRequest.showAttachedFile', requestAttachment.pk) }}" class="btn-white btn btn-xs"><i class="fa fa-eye" aria-hidden="true"></i></a>
-                        <a class="myBtn1 btn-white btn btn-xs" data-toggle="modal" data-target="#myModal1" data-url="{{ url('internal:serviceRequest.deleteAttachedFile', requestAttachment.pk) }}"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+                        <a href="{{ url('internal:serviceRequest.downloadAttachedFile', requestAttachment.pk) }}" class="btn-white btn">
+                          <i class="fa fa-download" aria-hidden="true"></i>
+                        </a>
+                        <a href="{{ url('internal:serviceRequest.showAttachedFile', requestAttachment.pk) }}" class="btn-white btn">
+                          <i class="fa fa-eye" aria-hidden="true"></i>
+                        </a>
+                        <a class="myBtn1 btn-white btn" data-toggle="modal" data-target="#myModal1" data-url="{{ url('internal:serviceRequest.deleteAttachedFile', requestAttachment.pk) }}">
+                          <i class="fa fa-trash-o" aria-hidden="true"></i>
+                        </a>
                       </div>
                     </td>
                   </tr>
@@ -89,6 +102,10 @@
 
 {% block custom_js %}
 <script>
+if ($('.message-container .messages li')) {
+  var msg = $('.message-container .messages li').first();
+  showToastr(msg.text(), msg.data('tags'));
+}
 $( document ).ready(function() {
   $(".myBtn1").click(function() {
     $("#myModal1").show();
@@ -108,17 +125,16 @@ $(".myBtn1").click(function(event) {
 });
 </script>
 <script src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.15/js/dataTables.bootstrap.min.js"></script>
 <script src="{{ static('js/datatable-config.js') }}"></script>
 <script>
-if ($('.message-container .messages li')) {
-  var msg = $('.message-container .messages li').first();
-  $.extend(toastr.options, {"positionClass": "toast-bottom-right",});
-  try {
-    toastr[msg.data('tags')](msg.text());
-  } catch (TypeError) {}
-}
-$('#attachment-table').DataTable({
-  responsive: true,
+var table = $('#attachment-table').DataTable({
+  columnDefs: [
+    {orderable: false, targets: 2},
+  ]
+});
+$('#mysearch').keyup(function(){
+  table.search($(this).val()).draw() ;
 });
 </script>
 {% endblock custom_js %}
