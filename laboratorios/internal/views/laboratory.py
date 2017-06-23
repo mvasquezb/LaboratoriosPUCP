@@ -31,7 +31,7 @@ def inventory_modal(request):
         inventory_pk = dicc['inventory_pk'][0]
         #print(inventory_pk)
         inventory = Inventory.all_objects.get(pk=inventory_pk)
-        article_inventory = ArticleInventory.all_objects.get(inventory=inventory)
+        article_inventory = ArticleInventory.all_objects.filter(inventory=inventory)
         matches_list = []
         for match in article_inventory:
             article_name = match.article.name
