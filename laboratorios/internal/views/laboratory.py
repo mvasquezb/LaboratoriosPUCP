@@ -258,7 +258,6 @@ def show(request,
             return redirect('internal:laboratory.index')
     else:
         laboratory = Laboratory.all_objects.get(
-            deleted__isnull=True,
             pk=pk
         )
         #
