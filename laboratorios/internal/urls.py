@@ -210,6 +210,9 @@ urlpatterns = [
     url('^laboratory/(?P<pk>\d+)/track_services/$',
         views.laboratory.track_services,
         name='laboratory.track_services'),
+    url('^laboratory/InventoryModal$',
+        views.laboratory.inventory_modal,
+        name='laboratory.inventory_modal'),
 
     #
     # sampleType
