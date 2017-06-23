@@ -1,0 +1,72 @@
+{% extends 'internal/base_internal.html' %}
+{% block page_content %}
+<div class="row border-bottom white-bg dashboard-header">
+    <div class="col-md-6">
+        <h2><strong>Editar Nuevo Inventario</strong></h2>
+    </div>
+</div>
+<div class="wrapper wrapper-content animated fadeInRight">
+  <div class="row">
+    <div class="col-lg-12">
+        <div class="ibox float-e-margins">
+            <div class="ibox-content">
+              {{ form.errors }}
+                <form data-toggle="validator" id="inventoryform" action="{{ url('internal:inventory.edit', pk=inventory.pk) }}" method="post">
+                {% csrf_token %}
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label>Nombre*</label>
+                                <input type="text" class="form-control" name="name" required data-error="El Nombre es obligatorio" value="{{ inventory.name }}" placeholder="Nombre">
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label>Localización</label>
+                                <textarea class="form-control" name="location" placeholder="Localización">{{ inventory.location }}</textarea>
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <p><strong>(*) Campos obligatorios</strong></p>
+                    <div class="row">
+                      <div class="col-md-offset-4 col-md-4 text-center">
+                        <input type="submit" class="btn btn-primary" name="editar"
+                          data-toggle="modal" data-target="#myModal1"
+                          id="register_button" value="Editar">
+                        <a href="{{ url('internal:inventory.index') }}" class="btn btn-white">Cancelar</a>
+                      </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+  </div>
+</div>
+<div class="message-container hidden">
+  <ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} data-tags="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+  </ul>
+</div>
+<div id="myModal1" class="modal1">
+  <!-- Modal content -->
+  <div class="modal-content">
+    <span class="span-close close">&times;</span>
+    <div class="modeal-center-content">
+      <p>¿Seguro que desea modificarlo?</p>
+      <button type="button" class="confirm btn btn-primary">Editar</button>
+      <button type="button" class="span-close btn btn-white">Cancelar</button>
+    </div>
+  </div>
+</div>
+{% endblock page_content %}
+
+{% block custom_js %}
+
+
+{% endblock custom_js %}
