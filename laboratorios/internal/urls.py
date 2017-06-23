@@ -53,6 +53,9 @@ urlpatterns = [
     url('^servicerequest/finalReport/(?P<id>\d+)$',
         views.servicerequest.finalReport,
         name='servicerequest.finalReport'),
+    url('^servicerequest/editAttachedFile/(?P<id>\d+)$',
+        views.servicerequest.editAttachedFile,
+        name='serviceRequest.editAttachedFile'),
     #
     # Employee
     #
