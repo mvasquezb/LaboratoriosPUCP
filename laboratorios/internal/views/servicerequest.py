@@ -14,22 +14,23 @@ from django.db.models import (
     F,
 )
 from django.urls import *
-import json as simplejson
-from datetime import *
 from django.http import JsonResponse
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.utils import timezone
 # from django.conf import settings
 # from django.core.files.storage import FileSystemStorage
 from django.http import HttpResponse
-
-from ..models import *
-from ..views.forms import *
 from django.template.loader import render_to_string
+from django.template.loader import get_template
+
+from internal.models import *
+from internal.views.forms import *
+from internal import utils
 
 from io import BytesIO
-from django.template.loader import get_template
 from xhtml2pdf import pisa
+import json as simplejson
+from datetime import datetime, timedelta
 
 
 def index(request,
@@ -115,22 +116,6 @@ def edit(request,
          pk,
          template='internal/servicerequest/edit.html'):
     service_request = ServiceRequest.all_objects.get(pk=pk)
-    #
-    # if service_request.state.description == "Modificado":
-    #     # Creamos un ServiceRequest de copia, el cual almacenará la modificación
-    #     service_request = ServiceRequest(client=service_request.client, supervisor=service_request.supervisor,
-    #                                          priority=service_request.priority, state=service_request.state,
-    #                                          external_provider=service_request.external_provider,
-    #                                          observations=service_request.observations,
-    #                                          expected_duration=service_request.expected_duration)
-    #     service_request_mod.save()
-    #
-    #     # Asociamos el servicio modificado al contrato
-    #     service_contract.request = service_request_mod
-    #     service_contract.save()
-    #
-    # else:
-    #   service_request = service_request_aux
 
     service_request_form = ServiceRequestForm(
         request.POST or None, instance=service_request)
@@ -324,7 +309,9 @@ def show(request,
         'clients': Client.all_objects.filter(deleted__isnull=True),
         'employees': Employee.all_objects.filter(deleted__isnull=True),
         'states': ServiceRequestState.all_objects.filter(deleted__isnull=True),
-        'external_providers': ExternalProvider.all_objects.filter(deleted__isnull=True)
+        'external_providers': ExternalProvider.all_objects.filter(
+            deleted__isnull=True
+        )
     }
     # verificacion
     forms_verified = 0  # Means true lol
@@ -357,7 +344,8 @@ def quotation(request,
               request_id,
               template='internal/servicerequest/quotation.html',
               extra_context=None):
-    service_request = get_object_or_404(ServiceRequest.all_objects, pk=request_id)
+    service_request = get_object_or_404(
+        ServiceRequest.all_objects, pk=request_id)
     quotation, created = Quotation.all_objects.get_or_create(
         request=service_request
     )
@@ -402,52 +390,79 @@ def assign_employee(request,
                     sample_id,
                     template='internal/servicerequest/assign_employee.html',
                     extra_context=None):
-    print(request.POST)
-    essay_methods = request.POST.getlist('methods[]')
-    essay_methods = list(map(lambda x: int(x), essay_methods))
-    print(essay_methods)
-    service_request = get_object_or_404(ServiceRequest.all_objects, pk=request_id)
-    sample = get_object_or_404(service_request.sample_set.all(), pk=sample_id)
+    if request.method == 'GET':
+        essay_methods = request.GET.get('methods', '')
+    elif request.method == 'POST':
+        essay_methods = request.POST.get('methods', '')
 
-    essay_method_list = EssayMethodFill.all_objects.filter(
-        pk__in=essay_methods
+    try:
+        essay_methods = simplejson.loads(essay_methods)
+    except simplejson.decoder.JSONDecodeError:
+        return JsonResponse({
+            'success': False,
+            'errors': 'Ocurrió un error al procesar su solicitud'
+        }, json_dumps_params={'ensure_ascii': False})
+
+    essay_methods = {
+        em['id']: em['checked']
+        for em in essay_methods
+    }
+    chosen_ems = {
+        id: checked
+        for id, checked in essay_methods.items() if checked
+    }
+    service_request = get_object_or_404(
+        ServiceRequest.all_objects.filter(deleted__isnull=True),
+        pk=request_id
     )
-    for em in essay_method_list:
-        em.chosen = True
-        em.save()
-    print(essay_method_list)
+    sample = get_object_or_404(service_request.sample_set.all(), pk=sample_id)
+    essay_method_list = EssayMethodFill.all_objects.filter(
+        pk__in=list(essay_methods.keys()),
+    )
+    chosen_ems = EssayMethodFill.all_objects.filter(
+        deleted__isnull=True,
+        pk__in=chosen_ems.keys()
+    )
+
     employee_q = Q()
-    for essay_method in essay_method_list:
+    for essay_method in chosen_ems:
         employee_q &= Q(essay_methods=essay_method.essay_method)
-    employee_list = Employee.all_objects.filter(employee_q)
-    employee_list = Employee.all_objects.filter(deleted__isnull=True)
+    employee_list = Employee.all_objects.filter(
+        employee_q,
+        deleted__isnull=True
+    )
+
     form = ServiceAssignEmployeeForm(
         request.POST or None,
         employee=employee_list
     )
 
     query = Q()
-    for essay_method in essay_method_list:
-        query &= Q(assigned_essay_methods=essay_method)
-    print(query)
+    for essay_method in chosen_ems:
+        query &= Q(assigned_essay_methods__in=[essay_method])
+
     if query:
         assigned_employee = employee_list.filter(query).first()
-        print('assigned')
     else:
         assigned_employee = None
     print(assigned_employee)
     # Está cagada esta lógica
     if request.method == 'POST':
-        essay_method_list = EssayMethodFill.all_objects.filter(
-            essay__sample=sample,
-            chosen=True,
-        )
-        print(essay_method_list)
         if form.is_valid():
-            # Remove previous assigned employee, if existant
-            employee = form.cleaned_data['employee']
-            methods_to_add = set(essay_method_list)
+            # Save essay method fill
             print(essay_method_list)
+            for em in essay_method_list:
+                print(em, em.id, essay_methods[em.pk])
+                em.chosen = essay_methods[em.id]
+                em.save()
+            # Remove previous assigned employee, if existant
+            if assigned_employee:
+                assigned_employee.assigned_essay_methods.remove(*chosen_ems)
+            employee = form.cleaned_data['employee']
+            print(employee)
+            emp_methods = employee.assigned_essay_methods.all()
+            methods_to_add = set(chosen_ems) ^ set(emp_methods)
+            print(methods_to_add)
             employee.assigned_essay_methods.set(methods_to_add)
             print(EssayMethodFill.all_objects.filter(employees=employee))
 
@@ -455,6 +470,10 @@ def assign_employee(request,
                 return JsonResponse({
                     'success': True,
                     'message': 'Se asignó la muestra correctamente',
+                    'redirect': reverse(
+                        'internal:servicerequest.edit',
+                        args=(service_request.id,)
+                    ),
                 }, json_dumps_params={
                     'ensure_ascii': False,
                 })
@@ -528,9 +547,7 @@ def workload_view_per_request(request,
         delta = now - date_in_service
         total = 100 * delta.days / expected_duration
         total = int(total)
-        end_date = date_in_service.replace(
-            day=date_in_service.day + expected_duration
-        )
+        end_date = date_in_service + timedelta(days=expected_duration)
         client = service_request_list[i].client
 
         my_dict = {
@@ -565,7 +582,9 @@ def upload(request, id):
 
         if len(myfile.name) >= 55:
             messages.error(
-                request, 'El nombre del archivo que intentó subir no debe exceder los 50 caracteres!')
+                request,
+                'El nombre del archivo que intentó subir no debe exceder los 50 caracteres!'
+            )
             return redirect('internal:serviceRequest.upload', id)
 
         # fs = FileSystemStorage()
@@ -579,14 +598,18 @@ def upload(request, id):
         fs = requestAttach.file
         filename = fs.save(myfile.name, myfile)
         if name:
-            nameWithExtension = name + requestAttach.file.name[requestAttach.file.name.rfind("."):]
-            matches = RequestAttachment.all_objects.filter(deleted__isnull=True,fileName = nameWithExtension )
+            nameWithExtension = name + \
+                requestAttach.file.name[requestAttach.file.name.rfind("."):]
+            matches = RequestAttachment.all_objects.filter(
+                deleted__isnull=True, fileName=nameWithExtension)
             if len(list(matches)) == 0:
                 requestAttach.fileName = nameWithExtension
                 requestAttach.save()
             else:
                 messages.error(
-                    request, 'El nombre del archivo que intentó subir ya existe')
+                    request,
+                    'El nombre del archivo que intentó subir ya existe'
+                )
                 return redirect('internal:serviceRequest.upload', id)
         else:
             requestAttach.fileName = requestAttach.file.name.split('/')[-1]
@@ -603,22 +626,12 @@ def upload(request, id):
         'servicerequest': sr_object,
     }
     return render(request, 'internal/serviceRequest/attachFile.html', context)
-    # else:
-    #    ra = RequestAttachment.all_objects.get(description = 'baka5')
-    #    filename = ra.file.name.split('/')[-1]
-    #    response = HttpResponse(ra.file, content_type='text/plain')
-    #    response['Content-Disposition'] = 'attachment; filename=%s' % filename
-
-    #    return response
-    #    return render(request, 'internal/serviceRequest/attachFile.html')
-
-    # return redirect('internal:serviceRequest.attachmentList',id)
-    # return render(request, 'internal/serviceRequest/attachFile.html')
 
 
 def attachmentList(request, id):
     sr_object = get_object_or_404(ServiceRequest, pk=id)
-    requestAttachment_list = RequestAttachment.all_objects.filter(deleted__isnull=True,
+    requestAttachment_list = RequestAttachment.all_objects.filter(
+        deleted__isnull=True,
         request=sr_object
     )
 
@@ -632,6 +645,45 @@ def attachmentList(request, id):
 
 def showAttachedFile(request, id):
     template = 'internal/serviceRequest/showAttachedFile.html'
+    context = {
+        'selected_file': RequestAttachment.all_objects.get(pk=id),
+    }
+    return render(request, template, context)
+
+
+def editAttachedFile(request, id):
+    if request.method == 'POST':
+        fileAttach = RequestAttachment.all_objects.get(pk=id)
+        description = request.POST.get('descripcionInput')
+        name = request.POST.get('nombreArchivoInput')
+        if not name:
+            messages.error(request, 'No puede dejar el nombre vacío!')
+            return redirect('internal:serviceRequest.editAttachedFile', id)
+        nameWithExtension = name + \
+            fileAttach.file.name[fileAttach.file.name.rfind("."):]
+        if (fileAttach.fileName == nameWithExtension and
+           fileAttach.description == description):
+            return redirect(
+                'internal:serviceRequest.attachmentList',
+                fileAttach.request.pk
+            )
+        matches = RequestAttachment.all_objects.filter(
+            deleted__isnull=True, fileName=nameWithExtension).exclude(pk=id)
+        if not matches:
+            fileAttach.fileName = nameWithExtension
+            fileAttach.save()
+        else:
+            messages.error(request, 'Ya existe un archivo con ese nombre!')
+            return redirect('internal:serviceRequest.editAttachedFile', id)
+        fileAttach.description = description
+        fileAttach.save()
+        messages.success(
+            request, 'Se han actualizado los datos del archivo exitosamente!')
+        return redirect(
+            'internal:serviceRequest.attachmentList',
+            fileAttach.request.pk
+        )
+    template = 'internal/serviceRequest/editAttachedFile.html'
     context = {
         'selected_file': RequestAttachment.all_objects.get(pk=id),
     }
@@ -692,8 +744,11 @@ def getMethodFillList(essayFill):
     return MethodsList
 
 
-def reportDetail(request, template='internal/servicerequest/reportDetail.html'):
+def reportDetail(request,
+                 template='internal/servicerequest/reportDetail.html'):
     if request.POST:
+        if "b_cancel" in request.POST:
+            return redirect('internal:servicerequest.index')
         list_samples_id = request.POST.getlist('checks[]')
         if len(list_samples_id) > 0:
             SampleCompleteList = []
@@ -734,15 +789,21 @@ def reportDetail(request, template='internal/servicerequest/reportDetail.html'):
                 request,
                 'Debe seleccionar una muestra!'
             )
-            return redirect('internal:servicerequest.reportGenerator', request.POST.get("b_reporte"))
+            return redirect(
+                'internal:servicerequest.reportGenerator',
+                request.POST.get("b_reporte")
+            )
     else:
         return redirect('internal:servicerequest.index')
 
-def finalReport(request, id, template='internal/servicerequest/reportDetail.html'):
+
+def finalReport(request,
+                id,
+                template='internal/servicerequest/reportDetail.html'):
     serviceRequest = ServiceRequest.all_objects.get(pk=id)
     list_samples_id = Sample.all_objects.filter(
         deleted__isnull=True, request=serviceRequest)
-    if len(list_samples_id) > 0:
+    if list_samples_id:
         SampleCompleteList = []
         EssayFillCompleteList = []
         MethodFillCompleteList = []

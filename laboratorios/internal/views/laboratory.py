@@ -6,12 +6,15 @@ from django.shortcuts import (
 from django.contrib import messages
 from django.utils import timezone
 from django.db.models import Q, Count
+from django.http import JsonResponse
+from django.http import HttpResponse
 
 from internal.models import *
 from .forms import LaboratoryForm
+
 import json as simplejson
-from django.http import JsonResponse
-from django.http import HttpResponse
+from datetime import timedelta
+
 
 def index(request,
           template='internal/laboratory/index.html',
@@ -24,19 +27,21 @@ def index(request,
         context.update(extra_context)
     return render(request, template, context)
 
+
 def inventory_modal(request):
     if request.method == 'GET' and request.is_ajax():
-        #print("LLEGA BIEN AL VIEW")
+        # print("LLEGA BIEN AL VIEW")
         dicc = dict(request.GET)
         inventory_pk = dicc['inventory_pk'][0]
-        #print(inventory_pk)
+        # print(inventory_pk)
         inventory = Inventory.all_objects.get(pk=inventory_pk)
-        article_inventory = ArticleInventory.all_objects.filter(inventory=inventory)
+        article_inventory = ArticleInventory.all_objects.filter(
+            inventory=inventory)
         matches_list = []
         for match in article_inventory:
             article_name = match.article.name
             article_quantity = match.article.quantity
-            matches_list.append((article_name,article_quantity))
+            matches_list.append((article_name, article_quantity))
         data = {
             'inventory_name': inventory.name,
             'inventory_location': inventory.location,
@@ -45,6 +50,7 @@ def inventory_modal(request):
         }
         return JsonResponse(data)
     return HttpResponse("GG")
+
 
 def services_index(request,
                    pk):
@@ -64,7 +70,7 @@ def services_index(request,
                 )
                 service.save()
     laboratory = get_object_or_404(
-        Laboratory.all_objects.filter(deleted__isnull=True),
+        Laboratory.all_objects,
         pk=pk
     )
     all_priorities = ServiceRequestPriority.all_objects.filter(
@@ -105,9 +111,7 @@ def services_index(request,
         delta = now - date_in_service
         total = 100 * delta.days / expected_duration
         total = int(total)
-        end_date = date_in_service.replace(
-            day=date_in_service.day + expected_duration
-        )
+        end_date = date_in_service + timedelta(days=expected_duration)
         client = service_request_list[i].client
 
         my_dict = {
@@ -140,7 +144,7 @@ def create(request,
     form = LaboratoryForm(request.POST or None)
     if request.method == 'POST':
         if form.is_valid():
-            #here we add essay_methods to every employee of the new laboratory
+            # here we add essay_methods to every employee of the new laboratory
             for employee in form.cleaned_data['employees']:
                 for essay_method in form.cleaned_data['essay_methods']:
                     employee.essay_methods.add(essay_method)
@@ -159,7 +163,9 @@ def create(request,
 
             # return HttpResponse(form.errors)
     else:
-        #users = Employee.all_objects.filter(deleted__isnull=True,laboratories__isnull=True) #just active users
+        # users =
+        # Employee.all_objects.filter(deleted__isnull=True,laboratories__isnull=True)
+        # #just active users
         users = Employee.all_objects.annotate(
             labs=Count('laboratories')
         ).filter(
@@ -252,7 +258,6 @@ def show(request,
             return redirect('internal:laboratory.index')
     else:
         laboratory = Laboratory.all_objects.get(
-            deleted__isnull=True,
             pk=pk
         )
         #
@@ -266,10 +271,16 @@ def show(request,
         selected_essaymethods = laboratory.essay_methods.all()
         #
         form = LaboratoryForm()
-        context = {'laboratory': laboratory, 'all_users': all_users,
-                   'selected_users': selected_users, 'all_inventories': all_inventories, 'selected_inventories': selected_inventories,
-                   'all_essaymethods': all_essaymethods, 'selected_essaymethods': selected_essaymethods,
-                   'form': form}
+        context = {
+            'laboratory': laboratory,
+            'all_users': all_users,
+            'selected_users': selected_users,
+            'all_inventories': all_inventories,
+            'selected_inventories': selected_inventories,
+            'all_essaymethods': all_essaymethods,
+            'selected_essaymethods': selected_essaymethods,
+            'form': form
+        }
         template = 'internal/laboratory/show.html'
         return render(request, template, context)
 
