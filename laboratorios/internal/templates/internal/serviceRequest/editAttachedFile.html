@@ -1,56 +1,55 @@
 {% extends 'internal/base_internal.html' %}
 
-{% block title %}{{ super() }} | Empleados{% endblock title %}
+{% block title %}{{ super() }} | Solicitudes{% endblock title %}
 
 {% block custom_css %}{% endblock custom_css %}
 
 {% block page_content %}
 <div class="row border-bottom white-bg dashboard-header">
-    <div class="col-md-6">
-        <h2><strong>Editar Archivo</strong></h2>
-    </div>
+  <div class="col-md-6">
+    <h2><strong>Editar Archivo</strong></h2>
+  </div>
 </div>
 <div class="wrapper wrapper-content animated fadeInRight" >
   <div class="row">
     <div class="col-lg-12">
-        <div class="ibox float-e-margins">
-            <div class="ibox-content">
-				<form method="post" enctype="multipart/form-data">
-					{% csrf_token %}
-                    <div class="row">
-                        <div class="col-lg-12">
-                            {% if "." not in selected_file.fileName %}
-                              <div class="form-group">
-                                <label>Nombre de archivo</label>
-                                <br>
-								<input value="{{ selected_file.fileName }}" name="nombreArchivoInput" id="nombreArchivoInputID">
-                              </div>
-                            {% else%}
-                              <div class="form-group">
-                                <label>Nombre de archivo</label>
-                                <br>
-								<input value="{{ selected_file.fileName[:(selected_file.fileName.rfind("."))] }}" maxlength="95" type="text" class="form-control" name="nombreArchivoInput" id="nombreArchivoInputID">
-                              </div>
-                            {% endif %}
-                            <div class="form-group">
-                              <label>Descripción</label>
-                              {% if selected_file.description %}
-                                <br>
-								<input value="{{ selected_file.description}}" type="text" class="form-control" maxlength="95" name="descripcionInput" id="descripcionInputID">
-                              {% else %}
-								<br>
-								<input value="" name="descripcionInput" id="descripcionInputID">
-                              {% endif%}
-                            </div>
-                        </div>
-                    </div>
-					<div>
-						<button name="b_cancel" id="cancel" class="btn btn-w-m btn-white" ><span class="bold" >Regresar</span></button>
-						<button type="submit" name="b_save" id="guardar" class="btn btn-primary" ><span class="bold">Guardar Cambios</span></button>
-					</div>
-				</form>
+      <div class="ibox float-e-margins">
+        <div class="ibox-content">
+          <form method="post" enctype="multipart/form-data" data-toggle="validator">
+            {% csrf_token %}
+            <div class="row">
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Nombre de archivo</label>
+                  {% if "." not in selected_file.fileName %}
+                    <input class="form-control" value="{{ selected_file.fileName }}" name="nombreArchivoInput" id="nombreArchivoInputID">
+                  {% else%}
+                    <input value="{{ selected_file.fileName[:(selected_file.fileName.rfind("."))] }}" maxlength="95" type="text" class="form-control" name="nombreArchivoInput" id="nombreArchivoInputID">
+                  {% endif %}
+                </div>
+              </div>
             </div>
+            <div class="row">
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Descripción</label>
+                  {% if selected_file.description %}
+                    <input class="form-control" value="{{ selected_file.description}}" type="text" class="form-control" maxlength="95" name="descripcionInput" id="descripcionInputID">
+                  {% else %}
+                    <input class="form-control" name="descripcionInput" id="descripcionInputID">
+                  {% endif%}
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <input type="submit" id="guardar" class="btn btn-primary" value="Guardar Cambios">
+                <a class="btn btn-w-m btn-white js-back-btn">Cancelar</a>
+              </div>
+            </div>
+          </form>
         </div>
+      </div>
     </div>
   </div>
 </div>
@@ -67,15 +66,8 @@
 <script>
 if ($('.message-container .messages li')) {
   var msg = $('.message-container .messages li').first();
-  $.extend(toastr.options, {"positionClass": "toast-bottom-right",});
-  try {
-    toastr[msg.data('tags')](msg.text());
-  } catch (TypeError) {}
+  showToastr(msg.text(), msg.data('tags'));
 }
-$('#attachment-table').DataTable({
-  responsive: true,
-});
 </script>
-
 {% endblock custom_js %}
 

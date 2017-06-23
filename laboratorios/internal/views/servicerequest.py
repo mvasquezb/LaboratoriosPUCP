@@ -309,7 +309,9 @@ def show(request,
         'clients': Client.all_objects.filter(deleted__isnull=True),
         'employees': Employee.all_objects.filter(deleted__isnull=True),
         'states': ServiceRequestState.all_objects.filter(deleted__isnull=True),
-        'external_providers': ExternalProvider.all_objects.filter(deleted__isnull=True)
+        'external_providers': ExternalProvider.all_objects.filter(
+            deleted__isnull=True
+        )
     }
     # verificacion
     forms_verified = 0  # Means true lol
@@ -342,7 +344,8 @@ def quotation(request,
               request_id,
               template='internal/servicerequest/quotation.html',
               extra_context=None):
-    service_request = get_object_or_404(ServiceRequest.all_objects, pk=request_id)
+    service_request = get_object_or_404(
+        ServiceRequest.all_objects, pk=request_id)
     quotation, created = Quotation.all_objects.get_or_create(
         request=service_request
     )
@@ -579,7 +582,9 @@ def upload(request, id):
 
         if len(myfile.name) >= 55:
             messages.error(
-                request, 'El nombre del archivo que intentó subir no debe exceder los 50 caracteres!')
+                request,
+                'El nombre del archivo que intentó subir no debe exceder los 50 caracteres!'
+            )
             return redirect('internal:serviceRequest.upload', id)
 
         # fs = FileSystemStorage()
@@ -593,14 +598,18 @@ def upload(request, id):
         fs = requestAttach.file
         filename = fs.save(myfile.name, myfile)
         if name:
-            nameWithExtension = name + requestAttach.file.name[requestAttach.file.name.rfind("."):]
-            matches = RequestAttachment.all_objects.filter(deleted__isnull=True,fileName = nameWithExtension )
+            nameWithExtension = name + \
+                requestAttach.file.name[requestAttach.file.name.rfind("."):]
+            matches = RequestAttachment.all_objects.filter(
+                deleted__isnull=True, fileName=nameWithExtension)
             if len(list(matches)) == 0:
                 requestAttach.fileName = nameWithExtension
                 requestAttach.save()
             else:
                 messages.error(
-                    request, 'El nombre del archivo que intentó subir ya existe')
+                    request,
+                    'El nombre del archivo que intentó subir ya existe'
+                )
                 return redirect('internal:serviceRequest.upload', id)
         else:
             requestAttach.fileName = requestAttach.file.name.split('/')[-1]
@@ -617,22 +626,12 @@ def upload(request, id):
         'servicerequest': sr_object,
     }
     return render(request, 'internal/serviceRequest/attachFile.html', context)
-    # else:
-    #    ra = RequestAttachment.all_objects.get(description = 'baka5')
-    #    filename = ra.file.name.split('/')[-1]
-    #    response = HttpResponse(ra.file, content_type='text/plain')
-    #    response['Content-Disposition'] = 'attachment; filename=%s' % filename
-
-    #    return response
-    #    return render(request, 'internal/serviceRequest/attachFile.html')
-
-    # return redirect('internal:serviceRequest.attachmentList',id)
-    # return render(request, 'internal/serviceRequest/attachFile.html')
 
 
 def attachmentList(request, id):
     sr_object = get_object_or_404(ServiceRequest, pk=id)
-    requestAttachment_list = RequestAttachment.all_objects.filter(deleted__isnull=True,
+    requestAttachment_list = RequestAttachment.all_objects.filter(
+        deleted__isnull=True,
         request=sr_object
     )
 
@@ -651,21 +650,26 @@ def showAttachedFile(request, id):
     }
     return render(request, template, context)
 
+
 def editAttachedFile(request, id):
     if request.method == 'POST':
         fileAttach = RequestAttachment.all_objects.get(pk=id)
-        if "b_cancel" in request.POST:
-            return redirect('internal:serviceRequest.attachmentList', fileAttach.request.pk)
         description = request.POST.get('descripcionInput')
         name = request.POST.get('nombreArchivoInput')
-        if len(name) == 0:
+        if not name:
             messages.error(request, 'No puede dejar el nombre vacío!')
             return redirect('internal:serviceRequest.editAttachedFile', id)
-        nameWithExtension = name + fileAttach.file.name[fileAttach.file.name.rfind("."):]
-        if (fileAttach.fileName == nameWithExtension) and (fileAttach.description == description):
-            return redirect('internal:serviceRequest.attachmentList', fileAttach.request.pk)
-        matches = RequestAttachment.all_objects.filter(deleted__isnull=True,fileName = nameWithExtension).exclude(pk=id)
-        if len(list(matches)) == 0:
+        nameWithExtension = name + \
+            fileAttach.file.name[fileAttach.file.name.rfind("."):]
+        if (fileAttach.fileName == nameWithExtension and
+           fileAttach.description == description):
+            return redirect(
+                'internal:serviceRequest.attachmentList',
+                fileAttach.request.pk
+            )
+        matches = RequestAttachment.all_objects.filter(
+            deleted__isnull=True, fileName=nameWithExtension).exclude(pk=id)
+        if not matches:
             fileAttach.fileName = nameWithExtension
             fileAttach.save()
         else:
@@ -673,13 +677,18 @@ def editAttachedFile(request, id):
             return redirect('internal:serviceRequest.editAttachedFile', id)
         fileAttach.description = description
         fileAttach.save()
-        messages.success(request, 'Se han actualizado los datos del archivo exitosamente!')
-        return redirect('internal:serviceRequest.attachmentList', fileAttach.request.pk)
+        messages.success(
+            request, 'Se han actualizado los datos del archivo exitosamente!')
+        return redirect(
+            'internal:serviceRequest.attachmentList',
+            fileAttach.request.pk
+        )
     template = 'internal/serviceRequest/editAttachedFile.html'
     context = {
         'selected_file': RequestAttachment.all_objects.get(pk=id),
     }
     return render(request, template, context)
+
 
 def deleteAttachedFile(request, id):
     requestAttached = RequestAttachment.all_objects.get(pk=id)
@@ -735,7 +744,8 @@ def getMethodFillList(essayFill):
     return MethodsList
 
 
-def reportDetail(request, template='internal/servicerequest/reportDetail.html'):
+def reportDetail(request,
+                 template='internal/servicerequest/reportDetail.html'):
     if request.POST:
         if "b_cancel" in request.POST:
             return redirect('internal:servicerequest.index')
@@ -779,15 +789,21 @@ def reportDetail(request, template='internal/servicerequest/reportDetail.html'):
                 request,
                 'Debe seleccionar una muestra!'
             )
-            return redirect('internal:servicerequest.reportGenerator', request.POST.get("b_reporte"))
+            return redirect(
+                'internal:servicerequest.reportGenerator',
+                request.POST.get("b_reporte")
+            )
     else:
         return redirect('internal:servicerequest.index')
 
-def finalReport(request, id, template='internal/servicerequest/reportDetail.html'):
+
+def finalReport(request,
+                id,
+                template='internal/servicerequest/reportDetail.html'):
     serviceRequest = ServiceRequest.all_objects.get(pk=id)
     list_samples_id = Sample.all_objects.filter(
         deleted__isnull=True, request=serviceRequest)
-    if len(list_samples_id) > 0:
+    if list_samples_id:
         SampleCompleteList = []
         EssayFillCompleteList = []
         MethodFillCompleteList = []
