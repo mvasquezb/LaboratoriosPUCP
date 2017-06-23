@@ -30,7 +30,7 @@ from internal import utils
 from io import BytesIO
 from xhtml2pdf import pisa
 import json as simplejson
-from datetime import *
+from datetime import datetime, timedelta
 
 
 def index(request,
@@ -544,9 +544,7 @@ def workload_view_per_request(request,
         delta = now - date_in_service
         total = 100 * delta.days / expected_duration
         total = int(total)
-        end_date = date_in_service.replace(
-            day=date_in_service.day + expected_duration
-        )
+        end_date = date_in_service + timedelta(days=expected_duration)
         client = service_request_list[i].client
 
         my_dict = {
