@@ -7,7 +7,7 @@
         <h2><strong>Reportes</strong></h2>
     </div>
 </div>
-<div class="wrapper wrapper-content animated fadeInRight">
+<div class="wrapper wrapper-content animated fadeInRight"> {% csrf_token %}
     <h3><strong>Criteria y Filtros</strong></h3>
     <label class="col-sm-2 control-label">Rango de Fechas</label>
     <div class="col-sm-4">
@@ -19,13 +19,24 @@
     <br>
     <br>
     <br>
-    <div id=criteriaInsertion clas="col=md-3">
-        <label class="col-sm-2 control-label">Criterios de agrupación</label>
+    <div id=criteriaInsertion class="col-md-4">
+        <label class="control-label">Criterios de agrupación</label>
+        <br>
+        <br>
+        <br> 
+    </div>
+    <div id=filterInsertion class="col-md-8">
+        <label class="control-label">Filtros</label>
+        <br>
+        <br>
         <br>
     </div>
-    <div id=filterInsertion clas="col=md-4">
-        <label class="col-sm-2 control-label">Filtros</label>
-        <br>
+    <div id=submitInfo class="col-md-6">
+        <a class="btn btn-primary pull-right" onclick=sendMe() >
+                <i class="fa fa-plus"></i>
+                Generar Reporte
+              </a>
+        <br><br><br><br>
     </div>
     
 </div>
@@ -67,6 +78,39 @@ $(function() {
 </script>
 <script type="text/javascript">
 $(document).ready(function(){
+    function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+var csrftoken = getCookie('csrftoken');
+    console.log(csrftoken);
+    var criteria_string = {{ criteria_string | safe }};
+    console.log(criteria_string);
+    for(var k=0; k<criteria_string.length; k++){
+        tag='';
+        tag=tag+'<label class="col-sm-2 control-label">'+criteria_string[k]+'</label>';
+            tag=tag+'<div class="col-md-1">'
+            tag=tag+'<input id=p_'+k+' type="checkbox" name="input" value="check" onclick=checkMe(this.id) > Seleccionar Criterio ';
+            tag=tag+'</div>';
+            tag=tag+'<br><br><br><br>';
+        $('#criteriaInsertion').append(tag);
+    }
+
+
+
+
+
     var filter = {{ filter | safe}};
     var filter_string = {{ filter_string | safe}};
     var data_list = {{ data_list | safe}};    
@@ -75,7 +119,7 @@ $(document).ready(function(){
         // For the css to actually work, we need to append html with all the sections closed beforehand
         tag='';
         tag=tag+'<label class="col-sm-1 control-label">'+filter_string[filter[i]]+'</label>';
-            tag=tag+'<div class="col-md-2">'
+            tag=tag+'<div class="col-md-1">'
             tag=tag+'<input id=s_'+i+' type="checkbox" name="input" value="check" onclick=checkMe(this.id) > Seleccionar Filtro ';
             tag=tag+'</div>';
             tag=tag+'<div class="col-md-4">';
@@ -93,7 +137,7 @@ $(document).ready(function(){
             for (var j=0;j<data_list[filter[i]].length;j++){
             tag=tag                              +'<tr>';
             tag=tag                                +'<td>'+ data_list[filter[i]][j]+'</td>';
-            tag=tag                                +'<td><input type="checkbox" name="value" class="i-checks checkbox_role"></td>';
+            tag=tag                                +'<td><input id=s_input_'+i.toString()+'_'+j.toString() +' type="checkbox" name="value" class="i-checks checkbox_role"></td>';
             tag=tag                              +'</tr>';
             
         }
@@ -105,7 +149,7 @@ $(document).ready(function(){
                 tag=tag+'</div>';
             tag=tag+'<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>';
         
-        $('#criteriaInsertion').append(tag);
+        
         $('#filterInsertion').append(tag);
     }
     
@@ -124,16 +168,43 @@ $(document).ready(function(){
             }
         }else{
             //document.getElementById(id.replace('s','p')).checked=false;
-
-        }
-        if (document.getElementById(id).checked == false){
+            if (document.getElementById(id).checked == false){
                 $('#list_'+id[2]).addClass('hidden');
             }else{
                 $('#list_'+id[2]).removeClass('hidden');
             }
+        }
     }
     
-    
+    sendMe=function(){
+        var sending_string='';
+        var criteria_index = 0;
+        for(var i=0;i<criteria_string.length;i++){
+            if (document.getElementById('p_'+i.toString()).checked){
+                
+                break;
+            }else{
+                criteria_index++;
+            }
+        }
+        sending_string=sending_string+criteria_index.toString()+'_'
+
+        for(var i=0;i<filter.length;i++){
+            if (document.getElementById('s_'+i.toString()).checked){
+                sending_string=sending_string+'es_1_';
+                for(var j=0;j<data_list[filter[i]].length;j++){
+                    if (document.getElementById('s_input_'+i.toString()+'_'+j.toString()).checked){
+                        sending_string=sending_string+'e_'+i.toString()+'_'+j.toString()+'_';
+                    }
+                }
+                sending_string=sending_string+'ef_';
+            }else{
+                sending_string=sending_string+'es_0_';
+            }
+        }
+        console.log(sending_string);
+        uploadData(sending_string);
+    }
 
 
     function uploadData(insert_data){

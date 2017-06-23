@@ -61,6 +61,8 @@ def report_parameters(request,
         'essay':'Ensayo',
     }
 
+    criteria_selection_string = ['Cliente','Tipo de Muestra','Laboratorio','Ensayo']
+
     # The JSONField wil pickup the following:
     # 1.- Date Range
     # 2.- Dictionary of selected filter
@@ -71,17 +73,22 @@ def report_parameters(request,
         'filter':filter_selection,
         'filter_string':filter_selection_string,
         'data_list':data_list,
+        'criteria_string':criteria_selection_string,
         }
-    if request == 'POST' and 'js_data' in request.body:
+    if request == 'POST':
         ## processing of shit right here
+        print('hola?')
+        print(request.body)
         js_data = json.loads(request.body['js_data'].decode('utf-8'))
         if js_data is not None:
-            print(js_data)
-            filter_string = js_data['date_range'][0] + '%' + js_data['date_range'][1]
+            #print(js_data)
+            filter_string = js_data
             
         ## end of processing shit
         ## passing string with selections to processing template
-            return redirect(reverse('internal:reports.results',filter_string))
+        return redirect(reverse('internal:reports.results',js_data))
+    else:
+        print('csm')
     return render(request,template,context)
 
 
