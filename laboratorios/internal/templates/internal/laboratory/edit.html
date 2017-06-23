@@ -1,0 +1,228 @@
+{% extends 'internal/base_internal.html' %}
+
+{% block title %}{{ super() }} | Laboratorios{% endblock title %}
+
+{% block custom_css %}
+
+{% endblock custom_css %}
+
+{% block page_content %}
+
+<div class="row border-bottom white-bg dashboard-header">
+  <div class="col-md-6">
+    <h2><strong>Editar Laboratorio</strong></h2>
+  </div>
+</div>
+<div class="wrapper wrapper-content animated fadeInRight" >
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="ibox float-e-margins">
+        <div class="ibox-content">
+          {{ form.errors }}
+          <form action="{{ url('internal:laboratory.edit', pk=laboratory.pk) }}" data-toggle="validator" id="form" method="POST">
+            <div class="row">
+              {% csrf_token %}
+              <div class="form-group col-md-12">
+                <label>Nombre de laboratorio (*)</label>
+                <input type="text" maxlength="50" class="form-control" id="laboratory_name" required data-error="El nombre es obligatorio" placeholder="Ingrese nombre de laboratorio" value="{% if laboratory %}{{ laboratory.name }}{% endif %}">
+                <span class="help-block m-b-none">Hasta 50 caracteres permitidos</span>
+                <div class="help-block with-errors"></div>
+              </div>
+              <!--
+              <div class="form-group">
+                <label>Capacidad máxima de empleados (*)</label>
+                <input class="form-control" name="laboratory_capacity" id="capacity" type="number" min="5" max="10" onkeydown="return FilterNmberInput(event)" onpaste="handlePaste(event)" required data-error="Ingrese un valor válido para capacidad de personal"
+                  value="{% if laboratory %}{{ laboratory.capacity }}{% else %}5{% endif %}">
+                <span class="help-block m-b-none">Mínima cantidad será cinco (5) y máxima será diez (10)</span>
+                <div class="help-block with-errors"></div>
+              </div>
+              -->
+            </div>
+            <div class="row">
+              {% if users|length == 0 %}
+                <div class="form-group">
+                  <p><strong>No hay empleados creados, puede crearlos </strong><a href="{{ url('internal:employee.create') }}"><strong>aquí</strong></a></p>
+                </div>
+              {% else %}
+              <div class="col-md-12">
+                <label>Personal del laboratorio</label><br>
+                
+                <div class="table-responsive">
+                  <table class="table table-striped table-bordered">
+                    <thead>
+                      <tr>
+                        <th>Nombre del Empleado</th>
+                        <th>Nombre de Usuario</th>
+                        <th>Correo</th>
+                        <th>Selección</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for user in users %}
+                        <tr>
+                          <td>{{ user }}</td>
+                          <td>{{ user.user.username }}</td>
+                          <td>{{ user.user.email }}</td>
+                          <td>
+                            <input type="checkbox" class="i-checks checkbox_users" data-id="{{ user.pk }}"
+                            {% if user in selected_users %}checked{% endif %}>
+                          </td>
+                        </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                  
+                  <div class="form-group">
+                    <label>Responsable del laboratorio</label>
+                    <span class="help-block">El responsable es un empleado perteneciente al laboratorio</span>
+                    <select class="form-control m-b" id="comboBox">
+                      <option selected>Ningún responsable seleccionado</option>
+                      {% for selected_user in selected_users %}
+                        <option data-id="{{ selected_user.pk }}"
+                        {% if laboratory and selected_user.pk == laboratory.supervisor.pk %}selected{% endif %}>
+                          {{ selected_user }}
+                        </option>
+                      {% endfor %}
+                    </select>
+                  </div>
+                  
+                </div>
+
+              </div>
+              {% endif %}
+            </div>
+            <div class="row">
+              {% if inventories|length == 0 %}
+                <div class="col-md-12 form-group">
+                  <p><strong>No hay inventarios creados, puede crearlos </strong><a href="#"><strong>aquí</strong></a></p>
+                </div>
+              {% else %}
+              <div class="col-md-12">
+                <label>Inventarios del laboratorio</label>
+                <div class="table-responsive">
+                  <table class="table table-striped table-bordered">
+                    <thead>
+                      <tr>
+                        <th>Nombre de inventario</th>
+                        <th>Ubicación</th>
+                        <th>Selección</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for inventory in inventories %}
+                        <tr>
+                          <td>{{ inventory.name }}</td>
+                          <td>{{ inventory.location }}</td>
+                          <td>
+                            <input type="checkbox" class="checkbox_inventory i-checks" data-id="{{ inventory.pk }}"
+                            {% if laboratory and inventory in selected_inventories %}checked{% endif %}>
+                          </td>
+                        </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              {% endif %}
+            </div>
+            <div class="row">
+              {% if essaymethods|length == 0 %}
+                <div class="col-md-12 form-group">
+                  <p><strong>No hay métodos de ensayos creados, puede crearlos </strong><a href="{{ url('internal:essaymethod.create') }}"><strong>aquí</strong></a></p>
+                </div>
+              {% else %}
+              <div class="col-md-12">
+                <label>Pruebas realizables para este laboratorio </label>
+                <div class="table-responsive">
+                  <table class="table table-striped table-bordered">
+                    <thead>
+                      <tr>
+                        <th>Nombre de Prueba</th>
+                        <th>Descripción</th>
+                        <th>Precio (S/.)</th>
+                        <th>Selección</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for essaymethod in essaymethods %}
+                        <tr>
+                          <td>{{ essaymethod.name }}</td>
+                          <td>{{ essaymethod.description }}</td>
+                          <td>{{ essaymethod.price }}</td>
+                          <td>
+                            <input type="checkbox" class="checkbox_essay i-checks" data-id="{{ essaymethod.pk }}"
+                            {% if laboratory and essaymethod in selected_essaymethods %}checked{% endif %}>
+                          </td>
+                        </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              {% endif %}
+            </div>
+            <div class="col-md-12 row form-group">
+              <p><strong>(*) Campos obligatorios</strong></p>
+            </div>
+            <div class="row">
+              <div class="col-md-offset-4 col-md-4 text-center">
+                <input type="submit" class="btn btn-primary" name="registrar"
+                  id="register_button" value="Guardar Cambios">
+                <a href="{{ url('internal:laboratory.index') }}" class="btn btn-white">Cancelar</a>
+              </div>
+            </div>
+          </form>
+          <!--<a data-toggle="modal" data-target="#myModal1">ausugua</a>-->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="message-container hidden">
+  <ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} data-tags="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+  </ul>
+</div>
+<div class="modal" id="myModal1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Titulo</h2>
+        <span data-dismiss="modal"><i class="fa fa-times"></i></span>
+      </div>
+      <div class="modal-body">
+        Cuerpo
+      </div>
+      <div class="modal-footer">
+        Pie de pagina
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock page_content %}
+
+{% block custom_js %}
+<script src="{{ static('js/laboratory.form.js') }}"></script>
+<script>
+$( document ).ready(function() {
+  $("#register_button").click(function() {
+    //$("#myModal1").show();
+    //var delete_url = $(this).attr("data-url");
+    $(".confirm").click(function() {
+      $('#form').submit();
+    });
+  });
+
+  $(".span-close").click(function() {
+    $("#myModal1").hide();
+  });
+});
+$("#myBtn1").click(function(event) {
+  event.preventDefault();
+  return false;
+});
+</script>
+{% endblock custom_js %}

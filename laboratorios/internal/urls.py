@@ -1,20 +1,20 @@
 from django.conf.urls import url
 from . import views
 from django.contrib.auth.views import login, logout_then_login
-
 from django.conf import settings
 from django.conf.urls.static import static
+
 
 urlpatterns = [
     #
     # Login
     #
-    url(r'^login$',
+    url(r'^login/?$',
         login,
         {'template_name': 'internal/login.html'},
         name='login'),
 
-    url(r'^logout$',
+    url(r'^logout/?$',
         logout_then_login,
         name='logout'),
     #
@@ -53,7 +53,7 @@ urlpatterns = [
     url('^servicerequest/finalReport/(?P<id>\d+)$',
         views.servicerequest.finalReport,
         name='servicerequest.finalReport'),
-	url('^servicerequest/editAttachedFile/(?P<id>\d+)$',
+    url('^servicerequest/editAttachedFile/(?P<id>\d+)$',
         views.servicerequest.editAttachedFile,
         name='serviceRequest.editAttachedFile'),
     #

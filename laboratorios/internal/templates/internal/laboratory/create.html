@@ -1,0 +1,25 @@
+{% extends 'internal/base_internal.html' %}
+
+{% block title %}{{ super() }} | Laboratorios{% endblock title %}
+
+{% block custom_css %}
+{% endblock custom_css %}
+
+{% block page_content %}
+{# template-variables #}
+{% set form_action_url = form_action_url or url('internal:laboratory.create') %}
+{% set page_header = page_header or 'Crear Laboratorio' %}
+
+{# /template-variables #}
+{% include 'internal/laboratory/create.base.html' %}
+{% endblock page_content %}
+
+{% block custom_js %}
+<script>
+if ($('.message-container .messages li')) {
+  var msg = $('.message-container .messages li').first();
+  showToastr(msg.text(), msg.data('tags'));
+}
+</script>
+<script src="{{ static('js/laboratory.form.js') }}"></script>
+{% endblock custom_js %}

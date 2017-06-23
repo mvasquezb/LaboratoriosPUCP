@@ -120,10 +120,15 @@
       {% block base_topbar %}
         <div class="row border-bottom">
           <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
+            <div class="navbar-header">
+              <a href="#" class="navbar-minimalize minimalize-styl-2 btn btn-primary">
+                <i class="fa fa-bars"></i>
+              </a>
+            </div>
            <ul class="nav navbar-top-links navbar-left">
               <li>
-                <a>
-                <i class="fa fa-arrow-left" onclick="goBack()"></i> Atras
+                <a class="js-back-btn navbar-top-btn">
+                  <i class="fa fa-arrow-left"></i> Atrás
                 </a>
               </li>
             </ul>
@@ -171,32 +176,6 @@
 <script src="{{ static('vendors/validator.js') }}"></script>
 <script src="{{ static('vendors/url-search-params.js') }}"></script>
 <script src="{{ static('vendors/cookies.js') }}"></script>
-<script>
-var csrftoken = Cookies.get('csrftoken');
-function csrfSafeMethod(method) {
-    // these HTTP methods do not require CSRF protection
-    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
-}
-$.ajaxSetup({
-    beforeSend: function(xhr, settings) {
-        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-            xhr.setRequestHeader("X-CSRFToken", csrftoken);
-        }
-    }
-});
-
-function goBack() {
-    window.history.back();
-}
-
-$(document).ready(function () {
-    $('.i-checks').iCheck({
-        checkboxClass: 'icheckbox_square-green',
-        radioClass: 'iradio_square-green',
-    });
-});
-
-</script>
 
 <!-- Theme script -->
 <script src="{{ static('js/inspinia.js') }}"></script>
