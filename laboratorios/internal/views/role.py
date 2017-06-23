@@ -25,7 +25,7 @@ def show(request, pk, template='internal/role/show.html'):
     role = get_object_or_404(Role, pk=pk)
     context = {
         'selected_permissions': role.permissions.all(),
-        'role': role
+        'custom_role': role
     }
     return render(request, template, context)
 
