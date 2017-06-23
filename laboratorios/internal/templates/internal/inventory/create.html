@@ -18,14 +18,14 @@
                     <div class="row">
                         <div class="col-lg-6">
                             <div class="form-group">
-                                <label>Nombre*</label>
+                                <label>Nombre (*)</label>
                                 <input type="text" class="form-control" name="name" required data-error="El Nombre es obligatorio" placeholder="Nombre">
                                 <div class="help-block with-errors"></div>
                             </div>
                         </div>
                         <div class="col-lg-6">
                             <div class="form-group">
-                                <label>Tipo*</label>
+                                <label>Tipo (*)</label>
                                  <select class="form-control m-b" name="type" onchange="fillLabels(this.value)">
                                 {% for type in inventory_types %}
                                     <option value="{{ type }}">{{ type[1]}}</option>
@@ -43,12 +43,9 @@
                             </div>
                         </div>
                     </div>
-                    <p><strong>(*) Campos obligatorios</strong></p>
-                    <div class="ibox float-e-margins">
-                      <div class="ibox-title">
-                        <h5>Agregar </h5>
-                      </div>
-                      <div class="ibox-content">
+                    <div class="row">
+                      <div class="col-md-12">
+                        <label>Agregar Insumos </label>
                         <div class="table-responsive">
                             <table class="table table-striped table-bordered" id="supply-table">
                               <thead>
@@ -75,9 +72,9 @@
                                     <td>{{ supply.name }}</td>
                                     <td>{{ supply.description }}</td>
                                     <td>
-                                      
+                                      <input type="checkbox" class="i-checks checkbox_supplies" data-id="{{ supply.pk }}" {% if suply in selected_supply %} checked {% endif %}>     
                                     </td>
-                                    <td >
+                                    <td class="text-left footable-visible footable-last-column">
                                       <input id="stock_field" type="number" class="form-control" required name="stock" placeholder="10" data-error="Ingrese un valor válido">
                                     </td>
                                   </tr>
@@ -86,7 +83,47 @@
                             </table>
                         </div>
                       </div>
+                      <div class="col-md-12">
+                        <label>Agregar Equipos </label>
+                        <div class="table-responsive">
+                          <table class="table table-striped table-bordered" id="equipment-table">
+                            <thead>
+                              <tr>
+                                <th>
+                                  N°
+                                </th>
+                                <th>
+                                  Nombre
+                                </th>
+                                <th>
+                                  Descripción
+                                </th>
+                                <th>
+                                  Añadir
+                                </th>
+                                <th>Cantidad</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {% for equipment in equipments %}
+                                <tr role="row">
+                                  <td>{{ loop.index }}</td>
+                                  <td>{{ equipment.name }}</td>
+                                  <td>{{ equipment.description }}</td>
+                                  <td>
+                                    <input type="checkbox" class="i-checks checkbox_supplies" data-id="{{ equipment.pk }}" {% if suply in selected_supply %} checked {% endif %}>   
+                                  </td>
+                                  <td class="text-left footable-visible footable-last-column">
+                                    <input id="stock_field" type="number" class="form-control" required name="stock" placeholder="10" data-error="Ingrese un valor válido">
+                                  </td>
+                                </tr>
+                              {% endfor %}
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
                     </div>
+                    <p><strong>(*) Campos obligatorios</strong></p>
                     <div class="row">
                       <div class="col-md-offset-4 col-md-4 text-center">
                         <input type="submit" class="btn btn-primary" name="registrar"
@@ -132,6 +169,7 @@ $(document).ready(function() {
 } );
 
 </script>
+<script src="{{ static('js/laboratory.form.js') }}"></script>
 
 
 {% endblock custom_js %}
