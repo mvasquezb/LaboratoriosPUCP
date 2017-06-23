@@ -55,18 +55,19 @@
                           <td>{{ user.user.username }}</td>
                           <td>{{ user.user.email }}</td>
                           <td>
-                            <input type="checkbox" class="i-checks checkbox_users" data-id="{{ user.pk }}"
+                            <input type="checkbox" class="i-checks checkbox_users" data-id="{{ user.pk }}" data-name="{{ user }}"
                             {% if user in selected_users %}checked{% endif %}>
                           </td>
                         </tr>
                       {% endfor %}
                     </tbody>
                   </table>
-                  <!--
+                  
                   <div class="form-group">
                     <label>Responsable del laboratorio</label>
+                    <span class="help-block">El responsable es un empleado perteneciente al laboratorio</span>
                     <select class="form-control m-b" id="comboBox">
-                      <option selected> Ningún responsable seleccionado </option>
+                      <option selected>Ningún responsable seleccionado</option>
                       {% for selected_user in selected_users %}
                         <option data-id="{{ selected_user.pk }}"
                         {% if laboratory and selected_user.pk == laboratory.supervisor.pk %}selected{% endif %}>
@@ -75,7 +76,7 @@
                       {% endfor %}
                     </select>
                   </div>
-                  -->
+                  
                 </div>
 
               </div>

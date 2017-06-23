@@ -71,11 +71,12 @@
                       {% endfor %}
                     </tbody>
                   </table>
-                  <!--
+                  
                   <div class="form-group">
                     <label>Responsable del laboratorio</label>
+                    <span class="help-block">El responsable es un empleado perteneciente al laboratorio</span>
                     <select class="form-control m-b" id="comboBox">
-                      <option selected> Ningún responsable seleccionado </option>
+                      <option selected>Ningún responsable seleccionado</option>
                       {% for selected_user in selected_users %}
                         <option data-id="{{ selected_user.pk }}"
                         {% if laboratory and selected_user.pk == laboratory.supervisor.pk %}selected{% endif %}>
@@ -84,7 +85,7 @@
                       {% endfor %}
                     </select>
                   </div>
-                  -->
+                  
                 </div>
 
               </div>
@@ -166,13 +167,12 @@
             <div class="row">
               <div class="col-md-offset-4 col-md-4 text-center">
                 <input type="submit" class="btn btn-primary" name="registrar"
-                  data-toggle="modal" data-target="#myModal1"
                   id="register_button" value="Guardar Cambios">
                 <a href="{{ url('internal:laboratory.index') }}" class="btn btn-white">Cancelar</a>
               </div>
             </div>
           </form>
-          <a data-toggle="modal" data-target="#myModal1">ausugua</a>
+          <!--<a data-toggle="modal" data-target="#myModal1">ausugua</a>-->
         </div>
       </div>
     </div>
@@ -209,7 +209,7 @@
 <script>
 $( document ).ready(function() {
   $("#register_button").click(function() {
-    $("#myModal1").show();
+    //$("#myModal1").show();
     //var delete_url = $(this).attr("data-url");
     $(".confirm").click(function() {
       $('#form').submit();
