@@ -1,3 +1,5 @@
+<!--
+
 {% extends 'internal/base_internal.html' %}
 
 {% block title %}{{ super() }} | Aprobar Solicitudes de Almacenamiento de Muestras{% endblock title %}
@@ -61,8 +63,8 @@
                         <a href="{{ url('internal:inventoryOrder.show', inventoryOrder.id) }}" class="btn-white btn"><i class="fa fa-eye" aria-hidden="true"></i></a>
 
 
-                        <a class="myBtn1 btn-white btn" data-toggle="modal" data-target="#myModal1" data-url="{{ url('internal:inventoryOrder.approve', inventoryOrder.id) }}">aprobar</i></a>
-                        <a class="myBtn2 btn-white btn" data-toggle="modal" data-target="#myModal2" data-url="{{ url('internal:inventoryOrder.reject', inventoryOrder.id) }}">rechazar</i></a>
+                        <a class="myBtn1 btn-white btn" data-toggle="modal1" data-target="#myModal1" data-url="{{ url('internal:inventoryOrder.approve', inventoryOrder.id) }}">aprobar</i></a>
+                        <a class="myBtn2 btn-white btn" data-toggle="modal1" data-target="#myModal2" data-url="{{ url('internal:inventoryOrder.reject', inventoryOrder.id) }}">rechazar</i></a>
 
                       </div>
                     </td>
@@ -77,20 +79,28 @@
   </div>
 </div>
 
-<div id="myModal1" class="modal">
-  <!-- Modal content -->
+<div id="myModal1" class="modal1">
+  <!-- Modal content
+
+-->
+
+<!--
   <div class="modal-content">
     <span class="span-close close">&times;</span>
     <div class="modeal-center-content">
         <p>¿Seguro que desea aprobar la muestra seleccionada?</p>
-        <button type="button" class="aprobar-inventoryOrder btn btn-success" style="margin-right: 0.2cm;">Aprobar</button>
-        <button type="button" class="span-close btn btn-primary" style="margin-left: 0.2cm;">Cancelar</button>
+        <button type="button" class="aprobar-inventoryOrder btn btn-success">Aprobar</button>
+        <button type="button" class="span-close btn btn-primary">Cancelar</button>
     </div>
   </div>
 </div>
 
-<div id="myModal2" class="modal">
-  <!-- Modal content -->
+<div id="myModal2" class="modal1">
+  <!-- Modal content
+
+  -->
+
+<!--
   <div class="modal-content">
     <span class="span-close close">&times;</span>
     <div class="modeal-center-content">
@@ -112,7 +122,9 @@
 
 {% block custom_js %}
 
-<!--Modal 1 para poder aprobar una solicitud-->
+<!--Modal 1 para poder aprobar una solicitud
+-->
+<!--
 <script>
 $( document ).ready(function() {
   $(".myBtn1").click(function() {
@@ -134,6 +146,8 @@ $(".myBtn1").click(function(event) {
 });
 </script>
 <!--Modal2, con myBtn2-->
+
+<!--
 <script>
 $( document ).ready(function() {
   $(".myBtn2").click(function() {
@@ -171,3 +185,4 @@ $('#employee_table').DataTable({
 </script>
 {% endblock custom_js %}
 
+-->
