@@ -1,5 +1,5 @@
 
-$('#form').on('submit', function (evt) {
+$('#inventoryform').on('submit', function (evt) {
   //evt.preventDefault();
   var $form = $(this);
   var name = $('<input>', {
@@ -8,22 +8,23 @@ $('#form').on('submit', function (evt) {
     value: $('#inventory_name').val(),
   });
   $form.append(name);
+
+
   var location = $('<input>', {
     name: 'location',
     type: 'hidden',
-    value: $('#inventory_name').val(),
+    value: $('#inventory_location').val(),
   });
-  $form.append(name);
-
+  $form.append(location);
   
   
   $('#comboBox').each(function () {
     var type = $('<input>', {
       name: 'inventory_type',
       type: 'hidden',
-      value: $('#comboBox option:selected').text(),
+      value: $('#comboBox option:selected').val(),
     });
-    $form.append(supervisor);
-  }
+    $form.append(type);
+  });
   
 });

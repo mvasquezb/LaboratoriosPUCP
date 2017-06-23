@@ -58,7 +58,7 @@
                     <td>{{ loop.index }}</td>
                     <td>{{ inventory.name }}</td>
                     <td>{{ inventory.location }}</td>
-                    <td>{{ inventory.inventory_type }}</td>
+                    <td>{{ inventory.get_inventory_type_display() }}</td>
                     <td class="text-left footable-visible footable-last-column">
                       <div class="btn-group">
                         <a  href="{{ url('internal:inventory.show', inventory.id) }}" class="btn-white btn"><i class="fa fa-eye" aria-hidden="true"></i></a>
