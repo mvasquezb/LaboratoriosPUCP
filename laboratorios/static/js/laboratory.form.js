@@ -153,6 +153,16 @@ $('#form').on('submit', function (evt) {
     $form.append(essay);
   });
 
-  //$form.submit();
-  //console.log($form.serialize());
 });
+
+  $('.inventory_modal').on('click',function(){
+    var inventory_pk = $(this).data('pk');
+    var url = $(".page_title").data("url");
+    $.get(url, {'inventory_pk': inventory_pk},function(data){
+      $('div.inventory_name').replaceWith("<div class='inner inventory_name'>" + data['inventory_name'] +"</div>");
+    });
+    //console.log("pasa el ajax")
+    //
+    //$('div.inventory_name').replaceWith("<div class='inner inventory_name'>" + data['inventory_name'] +"</div>");
+    //$('div.inventory_pk').replaceWith("<div class='inner inventory_pk'>" + inventory_pk + "</div>");
+  });

@@ -165,13 +165,14 @@
             </div>
             <div class="row">
               <div class="col-md-offset-4 col-md-4 text-center">
-                <input type="submit" id="myBtn1" class="btn btn-primary" name="registrar"
-                  {% if edit %}data-toggle="modal" data-target="#myModal1"{% endif %}
+                <input type="submit" class="btn btn-primary" name="registrar"
+                  data-toggle="modal" data-target="#myModal1"
                   id="register_button" value="Guardar Cambios">
                 <a href="{{ url('internal:laboratory.index') }}" class="btn btn-white">Cancelar</a>
               </div>
             </div>
           </form>
+          <a data-toggle="modal" data-target="#myModal1">ausugua</a>
         </div>
       </div>
     </div>
@@ -184,7 +185,22 @@
     {% endfor %}
   </ul>
 </div>
-
+<div class="modal" id="myModal1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Titulo</h2>
+        <span data-dismiss="modal"><i class="fa fa-times"></i></span>
+      </div>
+      <div class="modal-body">
+        Cuerpo
+      </div>
+      <div class="modal-footer">
+        Pie de pagina
+      </div>
+    </div>
+  </div>
+</div>
 
 {% endblock page_content %}
 
@@ -192,7 +208,7 @@
 <script src="{{ static('js/laboratory.form.js') }}"></script>
 <script>
 $( document ).ready(function() {
-  $("#myBtn1").click(function() {
+  $("#register_button").click(function() {
     $("#myModal1").show();
     //var delete_url = $(this).attr("data-url");
     $(".confirm").click(function() {

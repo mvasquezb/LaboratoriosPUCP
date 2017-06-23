@@ -3,6 +3,7 @@
     <h2><strong>{{ page_header }}</strong></h2>
   </div>
 </div>
+<div class="page_title" data-url="{{ url('internal:laboratory.inventory_modal')}}"></div>
 <div class="wrapper wrapper-content animated fadeInRight" >
   <div class="row">
     <div class="col-lg-12">
@@ -94,6 +95,8 @@
                       <tr>
                         <th>Nombre de inventario</th>
                         <th>Ubicación</th>
+                        <th>Tipo de Inventario</th>
+                        <th>Vista Rápida</th>
                         <th>Selección</th>
                       </tr>
                     </thead>
@@ -102,6 +105,8 @@
                         <tr>
                           <td>{{ inventory.name }}</td>
                           <td>{{ inventory.location }}</td>
+                          <td>Inventario de {{ inventory.get_inventory_type_display() }}</td>
+                          <td><a data-toggle="modal" data-target="#myModal1" class="inventory_modal btn btn-white" data-pk="{{ inventory.pk }}" ><i class="fa fa-eye" aria-hidden="true"></i></a></td>
                           <td>
                             <input type="checkbox" class="checkbox_inventory i-checks" data-id="{{ inventory.pk }}"
                             {% if laboratory and inventory in selected_inventories %}checked{% endif %}>
@@ -167,6 +172,34 @@
     </div>
   </div>
 </div>
+
+<div class="modal fade" role="dialog" id="myModal1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="col-md-offset-4 col-md-4 text-center">
+          <label class="modal-title">Detalle de Inventario</label>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div class="container">
+          <h4>Nombre</h4>
+          <div class="inner inventory_name"></div>
+        </div>
+        <div class="container">
+          <h4>PKs</h4>
+          <div class="inner inventory_pk"></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <div class="col-md-offset-4 col-md-4 text-center">
+          <a class="btn btn-white" data-dismiss="modal">Cancelar</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="message-container hidden">
   <ul class="messages">
     {% for message in messages %}

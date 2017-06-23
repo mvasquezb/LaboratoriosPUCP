@@ -10,7 +10,8 @@ from django.db.models import Q, Count
 from internal.models import *
 from .forms import LaboratoryForm
 import json as simplejson
-
+from django.http import JsonResponse
+from django.http import HttpResponse
 
 def index(request,
           template='internal/laboratory/index.html',
@@ -23,6 +24,18 @@ def index(request,
         context.update(extra_context)
     return render(request, template, context)
 
+def inventory_modal(request):
+    if request.method == 'GET' and request.is_ajax():
+        #print("LLEGA BIEN AL VIEW")
+        dicc = dict(request.GET)
+        inventory_pk = dicc['inventory_pk'][0]
+        #print(inventory_pk)
+        inventory = Inventory.all_objects.get(pk=inventory_pk)
+        data = {
+            'inventory_name': inventory.name
+        }
+        return JsonResponse(data)
+    return HttpResponse("sjdn")
 
 def services_index(request,
                    pk):
