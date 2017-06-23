@@ -47,6 +47,9 @@
                     Descripción
                   </th>
                   <th>
+                    Unidad
+                  </th>
+                  <th>
                     Estado
                   </th>
                   <th>Acciones</th>
@@ -58,6 +61,7 @@
                     <td>{{ loop.index }}</td>
                     <td>{{ supply.name }}</td>
                     <td>{{ supply.description }}</td>
+                    <td>{{ supply.metric_unit }}</td>
                     <td>
                       {% if supply.deleted %}
                         Eliminado
