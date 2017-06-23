@@ -6,12 +6,14 @@ from django.shortcuts import (
 from django.contrib import messages
 from django.utils import timezone
 from django.db.models import Q, Count
+from django.http import JsonResponse
+from django.http import HttpResponse
 
 from internal.models import *
 from .forms import LaboratoryForm
+
 import json as simplejson
-from django.http import JsonResponse
-from django.http import HttpResponse
+from datetime import timedelta
 
 
 def index(request,
@@ -68,7 +70,7 @@ def services_index(request,
                 )
                 service.save()
     laboratory = get_object_or_404(
-        Laboratory.all_objects.filter(deleted__isnull=True),
+        Laboratory.all_objects,
         pk=pk
     )
     all_priorities = ServiceRequestPriority.all_objects.filter(
@@ -109,9 +111,7 @@ def services_index(request,
         delta = now - date_in_service
         total = 100 * delta.days / expected_duration
         total = int(total)
-        end_date = date_in_service.replace(
-            day=date_in_service.day + expected_duration
-        )
+        end_date = date_in_service + timedelta(days=expected_duration)
         client = service_request_list[i].client
 
         my_dict = {
