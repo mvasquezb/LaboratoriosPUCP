@@ -8,7 +8,7 @@
     </div>
 </div>
 <div class="wrapper wrapper-content animated fadeInRight">
-    <h3><strong>Criteria</strong></h3>
+    <h3><strong>Criteria y Filtros</strong></h3>
     <label class="col-sm-2 control-label">Rango de Fechas</label>
     <div class="col-sm-4">
     <div id="reportrange" class="pull-right" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; width: 100%">
@@ -19,8 +19,15 @@
     <br>
     <br>
     <br>
-    <div id=criteriaInsertion>
+    <div id=criteriaInsertion clas="col=md-3">
+        <label class="col-sm-2 control-label">Criterios de agrupación</label>
+        <br>
     </div>
+    <div id=filterInsertion clas="col=md-4">
+        <label class="col-sm-2 control-label">Filtros</label>
+        <br>
+    </div>
+    
 </div>
 {% endblock page_content %}
 
@@ -60,32 +67,32 @@ $(function() {
 </script>
 <script type="text/javascript">
 $(document).ready(function(){
-    var criteria = {{ criteria | safe}};
-    var criteria_string = {{ criteria_string | safe}};
+    var filter = {{ filter | safe}};
+    var filter_string = {{ filter_string | safe}};
     var data_list = {{ data_list | safe}};    
-    for(var i=0;i<criteria.length;i++){
-        console.log(data_list[criteria[i]]);
+    for(var i=0;i<filter.length;i++){
+        console.log(data_list[filter[i]]);
         // For the css to actually work, we need to append html with all the sections closed beforehand
         tag='';
-        tag=tag+'<label class="col-sm-2 control-label">'+criteria_string[criteria[i]]+'</label>';
-                tag=tag+'<div class="col-sm-4"><input id=p_'+i+' type="checkbox" name="input" value="check" onclick=checkMe(this.id) > Primario';
-            tag=tag+'<input id=s_'+i+' type="checkbox" name="input" value="check" onclick=checkMe(this.id) > Secundario ';
+        tag=tag+'<label class="col-sm-1 control-label">'+filter_string[filter[i]]+'</label>';
+            tag=tag+'<div class="col-md-2">'
+            tag=tag+'<input id=s_'+i+' type="checkbox" name="input" value="check" onclick=checkMe(this.id) > Seleccionar Filtro ';
             tag=tag+'</div>';
-            tag=tag+'<div class="col-lg-6">';
+            tag=tag+'<div class="col-md-4">';
                             tag=tag+'<div id=list_'+i.toString()+' class="form-group hidden">';
-                                tag=tag+'<label>Seleccione l@s '+ criteria_string[criteria[i]]+'s: </label>';
+                                tag=tag+'<label>Seleccione l@s '+ filter_string[filter[i]]+'s: </label>';
                                 tag=tag+'<div class="table-responsive">';
                                     tag=tag+'<table class="table table-striped table-bordered permission_table">';
                                       tag=tag+'<thead>';
                                         tag=tag+'<tr>';
-                                          tag=tag+'<th>Nombre de '+criteria_string[criteria[i]]+'</th>';   
+                                          tag=tag+'<th>Nombre de '+filter_string[filter[i]]+'</th>';   
                                           tag=tag+'<th>Selección</th>';
                                         tag=tag+'</tr>';
                                       tag=tag+'</thead>';
                                       tag=tag+'<tbody id=body_'+i.toString()+' >';
-            for (var j=0;j<data_list[criteria[i]].length;j++){
+            for (var j=0;j<data_list[filter[i]].length;j++){
             tag=tag                              +'<tr>';
-            tag=tag                                +'<td>'+ data_list[criteria[i]][j]+'</td>';
+            tag=tag                                +'<td>'+ data_list[filter[i]][j]+'</td>';
             tag=tag                                +'<td><input type="checkbox" name="value" class="i-checks checkbox_role"></td>';
             tag=tag                              +'</tr>';
             
@@ -96,50 +103,28 @@ $(document).ready(function(){
                             tag=tag+'</div>';
                         tag=tag+'</div>';
                 tag=tag+'</div>';
-            tag=tag+'<br>';
-            tag=tag+'<br>';
-            tag=tag+'<br>';
-            tag=tag+'<br>';
-            tag=tag+'<br>';
-            tag=tag+'<br>';
-            tag=tag+'<br>';
-            tag=tag+'<br>';
-            tag=tag+'<br>';
-        
+            tag=tag+'<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>';
         
         $('#criteriaInsertion').append(tag);
+        $('#filterInsertion').append(tag);
     }
     
     checkMe=function(id){
         console.log(document.getElementById(id).checked);
-        // Check the other one for same criteria
+        // Check the other one for same filter
         console.log(id[0]);
         if (id[0]=='p'){
-            document.getElementById(id.replace('p','s')).checked=false;
+            //document.getElementById(id.replace('p','s')).checked=false;
 
-            // Check if another criteria is checked as main one
-            for(var i=0;i<criteria.length;i++){
+            // Check if another filter is checked as main one
+            for(var i=0;i<filter.length;i++){
                 if (i != parseInt(id.replace('p_',''))){
                     document.getElementById('p_'+i.toString()).checked=false;
-                    if (document.getElementById('s_'+i.toString()).checked==false){
-                        $('#list_'+i.toString()).addClass('hidden');
-                    }
                 }
             }
         }else{
-            document.getElementById(id.replace('s','p')).checked=false;
+            //document.getElementById(id.replace('s','p')).checked=false;
 
-            // Check if all are checked as secondary, then alert
-            var checked=0;
-            for(var i=0;i<criteria.length;i++){
-                if (document.getElementById('s_'+i.toString()).checked){
-                    checked = checked + 1;
-                }
-            }
-            if (checked == criteria.length){
-                alert('Debe seleccionar un criterio principal!');
-                document.getElementById(id).checked=false;
-            }
         }
         if (document.getElementById(id).checked == false){
                 $('#list_'+id[2]).addClass('hidden');
