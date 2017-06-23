@@ -1,10 +1,5 @@
-from django.shortcuts import (
-    HttpResponseRedirect,
-    redirect
-)
+from django.shortcuts import redirect
 from django.utils.deprecation import MiddlewareMixin
-from django.conf import settings
-from django.core.urlresolvers import reverse_lazy
 
 
 class AuthRequiredMiddleware(MiddlewareMixin):

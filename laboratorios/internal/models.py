@@ -534,9 +534,11 @@ class Inventory(SafeDeleteModel):
 
     SUPPLY_TYPE = 'SupplyInventory'
     EQUIPMENT_TYPE = 'EquipmentInventory'
+    SAMPLE_TYPE = 'SampleInventory'
     TYPE_CHOICES = (
         (SUPPLY_TYPE, 'Insumos'),
         (EQUIPMENT_TYPE, 'Equipos'),
+        (SAMPLE_TYPE, 'Muestras'),
     )
     audit_log = AuditlogHistoryField()
     name = models.CharField(max_length=100, unique=True)
