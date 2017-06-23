@@ -11,23 +11,11 @@
       <label><b>1. <u>INFORMACIÓN DE LA SOLICITUD</u></b></label>
       <div style="padding-left: 1.7em;">
         <label>Fecha de Registro: {{SampleCompleteList[0].request.registered_date.strftime('%d/%m/%Y')}}</label> <br>
-        {% if SampleCompleteList[0].request.client != None %}
-        <label>Nombre del Cliente: {{SampleCompleteList[0].request.client}}</label>
-        {% else %}
-        <label>Nombre del Cliente: No registrado </label>
-        {% endif %}
+        <label>Nombre del Cliente: {{SampleCompleteList[0].request.client or 'No registrado' }}</label>
         <br>
-        {% if SampleCompleteList[0].request.supervisor != None %}
-        <label>Nombre del Supervisor: {{SampleCompleteList[0].request.supervisor}}</label>
-        {% else %}
-        <label>Nombre del Supervisor: No registrado</label>
-        {% endif %}
+        <label>Nombre del Supervisor: {{SampleCompleteList[0].request.supervisor or 'No registrado'}}</label>
         <br>
-        {% if SampleCompleteList[0].request.observations != None %}
-        <label>Observaciones: {{SampleCompleteList[0].request.observations}}</label>
-        {% else %}
-        <label>Observaciones: Sin observaciones</label>
-        {% endif %}
+        <label>Observaciones: {{ SampleCompleteList[0].request.observations or 'Sin observaciones' }}</label>
         <br>
         </div>
         <br>
@@ -51,7 +39,7 @@
                 <tr role="row">
                   <td align="center">{{sample.name}}</td>
                   <td align="center">{{sample.code}}</td>
-                  <td align="center">sample.description</td>
+                  <td align="center">{{ sample.description }}</td>
                 </tr>
             {% endfor %}
             </tbody>
@@ -64,14 +52,14 @@
                         <div class="col-lg-6">
                           <label><b>2.{{i+1}}. <u>Muestra "{{SampleCompleteList[i].code}}"</u></b></label>
                           <br>
-                           <div style="padding-left: 1.7em;"><label><b>Observaciones: </b> SampleCompleteList[i].observations</label></div>
+                           <div style="padding-left: 1.7em;"><label><b>Observaciones: </b> {{ SampleCompleteList[i].observations or '-' }}</label></div>
                           {% for j in range(EssayFillCompleteList[i]|length) %}
                             <br>
                             <label><b>2.{{i+1}}.{{j+1}}. <u>Ensayo "{{EssayFillCompleteList[i][j].essay.name}}"</u></b></label>
                             <br>
                            <div style="padding-left: 1.7em;"><label><b>Descripción del Ensayo:</b> {{EssayFillCompleteList[i][j].essay.description}}</label>
                             <br>
-                             <label><b>Observaciones del Ensayo: </b> EssayFillCompleteList[i][j].observations</label></div>
+                             <label><b>Observaciones del Ensayo: </b> {{ EssayFillCompleteList[i][j].observations or '-' }}</label></div>
                             {% for h in range(MethodFillCompleteList[i][j]|length)%}
                           <br>
                           <label><b>2.{{i+1}}.{{j+1}}.{{h+1}}. <u>Método de Ensayo "{{MethodFillCompleteList[i][j][h].essay_method.name}}"</u></b></label>
@@ -104,7 +92,7 @@
                                   </tbody>
                               </table>
                           <br>
-                              <div style="padding-left: 1.7em;"><label><b>Observaciones:</b> MethodFillCompleteList[i][j][h].observations </label></div>
+                              <div style="padding-left: 1.7em;"><label><b>Observaciones:</b> {{ MethodFillCompleteList[i][j][h].observations or '-' }}</label></div>
                             {% endfor %}
                           {% endfor %}
                     </div>
