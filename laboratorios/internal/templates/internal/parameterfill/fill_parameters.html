@@ -38,13 +38,26 @@
                     <td>{{ method.name }}</td>
                   </tr>
               </tbody>
-            </table>
-            <form id=methodform action="{{ url('internal:parameterfill.fill_parameters',pk=pk) }}" method="post">{% csrf_token %}
-            {% for form in parameter_forms %}
-                {{ form.as_p() }}
-            {% endfor %}
-              <div class="text-left">
-                <input type="submit" value="Grabar resultados" class="btn btn-primary" form="methodform">
+            </table> 
+            <form id=methodform action="{{ url('internal:parameterfill.fill_parameters',pk=pk) }}" method="post">
+            {% csrf_token %}
+              <div class="col-md-4">
+              {% for form in parameter_forms %}
+                  {% for field in form %}
+                  <div class="form-group">
+                    {% if loop.index == 1 %}
+                    <label>Valor</label>
+                    {% endif %}
+                    {% if loop.index == 2 %}
+                    <label>Incertidumbre</label>
+                    {% endif %}
+                    {{ field.as_widget(attrs={'data-error':"Este campo es obligatorio",'class':"form-control"}) }}
+                  </div>
+                  {% endfor %}    
+              {% endfor %}
+                <div class="text-left">
+                  <input type="submit" value="Grabar resultados" class="btn btn-primary" form="methodform">
+                </div>
               </div>
             </form>
           </div>
