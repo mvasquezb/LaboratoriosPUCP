@@ -23,20 +23,22 @@
           <form action="{{ url('internal:laboratory.edit', pk=laboratory.pk) }}" data-toggle="validator" id="form" method="POST">
             <div class="row">
               {% csrf_token %}
-              <div class="form-group">
+              <div class="col-md-12 form-group">
                 <label>Nombre de laboratorio</label>
                 <input type="text" maxlength="50" disabled class="form-control" id="laboratory_name" required data-error="El nombre es obligatorio" placeholder="Ingrese nombre de laboratorio" value="{{ laboratory.name }}">
                 <div class="help-block with-errors"></div>
               </div>
 
+              <!--
               <div class="form-group">
                 <label>Capacidad máxima de empleados</label>
                 <input class="form-control" disabled name="laboratory_capacity" onkeydown="return FilterNmberInput(event)" onpaste="handlePaste(event)" id="capacity" type="number" min="5" max="10" value="{{ laboratory.capacity }}" required data-error="Ingrese un valor válido para capacidad de personal">
                 <div class="help-block with-errors"></div>
               </div>
+              -->
             </div>
             <div class="row">
-              <div class="form-group">
+              <div class="col-md-12 form-group">
                   {% if selected_users|length >0 %}
                   <label>Personal del laboratorio</label>
                   <div class="table-responsive">
@@ -76,6 +78,7 @@
                   {% endif %}
               </div>
             </div>
+            <!--
             <div class="row">
               <div class="form-group">
                 <label>Horas de Servicio</label>
@@ -90,9 +93,9 @@
                   </select>
               </div>
             </div>
-
+            -->
             <div class="row">
-              <div class="form-group">
+              <div class="col-md-12 form-group">
                 {% if selected_inventories|length > 0 %}
                 <label>Inventarios para el laboratorio</label>
                 <div class="table-responsive">
@@ -120,7 +123,7 @@
             </div>
 
             <div class="row">
-              <div class="form-group">
+              <div class="col-md-12 form-group">
               {% if selected_essaymethods|length > 0 %}
               <label>Pruebas realizables para este laboratorio </label>
               <div class="table-responsive">
@@ -149,7 +152,12 @@
               </div>
             </div>
             <div class="col-md-offset-4">
-              <a  href="{{ url('internal:laboratory.edit', laboratory.id) }}"  class="btn btn-primary"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>Editar</a>
+              {% if not laboratory.deleted %}
+                <a  href="{{ url('internal:laboratory.edit', laboratory.id) }}"  class="btn btn-primary">
+                  <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                  Editar
+                </a>
+              {% endif %}
               <a href="{{ url('internal:laboratory.index') }}" class="btn btn-white">Regresar</a>
             </div>
           </form>

@@ -31,7 +31,13 @@
             PUCP
           </div>
         </li>
-         <li>
+        <li>
+          <a href="{{ url('internal:index') }}">
+            <i class="fa fa-home"></i>
+            <span class="nav-label">Inicio</span>
+          </a>
+        </li>
+        <li>
           <a href="{{ url('internal:role.index') }}">
             <i class="fa fa-th-large"></i>
             <span class="nav-label">Roles</span>
@@ -99,8 +105,14 @@
         </li>
         <li>
           <a href="{{ url('internal:supply.index') }}">
-            <i class="fa fa-flask-large"></i>
+            <i class="fa fa-flask"></i>
             <span class="nav-label">Suministros</span>
+          </a>
+        </li>
+        <li>
+          <a href="{{ url('internal:reports.start') }}">
+            <i class="fa fa-file-pdf-o"></i>
+            <span class="nav-label">Reportes Consolidados</span>
           </a>
         </li>
       </ul>
@@ -167,7 +179,6 @@
 <script src="{{ static('vendors/pace-progress/pace.min.js') }}"></script>
 <script src="{{ static('js/icheck.min.js') }}"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
-<script src="{{ static('vendors/footable/footable.all.min.js') }}"></script>
 <script src="{{ static('vendors/validator.js') }}"></script>
 <script src="{{ static('vendors/url-search-params.js') }}"></script>
 <script src="{{ static('vendors/cookies.js') }}"></script>

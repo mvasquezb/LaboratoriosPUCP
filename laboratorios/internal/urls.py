@@ -53,6 +53,9 @@ urlpatterns = [
     url('^servicerequest/finalReport/(?P<id>\d+)$',
         views.servicerequest.finalReport,
         name='servicerequest.finalReport'),
+    url('^servicerequest/editAttachedFile/(?P<id>\d+)$',
+        views.servicerequest.editAttachedFile,
+        name='serviceRequest.editAttachedFile'),
     #
     # Employee
     #
@@ -161,7 +164,7 @@ urlpatterns = [
     url('^servicerequest/view_workload_per_request/?$',
         views.servicerequest.workload_view_per_request,
         name='servicerequest.workload_view_per_request'),
-    url('^servicerequest/(?P<pk>\d+)/approve/?$',
+    url('^servicerequest/approve/(?P<pk>\d+)$',
         views.servicerequest.approve,
         name='servicerequest.approve'),
 
@@ -210,6 +213,9 @@ urlpatterns = [
     url('^laboratory/(?P<pk>\d+)/track_services/$',
         views.laboratory.track_services,
         name='laboratory.track_services'),
+    url('^laboratory/InventoryModal$',
+        views.laboratory.inventory_modal,
+        name='laboratory.inventory_modal'),
 
     #
     # sampleType
@@ -323,4 +329,14 @@ urlpatterns = [
     url('^fill_parameters/(?P<pk>\d+)$',
         views.parameterfill.fill_parameters,
         name='parameterfill.fill_parameters'),
+    #
+    # Reports
+    #
+    url('^reports/start$',
+        views.reports.report_parameters,
+        name='reports.start'),
+    url('^reports/results/(?P<criteria_string>[\w\-]+)$',
+        views.reports.processing_parameters,
+        name='reports.results')
+
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
