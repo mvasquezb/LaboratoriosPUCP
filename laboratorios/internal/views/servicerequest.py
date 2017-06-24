@@ -428,7 +428,7 @@ def assign_employee(request,
     for essay_method in chosen_ems:
         employee_q &= Q(essay_methods=essay_method.essay_method)
     employee_list = Employee.all_objects.filter(
-        employee_q,
+        # employee_q,
         deleted__isnull=True
     )
 
