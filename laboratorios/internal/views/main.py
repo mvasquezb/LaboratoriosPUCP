@@ -9,6 +9,10 @@ __all__ = (
 
 
 def index(request, template='internal/index.html'):
+    context = {
+        'method_list': [],
+        'sample_data': {},
+    }
     if hasattr(request.user, 'basicuser'):
         employee = Employee.all_objects.get(
             deleted__isnull=True,
@@ -26,7 +30,6 @@ def index(request, template='internal/index.html'):
                 deleted__isnull=True,
                 pk=essay_method_fill.essay.sample.id
             )
-            print(sample)
             parameters_list = EssayMethodParameterFill.all_objects.filter(
                 deleted__isnull=True,
                 essay_method=essay_method_fill,
@@ -39,10 +42,5 @@ def index(request, template='internal/index.html'):
         context = {
             'method_list': essay_method_fill_list,
             'sample_data': sample_data,
-        }
-    else:
-        context = {
-            'method_list': [],
-            'sample_data': {},
         }
     return render(request, template, context)

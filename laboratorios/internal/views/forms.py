@@ -286,8 +286,3 @@ class EquipmentForm(ModelForm):
         model = Equipment
         fields = ['name', 'description', 'servicelife_unit',
                   'servicelife', 'error_range']
-
-class InventoryForm(ModelForm):
-    class Meta:
-        model = Inventory
-        exclude = []
