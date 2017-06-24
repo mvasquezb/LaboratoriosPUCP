@@ -8,13 +8,13 @@ from django.shortcuts import (
 from django.contrib import messages
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from internal.models import *
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import user_passes_test
 from internal.views.forms import (
-    EmployeeForm,
     UserCreationForm,
     UserEditForm,
     EquipmentForm
 )
+from internal.permissions.equipment import *
 
 
 def index(request,
@@ -42,6 +42,7 @@ def show(request,
     return render(request, template, context)
 
 
+@user_passes_test(create_equipment_check, login_url='internal:index')
 def create(request,
            template='internal/equipment/create.html'):
     #user_form = UserCreationForm(request.POST or None)
@@ -63,6 +64,7 @@ def create(request,
     return render(request, template, context)
 
 
+@user_passes_test(edit_equipment_check, login_url='internal:index')
 def edit(request, pk,
          template='internal/equipment/edit.html'):
     equipment = get_object_or_404(Equipment, pk=pk)
@@ -81,6 +83,7 @@ def edit(request, pk,
     return render(request, template, context)
 
 
+@user_passes_test(delete_equipment_check, login_url='internal:index')
 def delete(request, pk):
     equipment = get_object_or_404(Equipment, pk=pk)
     equipment.delete()

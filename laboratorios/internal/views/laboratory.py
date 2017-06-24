@@ -14,6 +14,8 @@ from .forms import LaboratoryForm
 
 import json as simplejson
 from datetime import timedelta
+from django.contrib.auth.decorators import user_passes_test
+from internal.permissions.laboratory import *
 
 
 def index(request,
@@ -138,6 +140,7 @@ def services_index(request,
     return render(request, template, context)
 
 
+@user_passes_test(create_laboratory_check, login_url='internal:index')
 def create(request,
            template='internal/laboratory/create.html',
            extra_content=None):
@@ -183,6 +186,7 @@ def create(request,
         return render(request, template, context)
 
 
+@user_passes_test(edit_laboratory_check, login_url='internal:index')
 def edit(request,
          pk):
     if request.method == 'POST':
@@ -238,6 +242,7 @@ def edit(request,
         return render(request, template, context)
 
 
+@user_passes_test(delete_laboratory_check, login_url='internal:index')
 def delete(request, pk):
     laboratory = get_object_or_404(Laboratory, pk=pk)
     laboratory.delete()

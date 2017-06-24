@@ -31,6 +31,8 @@ from io import BytesIO
 from xhtml2pdf import pisa
 import json as simplejson
 from datetime import datetime, timedelta
+from django.contrib.auth.decorators import user_passes_test
+from internal.permissions.serviceRequest import *
 
 
 def index(request,
@@ -44,6 +46,7 @@ def index(request,
     return render(request, template, context)
 
 
+@user_passes_test(create_service_request_check, login_url='internal:index')
 def create(request,
            pk,
            template='internal/servicerequest/create.html'):
@@ -112,6 +115,7 @@ def create_client(request,
     return render(request, template, context)
 
 
+@user_passes_test(edit_service_request_check, login_url='internal:index')
 def edit(request,
          pk,
          template='internal/servicerequest/edit.html'):
@@ -243,10 +247,12 @@ def edit_sample(request,
     return render(request, template, context)
 
 
+@user_passes_test(delete_service_request_check, login_url='internal:index')
 def delete(request,
            pk):
     service_request = ServiceRequest.all_objects.get(pk=pk)
     service_request.delete()
+
     return redirect(reverse("internal:servicerequest.index"))
 
 
@@ -255,6 +261,7 @@ def delete_sample(request,
                   pk_sample):
     sample = Sample.all_objects.get(pk=pk_sample)
     sample.delete()
+
     return redirect('internal:servicerequest.edit', pk_request)
 
 

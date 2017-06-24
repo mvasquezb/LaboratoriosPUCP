@@ -28,7 +28,11 @@ from django.contrib import messages
 from internal.models import *
 from internal.views.forms import *
 from django.core import serializers
+from django.contrib.auth.decorators import user_passes_test
+from internal.permissions.essay import *
 
+
+@user_passes_test(create_essay_check, login_url='internal:index')
 def create(request,
     template = 'internal/essay/create.html'):
     form = EssayForm(request.POST or None)
@@ -109,6 +113,7 @@ def show(request,
     return render(request, template, context)
 
 
+@user_passes_test(edit_essay_check, login_url='internal:index')
 def edit(request,
     pk,
     template='internal/essay/edit.html'):
@@ -199,8 +204,7 @@ def index(request,
     return render(request, template, context)
 
 
-
-
+@user_passes_test(delete_essay_check, login_url='internal:index')
 def delete(request, pk):
     essay = get_object_or_404(Essay, pk=pk)
     essay.delete()

@@ -7,8 +7,9 @@ from django.shortcuts import (
 from django.contrib import messages
 from internal.models import *
 from django.utils.text import slugify
-
 from .forms import SampleTypeForm
+from django.contrib.auth.decorators import user_passes_test
+from internal.permissions.sampleType import *
 
 NOT_OPTION_SELECTED = "Selecciona una opcion"
 
@@ -30,6 +31,7 @@ def validation_name(name):
     return not SampleType.objects.filter(name=name).exists()
 
 
+@user_passes_test(create_sample_type_check, login_url='internal:index')
 def create(request,
            template='internal/sampleType/create.html',
            extra_context=None):
@@ -49,6 +51,7 @@ def create(request,
     return render(request, template, context)
 
 
+@user_passes_test(edit_sample_type_check, login_url='internal:index')
 def edit(request, id, template='internal/sampleType/create.html'):
     sample_type = get_object_or_404(SampleType, pk=id)
     form = SampleTypeForm(request.POST or None, instance=sample_type)
@@ -69,6 +72,7 @@ def edit(request, id, template='internal/sampleType/create.html'):
     return render(request, template, context)
 
 
+@user_passes_test(delete_sample_type_check, login_url='internal:index')
 def delete(request,
            id,
            template='internal/sampleType/index.html',

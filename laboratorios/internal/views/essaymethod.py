@@ -10,8 +10,11 @@ from datetime import *
 
 from internal.models import *
 from internal.views.forms import *
+from django.contrib.auth.decorators import user_passes_test
+from internal.permissions.essayMethod import *
 
 
+@user_passes_test(create_essay_method_check, login_url='internal:index')
 def create(request,
            template='internal/essaymethod/create.html'):
     form = EssayMethodForm(request.POST or None)
@@ -56,6 +59,7 @@ def create(request,
     return render(request, template, context)
 
 
+@user_passes_test(edit_essay_method_check, login_url='internal:index')
 def edit(request,
          pk,
          template='internal/essaymethod/edit.html'):
@@ -146,6 +150,7 @@ def index(request,
     return render(request, template, context)
 
 
+@user_passes_test(delete_essay_method_check, login_url='internal:index')
 def delete(request, pk):
     essaymethod = get_object_or_404(EssayMethod, pk=pk)
     essaymethod.delete()

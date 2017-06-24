@@ -8,7 +8,6 @@ from django.shortcuts import (
 from django.contrib import messages
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from internal.models import *
-from django.contrib.auth.decorators import login_required
 from internal.views.forms import (
     EmployeeForm,
     UserCreationForm,
