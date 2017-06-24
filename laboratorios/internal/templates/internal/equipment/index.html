@@ -47,6 +47,9 @@
                     Descripción
                   </th>
                   <th>
+                    Tiempo de servicio
+                  </th>
+                  <th>
                     Estado
                   </th>
                   <th>Acciones</th>
@@ -58,6 +61,7 @@
                     <td>{{ loop.index }}</td>
                     <td>{{ equipment.name }}</td>
                     <td>{{ equipment.description }}</td>
+                    <td>{{ equipment.servicelife}} {{ equipment.servicelife_unit }}</td>
                     <td>
                       {% if equipment.deleted %}
                         Eliminado

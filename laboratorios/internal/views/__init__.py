@@ -11,6 +11,8 @@ from .sampleType import *
 from .essay import *
 from .inventoryItem import *
 from .parameterfill import *
+from .reports import *
+
 from .supply import *
 from .equipment import *
 from .inventory import *
