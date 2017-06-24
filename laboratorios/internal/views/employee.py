@@ -19,13 +19,6 @@ import functools
 from internal.permissions.employee import *
 
 
-'''def permission_check(user, permission):
-    if not hasattr(user, 'basicuser'):
-        return False
-    return permission in user.basicuser.permission()
-
-create_employee_check = functools.partial(permission_check, permission='Can add employee')'''
-
 def index(request,
           template='internal/employee/index.html',
           extra_context=None):
@@ -78,6 +71,7 @@ def create(request,
     return render(request, template, context)
 
 
+@user_passes_test(edit_employee_check, login_url='internal:index')
 def edit(request, pk,
          template='internal/employee/edit.html'):
     employee = get_object_or_404(Employee, pk=pk)
@@ -104,6 +98,7 @@ def edit(request, pk,
     return render(request, template, context)
 
 
+@user_passes_test(delete_employee_check, login_url='internal:index')
 def delete(request, pk):
     employee = get_object_or_404(Employee, pk=pk)
     employee.delete()
