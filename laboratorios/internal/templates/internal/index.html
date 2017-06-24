@@ -27,12 +27,14 @@
                   </tr>
                 </thead>
                 <tbody>
-                  {% for method in methods_list %}
+                  {% for method in method_list %}
+                    {% set sample_list = sample_data.get(method.id) %}
+                    {% for sample in sample_list %}
                     <tr role="row">
                       <td>{{ method.essay_method.name }}</td>
-                      <td>{{ samples_list[loop.index-1]['sample'].name }}</td>
-                      <td>{{ samples_list[loop.index-1]['sample'].sample_type }}</td>
-                      <td>{{ samples_list[loop.index-1]['filled'] }}</td>
+                      <td>{{ sample.sample.name }}</td>
+                      <td>{{ sample.sample.sample_type }}</td>
+                      <td>{{ sample.filled }}</td>
                       <td>
                         <div class="btn-group">
                           <a class="btn-white btn btn-xs" href="{{ url('internal:parameterfill.fill_parameters', method.id) }}">
@@ -41,6 +43,7 @@
                         </div>
                       </td>
                     </tr>
+                    {% endfor %}
                   {% endfor %}
                 </tbody>
               </table>
