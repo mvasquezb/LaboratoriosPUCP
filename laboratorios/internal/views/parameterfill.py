@@ -42,7 +42,7 @@ def fill_parameters(request,
                                                                     prefix='emf_' + str(parameter_list[i].pk)))
     context={
         'sample':sample,
-        'method':method,
+        'method':method.essay_method,
         'parameter_forms':parameter_form_list,
         'pk':pk,
     }
