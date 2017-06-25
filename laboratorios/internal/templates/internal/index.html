@@ -34,7 +34,11 @@
                       <td>{{ method.essay_method.name }}</td>
                       <td>{{ sample.sample.name }}</td>
                       <td>{{ sample.sample.sample_type }}</td>
-                      <td>{{ sample.filled }}</td>
+                      {% if sample.filled %}
+                        <td>Completado</td>
+                      {% else %}
+                        <td>No Completado</td>
+                      {% endif %}
                       <td>
                         <div class="btn-group">
                           <a class="btn-white btn btn-xs" href="{{ url('internal:parameterfill.fill_parameters', method.id) }}">
