@@ -11,6 +11,7 @@ from django.contrib.auth.decorators import user_passes_test
 from internal.permissions.serviceContract import *
 
 
+@user_passes_test(index_service_contract_check, login_url='internal:index')
 def index(request,
           template='internal/servicecontract/index.html',
           extra_context=None):
@@ -23,6 +24,7 @@ def index(request,
     return render(request, template, context)
 
 
+@user_passes_test(show_service_contract_check, login_url='internal:index')
 def show(request,
          service_id,
          template='internal/servicecontract/show.html'):
