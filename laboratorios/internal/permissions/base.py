@@ -1,11 +1,16 @@
 import functools
 
 
-def permission_check(user, permission):
+def permission_check(user, permissions):
     if not hasattr(user, 'basicuser'):
         return False
-    return permission in user.basicuser.permissions()
+    if not isinstance(permissions, (list, tuple)):
+        permissions = [permissions]
+    permission_list = user.basicuser.permissions()
+    return permission_list.filter(
+        codename__in=permissions
+    ).exists()
 
 
-def set_permission_check(permission):
-    return functools.partial(permission_check, permission=permission)
+def set_permission_check(permissions):
+    return functools.partial(permission_check, permissions=permissions)
