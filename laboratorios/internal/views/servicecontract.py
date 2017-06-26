@@ -164,11 +164,11 @@ def edit(request,
 
         # Copiamos el priority, pues en el edit no se establece ello
         if service_request_ori.priority is not None:
-            modification.priority = get_object_or_404(
+            service_request_mod.priority = get_object_or_404(
                 ServiceRequestPriority.all_objects,
                 pk=service_request_ori.priority.pk
             )
-            modification.save()
+            service_request_mod.save()
 
         service_request_ori.save()      # Guardamos el original
         service_contract_modification = ServiceContractModification(

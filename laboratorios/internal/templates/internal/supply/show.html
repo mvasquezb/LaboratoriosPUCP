@@ -17,17 +17,17 @@
             <div class="ibox-content">
               <div class="form-group">
                   <label>Nombre*</label>
-                  <input value="{{ supply.name}}"   type="text" class="form-control" name="name" required data-error="El Nombre es obligatorio" placeholder="Nombre del suministro">
+                  <input disabled value="{{ supply.name}}"   type="text" class="form-control" name="name" required data-error="El Nombre es obligatorio" placeholder="Nombre del suministro">
                   <div class="help-block with-errors"></div>
               </div>
               <div class="form-group">
                   <label>Descripción*</label>
-                  <input  value="{{ supply.description}}"  type="text" class="form-control" name="description" required data-error="La descripción es obligatoria" placeholder="Descripción del suministro">
+                  <input  disabled value="{{ supply.description}}"  type="text" class="form-control" name="description" required data-error="La descripción es obligatoria" placeholder="Descripción del suministro">
                   <div class="help-block with-errors"></div>
               </div>
               <div class="form-group">
                   <label>Unidades*</label>
-                  <input value="{{ supply.metric_unit }}" type="text" class="form-control" name="metric_unit" required data-error="El campo unidades es obligatorio" placeholder="Kilos, Toneladas, etc.">
+                  <input disabled value="{{ supply.metric_unit }}" type="text" class="form-control" name="metric_unit" required data-error="El campo unidades es obligatorio" placeholder="Kilos, Toneladas, etc.">
                   <div class="help-block with-errors"></div>
               </div>
               <div class="row">
