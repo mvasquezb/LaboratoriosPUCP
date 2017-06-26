@@ -18,6 +18,7 @@ from django.contrib.auth.decorators import user_passes_test
 from internal.permissions.laboratory import *
 
 
+@user_passes_test(index_laboratory_check, login_url='internal:index')
 def index(request,
           template='internal/laboratory/index.html',
           extra_context=None):
@@ -250,6 +251,7 @@ def delete(request, pk):
     return redirect('internal:laboratory.index')
 
 
+@user_passes_test(show_laboratory_check, login_url='internal:index')
 def show(request,
          pk):
     if request.method == 'POST':
