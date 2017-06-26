@@ -3,20 +3,18 @@ from django.shortcuts import (
     get_object_or_404,
     redirect,
     reverse,
-    HttpResponseRedirect
 )
 from django.contrib import messages
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from internal.models import *
 from django.contrib.auth.decorators import user_passes_test
+
 from internal.views.forms import (
-    UserCreationForm,
-    UserEditForm,
     EquipmentForm
 )
 from internal.permissions.equipment import *
 
 
+@user_passes_test(index_equipment_check, login_url='internal:index')
 def index(request,
           template='internal/equipment/index.html',
           extra_context=None):
@@ -30,6 +28,7 @@ def index(request,
     return render(request, template, context)
 
 
+@user_passes_test(show_equipment_check, login_url='internal:index')
 def show(request,
          pk,
          template='internal/equipment/show.html'):
