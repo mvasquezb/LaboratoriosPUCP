@@ -121,7 +121,7 @@ class ServiceRequestCreateForm(ModelForm):
             'priority':'Prioridad',
             'external_provider':'Proveedor Externo',
             'expected_duration':'Duración esperada',
-            'observations':'Observacions'
+            'observations':'Observaciones'
         }
 
 
@@ -144,7 +144,7 @@ class ServiceRequestForm(ModelForm):
             'priority':'Prioridad',
             'external_provider':'Proveedor Externo',
             'expected_duration':'Duración esperada',
-            'observations':'Observacions'
+            'observations':'Observaciones'
         }
 
 

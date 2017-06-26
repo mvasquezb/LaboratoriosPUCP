@@ -8485,3 +8485,15 @@ body.md-skin {
   display: inline-block;
   margin-left: 20px;
 }
+
+.criteriaInsertion {
+  display: inline;
+}
+
+.custom-row-report {
+  margin-bottom: 40px;
+}
+
+.custom-filter-label {
+  display: block;
+}
