@@ -8468,6 +8468,10 @@ body.md-skin {
   overflow: auto;
 }
 
+.table-responsive .permission_table.role {
+  max-height: 500px;
+} 
+
 .first-table-column {
   width: 175px;
 }
