@@ -9,8 +9,11 @@ from internal.views.forms import (
     InventoryOrderForm,
     InventoryOrderEditForm
 )
+from internal.permissions import user_passes_test
+from internal.permissions.inventoryOrder import *
 
 
+@user_passes_test(index_inventory_order_check, login_url='internal:index')
 def index(request,
           template='internal/inventoryOrder/index.html',
           extra_context=None):
@@ -27,6 +30,7 @@ def index(request,
     return render(request, template, context)
 
 
+@user_passes_test(show_inventory_order_check, login_url='internal:index')
 def show(request,
          pk,
          template='internal/inventoryOrder/show.html'):
@@ -57,7 +61,7 @@ def check(request,
     return render(request, template, context)
 
 
-
+@user_passes_test(create_inventory_order_check, login_url='internal:index')
 def create(request,
            template='internal/inventoryOrder/create.html'):
     form = InventoryOrderForm(request.POST or None)
@@ -95,6 +99,7 @@ def createPK(request,
     return render(request, template, context)
 
 
+@user_passes_test(edit_inventory_order_check, login_url='internal:index')
 def edit(request, pk1, pk,
          template='internal/inventoryOrder/edit.html'):
     inventoryOrder = get_object_or_404(
@@ -171,6 +176,7 @@ def reject(request, pk):
     return redirect('internal:inventoryOrder.index')
 
 
+@user_passes_test(delete_inventory_order_check, login_url='internal:index')
 def delete(request, pk):
     inventoryOrder = get_object_or_404(
         InventoryOrder.all_objects.filter(deleted__isnull=True),

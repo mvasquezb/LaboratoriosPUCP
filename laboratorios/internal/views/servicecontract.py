@@ -7,8 +7,11 @@ from django.shortcuts import (
 )
 from ..models import *
 from ..views.forms import *
+from internal.permissions import user_passes_test
+from internal.permissions.serviceContract import *
 
 
+@user_passes_test(index_service_contract_check, login_url='internal:index')
 def index(request,
           template='internal/servicecontract/index.html',
           extra_context=None):
@@ -21,6 +24,7 @@ def index(request,
     return render(request, template, context)
 
 
+@user_passes_test(show_service_contract_check, login_url='internal:index')
 def show(request,
          service_id,
          template='internal/servicecontract/show.html'):
@@ -44,6 +48,7 @@ def show(request,
     return render(request, template, context)
 
 
+@user_passes_test(delete_service_contract_check, login_url='internal:index')
 def delete(request, pk):
     servicecontract = get_object_or_404(ServiceContract.all_objects, pk=pk)
     servicerequest = get_object_or_404(
@@ -57,6 +62,7 @@ def delete(request, pk):
     return redirect('internal:servicecontract.index')
 
 
+@user_passes_test(edit_service_contract_check, login_url='internal:index')
 def edit(request,
          pk,
          template='internal/servicecontract/edit.html'):

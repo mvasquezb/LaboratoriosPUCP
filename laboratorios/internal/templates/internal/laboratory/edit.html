@@ -46,7 +46,7 @@
               {% else %}
               <div class="col-md-12">
                 <label>Personal del laboratorio</label><br>
-                
+
                 <div class="table-responsive">
                   <table class="table table-striped table-bordered">
                     <thead>
@@ -71,7 +71,7 @@
                       {% endfor %}
                     </tbody>
                   </table>
-                  
+
                   <div class="form-group">
                     <label>Responsable del laboratorio</label>
                     <span class="help-block">El responsable es un empleado perteneciente al laboratorio</span>
@@ -85,7 +85,7 @@
                       {% endfor %}
                     </select>
                   </div>
-                  
+
                 </div>
 
               </div>
@@ -178,13 +178,6 @@
     </div>
   </div>
 </div>
-<div class="message-container hidden">
-  <ul class="messages">
-    {% for message in messages %}
-    <li{% if message.tags %} data-tags="{{ message.tags }}"{% endif %}>{{ message }}</li>
-    {% endfor %}
-  </ul>
-</div>
 <div class="modal" id="myModal1">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -201,7 +194,6 @@
     </div>
   </div>
 </div>
-
 {% endblock page_content %}
 
 {% block custom_js %}

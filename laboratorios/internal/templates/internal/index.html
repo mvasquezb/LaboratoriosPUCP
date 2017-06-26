@@ -16,7 +16,7 @@
       <div class="ibox float-e-margins">
         <div class="ibox-content">
           <div class="table-responsive">
-              <table class="table table-striped table-bordered" id="role-table">
+              <table class="table table-striped table-bordered" id="sample-table">
                 <thead>
                   <tr role="row">
                     <th>Método</th>
@@ -59,24 +59,17 @@
     </div>
   </div>
 </div>
-
 {% endblock page_content %}
 
 {% block custom_js %}
 <script>
-var user_name = '{{ user.username }}';
-console.log(user_name);
-setTimeout(function() {
-  toastr.options = {
-    closeButton: true,
-    progressBar: true,
-    showMethod: 'slideDown',
-    timeOut: 4000
-  };
-  toastr.success('Sistema de Gestión de Laboratorios IC-PUCP', 'Bienvenido ' + user_name);
-}, 1300);
+var user_name = '{{ user }}';
 
-$('#role-table').DataTable({
+if (!$('.message-container .messages li').length) {
+  showToastr('Bienvenido ' + user_name, 'success', 'Sistema de Gestión de Laboratorios IC-PUCP');
+}
+
+$('#sample-table').DataTable({
   responsive: true,
 })
 </script>
