@@ -12,6 +12,7 @@ from django.contrib.auth.decorators import user_passes_test
 from internal.permissions.role import *
 
 
+@user_passes_test(index_role_check, login_url='internal:index')
 def index(request, template='internal/role/index.html', extra_context=None):
     roles = Role.objects.order_by('name')
 
@@ -23,6 +24,7 @@ def index(request, template='internal/role/index.html', extra_context=None):
     return render(request, template, context)
 
 
+@user_passes_test(show_role_check, login_url='internal:index')
 def show(request, pk, template='internal/role/show.html'):
     role = get_object_or_404(Role, pk=pk)
     context = {
