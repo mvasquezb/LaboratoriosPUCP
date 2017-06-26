@@ -325,6 +325,12 @@ function showToastr(pMsg, pTypeMsg, pTitle, options) {
     case "error":
       toastr.error(pMsg, pTitle);
       break;
+    case 'warning':
+      toastr.warning(pMsg, pTitle);
+      break;
+    case 'info':
+      toastr.info(pMsg, pTitle);
+      break;
   }
 }
 
