@@ -73,7 +73,6 @@
                     <a class="myBtn1 btn-white btn" data-toggle="modal" data-target="#myModal1"
                        data-url="{{ url('internal:servicecontract.delete', servicecontract.id) }}"><i
                       class="fa fa-trash-o" aria-hidden="true"></i></a>
-
                     {% else %}
                     <a class="btn-white btn"
                        href="{{ url('internal:servicecontract.approve', servicecontract.id) }}">Aprobar</a>
@@ -85,10 +84,10 @@
                 </td>
               </tr>
               {% endfor %}
-
               </tbody>
             </table>
           </div>
+          {% include 'internal/layouts/legend.html' %}
         </div>
       </div>
     </div>

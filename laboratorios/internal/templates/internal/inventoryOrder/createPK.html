@@ -33,9 +33,7 @@
                -->
                 <form id="myForm" action="{{ url('internal:inventoryOrder.create') }}" method="post" data-toggle="validator">
                     {% csrf_token %}
-
                     <div class="row">
-
                         <div class="col-lg-6">
                             <label>Ensayo realizable - Muestra</label>
                           <select class="form-control m-b" name="Fakeessay" value="{{actualInventoryOrder.id}}" onchange="fillLabels(this.value)">
@@ -47,11 +45,8 @@
                           <!--ABSOLUTAMENTE NECESARIO, POR NADA DEL MUNDO BORRAR-->
                           <input name="essay" value="{{ actualInventoryOrder.id }}" type="hidden"></input>
                           <input name="unsettled" value=True type="hidden"></input>
-
                         </div>
-
                     </div>
-
                   <!-- Si deseas mostrar los datos de la selecccion no se puede, Django no lo permite :( -->
                         <div class="ibox">
                           <div class="ibox-title">
@@ -68,7 +63,6 @@
                             </div>
                           </div>
                         </div>
-
                         <div class="ibox">
                           <div class="ibox-title">
                             Muestra
@@ -122,10 +116,13 @@
                         </div>
 
                     <div class="row">
-                          <div class="col-md-offset-4">
-                              <input type="submit" value="Registrar" class="btn btn-primary">
-                              <a class="btn btn-w-m btn-white js-back-btn">Cancelar</a>
-                          </div>
+                      <div class="col-md-12 row form-group">
+                        <p><strong>(*) Campos obligatorios</strong></p>
+                      </div>
+                      <div class="col-md-offset-4">
+                        <input type="submit" value="Registrar" class="btn btn-primary">
+                        <a class="btn btn-w-m btn-white js-back-btn">Cancelar</a>
+                      </div>
                     </div>
                 </form>
             </div>

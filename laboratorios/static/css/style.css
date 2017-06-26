@@ -8480,3 +8480,8 @@ body.md-skin {
 .ibox-content.small-ibox {
   padding-bottom: 0;
 }
+
+.legend-icons {
+  display: inline-block;
+  margin-left: 20px;
+}

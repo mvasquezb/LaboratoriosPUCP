@@ -27,8 +27,12 @@
                                 <div class="help-block with-errors"></div>
                             </div>
                         </div>
+                        <div class="col-md-12 row form-group">
+                          <p><strong>(*) Campos obligatorios</strong></p>
+                        </div>
                     </div>
                 <input type="submit" id="submit_button" value="Registrar" class="btn btn-primary">
+                    <a href="{{ url('internal:essay.index') }}" class="btn btn-white">Cancelar</a>
                 <div id="json_div" style="display: none;">
                     <form id="json_form" novalidate>
                     <p><label for="id_js_data">js_data:</label> <input type="text" name="js_data" maxlength="1024" id="id_js_data"/></p>
