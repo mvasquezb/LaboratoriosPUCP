@@ -14,6 +14,7 @@ from internal.permissions.sampleType import *
 NOT_OPTION_SELECTED = "Selecciona una opcion"
 
 
+@user_passes_test(index_sample_type_check, login_url='internal:index')
 def index(request,
           template='internal/sampleType/index.html',
           extra_context=None):
