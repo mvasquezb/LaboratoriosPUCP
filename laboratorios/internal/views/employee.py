@@ -14,10 +14,11 @@ from internal.views.forms import (
     UserEditForm
 )
 from django.contrib.auth.decorators import user_passes_test
-import functools
+
 from internal.permissions.employee import *
 
 
+@user_passes_test(index_employee_check, login_url='internal:index')
 def index(request,
           template='internal/employee/index.html',
           extra_context=None):
@@ -31,6 +32,7 @@ def index(request,
     return render(request, template, context)
 
 
+@user_passes_test(show_employee_check, login_url='internal:index')
 def show(request,
          pk,
          template='internal/employee/show.html'):
