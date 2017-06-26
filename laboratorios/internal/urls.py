@@ -337,6 +337,20 @@ urlpatterns = [
         name='reports.start'),
     url('^reports/results/(?P<criteria_string>[\w\-]+)$',
         views.reports.processing_parameters,
-        name='reports.results')
-
+        name='reports.results'),
+    #
+    # External Provider
+    #
+    url('^externalprovider/?$',
+        views.externalprovider.index,
+        name='externalprovider.index'),
+    url('^externalprovider/(?P<id>\d+)/?$',
+        views.externalprovider.show,
+        name='externalprovider.show'),
+    url('^externalprovider/(?P<id>\d+)/edit/?$',
+        views.externalprovider.edit,
+        name='externalprovider.edit'),
+    url('^externalprovider/(?P<id>\d+)/delete/?$',
+        views.externalprovider.delete,
+        name='externalprovider.delete'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
