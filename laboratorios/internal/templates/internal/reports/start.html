@@ -7,38 +7,70 @@
         <h2><strong>Reportes</strong></h2>
     </div>
 </div>
-<div class="wrapper wrapper-content animated fadeInRight"> {% csrf_token %}
-    <h3><strong>Criteria y Filtros</strong></h3>
-    <label class="col-sm-2 control-label">Rango de Fechas</label>
-    <div class="col-sm-4">
-    <div id="reportrange" class="pull-right" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; width: 100%">
-        <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>&nbsp;
-        <span></span> <b class="caret"></b>
+<div class="wrapper wrapper-content animated fadeInRight" >
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-content">
+                {% csrf_token %}
+                    <h3><strong>Criterios y Filtros</strong></h3>
+                    <div class="row custom-row-report">
+                        <label class="col-sm-2 control-label">Rango de Fechas</label>
+                        <div class="col-sm-4">
+                            <div id="reportrange" class="pull-right" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; width: 100%">
+                                <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>&nbsp;
+                                <span></span> <b class="caret"></b>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row custom-row-report">
+                        <div class="col-md-12">
+                            <label class="control-label">Criterios de agrupación</label>
+                        </div>
+                        <!--<div class="col-md-12">
+                            <div id=criteriaInsertion class="criteriaInsertion"></div>
+                        </div>-->
+                        <div class="col-sm-12">
+                            {% for criteria in criteria_string %}
+                            <div class="col-sm-12 col-md-3 group-filter-conteiner">
+                                <label>{{ criteria }}</label>
+                                <input type="checkbox" class="i-checks" id="p_{{ loop.index0 }}" name="input" value="check" onclick="checkMe(this.id)">
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="row custom-row-report">
+                        <div class="col-md-12">
+                            <label class="control-label">Filtros</label>
+                        </div>
+                        <!--<div class="col-md-12">
+                            <div id=filterInsertion></div>
+                        </div>-->
+                        <div class="col-md-12">
+                            {% for single_filter in filter %}
+                            <div class="col-md-3 group-filter-conteiner">
+                                <label class="custom-filter-label">{{ filter_string[single_filter] }}</label>
+                                <select class="custom-multiselect" name="l_{{ loop.index0 }}" multiple="multiple">
+                                    {% for data in data_list[single_filter] %}
+                                    <option value="{{ data }}">{{ data }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div id=submitInfo class="col-md-6">
+                            <a class="btn btn-primary pull-right" onclick=sendMe() >
+                                <i class="fa fa-plus"></i>
+                                Generar Reporte
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    </div>
-    <br>
-    <br>
-    <br>
-    <div id=criteriaInsertion class="col-md-4">
-        <label class="control-label">Criterios de agrupación</label>
-        <br>
-        <br>
-        <br> 
-    </div>
-    <div id=filterInsertion class="col-md-8">
-        <label class="control-label">Filtros</label>
-        <br>
-        <br>
-        <br>
-    </div>
-    <div id=submitInfo class="col-md-6">
-        <a class="btn btn-primary pull-right" onclick=sendMe() >
-                <i class="fa fa-plus"></i>
-                Generar Reporte
-              </a>
-        <br><br><br><br>
-    </div>
-    
 </div>
 {% endblock page_content %}
 
@@ -51,7 +83,6 @@
 <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css" />
 <script type="text/javascript">
 $(function() {
-
     var start = moment().subtract(29, 'days');
     var end = moment();
 
@@ -63,12 +94,12 @@ $(function() {
         startDate: start,
         endDate: end,
         ranges: {
-           'Today': [moment(), moment()],
-           'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-           'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-           'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-           'This Month': [moment().startOf('month'), moment().endOf('month')],
-           'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+           'Hoy': [moment(), moment()],
+           'Ayer': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+           'Ultimos 7 días': [moment().subtract(6, 'days'), moment()],
+           'Ultimos 30 días': [moment().subtract(29, 'days'), moment()],
+           'Este mes': [moment().startOf('month'), moment().endOf('month')],
+           'Mes pasado': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
         }
     }, cb);
 
@@ -78,6 +109,8 @@ $(function() {
 </script>
 <script type="text/javascript">
 $(document).ready(function(){
+    $('.custom-multiselect').multiselect();
+
     function getCookie(name) {
     var cookieValue = null;
     if (document.cookie && document.cookie !== '') {
@@ -94,22 +127,15 @@ $(document).ready(function(){
     return cookieValue;
 }
 var csrftoken = getCookie('csrftoken');
-    console.log(csrftoken);
     var criteria_string = {{ criteria_string | safe }};
-    console.log(criteria_string);
     for(var k=0; k<criteria_string.length; k++){
         tag='';
-        tag=tag+'<label class="col-sm-2 control-label">'+criteria_string[k]+'</label>';
-            tag=tag+'<div class="col-md-1">'
-            tag=tag+'<input id=p_'+k+' type="checkbox" name="input" value="check" onclick=checkMe(this.id) > Seleccionar Criterio ';
+        tag=tag+'<div class="col-md-3 group-filter-conteiner">'
+        tag=tag+'<label>'+criteria_string[k]+'</label>';
+            tag=tag+'<input type="checkbox" class="i-checks" id=p_'+k+' name="input" value="check" onclick=checkMe(this.id) >';
             tag=tag+'</div>';
-            tag=tag+'<br><br><br><br>';
         $('#criteriaInsertion').append(tag);
     }
-
-
-
-
 
     var filter = {{ filter | safe}};
     var filter_string = {{ filter_string | safe}};
@@ -203,22 +229,16 @@ var csrftoken = getCookie('csrftoken');
             }
         }
         console.log(sending_string);
-        uploadData(sending_string);
+        //uploadData(sending_string);
     }
-
 
     function uploadData(insert_data){
         var data = {js_data: insert_data,
                     csrfmiddlewaretoken: csrftoken};
-        $.post('/internal/essay/create', JSON.stringify(data), function(response){
+        $.post('/internal/reports/start', JSON.stringify(data), function(response) {
             console.log(data['csrfmiddlewaretoken'])
-            });
+        });
     }
-
-
-
-
-    
 });
 </script>
 
