@@ -3,7 +3,6 @@ from django.contrib.auth.models import (
     User as AuthUser,
     Permission
 )
-from django.forms.widgets import HiddenInput
 
 from safedelete.models import (
     SOFT_DELETE_CASCADE,
@@ -40,9 +39,28 @@ class BasicUser(SafeDeleteModel):
         return self.user.get_full_name() or self.user.username
 
     def permissions(self):
-        return Permission.objects.filter(
-            role__in=self.roles.all()
+        return Permission.objects.annotate(
+            full_name=models.functions.Concat(
+                models.F('content_type__app_label'),
+                models.Value('.'),
+                models.F('codename')
+            )
+        ).filter(
+            models.Q(full_name__in=self.user.get_all_permissions()) |
+            models.Q(role__in=self.roles.all())
         )
+
+    def get_all_permissions(self):
+        permissions = self.permissions()
+        return set(permissions.values_list('full_name', flat=True))
+
+    def has_perm(self, perm_name):
+        return perm_name in self.get_all_permissions()
+
+    def has_module_perms(self, app_label):
+        return self.permissions().filter(
+            content_type__app_label=app_label
+        ).exists()
 
 
 @auditlog.register()
