@@ -2,6 +2,8 @@ import functools
 
 
 def permission_check(user, permissions):
+    if user.is_superuser:
+        return True
     if not hasattr(user, 'basicuser'):
         return False
     if not isinstance(permissions, (list, tuple)):
