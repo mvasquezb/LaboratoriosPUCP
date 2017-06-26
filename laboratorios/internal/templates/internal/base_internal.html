@@ -18,7 +18,13 @@
       <ul class="nav metismenu" id="side-menu">
         <li class="nav-header">
           <div class="dropdown profile-element">
-            <span class="clear"> <span class="block m-t-xs"> <strong class="font-bold">{{ user.username.upper() }}</strong>
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+              <span class="clear">
+                <span class="block m-t-xs">
+                  <strong class="font-bold">{{ user.basicuser or user }}</strong>
+                </span>
+              </span>
+            </a>
             <ul class="dropdown-menu animated fadeInRight m-t-xs">
               <li><a href="profile.html">Profile</a></li>
               <li><a href="contacts.html">Contacts</a></li>
