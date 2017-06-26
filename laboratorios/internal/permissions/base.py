@@ -43,7 +43,7 @@ def user_passes_test(test_func,
             if test_func(request.user):
                 return view_func(request, *args, **kwargs)
             # Added this message line
-            messages.warning(request, message)
+            messages.error(request, message)
             path = request.build_absolute_uri()
             resolved_login_url = resolve_url(login_url or settings.LOGIN_URL)
             # If the login url is the same scheme and net location then just
