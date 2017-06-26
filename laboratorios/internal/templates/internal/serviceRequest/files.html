@@ -92,23 +92,10 @@
     </div>
   </div>
 </div>
-
-<div class="message-container hidden">
-  <ul class="messages">
-    {% for message in messages %}
-    <li {% if message.tags %} data-tags="{{ message.tags }}"{% endif %}>{{ message }}</li>
-    {% endfor %}
-  </ul>
-</div>
-
 {% endblock page_content %}
 
 {% block custom_js %}
 <script>
-if ($('.message-container .messages li')) {
-  var msg = $('.message-container .messages li').first();
-  showToastr(msg.text(), msg.data('tags'));
-}
 $( document ).ready(function() {
   $(".myBtn1").click(function() {
     $("#myModal1").show();

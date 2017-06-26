@@ -351,3 +351,8 @@ $('.i-checks').iCheck({
   checkboxClass: 'icheckbox_square-green',
   radioClass: 'iradio_square-green',
 });
+
+if ($('.message-container .messages li').length) {
+  var msg = $('.message-container .messages li').first();
+  showToastr(msg.text(), msg.data('tags'));
+}

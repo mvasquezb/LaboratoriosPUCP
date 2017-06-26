@@ -168,6 +168,13 @@
     {% endblock base_page_content %}
   </div>
 </div>
+<div class="message-container hidden">
+  <ul class="messages">
+    {% for message in messages %}
+      <li{% if message.tags %} data-tags="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+  </ul>
+</div>
 {% endblock base_content %}
 
 {% block base_js %}
