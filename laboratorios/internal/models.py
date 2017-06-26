@@ -41,8 +41,8 @@ class BasicUser(SafeDeleteModel):
 
     def permissions(self):
         return Permission.objects.filter(
-                role__in = self.roles.all()
-            ).values_list("name", flat=True)
+            role__in=self.roles.all()
+        )
 
 
 @auditlog.register()
