@@ -12,6 +12,7 @@ from django.contrib.auth.decorators import user_passes_test
 from internal.permissions.supply import *
 
 
+@user_passes_test(index_supply_check, login_url='internal:index')
 def index(request,
           template='internal/supply/index.html',
           extra_context=None):
@@ -25,6 +26,7 @@ def index(request,
     return render(request, template, context)
 
 
+@user_passes_test(show_supply_check, login_url='internal:index')
 def show(request,
          pk,
          template='internal/supply/show.html'):
