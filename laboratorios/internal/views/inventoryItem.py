@@ -8,7 +8,7 @@ from internal.models import *
 from internal.views.forms import (
     InventoryItemEditForm
 )
-from django.contrib.auth.decorators import user_passes_test
+from internal.permissions import user_passes_test
 from internal.permissions.inventoryItem import *
 
 

@@ -13,7 +13,7 @@ from internal.views.forms import (
     UserCreationForm,
     UserEditForm
 )
-from django.contrib.auth.decorators import user_passes_test
+from internal.permissions import user_passes_test
 
 from internal.permissions.employee import *
 

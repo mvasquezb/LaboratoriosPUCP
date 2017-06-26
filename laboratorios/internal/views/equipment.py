@@ -6,7 +6,7 @@ from django.shortcuts import (
 )
 from django.contrib import messages
 from internal.models import *
-from django.contrib.auth.decorators import user_passes_test
+from internal.permissions import user_passes_test
 
 from internal.views.forms import (
     EquipmentForm

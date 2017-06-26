@@ -10,7 +10,7 @@ import json
 
 from internal.models import *
 from internal.views.forms import *
-from django.contrib.auth.decorators import user_passes_test
+from internal.permissions import user_passes_test
 from internal.permissions.essay import *
 
 

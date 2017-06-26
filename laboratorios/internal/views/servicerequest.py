@@ -31,7 +31,7 @@ from io import BytesIO
 from xhtml2pdf import pisa
 import json as simplejson
 from datetime import datetime, timedelta
-from django.contrib.auth.decorators import user_passes_test
+from internal.permissions import user_passes_test
 from internal.permissions.serviceRequest import *
 
 

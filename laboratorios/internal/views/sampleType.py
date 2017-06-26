@@ -8,7 +8,7 @@ from django.contrib import messages
 from internal.models import *
 from django.utils.text import slugify
 from .forms import SampleTypeForm
-from django.contrib.auth.decorators import user_passes_test
+from internal.permissions import user_passes_test
 from internal.permissions.sampleType import *
 
 NOT_OPTION_SELECTED = "Selecciona una opcion"

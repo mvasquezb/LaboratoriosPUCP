@@ -14,7 +14,7 @@ from .forms import LaboratoryForm
 
 import json as simplejson
 from datetime import timedelta
-from django.contrib.auth.decorators import user_passes_test
+from internal.permissions import user_passes_test
 from internal.permissions.laboratory import *
 
 

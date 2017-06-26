@@ -6,9 +6,10 @@ from django.shortcuts import (
 )
 from django.contrib import messages
 from internal.models import *
+
 from internal.views.forms import EmployeeForm
 from internal.views.forms import RoleForm
-from django.contrib.auth.decorators import user_passes_test
+from internal.permissions import user_passes_test
 from internal.permissions.role import *
 
 
