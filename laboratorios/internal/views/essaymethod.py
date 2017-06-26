@@ -124,6 +124,7 @@ def edit(request,
     return render(request, template, context)
 
 
+@user_passes_test(show_essay_method_check, login_url='internal:index')
 def show(request,
          pk,
          template='internal/essaymethod/show.html'):
@@ -137,6 +138,7 @@ def show(request,
     return render(request, template, context)
 
 
+@user_passes_test(index_essay_method_check, login_url='internal:index')
 def index(request,
           template='internal/essaymethod/index.html',
           extra_context=None):
