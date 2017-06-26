@@ -14,7 +14,7 @@ def permission_check(user, permissions):
         return False
     if not isinstance(permissions, (list, tuple)):
         permissions = [permissions]
-    permission_list = user.basicuser.permissions()
+    permission_list = user.basicuser.permissions
     return permission_list.filter(
         codename__in=permissions
     ).exists()
