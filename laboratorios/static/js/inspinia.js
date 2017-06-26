@@ -319,11 +319,11 @@ function showToastr(pMsg, pTypeMsg, pTitle, options) {
 
   switch(pTypeMsg){
     case "success":
-      toastr.success(pMsg, '', pTitle);
+      toastr.success(pMsg, pTitle);
       break;
 
     case "error":
-      toastr.error(pMsg, '', pTitle);
+      toastr.error(pMsg, pTitle);
       break;
   }
 }
