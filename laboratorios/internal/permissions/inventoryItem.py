@@ -1,6 +1,5 @@
-import functools
-from . import permission_check
+from . import set_permission_check
 
 
-delete_inventory_item_check = functools.partial(permission_check, permission='Can delete inventory item')
-edit_inventory_item_check = functools.partial(permission_check, permission='Can change inventory item')
+delete_inventory_item_check = set_permission_check('delete_inventoryitem')
+edit_inventory_item_check = set_permission_check('change_inventoryitem')

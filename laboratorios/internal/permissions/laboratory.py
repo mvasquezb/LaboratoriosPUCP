@@ -1,7 +1,6 @@
-import functools
-from . import permission_check
+from . import set_permission_check
 
 
-create_laboratory_check = functools.partial(permission_check, permission='Can add laboratory')
-edit_laboratory_check = functools.partial(permission_check, permission='Can change laboratory')
-delete_laboratory_check = functools.partial(permission_check, permission='Can delete laboratory')
+create_laboratory_check = set_permission_check('add_laboratory')
+edit_laboratory_check = set_permission_check('change_laboratory')
+delete_laboratory_check = set_permission_check('delete_laboratory')

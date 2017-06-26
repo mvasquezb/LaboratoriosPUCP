@@ -1,7 +1,6 @@
-import functools
-from . import permission_check
+from . import set_permission_check
 
 
-create_employee_check = functools.partial(permission_check, permission='Can add employee')
-edit_employee_check = functools.partial(permission_check, permission='Can change employee')
-delete_employee_check = functools.partial(permission_check, permission='Can delete employee')
+create_employee_check = set_permission_check('add_employee')
+edit_employee_check = set_permission_check('change_employee')
+delete_employee_check = set_permission_check('delete_employee')

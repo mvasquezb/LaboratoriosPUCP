@@ -1,7 +1,6 @@
-import functools
-from . import permission_check
+from . import set_permission_check
 
 
-create_service_request_check = functools.partial(permission_check, permission='Can add service request')
-edit_service_request_check = functools.partial(permission_check, permission='Can change service request')
-delete_service_request_check = functools.partial(permission_check, permission='Can delete service request')
+create_service_request_check = set_permission_check('add_servicerequest')
+edit_service_request_check = set_permission_check('change_servicerequest')
+delete_service_request_check = set_permission_check('delete_servicerequest')

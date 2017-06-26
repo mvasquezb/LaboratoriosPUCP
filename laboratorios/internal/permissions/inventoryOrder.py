@@ -1,7 +1,6 @@
-import functools
-from . import permission_check
+from . import set_permission_check
 
 
-create_inventory_order_check = functools.partial(permission_check, permission='Can add inventory order')
-edit_inventory_order_check = functools.partial(permission_check, permission='Can change inventory order')
-delete_inventory_order_check = functools.partial(permission_check, permission='Can delete inventory order')
+create_inventory_order_check = set_permission_check('add_inventoryorder')
+edit_inventory_order_check = set_permission_check('change_inventoryorder')
+delete_inventory_order_check = set_permission_check('delete_inventoryorder')

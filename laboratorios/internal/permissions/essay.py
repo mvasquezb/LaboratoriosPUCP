@@ -1,7 +1,6 @@
-import functools
-from . import permission_check
+from . import set_permission_check
 
 
-create_essay_check = functools.partial(permission_check, permission='Can add essay')
-edit_essay_check = functools.partial(permission_check, permission='Can change essay')
-delete_essay_check = functools.partial(permission_check, permission='Can delete essay')
+create_essay_check = set_permission_check('add_essay')
+edit_essay_check = set_permission_check('change_essay')
+delete_essay_check = set_permission_check('delete_essay')
