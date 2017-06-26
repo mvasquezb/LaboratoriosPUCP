@@ -144,25 +144,9 @@
   </div>
 
 </div>
-<div class="message-container hidden">
-  <ul class="messages">
-    {% for message in messages %}
-    <li{% if message.tags %} data-tags="{{ message.tags }}"{% endif %}>{{ message }}</li>
-    {% endfor %}
-  </ul>
-</div>
 {% endblock page_content %}
 
-
 {% block custom_js %}
-
-<script type="text/javascript">
-  if ($('.message-container .messages li')) {
-  var msg = $('.message-container .messages li').first();
-  $.extend(toastr.options, {"positionClass": "toast-bottom-right",});
-  showToastr(msg.text(), msg.data('tags'));
-}
-</script>
 <script src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.10.15/js/dataTables.bootstrap.min.js"></script>
 <script src="{{ static('js/datatable-config.js') }}"></script>

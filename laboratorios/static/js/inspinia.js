@@ -319,11 +319,17 @@ function showToastr(pMsg, pTypeMsg, pTitle, options) {
 
   switch(pTypeMsg){
     case "success":
-      toastr.success(pMsg, '', pTitle);
+      toastr.success(pMsg, pTitle);
       break;
 
     case "error":
-      toastr.error(pMsg, '', pTitle);
+      toastr.error(pMsg, pTitle);
+      break;
+    case 'warning':
+      toastr.warning(pMsg, pTitle);
+      break;
+    case 'info':
+      toastr.info(pMsg, pTitle);
       break;
   }
 }
@@ -345,3 +351,8 @@ $('.i-checks').iCheck({
   checkboxClass: 'icheckbox_square-green',
   radioClass: 'iradio_square-green',
 });
+
+if ($('.message-container .messages li').length) {
+  var msg = $('.message-container .messages li').first();
+  showToastr(msg.text(), msg.data('tags'));
+}

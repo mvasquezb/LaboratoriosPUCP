@@ -140,51 +140,9 @@
     </div>
   </div>
 </div>
-
-
-<div class="message-container hidden">
-  <ul class="messages">
-    {% for message in messages %}
-    <li{% if message.tags %} data-tags="{{ message.tags }}"{% endif %}>{{ message }}</li>
-    {% endfor %}
-  </ul>
-</div>
-
-
-
 {% endblock page_content %}
 
 {% block custom_js %}
-<script type="text/javascript">
-  if ($('.message-container .messages li')) {
-  var msg = $('.message-container .messages li').first();
-  $.extend(toastr.options, {"positionClass": "toast-bottom-right",});
-  toastr[msg.data('tags')](msg.text());
-}
-</script>
-
-<script type="text/javascript">
-  var fill_Toastr = function(pMsg, pTypeMsg,pTitle){
-    toastr.options = {
-    closeButton: true,
-    progressBar: true,
-    showMethod: 'slideDown',
-    positionClass: "toast-bottom-right",
-    timeOut: 4000
-    };
-
-    switch(pTypeMsg){
-      case "success":
-      toastr.success(pMsg, '',pTitle);
-      break;
-
-      case "error":
-      toastr.error(pMsg, '',pTitle);
-      break;
-    }
-  }
-
-</script>
 <script src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.10.15/js/dataTables.bootstrap.min.js"></script>
 <script src="{{ static('js/datatable-config.js') }}"></script>
