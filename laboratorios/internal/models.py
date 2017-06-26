@@ -543,7 +543,6 @@ class Inventory(SafeDeleteModel):
     audit_log = AuditlogHistoryField()
     name = models.CharField(max_length=100, unique=True)
     location = models.CharField(max_length=200)
-    # SupplyInventory or EquipmentInventory
     inventory_type = models.CharField(
         max_length=50,
         choices=TYPE_CHOICES,
@@ -604,7 +603,6 @@ class ArticleInventory(SafeDeleteModel):
     audit_log = AuditlogHistoryField()
     inventory = models.ForeignKey(Inventory)
     article = models.ForeignKey(InventoryArticle)
-    expiration_date = models.DateTimeField(null=True, blank=True)
     quantity = models.PositiveIntegerField()
     registered_date = models.DateTimeField(
         auto_now_add=True,
