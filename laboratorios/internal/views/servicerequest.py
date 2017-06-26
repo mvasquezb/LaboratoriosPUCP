@@ -35,6 +35,7 @@ from django.contrib.auth.decorators import user_passes_test
 from internal.permissions.serviceRequest import *
 
 
+@user_passes_test(index_service_request_check, login_url='internal:index')
 def index(request,
           template='internal/servicerequest/index.html',
           extra_context=None):
@@ -265,6 +266,7 @@ def delete_sample(request,
     return redirect('internal:servicerequest.edit', pk_request)
 
 
+@user_passes_test(show_service_request_check, login_url='internal:index')
 def show(request,
          pk,
          template='internal/servicerequest/show.html'):
