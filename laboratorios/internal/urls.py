@@ -216,6 +216,9 @@ urlpatterns = [
     url('^laboratory/InventoryModal$',
         views.laboratory.inventory_modal,
         name='laboratory.inventory_modal'),
+    url('^laboratory/EmployeeModal$',
+        views.laboratory.employee_modal,
+        name='laboratory.employee_modal'),
 
     #
     # sampleType

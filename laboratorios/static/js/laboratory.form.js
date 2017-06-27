@@ -150,6 +150,9 @@ $('#form').on('submit', function (evt) {
     var inventory_pk = $(this).data('pk');
     var url = $(".page_title").data("url");
     $('.content_table').empty();
+    $('.header_table').empty();
+    $('.inventory_empty').empty();
+    $('.inventory_table').show();
     $.get(url, {'inventory_pk': inventory_pk},function(data){
       //General Data
       $('div.inventory_name').replaceWith("<div class='inner inventory_name'>" + data['inventory_name'] +"</div>");
@@ -160,30 +163,57 @@ $('#form').on('submit', function (evt) {
       var element;
       var i;
       
-      /*
-      if data['inventory_type'] == 'Equipos' {
-        $('.header_table').append();
+      if (element_list.length == 0){
+        $('.inventory_empty').append("<h4>No hay contenido en este inventario</h4>");
+        $('.inventory_table').hide();
       }
-      else if data['inventory_type'] == 'Insumos'{
+      else {
+        if (data['inventory_type'] == 'Equipos') {
+          $('.header_table').append("<tr>" + "<th>#</th>" + "<th>Nombre</th>" + "<th>Unidad de tiempo</th>" + "<th>Tiempo de vida</th>" + "<th>Rango de error</th>" + "<th>Cantidad</th>" + "</tr>");
+        }
+        else if (data['inventory_type'] == 'Insumos'){
+          $('.header_table').append("<tr>" + "<th>#</th>" + "<th>Nombre</th>" + "<th>Unidad métrica</th>" + "<th>Cantidad</th>" + "</tr>");
+        }
+        else{
+        //$('.header_table').append("<thead><tr>" + "<th>#</th>" + "<th>Nombre</th>" + "<th>Unidad de tiempo vida</th>" + "<th>Tiempo de vida</th>" + "<th>Rango de error</th>" + "</tr></thead>");
+        }
 
-      }
-      else{
-
-      }
-      */
-
-      for (i=0;i<element_list.length;i++){
-        element = element_list[i];
-        $('.content_table').append("<tr>" + "<th>" + (i+1) + "</th>" + "<th>" + element[0] + "</th>" +"<th>" + element[1] + "</th>" + "</tr>");
-        //$('.content_table').append("<th>" + (i+1) + "</th>");
-        //$('.content_table').append("<th>" + element[0] + "</th>");
-        //$('.content_table').append("<th>" + element[1] + "</th>");
-        //$('.content_table').append("</tr>");
+        for (i=0;i<element_list.length;i++){
+          element = element_list[i];
+          if (data['inventory_type'] == 'Equipos'){
+            $('.content_table').append("<tr>" + "<th>" + (i+1) + "</th>" + "<th>" + element[0] + "</th>" +"<th>" + element[1] + "</th>" + "<th>" + element[2] + "</th>" + "<th>" + element[3] + "</th>" + "<th>" + element[4] + "</th>" + "</tr>");
+          }
+          else if (data['inventory_type'] == 'Insumos'){
+            $('.content_table').append("<tr>" + "<th>" + (i+1) + "</th>" + "<th>" + element[0] + "</th>" +"<th>" + element[1] + "</th>" + "<th>" + element[2] + "</th>" + "</tr>");
+          }
+          else {
+            //
+          }
+        }
       }
       
     });
-    //console.log("pasa el ajax")
-    //
-    //$('div.inventory_name').replaceWith("<div class='inner inventory_name'>" + data['inventory_name'] +"</div>");
-    //$('div.inventory_pk').replaceWith("<div class='inner inventory_pk'>" + inventory_pk + "</div>");
+  });
+
+  $('.employee_modal').on('click',function(){
+    var employee_pk = $(this).data('pk');
+    var url = $('.page_title').data('emp');
+    $('.roles_content').empty();
+    $('.empty_message').empty();
+    $('.roles_table').show();
+    $.get(url, {'employee_pk': employee_pk}, function(data){
+      var element_list = data['roles_data'];
+      var element;
+      var i;
+      if (element_list.length == 0){
+        $('.empty_message').append("<h4>No hay roles asociados a este empleado</h4>");
+        $('.roles_table').hide();
+      }
+      else {
+        for (i=0;i<element_list.length;i++){
+          element = element_list[i];
+          $('.roles_content').append("<tr>" + "<th>" + (i+1) + "</th>" + "<th>" + element[0] + "</th>" + "<th>" + element[1] + "</th>" + "</tr>");
+        }
+      }
+    });
   });

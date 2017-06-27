@@ -30,6 +30,19 @@ def index(request,
         context.update(extra_context)
     return render(request, template, context)
 
+def employee_modal(request):
+    if request.method == 'GET' and request.is_ajax():
+        dicc = dict(request.GET)
+        employee_pk = dicc['employee_pk'][0]
+        employee = BasicUser.all_objects.get(pk=employee_pk)
+        employee_roles = employee.roles.all()
+        roles_data = []
+        for role in employee_roles:
+            roles_data.append((role.name, role.description))
+        data = {'roles_data': roles_data}
+        return JsonResponse(data)
+        #print(employee.basicuser)
+    return HttpResponse("GG")
 
 def inventory_modal(request):
     if request.method == 'GET' and request.is_ajax():
@@ -47,13 +60,13 @@ def inventory_modal(request):
                 servicelife_unit = match.article.equipment.servicelife_unit
                 servicelife = match.article.equipment.servicelife
                 error_range = match.article.equipment.error_range
-                matches_list.append((article_name, article_quantity))
+                matches_list.append((article_name, servicelife_unit, servicelife, error_range, article_quantity))
         elif inventory.get_inventory_type_display() == 'Insumos':
             for match in article_inventory:
                 article_name = match.article.name
                 article_quantity = match.quantity
                 metric_unit = match.article.supply.metric_unit
-                matches_list.append((article_name, article_quantity))
+                matches_list.append((article_name, metric_unit,article_quantity))
         else: #samples
             for match in article_inventory:
                 article_name = match.article.name
