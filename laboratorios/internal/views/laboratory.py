@@ -197,6 +197,11 @@ def edit(request,
         )
         aux_form = LaboratoryForm(request.POST or None, instance=instance)
         if aux_form.is_valid():
+            # here we add essay_methods to every employee of the new laboratory
+            for employee in aux_form.cleaned_data['employees']:
+                essay_methods = aux_form.cleaned_data['essay_methods']
+                employee.essay_methods.add(*essay_methods)
+                employee.save()
             aux_form.save()
             messages.success(
                 request, 'Se ha editado el laboratorio exitosamante')
