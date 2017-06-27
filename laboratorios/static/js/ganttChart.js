@@ -526,7 +526,7 @@ function ganttChart(config) {
                 .attr('class', 'Single--Node')
                 .attr('rx', 5)
                 .attr('ry', 5)
-                .attr("height", 60)
+                .attr("height", 80)
                 .attr("x", 0)
                 .attr("y", function(d, i) {
                     return y(i + 1);
@@ -557,31 +557,37 @@ function ganttChart(config) {
                     }
                     return "translate(" + position + ", " + (y(i + 1) + 45) + ")";
                 })
-                .call(renderTerm)
+                //.call(renderTerm)
                 .call(renderDuration)
                 .call(appendProgressBar)
         }
 
         function appendProgressBar(d, i) {
+            var progress_bar_width; //width representing the duration of the service
             this.append('rect')
                 .attr('class', 'ProgressBar')
                 .attr('fill', '#ddd')
-                .attr('width', PROGRESSBAR_WIDTH)
+                //.attr('width', PROGRESSBAR_WIDTH)
+                .attr('width', function(d) {
+                    progress_bar_width = getWidth(d);
+                    return progress_bar_width
+                })
 
             this.append('rect')
                 .attr('class', 'ProgressBar ProgressBar-Fill')
                 .attr('fill', 'red')
                 .attr('width', function(d) {
-                    var width = ((d.completion_percentage * PROGRESSBAR_WIDTH) / 100);
+                    //var width = ((d.completion_percentage * PROGRESSBAR_WIDTH) / 100);
+                    var width = ((d.completion_percentage * progress_bar_width) / 100);
                     return width;
                 })
 
             this.selectAll('.ProgressBar')
                 .attr('rx', 5)
                 .attr('ry', 5)
-                .attr('y', -7)
+                .attr('y', 20)
                 .attr('height', 7)
-                .attr('x', 180)
+                .attr('x', 0)
                 .attr('opacity', function(d) {
                     var width = getWidth(d);
                     return Number(width > PROGRESSBAR_BOUNDARY)
@@ -643,7 +649,7 @@ function ganttChart(config) {
         function renderDuration(d, i) {
             this.append('text')
                 .attr('class', 'Duration')
-                .attr('x', 80)
+                .attr('x', 0)
                 .text(function(d) {
                     return getDuration(d)
                 })
