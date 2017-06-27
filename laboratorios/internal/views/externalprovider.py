@@ -7,8 +7,11 @@ from django.contrib import messages
 
 from internal import models
 from internal.views.forms import ExternalProviderForm
+from internal.permissions import user_passes_test
+from internal.permissions.externalprovider import *
 
 
+@user_passes_test(index_externalprovider_check, login_url='internal:index')
 def index(request,
           template='internal/externalprovider/index.html',
           extra_context=None):
@@ -21,6 +24,7 @@ def index(request,
     return render(request, template, context)
 
 
+@user_passes_test(show_externalprovider_check, login_url='internal:index')
 def show(request,
          id,
          template='internal/externalprovider/show.html',
@@ -38,6 +42,7 @@ def show(request,
     return render(request, template, context)
 
 
+@user_passes_test(create_externalprovider_check, login_url='internal:index')
 def create(request,
            template='internal/externalprovider/create.html',
            extra_context=None):
@@ -60,6 +65,7 @@ def create(request,
     return render(request, template, context)
 
 
+@user_passes_test(edit_externalprovider_check, login_url='internal:index')
 def edit(request,
          id,
          template='internal/externalprovider/edit.html',
@@ -87,6 +93,7 @@ def edit(request,
     return render(request, template, context)
 
 
+@user_passes_test(delete_externalprovider_check, login_url='internal:index')
 def delete(request, id):
     provider = get_object_or_404(models.ExternalProvider.all_objects.filter(
         deleted__isnull=True,
