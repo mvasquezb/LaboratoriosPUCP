@@ -8468,6 +8468,10 @@ body.md-skin {
   overflow: auto;
 }
 
+.table-responsive .permission_table.role {
+  max-height: 500px;
+}
+
 .first-table-column {
   width: 175px;
 }
@@ -8485,3 +8489,17 @@ body.md-skin {
   display: inline-block;
   margin-left: 20px;
 }
+
+.criteriaInsertion {
+  display: inline;
+}
+
+.custom-row-report {
+  margin-bottom: 40px;
+}
+
+.custom-filter-label {
+  display: block;
+}
+
+.provider-service-table { max-height: 350px; }

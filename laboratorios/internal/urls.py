@@ -216,6 +216,9 @@ urlpatterns = [
     url('^laboratory/InventoryModal$',
         views.laboratory.inventory_modal,
         name='laboratory.inventory_modal'),
+    url('^laboratory/EmployeeModal$',
+        views.laboratory.employee_modal,
+        name='laboratory.employee_modal'),
 
     #
     # sampleType
@@ -337,6 +340,41 @@ urlpatterns = [
         name='reports.start'),
     url('^reports/results/(?P<settings_string>[\w\-]+)/$',
         views.reports.processing_parameters,
-        name='reports.results')
-
+        name='reports.results'),
+    #
+    # External Provider
+    #
+    url('^externalprovider/?$',
+        views.externalprovider.index,
+        name='externalprovider.index'),
+    url('^externalprovider/create/?$',
+        views.externalprovider.create,
+        name='externalprovider.create'),
+    url('^externalprovider/(?P<id>\d+)/?$',
+        views.externalprovider.show,
+        name='externalprovider.show'),
+    url('^externalprovider/(?P<id>\d+)/edit/?$',
+        views.externalprovider.edit,
+        name='externalprovider.edit'),
+    url('^externalprovider/(?P<id>\d+)/delete/?$',
+        views.externalprovider.delete,
+        name='externalprovider.delete'),
+    #
+    # Client
+    #
+    url('^client/?$',
+        views.client.index,
+        name='client.index'),
+    url('^client/(?P<pk>\d+)/?$',
+        views.client.show,
+        name='client.show'),
+    url('^client/create/?$',
+        views.client.create,
+        name='client.create'),
+    url('^client/(?P<pk>\d+)/edit/?$',
+        views.client.edit,
+        name='client.edit'),
+    url('^client/(?P<pk>\d+)/delete/?$',
+        views.client.delete,
+        name='client.delete'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

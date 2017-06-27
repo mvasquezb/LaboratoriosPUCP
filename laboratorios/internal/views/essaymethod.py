@@ -10,8 +10,11 @@ from datetime import *
 
 from internal.models import *
 from internal.views.forms import *
+from internal.permissions import user_passes_test
+from internal.permissions.essayMethod import *
 
 
+@user_passes_test(create_essay_method_check, login_url='internal:index')
 def create(request,
            template='internal/essaymethod/create.html'):
     form = EssayMethodForm(request.POST or None)
@@ -56,6 +59,7 @@ def create(request,
     return render(request, template, context)
 
 
+@user_passes_test(edit_essay_method_check, login_url='internal:index')
 def edit(request,
          pk,
          template='internal/essaymethod/edit.html'):
@@ -120,6 +124,7 @@ def edit(request,
     return render(request, template, context)
 
 
+@user_passes_test(show_essay_method_check, login_url='internal:index')
 def show(request,
          pk,
          template='internal/essaymethod/show.html'):
@@ -133,10 +138,11 @@ def show(request,
     return render(request, template, context)
 
 
+@user_passes_test(index_essay_method_check, login_url='internal:index')
 def index(request,
           template='internal/essaymethod/index.html',
           extra_context=None):
-    essaymethods = EssayMethod.objects.order_by('name')
+    essaymethods = EssayMethod.all_objects.order_by('name')
 
     context = {
         'essaymethod_list': essaymethods,
@@ -146,6 +152,7 @@ def index(request,
     return render(request, template, context)
 
 
+@user_passes_test(delete_essay_method_check, login_url='internal:index')
 def delete(request, pk):
     essaymethod = get_object_or_404(EssayMethod, pk=pk)
     essaymethod.delete()

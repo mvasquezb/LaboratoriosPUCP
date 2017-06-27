@@ -8,18 +8,21 @@ from django.shortcuts import (
 from django.contrib import messages
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from internal.models import *
-from django.contrib.auth.decorators import login_required
 from internal.views.forms import (
     EmployeeForm,
     UserCreationForm,
     UserEditForm
 )
+from internal.permissions import user_passes_test
+
+from internal.permissions.employee import *
 
 
+@user_passes_test(index_employee_check, login_url='internal:index')
 def index(request,
           template='internal/employee/index.html',
           extra_context=None):
-    employee_list = Employee.objects.order_by('user__username')
+    employee_list = Employee.all_objects.order_by('user__username')
 
     context = {
         'employees_list': employee_list,
@@ -29,6 +32,7 @@ def index(request,
     return render(request, template, context)
 
 
+@user_passes_test(show_employee_check, login_url='internal:index')
 def show(request,
          pk,
          template='internal/employee/show.html'):
@@ -41,6 +45,7 @@ def show(request,
     return render(request, template, context)
 
 
+@user_passes_test(create_employee_check, login_url='internal:index')
 def create(request,
            template='internal/employee/create.html'):
     user_form = UserCreationForm(request.POST or None)
@@ -67,6 +72,7 @@ def create(request,
     return render(request, template, context)
 
 
+@user_passes_test(edit_employee_check, login_url='internal:index')
 def edit(request, pk,
          template='internal/employee/edit.html'):
     employee = get_object_or_404(Employee, pk=pk)
@@ -93,6 +99,7 @@ def edit(request, pk,
     return render(request, template, context)
 
 
+@user_passes_test(delete_employee_check, login_url='internal:index')
 def delete(request, pk):
     employee = get_object_or_404(Employee, pk=pk)
     employee.delete()

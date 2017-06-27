@@ -13,6 +13,7 @@
     <h2><strong>Editar Laboratorio</strong></h2>
   </div>
 </div>
+<div class="page_title" data-url="{{ url('internal:laboratory.inventory_modal')}}" data-emp="{{ url('internal:laboratory.employee_modal')}}"></div>
 <div class="wrapper wrapper-content animated fadeInRight" >
   <div class="row">
     <div class="col-lg-12">
@@ -46,7 +47,7 @@
               {% else %}
               <div class="col-md-12">
                 <label>Personal del laboratorio</label><br>
-                
+
                 <div class="table-responsive">
                   <table class="table table-striped table-bordered">
                     <thead>
@@ -54,6 +55,7 @@
                         <th>Nombre del Empleado</th>
                         <th>Nombre de Usuario</th>
                         <th>Correo</th>
+                        <th>Ver Roles</th>
                         <th>Selección</th>
                       </tr>
                     </thead>
@@ -63,6 +65,7 @@
                           <td>{{ user }}</td>
                           <td>{{ user.user.username }}</td>
                           <td>{{ user.user.email }}</td>
+                          <td><a data-toggle="modal" data-target="#myModal2" class="employee_modal btn btn-white" data-pk="{{ user.pk }}" ><i class="fa fa-eye" aria-hidden="true"></i></a></td>
                           <td>
                             <input type="checkbox" class="i-checks checkbox_users" data-id="{{ user.pk }}"
                             {% if user in selected_users %}checked{% endif %}>
@@ -71,7 +74,7 @@
                       {% endfor %}
                     </tbody>
                   </table>
-                  
+
                   <div class="form-group">
                     <label>Responsable del laboratorio</label>
                     <span class="help-block">El responsable es un empleado perteneciente al laboratorio</span>
@@ -85,7 +88,7 @@
                       {% endfor %}
                     </select>
                   </div>
-                  
+
                 </div>
 
               </div>
@@ -105,6 +108,8 @@
                       <tr>
                         <th>Nombre de inventario</th>
                         <th>Ubicación</th>
+                        <th>Tipo de Inventario</th>
+                        <th>Vista Rápida</th>
                         <th>Selección</th>
                       </tr>
                     </thead>
@@ -113,6 +118,8 @@
                         <tr>
                           <td>{{ inventory.name }}</td>
                           <td>{{ inventory.location }}</td>
+                          <td>Inventario de {{ inventory.get_inventory_type_display() }}</td>
+                          <td><a data-toggle="modal" data-target="#myModal1" class="inventory_modal btn btn-white" data-pk="{{ inventory.pk }}" ><i class="fa fa-eye" aria-hidden="true"></i></a></td>
                           <td>
                             <input type="checkbox" class="checkbox_inventory i-checks" data-id="{{ inventory.pk }}"
                             {% if laboratory and inventory in selected_inventories %}checked{% endif %}>
@@ -178,30 +185,100 @@
     </div>
   </div>
 </div>
-<div class="message-container hidden">
-  <ul class="messages">
-    {% for message in messages %}
-    <li{% if message.tags %} data-tags="{{ message.tags }}"{% endif %}>{{ message }}</li>
-    {% endfor %}
-  </ul>
-</div>
-<div class="modal" id="myModal1">
+
+<div class="modal fade" role="dialog" id="myModal2" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h2>Titulo</h2>
-        <span data-dismiss="modal"><i class="fa fa-times"></i></span>
+        <div class="col-md-offset-4 col-md-4 text-center">
+          <label class="modal-title">Roles de Empleado</label>
+        </div>
       </div>
       <div class="modal-body">
-        Cuerpo
+        <table class="table roles_table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Rol</th>
+              <th>Descripción</th>
+            </tr>
+          </thead>
+          <tbody class="roles_content">
+            
+          </tbody>
+        </table>
+        <div class="empty_message">
+          
+        </div>
       </div>
       <div class="modal-footer">
-        Pie de pagina
+        <div class="col-md-offset-4 col-md-4 text-center">
+          <a class="btn btn-white" data-dismiss="modal">Aceptar</a>
+        </div>
       </div>
     </div>
   </div>
 </div>
 
+<div class="modal fade" role="dialog" id="myModal1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="col-md-offset-4 col-md-4 text-center">
+          <label class="modal-title">Detalle de Inventario</label>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div class="ibox">
+          <div class="ibox-title">
+            <h5>Datos Generales y Contenido</h5>
+          </div>
+          <div class="ibox-content">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Nombre</th>
+                  <th>Ubicación</th>
+                  <th>Tipo de Inventario</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th>
+                    <div class="inner inventory_name"></div>
+                  </th>
+                  <th>
+                    <div class="inner inventory_location"></div>
+                  </th>
+                  <th>
+                    <div class="inner inventory_type"></div>
+                  </th>
+                </tr>
+              </tbody>
+            </table>
+            
+            <table class="table inventory_table">
+              <thead class="header_table">
+                
+              </thead>
+              <tbody class="content_table">
+                
+              </tbody>
+            </table>
+            <div class="inventory_empty">
+              
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <div class="col-md-offset-4 col-md-4 text-center">
+          <a class="btn btn-white" data-dismiss="modal">Cancelar</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock page_content %}
 
 {% block custom_js %}

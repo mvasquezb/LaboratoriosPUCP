@@ -121,7 +121,7 @@ class ServiceRequestCreateForm(ModelForm):
             'priority':'Prioridad',
             'external_provider':'Proveedor Externo',
             'expected_duration':'Duración esperada',
-            'observations':'Observacions'
+            'observations':'Observaciones'
         }
 
 
@@ -144,7 +144,7 @@ class ServiceRequestForm(ModelForm):
             'priority':'Prioridad',
             'external_provider':'Proveedor Externo',
             'expected_duration':'Duración esperada',
-            'observations':'Observacions'
+            'observations':'Observaciones'
         }
 
 
@@ -259,6 +259,7 @@ class EssayForm(ModelForm):
         model = Essay
         exclude = ['essay_methods']
 
+
 class JSONField(forms.Form):
     js_data = forms.CharField(label='js_data')
 
@@ -286,3 +287,13 @@ class EquipmentForm(ModelForm):
         model = Equipment
         fields = ['name', 'description', 'servicelife_unit',
                   'servicelife', 'error_range']
+
+
+class ExternalProviderForm(ModelForm):
+    class Meta:
+        model = ExternalProvider
+        fields = ('name', 'description')
+        labels = {
+            'name': 'Nombre',
+            'description': 'Descripción',
+        }

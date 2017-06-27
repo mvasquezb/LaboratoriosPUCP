@@ -30,11 +30,11 @@
                           <div class="ibox-content">
                             <div class="form-group">
                               <label>Nombre del Ensayo</label>
-                              <div class="text-primary">{{ inventoryOrder.essay.essay.name }}</div>
+                              <input class="form-control" value="{{ inventoryOrder.essay.essay.name }}" name="NameEssay" disabled="true" type="text">
                             </div>
                             <div class="form-group">
                               <label>Descripción del Ensayo</label>
-                              <div class="text-primary">{{ inventoryOrder.essay.essay.description }}</div>
+                              <input class="form-control" value="{{ inventoryOrder.essay.essay.description }}" name="NameDescription" disabled="true" type="text">
                             </div>
                           </div>
                         </div>
@@ -46,23 +46,19 @@
                           <div class="ibox-content">
                             <div class="form-group">
                               <label>Codigo de la Muestra</label>
-                              <div class="text-primary">{{ inventoryOrder.essay.sample.code }}</div>
+                              <input class="form-control" value="{{ inventoryOrder.essay.sample.code }}" name="SampleCode" disabled="true" type="text">
                             </div>
                             <div class="form-group">
                               <label>Nombre de la Muestra</label>
-                              <div class="text-primary">{{ inventoryOrder.essay.sample.name }}</div>
+                              <input class="form-control" value="{{ inventoryOrder.essay.sample.name }}" name="SampleName" disabled="true" type="text">
                             </div>
                             <div class="form-group">
                               <label>Tipo de la Muestra</label>
-                              <div class="text-primary">{{ inventoryOrder.essay.sample.sample_type.name }}</div>
-                            </div>
-                            <div class="form-group">
-                              <label>Cantidad</label>
-                              <div class="text-primary">{{ inventoryOrder.essay.quantity }}</div>
+                              <input class="form-control" value="{{ inventoryOrder.essay.sample.sample_type.name }}" name="SampleTypeName" disabled="true" type="text">
                             </div>
                             <div class="form-group">
                               <label>Laboratorio</label>
-                              <div class="text-primary">{{ inventoryOrder.essay.sample.inventory.name }}</div>
+                              <input class="form-control" value="{{ inventoryOrder.essay.sample.inventory.name }}" name="SampleLaboratory" disabled="true" type="text">
                             </div>
                           </div>
                         </div>
@@ -74,139 +70,39 @@
                           <div class="ibox-content">
                             <div class="form-group">
                               <label>Cliente</label>
-                              <div class="text-primary">{{ inventoryOrder.essay.sample.request.client }}</div>
+                              <input class="form-control" value="{{ inventoryOrder.essay.sample.request.client }}" name="RequestClient" disabled="true" type="text">
+                            </div>
+                            <div class="form-group">
+                              <label>Prioridad</label>
+                              <input class="form-control" value="{{ inventoryOrder.essay.sample.request.priority }}" name="RequestPriority" disabled="true" type="text">
                             </div>
                             <div class="form-group">
                               <label>Supervisor</label>
-                              <div class="text-primary">{{ inventoryOrder.essay.sample.request.supervisor }}</div>
+                              <input class="form-control" value="{{ inventoryOrder.essay.sample.request.supervisor }}" name="RequestSupervisor" disabled="true" type="text">
                             </div>
                             <div class="form-group">
                               <label>Estado de la solicitud</label>
-                              <div class="text-primary">{{ inventoryOrder.essay.sample.request.state }}</div>
+                              <input class="form-control" value="{{ inventoryOrder.essay.sample.request.state }}" name="RequestState" disabled="true" type="text">
                             </div>
                             <div class="form-group">
                               <label>Observaciones</label>
-                              <div class="text-primary">{{ inventoryOrder.essay.sample.request.observations or '-' }}</div>
+                              <input class="form-control" value="{{ inventoryOrder.essay.sample.request.observations or '-' }}" name="RequestObservations" disabled="true" type="text">
                             </div>
                           </div>
                         </div>
-
 
                       </div>
-
-
-                        <!--
-                        <div class="panel panel-primary" style="float: left; width: 100%">
-                          <div class="panel-heading">
-                            Ensayo
-                          </div>
-                          <div class="panel-body">
-                            <div class="form-group">
-                              <label>Nombre</label>
-                              <div class="text-primary">{{ inventoryOrder.essay.essay.name }}</div>
-                            </div>
-                            <div class="form-group">
-                              <label>Descripción</label>
-                              <div class="text-primary">{{ inventoryOrder.essay.essay.description }}</div>
-                            </div>
-                          </div>
-                        </div>
-
-                        <div class="panel panel-primary" style="float: left; width: 100%">
-                          <div class="panel-heading">
-                            Muestra
-                          </div>
-                          <div class="panel-body">
-                            <div class="form-group">
-                              <label>Nombre</label>
-                              <div class="text-primary">{{ inventoryOrder.essay.sample.name }}</div>
-                            </div>
-                            <div class="form-group">
-                              <label>Tipo</label>
-                              <div class="text-primary">{{ inventoryOrder.essay.sample.sample_type.name }}</div>
-                            </div>
-                            <div class="form-group">
-                              <label>Laboratorio</label>
-                              <div class="text-primary">{{ inventoryOrder.essay.sample.inventory.name }}</div>
-                            </div>
-                          </div>
-                        </div>
-
-                        <div class="panel panel-primary" style="float: left; width: 100%">
-                          <div class="panel-heading">
-                            Solicitud
-                          </div>
-                          <div class="panel-body">
-                            <div class="form-group">
-                              <label>Cliente</label>
-                              <div class="text-primary">{{ inventoryOrder.essay.sample.request.client }}</div>
-                            </div>
-                            <div class="form-group">
-                              <label>Supervisor</label>
-                              <div class="text-primary">{{ inventoryOrder.essay.sample.request.supervisor }}</div>
-                            </div>
-                            <div class="form-group">
-                              <label>Estado</label>
-                              <div class="text-primary">{{ inventoryOrder.essay.sample.request.state }}</div>
-                            </div>
-                            <div class="form-group">
-                              <label>Observaciones</label>
-                              <div class="text-primary">{{ inventoryOrder.essay.sample.request.observations }}</div>
-                            </div>
-                          </div>
-                        </div>
-                        -->
-
                       <div class="col-lg-6">
                         <div class="form-group">
                           <label>Metodos de Ensayo</label>
-                          <select name="laboratories" class="form-control" multiple>
+                          <select name="laboratories" class="form-control" multiple disabled="True">
                             {% for actual_essay_methods in inventoryOrder.essay.essay.essay_methods.all() %}
                             <option value="{{ actual_essay_methods.id }}">{{ actual_essay_methods.name }}</option>
                             {% endfor %}
                           </select>
                         </div>
                       </div>
-
-
-
-                      <!--
-                      <div class="panel panel-primary" style="float: right; width: 50%">
-                        <div class="panel-heading">
-                          Metodos de Ensayo
-                        </div>
-                        <div class="panel-body">
-                            {% for actual_essay_methods in inventoryOrder.essay.essay.essay_methods.all() %}
-                                <div class="ibox">
-                                  <div class="ibox-title">
-                                    <div class="text-primary">{{ actual_essay_methods.name }}</div>
-                                  </div>
-                                  <div class="ibox-content">
-                                    <label>Descripción del Ensayo</label>
-                                    <div class="text-primary">{{ actual_essay_methods.description }}</div>
-                                    <label>Precio del metodo (S/.)</label>
-                                    <div class="text-primary">{{ actual_essay_methods.price }}</div>
-                                      <div class="ibox">
-                                        <div class="ibox-title">
-                                          Parametros
-                                        </div>
-                                        {% for actual_parameters in actual_essay_methods.parameters.all() %}
-                                            <div class="ibox-content">
-                                              <label>Descripción de Parametro</label>
-                                              <div class="text-primary">{{ actual_parameters.description  }}</div>
-                                              <label>Unidades del parametro</label>
-                                              <div class="text-primary">{{ actual_parameters.unit }}</div>
-                                            </div>
-                                        {% endfor %}
-                                      </div>
-                                    </div>
-                                  </div>
-                            {% endfor %}
-                        </div>
-                      </div>
-                      -->
                     </div>
-
             </div>
         </div>
     </div>

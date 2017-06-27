@@ -8,8 +8,11 @@ from internal.models import *
 from internal.views.forms import (
     SupplyForm,
 )
+from internal.permissions import user_passes_test
+from internal.permissions.supply import *
 
 
+@user_passes_test(index_supply_check, login_url='internal:index')
 def index(request,
           template='internal/supply/index.html',
           extra_context=None):
@@ -23,6 +26,7 @@ def index(request,
     return render(request, template, context)
 
 
+@user_passes_test(show_supply_check, login_url='internal:index')
 def show(request,
          pk,
          template='internal/supply/show.html'):
@@ -35,6 +39,7 @@ def show(request,
     return render(request, template, context)
 
 
+@user_passes_test(create_supply_check, login_url='internal:index')
 def create(request,
            template='internal/supply/create.html'):
     #user_form = UserCreationForm(request.POST or None)
@@ -56,6 +61,7 @@ def create(request,
     return render(request, template, context)
 
 
+@user_passes_test(edit_supply_check, login_url='internal:index')
 def edit(request, pk,
          template='internal/supply/edit.html'):
     supply = get_object_or_404(Supply, pk=pk)
@@ -74,6 +80,7 @@ def edit(request, pk,
     return render(request, template, context)
 
 
+@user_passes_test(delete_supply_check, login_url='internal:index')
 def delete(request, pk):
     supply= get_object_or_404(Supply, pk=pk)
     supply.delete()
