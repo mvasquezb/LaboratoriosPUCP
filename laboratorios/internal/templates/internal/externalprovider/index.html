@@ -3,7 +3,6 @@
 {% block title %}{{ super() }} | Proveedores Externos{% endblock title %}
 
 {% block custom_css %}
-<link href="{{ static('vendors/footable/footable.core.css') }}" rel="stylesheet">
 {% endblock custom_css %}
 
 {% block page_content %}
@@ -27,7 +26,7 @@
             </div>
           </div>
           <div class="col-md-2 col-md-offset-7">
-            <a class="btn btn-primary pull-right" href="{{ url('internal:employee.create') }}">
+            <a class="btn btn-primary pull-right" href="{{ url('internal:externalprovider.create') }}">
               <i class="fa fa-plus"></i>
               Crear Proveedor
             </a>

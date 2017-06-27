@@ -1,0 +1,48 @@
+{% extends 'internal/base_internal.html' %}
+
+{% block title %}{{ super() }} | Empleados{% endblock title %}
+
+{% block custom_css %}{% endblock custom_css %}
+
+{% block page_content %}
+<div class="row border-bottom white-bg dashboard-header">
+  <div class="col-md-6">
+    <h2><strong>Detalle de Proveedor de Servicio</strong></h2>
+  </div>
+</div>
+<div class="wrapper wrapper-content animated fadeInRight" >
+  <div class="row">
+    <div class="col-md-12">
+      <div class="ibox float-e-margins">
+        <div class="ibox-content">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label>Nombre</label>
+                <input type="text" class="form-control" disabled="" value="{{ provider.name }}">
+              </div>
+              <div class="form-group">
+                <label>Descripción</label>
+                <input value="{{ provider.description or '' }}" type="text" class="form-control" disabled>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4">
+              {% if not provider.deleted %}
+                <a href="{{ url('internal:externalprovider.edit', provider.id) }}" class="btn btn-primary">
+                  <i class="fa fa-edit"></i>
+                  Editar
+                </a>
+              {% endif %}
+              <a href="{{ url('internal:externalprovider.index') }}" class="btn btn-white">
+                Regresar
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock page_content %}

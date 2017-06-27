@@ -8,7 +8,7 @@
 {% block page_content %}
 <div class="row border-bottom white-bg dashboard-header">
   <div class="col-md-6">
-    <h2><strong>Crear Proveedor de Servicio</strong></h2>
+    <h2><strong>{{ page_header }}</strong></h2>
   </div>
 </div>
 <div class="wrapper wrapper-content animated fadeInRight">
@@ -24,7 +24,7 @@
                   <div class="col-md-6">
                     <div class="form-group">
                       <label for="name">Nombre *</label>
-                      <input type="text" maxlength="100" class="form-control" name="name" required="" data-error="El nombre es obligatorio" placeholder="Proveedor">
+                      <input type="text" maxlength="100" class="form-control" name="name" required="" data-error="El nombre es obligatorio" placeholder="Proveedor" value="{% if provider %}{{ provider.name }}{% endif %}">
                       <div class="help-block with-errors"></div>
                     </div>
                   </div>
@@ -33,7 +33,7 @@
                   <div class="col-md-6">
                     <div class="form-group">
                       <label for="description">Descripción</label>
-                      <textarea name="description" cols="20" rows="5" class="form-control" maxlength="100" placeholder="Descripción"></textarea>
+                      <textarea name="description" cols="20" rows="5" class="form-control" maxlength="100" placeholder="Descripción">{% if provider %}{{ provider.description or '' }}{% endif %}</textarea>
                       <div class="help-block with-errors"></div>
                     </div>
                   </div>
