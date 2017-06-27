@@ -1,0 +1,24 @@
+{% set show_eye = show_eye if show_eye is defined else True %}
+{% set show_edit = show_edit if show_edit is defined else True %}
+{% set show_delete = show_delete if show_delete is defined else True %}
+<div class="row">
+  <div class="col-md-12">
+    <div class="ibox-content">
+      <nav>
+        <label>Leyenda</label>
+        <div class="legend-icons">
+          {% if show_eye %}
+            <i class="fa fa-eye" aria-hidden="true"></i> Visualizar |
+          {% endif %}
+          {% if show_edit %}
+            <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Editar |
+          {% endif %}
+          {% if show_delete %}
+            <i class="fa fa-trash-o" aria-hidden="true"></i> Eliminar
+          {% endif %}
+          {% block extra_legend %}{% endblock extra_legend %}
+        </div>
+      </nav>
+    </div>
+  </div>
+</div>
