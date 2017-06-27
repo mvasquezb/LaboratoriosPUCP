@@ -18,7 +18,7 @@ from internal.permissions.equipment import *
 def index(request,
           template='internal/equipment/index.html',
           extra_context=None):
-    equipment_list = Equipment.objects.order_by('registered_date')
+    equipment_list = Equipment.all_objects.order_by('registered_date')
 
     context = {
         'equipment_list': equipment_list,

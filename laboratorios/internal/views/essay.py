@@ -180,7 +180,7 @@ def edit(request,
 def index(request,
           template='internal/essay/index.html',
           extra_context=None):
-    essays = Essay.objects.order_by('name')
+    essays = Essay.all_objects.order_by('name')
 
     context = {
         'essay_list': essays,
