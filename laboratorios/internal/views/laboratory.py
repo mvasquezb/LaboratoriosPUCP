@@ -5,7 +5,7 @@ from django.shortcuts import (
 )
 from django.contrib import messages
 from django.utils import timezone
-from django.db.models import Q, Count
+from django.db.models import Q
 from django.http import JsonResponse
 from django.http import HttpResponse
 
@@ -198,10 +198,9 @@ def create(request,
         # users =
         # Employee.all_objects.filter(deleted__isnull=True,laboratories__isnull=True)
         # #just active users
-        users = Employee.all_objects.annotate(
-            labs=Count('laboratories')
-        ).filter(
-            Q(labs=0),
+        inactive_labs = Laboratory.all_objects.filter(deleted__isnull=True)
+        users = Employee.all_objects.filter(
+            ~Q(laboratories__in=inactive_labs),
             deleted__isnull=True,
         )
         inventories = Inventory.all_objects.filter(deleted__isnull=True)
@@ -245,12 +244,11 @@ def edit(request,
             pk=pk
         )
         #
-        all_users = Employee.all_objects.annotate(
-            labs=Count('laboratories')
-        ).filter(
+        inactive_labs = Laboratory.all_objects.filter(deleted__isnull=True)
+        all_users = Employee.all_objects.filter(
             # Get employees that do not belong to a laboratory
             # Or that belong to this laboratory
-            Q(labs=0) | Q(laboratories=laboratory.id),
+            ~Q(laboratories__in=inactive_labs) | Q(laboratories=laboratory.id),
             deleted__isnull=True,
         )
         selected_users = laboratory.employees.all()
