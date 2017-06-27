@@ -37,13 +37,16 @@
               <thead>
                 <tr>
                   <th>
+                    N°
+                  </th>
+                  <th>
                     Muestra
                   </th>
                   <th>
-                    Tipo muestra
+                    Prioridad
                   </th>
                   <th>
-                    Cantidad
+                    Tipo muestra
                   </th>
                   <th>
                     Estado
@@ -54,10 +57,11 @@
               <tbody>
                 {% for inventoryItem in inventoryItem_list %}
                   <tr role="row">
+                    <td>{{ loop.index }}</td>
                     <td>{{ inventoryItem.sample.name }}</td>
+                    <td>{{ inventoryItem.sample.request.priority }}</td>
                     <td>{{ inventoryItem.sample.sample_type.name }}</td>
-                    <td>{{ inventoryItem.quantity}}</td>
-                    <td>{{ inventoryItem.state }}</td>
+                    <td>{{ inventoryItem.state or 'Recien Registrado' }}</td>
 
                     <td class="text-left footable-visible footable-last-column">
                       <div class="btn-group">
