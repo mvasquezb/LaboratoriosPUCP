@@ -174,7 +174,7 @@
   </div>
 </div>
 
-<div class="modal fade" role="dialog" id="myModal1">
+<div class="modal fade" role="dialog" id="myModal1" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -183,17 +183,47 @@
         </div>
       </div>
       <div class="modal-body">
-        <div class="container">
-          <h4>Nombre</h4>
-          <div class="inner inventory_name"></div>
-        </div>
-        <div class="container">
-          <h4>Ubicación</h4>
-          <div class="inner inventory_location"></div>
-        </div>
-        <div class="container">
-          <h4>Tipo de Inventario</h4>
-          <div class="inner inventory_type"></div>
+        <div class="ibox">
+          <div class="ibox-title">
+            <h5>Datos Generales y Contenido</h5>
+          </div>
+          <div class="ibox-content">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Nombre</th>
+                  <th>Ubicación</th>
+                  <th>Tipo de Inventario</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th>
+                    <div class="inner inventory_name"></div>
+                  </th>
+                  <th>
+                    <div class="inner inventory_location"></div>
+                  </th>
+                  <th>
+                    <div class="inner inventory_type"></div>
+                  </th>
+                </tr>
+              </tbody>
+            </table>
+            
+            <table class="table">
+              <thead class="header_table">
+                <tr>
+                  <th>#</th>
+                  <th>Nombre</th>
+                  <th>Cantidad</th>
+                </tr>
+              </thead>
+              <tbody class="content_table">
+                
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
       <div class="modal-footer">

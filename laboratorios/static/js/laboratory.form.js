@@ -149,10 +149,38 @@ $('#form').on('submit', function (evt) {
   $('.inventory_modal').on('click',function(){
     var inventory_pk = $(this).data('pk');
     var url = $(".page_title").data("url");
+    $('.content_table').empty();
     $.get(url, {'inventory_pk': inventory_pk},function(data){
+      //General Data
       $('div.inventory_name').replaceWith("<div class='inner inventory_name'>" + data['inventory_name'] +"</div>");
       $('div.inventory_location').replaceWith("<div class='inner inventory_location'>" + data['inventory_location'] + "</div>");
       $('div.inventory_type').replaceWith("<div class='inner inventory_type'>" + data['inventory_type'] + "</div>");
+      //Inventory Content Data
+      var element_list = data['inventory_matches'];
+      var element;
+      var i;
+      
+      /*
+      if data['inventory_type'] == 'Equipos' {
+        $('.header_table').append();
+      }
+      else if data['inventory_type'] == 'Insumos'{
+
+      }
+      else{
+
+      }
+      */
+
+      for (i=0;i<element_list.length;i++){
+        element = element_list[i];
+        $('.content_table').append("<tr>" + "<th>" + (i+1) + "</th>" + "<th>" + element[0] + "</th>" +"<th>" + element[1] + "</th>" + "</tr>");
+        //$('.content_table').append("<th>" + (i+1) + "</th>");
+        //$('.content_table').append("<th>" + element[0] + "</th>");
+        //$('.content_table').append("<th>" + element[1] + "</th>");
+        //$('.content_table').append("</tr>");
+      }
+      
     });
     //console.log("pasa el ajax")
     //

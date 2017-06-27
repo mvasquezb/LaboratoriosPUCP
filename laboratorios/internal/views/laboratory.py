@@ -33,22 +33,37 @@ def index(request,
 
 def inventory_modal(request):
     if request.method == 'GET' and request.is_ajax():
-        # print("LLEGA BIEN AL VIEW")
         dicc = dict(request.GET)
         inventory_pk = dicc['inventory_pk'][0]
-        # print(inventory_pk)
         inventory = Inventory.all_objects.get(pk=inventory_pk)
         article_inventory = ArticleInventory.all_objects.filter(
             inventory=inventory)
         matches_list = []
-        for match in article_inventory:
-            article_name = match.article.name
-            article_quantity = match.article.quantity
-            matches_list.append((article_name, article_quantity))
+        #match for equipment inventory
+        if inventory.get_inventory_type_display() == 'Equipos':
+            for match in article_inventory:
+                article_name = match.article.name
+                article_quantity = match.quantity
+                servicelife_unit = match.article.equipment.servicelife_unit
+                servicelife = match.article.equipment.servicelife
+                error_range = match.article.equipment.error_range
+                matches_list.append((article_name, article_quantity))
+        elif inventory.get_inventory_type_display() == 'Insumos':
+            for match in article_inventory:
+                article_name = match.article.name
+                article_quantity = match.quantity
+                metric_unit = match.article.supply.metric_unit
+                matches_list.append((article_name, article_quantity))
+        else: #samples
+            for match in article_inventory:
+                article_name = match.article.name
+                article_quantity = match.quantity
+                #fields in sample
+                matches_list.append((article_name, article_quantity))
         data = {
             'inventory_name': inventory.name,
             'inventory_location': inventory.location,
-            'inventory_type': inventory.inventory_type,
+            'inventory_type': inventory.get_inventory_type_display(),
             'inventory_matches': matches_list
         }
         return JsonResponse(data)
