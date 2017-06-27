@@ -356,4 +356,22 @@ urlpatterns = [
     url('^externalprovider/(?P<id>\d+)/delete/?$',
         views.externalprovider.delete,
         name='externalprovider.delete'),
+    #
+    # Client
+    #
+    url('^client/?$',
+        views.client.index,
+        name='client.index'),
+    url('^client/(?P<pk>\d+)/?$',
+        views.client.show,
+        name='client.show'),
+    url('^client/create?$',
+        views.client.create,
+        name='client.create'),
+    url('^client/(?P<pk>\d+)/edit/?$',
+        views.client.edit,
+        name='client.edit'),
+    url('^client/(?P<pk>\d+)/delete/?$',
+        views.client.delete,
+        name='client.delete'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

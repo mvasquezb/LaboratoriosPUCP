@@ -142,7 +142,7 @@ def show(request,
 def index(request,
           template='internal/essaymethod/index.html',
           extra_context=None):
-    essaymethods = EssayMethod.objects.order_by('name')
+    essaymethods = EssayMethod.all_objects.order_by('name')
 
     context = {
         'essaymethod_list': essaymethods,
