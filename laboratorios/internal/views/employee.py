@@ -22,7 +22,7 @@ from internal.permissions.employee import *
 def index(request,
           template='internal/employee/index.html',
           extra_context=None):
-    employee_list = Employee.objects.order_by('user__username')
+    employee_list = Employee.all_objects.order_by('user__username')
 
     context = {
         'employees_list': employee_list,

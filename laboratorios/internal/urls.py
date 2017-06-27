@@ -337,6 +337,23 @@ urlpatterns = [
         name='reports.start'),
     url('^reports/results/(?P<criteria_string>[\w\-]+)$',
         views.reports.processing_parameters,
-        name='reports.results')
-
+        name='reports.results'),
+    #
+    # Role
+    #
+    url('^client/?$',
+        views.client.index,
+        name='client.index'),
+    url('^client/(?P<pk>\d+)/?$',
+        views.client.show,
+        name='client.show'),
+    url('^client/create?$',
+        views.client.create,
+        name='client.create'),
+    url('^client/(?P<pk>\d+)/edit/?$',
+        views.client.edit,
+        name='client.edit'),
+    url('^client/(?P<pk>\d+)/delete/?$',
+        views.client.delete,
+        name='client.delete'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
