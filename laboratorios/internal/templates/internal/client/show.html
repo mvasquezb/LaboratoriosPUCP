@@ -7,7 +7,7 @@
 {% block page_content %}
 <div class="row border-bottom white-bg dashboard-header">
     <div class="col-md-6">
-        <h2><strong>Editar cliente</strong></h2>
+        <h2><strong>Detalle de Cliente</strong></h2>
     </div>
 </div>
 <div class="wrapper wrapper-content animated fadeInRight">
@@ -17,15 +17,15 @@
             <div class="ibox-content">
                     {% for field in user_form|list + form|list if field.name != 'password2' %}
                       <div class="form-group">
-                        <label>{% if field.label == 'Doc number' %} Nro de Documento {% elif field.label == 'Phone number' %} Telefono {% else %}{{field.label}} {% endif %} {% if field.field.required %}*{% endif %}</label>
+                        <label>{% if field.label == 'Doc number' %} Nro de Documento {% elif field.label == 'Phone number' %} Telefono {% else %}{{field.label}} {% endif %}</label>
                         <div data-error="El {{field.label}} es obligatorio" aria-placeholder="-----">
                             {% if field.label == 'Doc number' %} 
                             <div class="form-inline">
                                 <div class = "form-group">
-                                    <select class="form-control" disabled>
+                                    {#<select class="form-control" disabled>
                                         <option> RUC </option>
                                         <option> DNI </option>
-                                    </select>
+                                    </select> #}
                                     {{ field.as_widget(attrs={'disabled' : "disabled", 'data-error':"Este campo es obligatorio",'class':"form-control",'min':"0",'step':"1"})}}
                                 </div>
                             </div>
