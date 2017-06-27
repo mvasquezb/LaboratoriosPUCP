@@ -26,7 +26,40 @@
                 <input value="{{ provider.description or '' }}" type="text" class="form-control" disabled>
               </div>
             </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label>Órdenes de Servicio</label>
+                <div class="table-responsive provider-service-table">
+                  <table class="table table-striped">
+                    <thead>
+                      <tr>
+                        <th>N°</th>
+                        <th>Cliente</th>
+                        <th>Acciones</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for service in service_list %}
+                        <tr>
+                          <td>{{ loop.index }}</td>
+                          <td>{{ service.client }}</td>
+                          <td>
+                            <div class="btn-group">
+                              <a href="{{ url('internal:servicerequest.show', service.id) }}" class="btn btn-white">
+                                <i class="fa fa-eye"></i>
+                              </a>
+                            </div>
+                          </td>
+                        </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
           </div>
+          {% set show_edit, show_delete = False, False %}
+          {% include 'internal/layouts/legend.html' %}
           <div class="row">
             <div class="col-md-4">
               {% if not provider.deleted %}

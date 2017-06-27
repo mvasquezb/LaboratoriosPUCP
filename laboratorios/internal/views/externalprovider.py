@@ -26,8 +26,12 @@ def show(request,
          template='internal/externalprovider/show.html',
          extra_context=None):
     provider = get_object_or_404(models.ExternalProvider.all_objects, pk=id)
+    service_list = models.ServiceRequest.all_objects.filter(
+        external_provider=provider
+    )
     context = {
         'provider': provider,
+        'service_list': service_list,
     }
     if extra_context is not None:
         context.update(extra_context)
