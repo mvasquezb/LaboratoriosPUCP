@@ -11,3 +11,4 @@ from .sampleType import *
 from .serviceContract import *
 from .serviceRequest import *
 from .supply import *
+from .client import *
