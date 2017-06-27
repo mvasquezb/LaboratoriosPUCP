@@ -579,7 +579,7 @@ function ganttChart(config) {
                 .attr('width', function(d) {
                     //var width = ((d.completion_percentage * PROGRESSBAR_WIDTH) / 100);
                     var width = ((d.completion_percentage * progress_bar_width) / 100);
-                    if (width> 100)
+                    if (d.completion_percentage > 100)
                       width=progress_bar_width;
                     return width;
                 })
