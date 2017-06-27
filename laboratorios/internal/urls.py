@@ -368,7 +368,7 @@ urlpatterns = [
     url('^client/(?P<pk>\d+)/?$',
         views.client.show,
         name='client.show'),
-    url('^client/create?$',
+    url('^client/create/?$',
         views.client.create,
         name='client.create'),
     url('^client/(?P<pk>\d+)/edit/?$',
