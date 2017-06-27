@@ -335,7 +335,7 @@ urlpatterns = [
     url('^reports/start$',
         views.reports.report_parameters,
         name='reports.start'),
-    url('^reports/results/(?P<criteria_string>[\w\-]+)$',
+    url('^reports/results/(?P<settings_string>[\w\-]+)/$',
         views.reports.processing_parameters,
         name='reports.results')
 

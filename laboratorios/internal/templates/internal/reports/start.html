@@ -210,8 +210,9 @@ var csrftoken = getCookie('csrftoken');
     function uploadData(insert_data){
         var data = {js_data: insert_data,
                     csrfmiddlewaretoken: csrftoken};
-        $.post('/internal/essay/create', JSON.stringify(data), function(response){
-            console.log(data['csrfmiddlewaretoken'])
+        $.post('/internal/reports/start', JSON.stringify(data), function(response){
+            console.log(data['csrfmiddlewaretoken']);
+            window.location.replace('/internal/reports/results/'+insert_data);
             });
     }
 

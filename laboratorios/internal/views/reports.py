@@ -75,29 +75,26 @@ def report_parameters(request,
         'data_list':data_list,
         'criteria_string':criteria_selection_string,
         }
-    if request == 'POST':
+    if request.method == 'POST':
         ## processing of shit right here
         print('hola?')
         print(request.body)
-        js_data = json.loads(request.body['js_data'].decode('utf-8'))
+        js_data = json.loads(request.body.decode('utf-8'))['js_data']
         if js_data is not None:
-            #print(js_data)
-            filter_string = js_data
-            
-        ## end of processing shit
-        ## passing string with selections to processing template
-        return redirect(reverse('internal:reports.results',js_data))
-    else:
-        print('csm')
+            print(js_data)
+            return redirect(reverse('internal:reports.results',kwargs={'settings_string': js_data}))
+        else:
+            print("que fuentes tmr?")
     return render(request,template,context)
+
 
 
 def processing_parameters(
     request,
-    filter_string,
+    settings_string,
     template='internal/reports/results.html'
     ):
-    print(filter_string)
+    print(settings_string)
     context={}
 
     return render(request,template,context)
