@@ -19,19 +19,19 @@
               <div class="col-md-12">
                 <div class="form-group">
                   <label>Codigo de la Muestra</label>
-                  <input class="form-control" value={{ inventoryItem.sample.code or '-' }} name="SampleCode" disabled="true" type="text">
+                  <input class="form-control" value="{{ inventoryItem.sample.code or '-' }}" name="SampleCode" disabled="true" type="text">
                 </div>
                 <div class="form-group">
                   <label>Nombre de la Muestra</label>
-                  <input class="form-control" value={{ inventoryItem.sample.name }} name="SampleName" disabled="true" type="text">
+                  <input class="form-control" value="{{ inventoryItem.sample.name }}" name="SampleName" disabled="true" type="text">
                 </div>
                 <div class="form-group">
                   <label>Tipo de la Muestra</label>
-                  <input class="form-control" value={{ inventoryItem.sample.sample_type.name }} name="SampleTypeName" disabled="true" type="text">
+                  <input class="form-control" value="{{ inventoryItem.sample.sample_type.name }}" name="SampleTypeName" disabled="true" type="text">
                 </div>
                 <div class="form-group">
                   <label>Laboratorio</label>
-                  <input class="form-control" value={{ inventoryItem.sample.inventory.name }} name="SampleLaboratory" disabled="true" type="text">
+                  <input class="form-control" value="{{ inventoryItem.sample.inventory.name }}" name="SampleLaboratory" disabled="true" type="text">
                 </div>
               </div>
             </div>
