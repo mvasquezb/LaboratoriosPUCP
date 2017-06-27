@@ -339,7 +339,25 @@ urlpatterns = [
         views.reports.processing_parameters,
         name='reports.results'),
     #
-    # Role
+    # External Provider
+    #
+    url('^externalprovider/?$',
+        views.externalprovider.index,
+        name='externalprovider.index'),
+    url('^externalprovider/create/?$',
+        views.externalprovider.create,
+        name='externalprovider.create'),
+    url('^externalprovider/(?P<id>\d+)/?$',
+        views.externalprovider.show,
+        name='externalprovider.show'),
+    url('^externalprovider/(?P<id>\d+)/edit/?$',
+        views.externalprovider.edit,
+        name='externalprovider.edit'),
+    url('^externalprovider/(?P<id>\d+)/delete/?$',
+        views.externalprovider.delete,
+        name='externalprovider.delete'),
+    #
+    # Client
     #
     url('^client/?$',
         views.client.index,

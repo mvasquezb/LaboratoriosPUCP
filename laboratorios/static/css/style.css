@@ -8470,7 +8470,7 @@ body.md-skin {
 
 .table-responsive .permission_table.role {
   max-height: 500px;
-} 
+}
 
 .first-table-column {
   width: 175px;
@@ -8501,3 +8501,5 @@ body.md-skin {
 .custom-filter-label {
   display: block;
 }
+
+.provider-service-table { max-height: 350px; }

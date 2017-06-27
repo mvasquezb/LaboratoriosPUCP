@@ -366,7 +366,7 @@ class ExternalProvider(SafeDeleteModel):
 
     audit_log = AuditlogHistoryField()
     name = models.CharField(max_length=100)
-    description = models.CharField(max_length=200)
+    description = models.CharField(max_length=200, null=True, blank=True)
     services = models.ManyToManyField('ExternalProviderService', blank=True)
     registered_date = models.DateTimeField(
         auto_now_add=True,
