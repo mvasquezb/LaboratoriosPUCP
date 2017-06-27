@@ -43,7 +43,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row">
+              <!--       <div class="row">
                       <div id="supplies_div"class="col-md-12">
                         <label>Agregar Insumos </label>
                         <div class="table-responsive">
@@ -122,10 +122,10 @@
                           </table>
                         </div>
                       </div>
-                    </div>
+                    </div> -->
                     <p><strong>(*) Campos obligatorios</strong></p>
                     <div class="row">
-                      <div class="col-md-offset-4 col-md-4 text-center">
+                        <div class="col-lg-12">
                         <input type="submit" class="btn btn-primary" name="registrar"
                           id="register_button" value="Registrar">
                         <a href="{{ url('internal:inventory.index') }}" class="btn btn-white">Cancelar</a>
@@ -162,22 +162,22 @@ $(document).ready(function() {
       ],
     });
     //console.log(list);
-    var list= {{types|safe}};
-    $('#comboBox').change(function(){
-      var option= $('#comboBox option:selected').text();
-      if(option==list[0]){
-        $('#equipments_div').hide();
-        $('#supplies_div').toggle();
-      }else if(option==list[1]){
-        $('#supplies_div').hide();
-        $('#equipments_div').toggle();
-      }else{
-        $('#equipments_div').hide();
-        $('#supplies_div').hide();
+    // var list= {{types|safe}};
+    // $('#comboBox').change(function(){
+    //   var option= $('#comboBox option:selected').text();
+    //   if(option==list[0]){
+    //     $('#equipments_div').hide();
+    //     $('#supplies_div').toggle();
+    //   }else if(option==list[1]){
+    //     $('#supplies_div').hide();
+    //     $('#equipments_div').toggle();
+    //   }else{
+    //     $('#equipments_div').hide();
+    //     $('#supplies_div').hide();
 
-      }     
+    //   }     
 
-    });
+    // });
 
     $('#mysearch').keyup(function(){
       table.search($(this).val()).draw() ;

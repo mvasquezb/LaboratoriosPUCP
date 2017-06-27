@@ -103,24 +103,28 @@ def delete(request, pk):
 
 def show(request,
          pk):
-    if request.method == 'POST':
-        instance = inventory.all_objects.get(
-            deleted__isnull=True,
-            pk=pk
-        )
-        aux_form = InventoryForm(request.POST or None, instance=instance)
-        if aux_form.is_valid():
-            aux_form.save()
-            return redirect('internal:inventory.index')
-    else:
-        inventory = inventory.all_objects.get(
-            deleted__isnull=True,
-            pk=pk
-        )
-        
-        form = InventoryForm()
-        context = {'inventory': inventory,
-                   'form': form}
-        template = 'internal/inventory/show.html'
-        return render(request, template, context)
+    suplies = Supply.all_objects.filter(deleted__isnull=True)
+    equipments=Equipment.all_objects.filter(deleted__isnull=True)
+    instance = Inventory.all_objects.get(
+        deleted__isnull=True,
+        pk=pk
+    )
+    # inventory_articles= ArticleInventory.all_objects.get(
+    #     deleted__isnull=True,
+    #     inventory=instance
+    # )
+    inventories = Inventory.all_objects.filter(deleted__isnull=True)
+    inventory_types= Inventory.TYPE_CHOICES
+    types=[]
+    for  type_aux in inventory_types:
+        types.append(type_aux[1])
+    # if (instance.inventory_type=types[0]):
+    #     suplies = inventory_articles.article
+
+    context = { 'inventories': inventories,
+                'inventory_types':inventory_types,
+                'supply_list':suplies,'equipments':equipments,
+                'inventory':instance,'types':types}
+    template = 'internal/inventory/show.html'
+    return render(request, template, context)
 

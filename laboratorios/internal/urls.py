@@ -337,6 +337,24 @@ urlpatterns = [
         name='reports.start'),
     url('^reports/results/(?P<criteria_string>[\w\-]+)$',
         views.reports.processing_parameters,
-        name='reports.results')
+        name='reports.results'),
+        #
+    # Inventory
+    #
+    url('^inventory/create$',
+        views.inventory.create,
+        name='inventory.create'),
+    url('^inventory/(?P<pk>\d+)$',
+        views.inventory.show,
+        name='inventory.show'),
+    url('^inventory/(?P<pk>\d+)/edit/?$',
+        views.inventory.edit,
+        name='inventory.edit'),
+    url('^inventory/?$',
+        views.inventory.index,
+        name='inventory.index'),
+    url('^inventory/(?P<pk>\d+)/delete/?$',
+        views.inventory.delete,
+        name='inventory.delete')
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
