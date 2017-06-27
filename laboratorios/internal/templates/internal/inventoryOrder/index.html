@@ -48,6 +48,9 @@
                     Nombre
                   </th>
                   <th>
+                    Prioridad
+                  </th>
+                  <th>
                     Tipo
                   </th>
                   <th>
@@ -64,6 +67,7 @@
                   <tr role="row">
                     <td>{{ loop.index }}</td>
                     <td>{{ inventoryOrder.essay.sample.name }} - Solicitud: {{ inventoryOrder.essay.sample.request }}</td>
+                    <td>{{ inventoryOrder.essay.sample.request.priority }}</td>
                     <td>{{ inventoryOrder.essay.sample.sample_type.name }}</td>
                     <td>{{ inventoryOrder.essay.sample.request.client }}</td>
                     <td>
