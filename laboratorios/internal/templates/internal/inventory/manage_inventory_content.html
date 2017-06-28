@@ -1,0 +1,116 @@
+{% extends 'internal/base_internal.html' %}
+
+{% block title %}{{ super() }} | Inventarios{% endblock title %}
+
+{% block custom_css %}
+{% endblock custom_css %}
+
+{% block page_content %}
+
+<div class="row border-bottom white-bg dashboard-header">
+    <div class="col-md-6">
+    	<h2><strong>Administrador de Contenido de Inventario</strong></h2>
+    </div>
+</div>
+
+<div class="wrapper wrapper-content animated fadeInRight" >
+	<div class="row">
+    <div class="ibox float-e-margins">
+      <div class="ibox-content">
+        <div class="row">
+          <div class="form-group col-md-12">
+            <label>Nombre de Inventario</label>
+            <input type="text" disabled class="form-control" value="{{ inventory.name }}">
+          </div>
+        </div>
+        <div class="row">
+          <div class="form-group col-md-12">
+            <label>Ubicación</label>
+            <input type="text" disabled class="form-control" value="{{ inventory.location }}">
+          </div>
+        </div>
+        <div class="row">
+          <div class="form-group col-md-12">
+            <label>Tipo de Inventario</label>
+            <input type="text" disabled class="form-control" value="{{ inventory.get_inventory_type_display() }}">
+          </div>
+        </div>
+        <div class="row">
+          <div class="form-group col-md-12">
+            <label>Articulos disponibles para este inventario</label>
+            <div class="table-responsive">
+            {% if  inventory.get_inventory_type_display() == inventory_types[0][1] %}
+              <table class="table table-striped table-bordered">
+                <thead>
+                  <tr>
+                    <th>N°</th>
+                    <th>Nombre</th>
+                    <th>Descripción</th>
+                    <th>Unidad Métrica</th>
+                    <th>Cantidad Actual</th>
+                    <th>Añadir/Disminuir</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for article in articles %}
+                    <tr>
+                      <th>{{ loop.index }}</th>
+                      <th>{{ article.name }}</th>
+                      <th>{{ article.description }}</th>
+                      <th>{{ article.metric_unit }}</th>
+                      {% set get_out = {'value': False} %}
+                      {% for match in matches %}
+                        {% if article.pk == match.article.supply.pk %}
+                          {% if get_out.update({'value': True}) %}{% endif %}
+                          <th>{{ match.quantity }}</th>
+                          {% break %}
+                        {% endif %}
+                      {% endfor %}
+                      {% if not get_out['value'] %}
+                        <th>0</th>
+                      {% endif %}
+                      <th>0</th>
+                      <th>
+                        <input type="number" min="0" name=""><div class="btn-group">
+                          <a class="btn-white btn"><i class="fa fa-plus" aria-hidden="true"></i></a>
+                          <a class="btn-white btn"><i class="fa fa-minus" aria-hidden="true"></i></a>
+                        </div>
+                      </th>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            {% elif inventory.get_inventory_type_display() == inventory_types[1][1] %}
+              <table class="table table-striped table-bordered">
+                <thead>
+                  <tr>
+                    <th>N°</th>
+                    <th>Nombre</th>
+                    <th>Descripción</th>
+                    <th>Rango de Error</th>
+                    <th>Tiempo de Vida</th>
+                    <th>Cantidad Actual</th>
+                    <th>Añadir/Disminuir</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  
+                </tbody>
+              </table>
+            {% endif %}
+          </div>
+          </div>
+        </div>
+      </div>
+    </div>
+	</div>
+</div>
+
+{% endblock page_content %}
+
+
+{% block custom_js %}
+
+{% endblock custom_js %}

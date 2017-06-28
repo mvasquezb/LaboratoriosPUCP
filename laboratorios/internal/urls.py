@@ -355,6 +355,9 @@ urlpatterns = [
         name='inventory.index'),
     url('^inventory/(?P<pk>\d+)/delete/?$',
         views.inventory.delete,
-        name='inventory.delete')
+        name='inventory.delete'),
+    url('^inventory/(?P<pk>\d+)/manage_content/?$',
+        views.inventory.manage_content,
+        name='inventory.manage_content')
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

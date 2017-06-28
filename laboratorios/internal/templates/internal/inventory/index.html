@@ -8,7 +8,7 @@
 {% block page_content %}
 <div class="row border-bottom white-bg dashboard-header">
     <div class="col-md-6">
-        <h2><strong>Inventario</strong></h2>
+        <h2><strong>Lista de Inventarios</strong></h2>
     </div>
 </div>
 <div class="wrapper wrapper-content animated fadeInRight" ><div class="row">
@@ -64,6 +64,7 @@
                         <a  href="{{ url('internal:inventory.show', inventory.id) }}" class="btn-white btn"><i class="fa fa-eye" aria-hidden="true"></i></a>
                         {% if not inventory.deleted %}
                         <a  href="{{ url('internal:inventory.edit', inventory.id) }}" class="btn-white btn"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+                        <a  href="{{ url('internal:inventory.manage_content', inventory.id) }}" class="btn-white btn"><i class="fa fa-gears" aria-hidden="true"></i></a>
                         <a class="myBtn1 btn-white btn" data-toggle="modal" data-target="#myModal1" data-url="{{ url('internal:inventory.delete', inventory.id) }}"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
                         {% endif %}
                       </div>
@@ -73,6 +74,7 @@
               </tbody>
             </table>
         </div>
+
       </div>
     </div>
   </div>
