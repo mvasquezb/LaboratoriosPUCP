@@ -84,7 +84,9 @@
                                         {% for laboratory in laboratories %}
                                           <tr>
                                             <td>{{ laboratory.name }}</td>
-                                            <td><input type="checkbox" name="{{ laboratory.pk }}" class="i-checks checkbox_laboratory"></td>
+                                            <td>
+                                              <input type="radio" name="laboratory" value="{{ laboratory.pk }}" class="i-checks checkbox_laboratory">
+                                            </td>
                                           </tr>
                                         {% endfor %}
                                       </tbody>
