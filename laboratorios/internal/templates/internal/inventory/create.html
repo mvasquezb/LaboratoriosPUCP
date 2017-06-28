@@ -141,12 +141,6 @@
 
 
 {% block custom_js %}
-<script>
-if ($('.message-container .messages li')) {
-  var msg = $('.message-container .messages li').first();
-  showToastr(msg.text(), msg.data('tags'));
-}
-</script>
 <script src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.10.15/js/dataTables.bootstrap.min.js"></script>
 <script src="{{ static('js/datatable-config.js') }}"></script>
