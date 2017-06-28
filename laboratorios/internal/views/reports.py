@@ -125,10 +125,10 @@ def client_group(context,settings):
         essay_list=list(map(lambda x:Essay.all_objects.filter(deleted__isnull=True,pk=x).first(),list(map(lambda x: settings['data_list']['essay'][x],settings['filters_data'][3]))))
         service_matrix=list(map(lambda x: [y for y in x if len(EssayFill.all_objects.filter(deleted__isnull=True,essay__in=essay_list,sample=y.sample))>0],service_matrix))
 
-    print(client_list)  
-    print(sample_list)
-    print(laboratory_list)
-    print(service_matrix)
+   ## print(client_list)  
+   ## print(sample_list)
+   ## print(laboratory_list)
+   ##s print(service_matrix)
     return context
 
 def sample_group(context,settings):
