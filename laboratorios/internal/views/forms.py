@@ -182,11 +182,11 @@ class EssayFillSelectionForm(ModelForm):
             deleted__isnull=True,
             pk=self.data['essay']
         )
-        EssayFill.all_objects.filter(
+        essay_fills = EssayFill.all_objects.filter(
             deleted__isnull=True,
             essay=myself.essay
         )
-        methods_count = essay_fills
+        methods_count = essay_fills.count()
         essay_methods = EssayMethod.all_objects.filter(
             deleted__isnull=True,
             essays=essay
