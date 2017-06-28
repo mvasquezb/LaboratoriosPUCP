@@ -24,4 +24,5 @@ urlpatterns = [
     url(r'^$',
         RedirectView.as_view(url='/internal/login/', permanent=False),
         name='index'),
+    url('^oauth/', include('social_django.urls', namespace='social')),
 ]
