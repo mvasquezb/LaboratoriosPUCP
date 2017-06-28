@@ -216,7 +216,9 @@ urlpatterns = [
     url('^laboratory/InventoryModal$',
         views.laboratory.inventory_modal,
         name='laboratory.inventory_modal'),
-
+    url('^laboratory/EmployeeModal$',
+        views.laboratory.employee_modal,
+        name='laboratory.employee_modal'),
     #
     # sampleType
     #
@@ -335,16 +337,16 @@ urlpatterns = [
     url('^reports/start$',
         views.reports.report_parameters,
         name='reports.start'),
-    url('^reports/results/(?P<criteria_string>[\w\-]+)$',
+    url('^reports/results/$',
         views.reports.processing_parameters,
         name='reports.results'),
-        #
+    #
     # Inventory
     #
-    url('^inventory/create$',
+    url('^inventory/create/?$',
         views.inventory.create,
         name='inventory.create'),
-    url('^inventory/(?P<pk>\d+)$',
+    url('^inventory/(?P<pk>\d+)/?$',
         views.inventory.show,
         name='inventory.show'),
     url('^inventory/(?P<pk>\d+)/edit/?$',
@@ -360,4 +362,40 @@ urlpatterns = [
         views.inventory.manage_content,
         name='inventory.manage_content')
 
+    #
+    # External Provider
+    #
+    url('^externalprovider/?$',
+        views.externalprovider.index,
+        name='externalprovider.index'),
+    url('^externalprovider/create/?$',
+        views.externalprovider.create,
+        name='externalprovider.create'),
+    url('^externalprovider/(?P<id>\d+)/?$',
+        views.externalprovider.show,
+        name='externalprovider.show'),
+    url('^externalprovider/(?P<id>\d+)/edit/?$',
+        views.externalprovider.edit,
+        name='externalprovider.edit'),
+    url('^externalprovider/(?P<id>\d+)/delete/?$',
+        views.externalprovider.delete,
+        name='externalprovider.delete'),
+    #
+    # Client
+    #
+    url('^client/?$',
+        views.client.index,
+        name='client.index'),
+    url('^client/(?P<pk>\d+)/?$',
+        views.client.show,
+        name='client.show'),
+    url('^client/create/?$',
+        views.client.create,
+        name='client.create'),
+    url('^client/(?P<pk>\d+)/edit/?$',
+        views.client.edit,
+        name='client.edit'),
+    url('^client/(?P<pk>\d+)/delete/?$',
+        views.client.delete,
+        name='client.delete'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

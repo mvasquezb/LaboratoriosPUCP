@@ -6,6 +6,7 @@
 <link href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
 <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/metisMenu/2.7.0/metisMenu.min.css">
+<link href="{{ static('css/bootstrap-multiselect.css') }}" rel="stylesheet">
 {% endblock base_css %}
 
 {% block base_content %}
@@ -18,7 +19,13 @@
       <ul class="nav metismenu" id="side-menu">
         <li class="nav-header">
           <div class="dropdown profile-element">
-            <span class="clear"> <span class="block m-t-xs"> <strong class="font-bold">{{ user.username.upper() }}</strong>
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+              <span class="clear">
+                <span class="block m-t-xs">
+                  <strong class="font-bold">{{ user.basicuser or user }}</strong>
+                </span>
+              </span>
+            </a>
             <ul class="dropdown-menu animated fadeInRight m-t-xs">
               <li><a href="profile.html">Profile</a></li>
               <li><a href="contacts.html">Contacts</a></li>
@@ -67,7 +74,6 @@
             <span class="nav-label">Laboratorios</span>
           </a>
         </li>
-        
         <li>
           <a href="{{ url('internal:sampleType.index') }}">
             <i class="fa fa-flask"></i>
@@ -116,6 +122,18 @@
             <span class="nav-label">Reportes Consolidados</span>
           </a>
         </li>
+        <li>
+          <a href="{{ url('internal:externalprovider.index') }}">
+            <i class="fa fa-wrench"></i>
+            <span class="nav-label">Proveedores Externos</span>
+          </a>
+        </li>
+        <li>
+          <a href="{{ url('internal:client.index') }}">
+            <i class="fa fa-file-pdf-o"></i>
+            <span class="nav-label">Clientes</span>
+          </a>
+        </li>
       </ul>
     </div>
   </nav>
@@ -146,7 +164,7 @@
                 </span>
               </li>
               <li>
-                <a href="{{ url('internal:logout') }}">
+                <a class="navbar-top-btn" href="{{ url('internal:logout') }}">
                 <i class="fa fa-sign-out"></i> Log out
                 </a>
               </li>
@@ -169,6 +187,13 @@
     {% endblock base_page_content %}
   </div>
 </div>
+<div class="message-container hidden">
+  <ul class="messages">
+    {% for message in messages %}
+      <li{% if message.tags %} data-tags="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+  </ul>
+</div>
 {% endblock base_content %}
 
 {% block base_js %}
@@ -186,4 +211,5 @@
 
 <!-- Theme script -->
 <script src="{{ static('js/inspinia.js') }}"></script>
+<script src="{{ static('js/bootstrap-multiselect.js') }}"></script>
 {% endblock base_js %}

@@ -73,7 +73,6 @@
                     <a class="myBtn1 btn-white btn" data-toggle="modal" data-target="#myModal1"
                        data-url="{{ url('internal:servicecontract.delete', servicecontract.id) }}"><i
                       class="fa fa-trash-o" aria-hidden="true"></i></a>
-
                     {% else %}
                     <a class="btn-white btn"
                        href="{{ url('internal:servicecontract.approve', servicecontract.id) }}">Aprobar</a>
@@ -85,10 +84,10 @@
                 </td>
               </tr>
               {% endfor %}
-
               </tbody>
             </table>
           </div>
+          {% include 'internal/layouts/legend.html' %}
         </div>
       </div>
     </div>
@@ -105,30 +104,9 @@
     </div>
   </div>
 </div>
-
-
-{#
-<div class="message-container hidden">
-  <ul class="messages">
-    {% for message in messages %}
-    <li {% if message.tags %} data-tags="{{ message.tags }}" {% endif %}>{{ message }}</li>
-    {% endfor %}
-  </ul>
-</div>
-#}
-
-
 {% endblock page_content %}
 
 {% block custom_js %}
-<script type="text/javascript">
-  if ($('.message-container .messages li')) {
-  var msg = $('.message-container .messages li').first();
-  $.extend(toastr.options, {"positionClass": "toast-bottom-right",});
-  toastr[msg.data('tags')](msg.text());
-}
-
-</script>
 <script src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.10.15/js/dataTables.bootstrap.min.js"></script>
 <script src="{{ static('js/datatable-config.js') }}"></script>

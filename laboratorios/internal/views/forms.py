@@ -15,22 +15,22 @@ import copy
 
 
 class EmployeeForm(ModelForm):
-    laboratories = forms.ModelMultipleChoiceField(
+    laboratory = forms.ModelChoiceField(
         queryset=Laboratory.all_objects.filter(deleted__isnull=True)
     )
 
     def __init__(self, *args, **kwargs):
         super(EmployeeForm, self).__init__(*args, **kwargs)
         self.fields['roles'].required = False
-        self.fields['laboratories'].required = False
+        self.fields['laboratory'].required = False
 
     class Meta:
         model = Employee
-        fields = ['roles', 'laboratories']
+        fields = ['roles', 'laboratory']
 
-    def _save_m2m(self, *args, **kwargs):
-        super(EmployeeForm, self)._save_m2m(*args, **kwargs)
-        self.instance.laboratories.set(self.cleaned_data['laboratories'])
+    # def _save_m2m(self, *args, **kwargs):
+    #     super(EmployeeForm, self)._save_m2m(*args, **kwargs)
+    #     self.instance.laboratories.set(self.cleaned_data['laboratories'])
 
 
 class UserCreationForm(auth_forms.UserCreationForm):
@@ -121,7 +121,7 @@ class ServiceRequestCreateForm(ModelForm):
             'priority':'Prioridad',
             'external_provider':'Proveedor Externo',
             'expected_duration':'Duración esperada',
-            'observations':'Observacions'
+            'observations':'Observaciones'
         }
 
 
@@ -144,7 +144,7 @@ class ServiceRequestForm(ModelForm):
             'priority':'Prioridad',
             'external_provider':'Proveedor Externo',
             'expected_duration':'Duración esperada',
-            'observations':'Observacions'
+            'observations':'Observaciones'
         }
 
 
@@ -225,9 +225,17 @@ class ServiceAssignEmployeeForm(forms.Form):
 
 
 class LaboratoryForm(ModelForm):
+    employees = forms.ModelMultipleChoiceField(
+        queryset=Employee.all_objects.filter(deleted__isnull=True)
+    )
+
     class Meta:
         model = Laboratory
         exclude = []
+
+    def _save_m2m(self, *args, **kwargs):
+        super(LaboratoryForm, self)._save_m2m(*args, **kwargs)
+        self.instance.employees.set(self.cleaned_data['employees'])
 
 
 class SampleTypeForm(ModelForm):
@@ -259,6 +267,7 @@ class EssayForm(ModelForm):
         model = Essay
         exclude = ['essay_methods']
 
+
 class JSONField(forms.Form):
     js_data = forms.CharField(label='js_data')
 
@@ -287,7 +296,17 @@ class EquipmentForm(ModelForm):
         fields = ['name', 'description', 'servicelife_unit',
                   'servicelife', 'error_range']
 
+
+class ExternalProviderForm(ModelForm):
+    class Meta:
+        model = ExternalProvider
+        fields = ('name', 'description')
+        labels = {
+            'name': 'Nombre',
+            'description': 'Descripción',
+        }
+
 class InventoryForm(ModelForm):
     class Meta:
         model = Inventory
-        exclude = []
+        exclude = ()

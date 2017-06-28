@@ -48,7 +48,7 @@
                 <label>Supervisor</label>
                 <select name="supervisor" data-error="Este campo es obligatorio" required="" id="id_supervisor" class="form-control">
                   {% for employee in employees %}
-                      <option {% if service_request.supervisor.id == employee.id %}selected{% endif %} value="{{ employee.id }}">
+                      <option {% if service_request.supervisor == employee %}selected{% endif %} value="{{ employee.id }}">
                         {{ employee }}
                       </option>
                   {% endfor %}
@@ -150,6 +150,9 @@
           </div>
         </div>
         {% endfor %}
+        <div class="col-md-12 row form-group">
+          <p><strong>(*) Campos obligatorios</strong></p>
+        </div>
         <div class="row">
           <div class="col-lg-6 col-lg-offset-3">
             <div class="text-center">

@@ -6,10 +6,14 @@ from django.shortcuts import (
 )
 from django.contrib import messages
 from internal.models import *
+
 from internal.views.forms import EmployeeForm
 from internal.views.forms import RoleForm
+from internal.permissions import user_passes_test
+from internal.permissions.role import *
 
 
+@user_passes_test(index_role_check, login_url='internal:index')
 def index(request, template='internal/role/index.html', extra_context=None):
     roles = Role.objects.order_by('name')
 
@@ -21,6 +25,7 @@ def index(request, template='internal/role/index.html', extra_context=None):
     return render(request, template, context)
 
 
+@user_passes_test(show_role_check, login_url='internal:index')
 def show(request, pk, template='internal/role/show.html'):
     role = get_object_or_404(Role, pk=pk)
     context = {
@@ -30,6 +35,7 @@ def show(request, pk, template='internal/role/show.html'):
     return render(request, template, context)
 
 
+@user_passes_test(create_role_check, login_url='internal:index')
 def create(request,
            template='internal/role/create.html'):
     form = RoleForm(request.POST or None)
@@ -45,6 +51,7 @@ def create(request,
     return render(request, template, context)
 
 
+@user_passes_test(edit_role_check, login_url='internal:index')
 def edit(request, pk,
          template='internal/role/edit.html'):
     role = get_object_or_404(Role, pk=pk)
@@ -66,6 +73,7 @@ def edit(request, pk,
     return render(request, template, context)
 
 
+@user_passes_test(delete_role_check, login_url='internal:index')
 def delete(request, pk):
     role = get_object_or_404(Role, pk=pk)
     role.delete()

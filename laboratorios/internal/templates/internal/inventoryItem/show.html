@@ -25,27 +25,23 @@
 
                             <div class="form-group">
                               <label>Codigo de la Muestra</label>
-                              <div class="text-primary">{{ inventoryItem.sample.code }}</div>
+                              <input class="form-control" value={{ inventoryItem.sample.code }} name="SampleCode" disabled="true" type="text">
                             </div>
                             <div class="form-group">
                               <label>Nombre de la Muestra</label>
-                              <div class="text-primary">{{ inventoryItem.sample.name }}</div>
+                              <input class="form-control" value={{ inventoryItem.sample.name }} name="SampleName" disabled="true" type="text">
                             </div>
                             <div class="form-group">
                               <label>Tipo de la Muestra</label>
-                              <div class="text-primary">{{ inventoryItem.sample.sample_type.name }}</div>
-                            </div>
-                            <div class="form-group">
-                              <label>Cantidad</label>
-                              <div class="text-primary">{{ inventoryItem.quantity }}</div>
+                              <input class="form-control" value={{ inventoryItem.sample.sample_type.name }} name="TypeName" disabled="true" type="text">
                             </div>
                             <div class="form-group">
                               <label>Laboratorio</label>
-                              <div class="text-primary">{{ inventoryItem.sample.inventory.name }}</div>
+                              <input class="form-control" value={{ inventoryItem.sample.inventory.name }} name="SampleLaboratory" disabled="true" type="text">
                             </div>
                             <div class="form-group">
                               <label>Estado</label>
-                              <div class="text-primary">{{ inventoryItem.state }}</div>
+                              <input class="form-control" value={{ inventoryItem.state or 'Recien Registrado' }} name="SampleState" disabled="true" type="text">
                             </div>
                           </div>
                         </div>

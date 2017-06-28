@@ -5,7 +5,7 @@ from django.shortcuts import (
 )
 from django.contrib import messages
 from django.utils import timezone
-from django.db.models import Q, Count
+from django.db.models import Q
 from django.http import JsonResponse
 from django.http import HttpResponse
 
@@ -14,8 +14,11 @@ from .forms import LaboratoryForm
 
 import json as simplejson
 from datetime import timedelta
+from internal.permissions import user_passes_test
+from internal.permissions.laboratory import *
 
 
+@user_passes_test(index_laboratory_check, login_url='internal:index')
 def index(request,
           template='internal/laboratory/index.html',
           extra_context=None):
@@ -27,25 +30,53 @@ def index(request,
         context.update(extra_context)
     return render(request, template, context)
 
+def employee_modal(request):
+    if request.method == 'GET' and request.is_ajax():
+        dicc = dict(request.GET)
+        employee_pk = dicc['employee_pk'][0]
+        employee = BasicUser.all_objects.get(pk=employee_pk)
+        employee_roles = employee.roles.all()
+        roles_data = []
+        for role in employee_roles:
+            roles_data.append((role.name, role.description))
+        data = {'roles_data': roles_data}
+        return JsonResponse(data)
+        #print(employee.basicuser)
+    return HttpResponse("GG")
 
 def inventory_modal(request):
     if request.method == 'GET' and request.is_ajax():
-        # print("LLEGA BIEN AL VIEW")
         dicc = dict(request.GET)
         inventory_pk = dicc['inventory_pk'][0]
-        # print(inventory_pk)
         inventory = Inventory.all_objects.get(pk=inventory_pk)
         article_inventory = ArticleInventory.all_objects.filter(
             inventory=inventory)
         matches_list = []
-        for match in article_inventory:
-            article_name = match.article.name
-            article_quantity = match.article.quantity
-            matches_list.append((article_name, article_quantity))
+        #match for equipment inventory
+        if inventory.get_inventory_type_display() == 'Equipos':
+            for match in article_inventory:
+                article_name = match.article.name
+                article_quantity = match.quantity
+                servicelife_unit = match.article.equipment.servicelife_unit
+                servicelife = match.article.equipment.servicelife
+                error_range = match.article.equipment.error_range
+                matches_list.append((article_name, servicelife_unit, servicelife, error_range, article_quantity))
+        elif inventory.get_inventory_type_display() == 'Insumos':
+            for match in article_inventory:
+                article_name = match.article.name
+                article_quantity = match.quantity
+                metric_unit = match.article.supply.metric_unit
+                matches_list.append((article_name, metric_unit,article_quantity))
+        else: #samples
+            for match in article_inventory:
+                article_name = match.article.name
+                article_quantity = match.quantity
+                #fields in sample
+                matches_list.append((article_name, article_quantity))
         data = {
             'inventory_name': inventory.name,
             'inventory_location': inventory.location,
-            'inventory_type': inventory.inventory_type,
+            'inventory_type': inventory.get_inventory_type_display(),
             'inventory_matches': matches_list
         }
         return JsonResponse(data)
@@ -138,6 +169,7 @@ def services_index(request,
     return render(request, template, context)
 
 
+@user_passes_test(create_laboratory_check, login_url='internal:index')
 def create(request,
            template='internal/laboratory/create.html',
            extra_content=None):
@@ -164,12 +196,11 @@ def create(request,
             # return HttpResponse(form.errors)
     else:
         # users =
-        # Employee.all_objects.filter(deleted__isnull=True,laboratories__isnull=True)
+        # Employee.all_objects.filter(deleted__isnull=True,laboratory__isnull=True)
         # #just active users
-        users = Employee.all_objects.annotate(
-            labs=Count('laboratories')
-        ).filter(
-            Q(labs=0),
+        inactive_labs = Laboratory.all_objects.filter(deleted__isnull=True)
+        users = Employee.all_objects.filter(
+            ~Q(laboratory__in=inactive_labs),
             deleted__isnull=True,
         )
         inventories = Inventory.all_objects.filter(deleted__isnull=True)
@@ -183,6 +214,7 @@ def create(request,
         return render(request, template, context)
 
 
+@user_passes_test(edit_laboratory_check, login_url='internal:index')
 def edit(request,
          pk):
     if request.method == 'POST':
@@ -192,6 +224,11 @@ def edit(request,
         )
         aux_form = LaboratoryForm(request.POST or None, instance=instance)
         if aux_form.is_valid():
+            # here we add essay_methods to every employee of the new laboratory
+            for employee in aux_form.cleaned_data['employees']:
+                essay_methods = aux_form.cleaned_data['essay_methods']
+                employee.essay_methods.add(*essay_methods)
+                employee.save()
             aux_form.save()
             messages.success(
                 request, 'Se ha editado el laboratorio exitosamante')
@@ -207,12 +244,11 @@ def edit(request,
             pk=pk
         )
         #
-        all_users = Employee.all_objects.annotate(
-            labs=Count('laboratories')
-        ).filter(
+        inactive_labs = Laboratory.all_objects.filter(deleted__isnull=True)
+        all_users = Employee.all_objects.filter(
             # Get employees that do not belong to a laboratory
             # Or that belong to this laboratory
-            Q(labs=0) | Q(laboratories=laboratory.id),
+            ~Q(laboratory__in=inactive_labs) | Q(laboratory=laboratory.id),
             deleted__isnull=True,
         )
         selected_users = laboratory.employees.all()
@@ -238,6 +274,7 @@ def edit(request,
         return render(request, template, context)
 
 
+@user_passes_test(delete_laboratory_check, login_url='internal:index')
 def delete(request, pk):
     laboratory = get_object_or_404(Laboratory, pk=pk)
     laboratory.delete()
@@ -245,6 +282,7 @@ def delete(request, pk):
     return redirect('internal:laboratory.index')
 
 
+@user_passes_test(show_laboratory_check, login_url='internal:index')
 def show(request,
          pk):
     if request.method == 'POST':
