@@ -583,7 +583,7 @@ def validate_name(name):
     for c in name:
         if (not c.isalnum()) and (not c in ['_', ' ', '-', '&', '(',')', '$']):
             return False
-    if (name[len(name)-1] == '.'):
+    if (name[-1] == '.'):
         return False
     return True
 
@@ -596,13 +596,13 @@ def upload(request, id):
     if request.method == 'POST':
         myfile = request.FILES.get('myfile')
         if not myfile:
-            messages.error(request, 'Debe seleccionar un archivo!')
+            messages.error(request, 'Debe seleccionar un archivo')
             return redirect('internal:serviceRequest.upload', id)
 
         if len(myfile.name) >= 55:
             messages.error(
                 request,
-                'El nombre del archivo que intentó subir no debe exceder los 50 caracteres!'
+                'El nombre del archivo que intentó subir no debe exceder los 50 caracteres'
             )
             return redirect('internal:serviceRequest.upload', id)
 
@@ -618,7 +618,7 @@ def upload(request, id):
                     nameWithExtension = name
                 matches = RequestAttachment.all_objects.filter(
                     deleted__isnull=True, fileName=nameWithExtension)
-                if len(list(matches)) == 0:
+                if not matches:
                     requestAttach = RequestAttachment.all_objects.create(
                         request=sr_object,
                         description=description,
