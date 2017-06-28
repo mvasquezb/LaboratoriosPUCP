@@ -32,6 +32,7 @@ from xhtml2pdf import pisa
 import json as simplejson
 from datetime import datetime, timedelta
 from internal.permissions import user_passes_test
+from functools import reduce
 from internal.permissions.serviceRequest import *
 
 
