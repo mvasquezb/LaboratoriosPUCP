@@ -20,7 +20,7 @@
                     {% csrf_token %}
                     <div class="row">
                         <div class="col-lg-6">
-                            <label>Ensayo realizable - Muestra</label>
+                            <label>Ensayo realizable - Muestra (*)</label>
                           <select class="form-control m-b" name="essay" onchange="fillLabels(this.value)">
                               <option selected disabled>Escoja una opcion</option>
                               {% for actualEssay in essayies %}
@@ -106,10 +106,13 @@
                           </div> #}
                         </div>
                     <div class="row">
-                          <div class="col-lg-12">
-                              <input type="submit" value="Registrar" class="btn btn-primary">
-                              <a href="{{ url('internal:inventoryOrder.index') }}" class="btn btn-white">Cancelar</a>
-                          </div>
+                      <div class="col-md-12 row form-group">
+                        <p><strong>(*) Campos obligatorios</strong></p>
+                      </div>
+                      <div class="col-lg-12">
+                          <input type="submit" value="Registrar" class="btn btn-primary">
+                          <a href="{{ url('internal:inventoryOrder.index') }}" class="btn btn-white">Cancelar</a>
+                      </div>
                     </div>
                 </form>
             </div>

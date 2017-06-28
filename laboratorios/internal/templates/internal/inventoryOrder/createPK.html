@@ -33,9 +33,7 @@
                -->
                 <form id="myForm" action="{{ url('internal:inventoryOrder.create') }}" method="post" data-toggle="validator">
                     {% csrf_token %}
-
                     <div class="row">
-
                         <div class="col-lg-6">
                             <label>Ensayo realizable - Muestra</label>
                           <select class="form-control m-b" name="Fakeessay" value="{{actualInventoryOrder.id}}" onchange="fillLabels(this.value)">
@@ -47,11 +45,8 @@
                           <!--ABSOLUTAMENTE NECESARIO, POR NADA DEL MUNDO BORRAR-->
                           <input name="essay" value="{{ actualInventoryOrder.id }}" type="hidden"></input>
                           <input name="unsettled" value=True type="hidden"></input>
-
                         </div>
-
                     </div>
-
                   <!-- Si deseas mostrar los datos de la selecccion no se puede, Django no lo permite :( -->
                         <div class="ibox">
                           <div class="ibox-title">
@@ -60,15 +55,14 @@
                           <div class="ibox-content">
                             <div class="form-group">
                               <label>Nombre del Ensayo</label>
-                              <div class="text-primary" id="try1">{{actualInventoryOrder.essay.name}}</div>
+                              <input class="form-control" value="{{ actualInventoryOrder.essay.name }}" name="EssayName" disabled="true" type="text">
                             </div>
                             <div class="form-group">
                               <label>Descripción del Ensayo</label>
-                              <div class="text-primary" id="try2">{{actualInventoryOrder.essay.description}}</div>
+                              <input class="form-control" value="{{ actualInventoryOrder.essay.description }}" name="EssayDescription" disabled="true" type="text">
                             </div>
                           </div>
                         </div>
-
                         <div class="ibox">
                           <div class="ibox-title">
                             Muestra
@@ -76,23 +70,19 @@
                           <div class="ibox-content">
                             <div class="form-group">
                               <label>Codigo de la Muestra</label>
-                              <div class="text-primary">{{ actualInventoryOrder.sample.code }}</div>
+                              <input class="form-control" value="{{ actualInventoryOrder.sample.code }}" name="SampleCode" disabled="true" type="text">
                             </div>
                             <div class="form-group">
                               <label>Nombre de la Muestra</label>
-                              <div class="text-primary">{{ actualInventoryOrder.sample.name }}</div>
+                              <input class="form-control" value="{{ actualInventoryOrder.sample.name }}" name="SampleName" disabled="true" type="text">
                             </div>
                             <div class="form-group">
                               <label>Tipo de la Muestra</label>
-                              <div class="text-primary">{{ actualInventoryOrder.sample.sample_type.name }}</div>
-                            </div>
-                            <div class="form-group">
-                              <label>Cantidad</label>
-                              <div class="text-primary">{{ actualInventoryOrder.quantity }}</div>
+                              <input class="form-control" value="{{ actualInventoryOrder.sample.sample_type.name }}" name="SampleTypeName" disabled="true" type="text">
                             </div>
                             <div class="form-group">
                               <label>Laboratorio</label>
-                              <div class="text-primary">{{ actualInventoryOrder.sample.inventory.name }}</div>
+                              <input class="form-control" value="{{ actualInventoryOrder.sample.inventory.name }}" name="SampleLaboratory" disabled="true" type="text">
                             </div>
                           </div>
                         </div>
@@ -104,28 +94,35 @@
                           <div class="ibox-content">
                             <div class="form-group">
                               <label>Cliente</label>
-                              <div class="text-primary">{{ actualInventoryOrder.sample.request.client }}</div>
+                              <input class="form-control" value="{{ actualInventoryOrder.sample.request.client }}" name="RequestClient" disabled="true" type="text">
+                            </div>
+                            <div class="form-group">
+                              <label>Prioridad</label>
+                              <input class="form-control" value="{{ actualInventoryOrder.sample.request.priority }}" name="RequestPriority" disabled="true" type="text">
                             </div>
                             <div class="form-group">
                               <label>Supervisor</label>
-                              <div class="text-primary">{{ actualInventoryOrder.sample.request.supervisor }}</div>
+                              <input class="form-control" value="{{ actualInventoryOrder.sample.request.supervisor }}" name="RequestSupervisor" disabled="true" type="text">
                             </div>
                             <div class="form-group">
                               <label>Estado de la solicitud</label>
-                              <div class="text-primary">{{ actualInventoryOrder.sample.request.state }}</div>
+                              <input class="form-control" value="{{ actualInventoryOrder.sample.request.state }}" name="RequestState" disabled="true" type="text">
                             </div>
                             <div class="form-group">
                               <label>Observaciones</label>
-                              <div class="text-primary">{{ actualInventoryOrder.sample.request.observations or '-' }}</div>
+                              <input class="form-control" value="{{ actualInventoryOrder.sample.request.observations or '-' }}" name="RequestObservation" disabled="true" type="text">
                             </div>
                           </div>
                         </div>
 
                     <div class="row">
-                          <div class="col-md-offset-4">
-                              <input type="submit" value="Registrar" class="btn btn-primary">
-                              <a class="btn btn-w-m btn-white js-back-btn">Cancelar</a>
-                          </div>
+                      <div class="col-md-12 row form-group">
+                        <p><strong>(*) Campos obligatorios</strong></p>
+                      </div>
+                      <div class="col-md-offset-4">
+                        <input type="submit" value="Registrar" class="btn btn-primary">
+                        <a class="btn btn-w-m btn-white js-back-btn">Cancelar</a>
+                      </div>
                     </div>
                 </form>
             </div>

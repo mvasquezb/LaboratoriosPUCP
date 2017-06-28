@@ -40,10 +40,14 @@
                             </div>
                         </div>
                     </div>
+                    <div class="col-md-12 row form-group">
+                      <p><strong>(*) Campos obligatorios</strong></p>
+                    </div>
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="form-group">
                                 <input type="submit" id="submit_button" value="Registrar" class="btn btn-primary">
+                                <a href="{{ url('internal:essaymethod.index') }}" class="btn btn-white">Cancelar</a>
                             </div>
                         </div>
                     </div>
@@ -106,7 +110,6 @@ $(document).ready(function(){
         var x = document.getElementById("selectNumber1").selectedIndex;
         console.log(x);
         console.log(parameter_list[x-1]);
-        // console.log(event.srcElement.id);       // reflecting id of the obj source
         var description=parameter_list[x-1]['description'];
         var unit=parameter_list[x-1]['unit'];
         var parameter_id_gen=parameter_list[x-1]['id'];
@@ -196,7 +199,7 @@ $(document).ready(function(){
                                                 +'<label for=id_created_parameter_description_'+(created_parameters+1).toString()+' >Descripción:</label>'
                                                 +'<input class="form-control small-parameter-input" type="text" name="description" id=id_created_parameter_description_'+(created_parameters+1).toString()+' /><br>'
                                                 +'<label for=id_created_parameter_unit_'+(created_parameters+1).toString()+' >Unidades:</label>'
-                                                +'<input class="form-control small-parameter-input" type="text" name="unit" id=id_created_parameter_unit_'+(created_parameters+1).toString()+' />'
+                                                +'<input class="form-control small-parameter-input" type="number" name="unit" id=id_created_parameter_unit_'+(created_parameters+1).toString()+' />'
                                                 +'</small>');
     created_parameters=created_parameters+1;
     });

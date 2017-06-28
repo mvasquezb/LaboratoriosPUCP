@@ -27,8 +27,12 @@
                                 <div class="help-block with-errors"></div>
                             </div>
                         </div>
+                        <div class="col-md-12 row form-group">
+                          <p><strong>(*) Campos obligatorios</strong></p>
+                        </div>
                     </div>
                     <input type="submit" id=submit_button value="Grabar cambios" class="btn btn-primary">
+                    <a href="{{ url('internal:essay.index') }}" class="btn btn-white">Cancelar</a>
                     <div id="json_div" style="display: none;">
                         <form id="json_form" novalidate>
                         <p><label for="id_js_data">js_data:</label> <input type="text" name="js_data" maxlength="1024" id="id_js_data"/></p>
@@ -124,7 +128,7 @@ $(document).ready(function(){
                     // Sección de código para agregar el bloque html de un parámetro perteneciente al método seleccionado
                     $('#parameters_'+method_id_gen.toString()).append('<br>'
                                             +'<small class="m-r">'
-                                                +'Descripcion: '+parameter_list[i]['description']
+                                                +'Descripción: '+parameter_list[i]['description']
                                                 +'  Unidades: '+parameter_list[i]['unit']
                                                 +'</small>');
                 }
@@ -183,7 +187,7 @@ $(document).ready(function(){
                     // Sección de código para agregar el bloque html de un parámetro perteneciente al método seleccionado
                     $('#parameters_'+method_id_gen.toString()).append('<br>'
                                             +'<small class="m-r">'
-                                                +'Descripcion: '+parameter_list[i]['description']
+                                                +'Descripción: '+parameter_list[i]['description']
                                                 +'  Unidades: '+parameter_list[i]['unit']
                                                 +'</small>');
                 }

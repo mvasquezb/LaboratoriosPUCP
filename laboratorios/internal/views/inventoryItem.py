@@ -8,8 +8,11 @@ from internal.models import *
 from internal.views.forms import (
     InventoryItemEditForm
 )
+from internal.permissions import user_passes_test
+from internal.permissions.inventoryItem import *
 
 
+@user_passes_test(index_inventory_item_check, login_url='internal:index')
 def index(request,
           template='internal/inventoryItem/index.html',
           extra_context=None):
@@ -22,6 +25,8 @@ def index(request,
         context.update(extra_context)
     return render(request, template, context)
 
+
+@user_passes_test(show_inventory_item_check, login_url='internal:index')
 def show(request,
          pk,
          template='internal/inventoryItem/show.html'):
@@ -34,6 +39,8 @@ def show(request,
     }
     return render(request, template, context)
 
+
+@user_passes_test(delete_inventory_item_check, login_url='internal:index')
 def delete(request, pk):
     inventoryItems = get_object_or_404(
         InventoryItem,
@@ -43,6 +50,8 @@ def delete(request, pk):
 
     return redirect('internal:inventoryItem.index')
 
+
+@user_passes_test(edit_inventory_item_check, login_url='internal:index')
 def edit(request, pk,
          template='internal/inventoryItem/edit.html'):
 

@@ -14,55 +14,46 @@
   <div class="row">
     <div class="col-lg-12">
         <div class="ibox float-e-margins">
-            <div class="ibox-content">
-              <div class="row">
-                <div class="col-md-12">
-                  <div class="form-group">
-                              <label>Codigo de la Muestra</label>
-                              <div class="text-primary">{{ inventoryItem.sample.code or '-' }}</div>
-                            </div>
-                            <div class="form-group">
-                              <label>Nombre de la Muestra</label>
-                              <div class="text-primary">{{ inventoryItem.sample.name }}</div>
-                            </div>
-                            <div class="form-group">
-                              <label>Tipo de la Muestra</label>
-                              <div class="text-primary">{{ inventoryItem.sample.sample_type.name }}</div>
-                            </div>
-                            <div class="form-group">
-                              <label>Cantidad</label>
-                              <div class="text-primary">{{ inventoryItem.sample.sample_type.name }}</div>
-                            </div>
-                            <div class="form-group">
-                              <label>Laboratorio</label>
-                              <div class="text-primary">{{ inventoryItem.quantity }}</div>
-                            </div>
-
-                          </div>
-                        </div>
-
+          <div class="ibox-content">
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label>Codigo de la Muestra</label>
+                  <input class="form-control" value="{{ inventoryItem.sample.code or '-' }}" name="SampleCode" disabled="true" type="text">
+                </div>
+                <div class="form-group">
+                  <label>Nombre de la Muestra</label>
+                  <input class="form-control" value="{{ inventoryItem.sample.name }}" name="SampleName" disabled="true" type="text">
+                </div>
+                <div class="form-group">
+                  <label>Tipo de la Muestra</label>
+                  <input class="form-control" value="{{ inventoryItem.sample.sample_type.name }}" name="SampleTypeName" disabled="true" type="text">
+                </div>
+                <div class="form-group">
+                  <label>Laboratorio</label>
+                  <input class="form-control" value="{{ inventoryItem.sample.inventory.name }}" name="SampleLaboratory" disabled="true" type="text">
+                </div>
+              </div>
+            </div>
             <form id="myForm" action="{{ url('internal:inventoryItem.edit', inventoryItem.id) }}" method="post" data-toggle="validator">
                     {% csrf_token %}
-
-
                     <div class="row">
                         <div class="col-lg-6">
                             <div class="form-group">
-                                <label>Estado de la muestra</label>
+                                <label>Estado de la muestra (*)</label>
                                 <input value="{{ inventoryItem.state or '' }}"  type="text" class="form-control" name="state" required data-error="El Estado es obligatorio" placeholder="Estado">
                                 <div class="help-block with-errors"></div>
                             </div>
-
                         </div>
-
                     </div>
-
                     <div class="row">
-                          <div class="col-lg-12 text-center">
-                              <input type="submit" value="Registrar" class="btn btn-primary">
-
-                              <a class="btn btn-w-m btn-white js-back-btn">Cancelar</a>
-                          </div>
+                      <div class="col-md-12 row form-group">
+                        <p><strong>(*) Campos obligatorios</strong></p>
+                      </div>
+                      <div class="col-lg-12 text-center">
+                          <input type="submit" value="Registrar" class="btn btn-primary">
+                          <a class="btn btn-w-m btn-white js-back-btn">Cancelar</a>
+                      </div>
                     </div>
                 </form>
                 </div>
