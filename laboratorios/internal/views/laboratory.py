@@ -196,11 +196,11 @@ def create(request,
             # return HttpResponse(form.errors)
     else:
         # users =
-        # Employee.all_objects.filter(deleted__isnull=True,laboratories__isnull=True)
+        # Employee.all_objects.filter(deleted__isnull=True,laboratory__isnull=True)
         # #just active users
         inactive_labs = Laboratory.all_objects.filter(deleted__isnull=True)
         users = Employee.all_objects.filter(
-            ~Q(laboratories__in=inactive_labs),
+            ~Q(laboratory__in=inactive_labs),
             deleted__isnull=True,
         )
         inventories = Inventory.all_objects.filter(deleted__isnull=True)
@@ -248,7 +248,7 @@ def edit(request,
         all_users = Employee.all_objects.filter(
             # Get employees that do not belong to a laboratory
             # Or that belong to this laboratory
-            ~Q(laboratories__in=inactive_labs) | Q(laboratories=laboratory.id),
+            ~Q(laboratory__in=inactive_labs) | Q(laboratory=laboratory.id),
             deleted__isnull=True,
         )
         selected_users = laboratory.employees.all()
