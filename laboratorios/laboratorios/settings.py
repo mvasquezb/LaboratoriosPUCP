@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'auditlog',
     'internal',
     'xhtml2pdf',
+    'social_django',
 ]
 
 MIDDLEWARE = [
@@ -76,6 +77,8 @@ TEMPLATES = [
                 # 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'internal.context_processors.auth',
+                'social_django.context_processors.backends',
+                'social_django.context_processors.login_redirect',
             ],
         },
     },
@@ -173,3 +176,35 @@ LOGIN_REDIRECT_URL = reverse_lazy('internal:index')
 LOGOUT_URL = reverse_lazy('internal:logout')
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+AUTHENTICATION_BACKENDS = (
+    'social_core.backends.google.GoogleOAuth2',
+    'django.contrib.auth.backends.ModelBackend',
+)
+
+LOGIN_EXEMPT_URLS = (
+    r'^oauth/.*',
+)
+
+# SOCIAL_AUTH_USER_MODEL = '.User'
+SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = []
+
+SOCIAL_AUTH_GOOGLE_PLUS_AUTH_EXTRA_ARGUMENTS = {
+    'access_type': 'offline'
+}
+
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = os.getenv('SOCIAL_AUTH_GOOGLE_OAUTH2_KEY')
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.getenv('SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET')
+
+# SOCIAL_AUTH_STORAGE = 'social_django_mongoengine.models.DjangoStorage'
+SOCIAL_AUTH_PIPELINE = (
+    'social_core.pipeline.social_auth.social_details',
+    'social_core.pipeline.social_auth.social_uid',
+    'social_core.pipeline.social_auth.social_user',
+    'social_core.pipeline.user.get_username',
+    'social_core.pipeline.social_auth.associate_by_email',
+    # 'social_core.pipeline.user.create_user',
+    'social_core.pipeline.social_auth.associate_user',
+    'social_core.pipeline.social_auth.load_extra_data',
+    'social_core.pipeline.user.user_details',
+)
