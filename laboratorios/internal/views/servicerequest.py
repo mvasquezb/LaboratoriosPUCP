@@ -32,6 +32,7 @@ from xhtml2pdf import pisa
 import json as simplejson
 from datetime import datetime, timedelta
 from internal.permissions import user_passes_test
+from functools import reduce
 from internal.permissions.serviceRequest import *
 
 
@@ -577,6 +578,16 @@ def workload_view_per_request(request,
     }
     return render(request, template, context)
 
+def validate_name(name):
+    if (name.upper() in ['.','..','CON','PRN','AUX','CLOCK$','NUL','COM1','COM2','COM3','COM4','COM5','COM6','COM7','COM8','COM9','LPT1','LPT2','LPT3','LPT4','LPT5','LPT6','LPT7','LPT8','LPT9','LST','KEYBD$','SCREEN$','$IDLE$','CONFIG$']):
+        return False
+    for c in name:
+        if (not c.isalnum()) and (not c in ['_', ' ', '-', '&', '(',')', '$']):
+            return False
+    if (name[-1] == '.'):
+        return False
+    return True
+
 
 def upload(request, id):
     sr_object = get_object_or_404(
@@ -586,43 +597,80 @@ def upload(request, id):
     if request.method == 'POST':
         myfile = request.FILES.get('myfile')
         if not myfile:
-            messages.error(request, 'Debe seleccionar un archivo!')
+            messages.error(request, 'Debe seleccionar un archivo')
             return redirect('internal:serviceRequest.upload', id)
 
         if len(myfile.name) >= 55:
             messages.error(
                 request,
-                'El nombre del archivo que intentó subir no debe exceder los 50 caracteres!'
+                'El nombre del archivo que intentó subir no debe exceder los 50 caracteres'
             )
             return redirect('internal:serviceRequest.upload', id)
 
         # fs = FileSystemStorage()
         description = request.POST.get('text_description')
         name = request.POST.get('text_name')
-        requestAttach = RequestAttachment.all_objects.create(
-            request=sr_object,
-            description=description,
-            fileName="default"
-        )
-        fs = requestAttach.file
-        filename = fs.save(myfile.name, myfile)
+
         if name:
-            nameWithExtension = name + \
-                requestAttach.file.name[requestAttach.file.name.rfind("."):]
-            matches = RequestAttachment.all_objects.filter(
-                deleted__isnull=True, fileName=nameWithExtension)
-            if len(list(matches)) == 0:
-                requestAttach.fileName = nameWithExtension
-                requestAttach.save()
+            if validate_name(name):
+                if ('.' in myfile.name):
+                    nameWithExtension = name + myfile.name[myfile.name.rfind("."):]
+                else:
+                    nameWithExtension = name
+                matches = RequestAttachment.all_objects.filter(
+                    deleted__isnull=True, fileName=nameWithExtension)
+                if not matches:
+                    requestAttach = RequestAttachment.all_objects.create(
+                        request=sr_object,
+                        description=description,
+                        fileName="default"
+                    )
+                    fs = requestAttach.file
+                    filename = fs.save(nameWithExtension, myfile)
+                    requestAttach.fileName = nameWithExtension
+                    requestAttach.save()
+                else:
+                    messages.error(
+                        request,
+                        'El nombre del archivo que intentó subir ya existe'
+                    )
+                    return redirect('internal:serviceRequest.upload', id)
             else:
                 messages.error(
                     request,
-                    'El nombre del archivo que intentó subir ya existe'
+                    'El nombre del archivo que intentó subir no es válido.'
                 )
                 return redirect('internal:serviceRequest.upload', id)
         else:
-            requestAttach.fileName = requestAttach.file.name.split('/')[-1]
-            requestAttach.save()
+            if ('.'in myfile.name):
+                valido = validate_name(myfile.name[:myfile.name.rfind(".")])
+            else:
+                valido = validate_name(myfile.name)
+            if (valido):
+                matches = RequestAttachment.all_objects.filter(
+                    deleted__isnull=True, fileName=myfile.name)
+                if len(list(matches)) == 0:
+                    requestAttach = RequestAttachment.all_objects.create(
+                        request=sr_object,
+                        description=description,
+                        fileName="default"
+                    )
+                    fs = requestAttach.file
+                    fs.save(myfile.name, myfile)
+                    requestAttach.fileName = requestAttach.file.name.split('/')[-1]
+                    requestAttach.save()
+                else:
+                    messages.error(
+                        request,
+                        'El nombre del archivo que intentó subir ya existe'
+                    )
+                    return redirect('internal:serviceRequest.upload', id)
+            else:
+                messages.error(
+                    request,
+                    'El nombre del archivo que intentó subir no es válido.'
+                )
+                return redirect('internal:serviceRequest.upload', id)
         messages.success(
             request,
             'Se ha subido el archivo "' +
