@@ -16,6 +16,7 @@
         <div class="ibox float-e-margins">
             <div class="ibox-content">
             {{ form.errors }}
+            {{ form.as_p() }}
                 <form id="myForm" action="{{ url('internal:employee.edit', custom_employee.id) }}" method="post" data-toggle="validator">
                     {% csrf_token %}
 
@@ -78,7 +79,9 @@
                                         {% for laboratory in laboratories %}
                                           <tr>
                                             <td>{{ laboratory.name }}</td>
-                                            <td><input {% if laboratory in selected_laboratories %}checked{% endif %} type="checkbox" name="{{ laboratory.pk }}" class="i-checks checkbox_laboratory"></td>
+                                            <td>
+                                              <input {% if laboratory == selected_laboratory %}checked{% endif %} type="radio" name="laboratory" value="{{ laboratory.pk }}" class="i-checks checkbox_laboratory">
+                                            </td>
                                           </tr>
                                         {% endfor %}
                                       </tbody>

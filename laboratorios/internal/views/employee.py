@@ -38,7 +38,7 @@ def show(request,
          template='internal/employee/show.html'):
     employee = get_object_or_404(Employee, pk=pk)
     context = {
-        'selected_laboratories': employee.laboratories.all(),
+        'selected_laboratory': employee.laboratory,
         'selected_roles': employee.roles.all(),
         'custom_employee': employee
     }
@@ -80,7 +80,7 @@ def edit(request, pk,
     form = EmployeeForm(request.POST or None, instance=employee)
     context = {
         'laboratories': Laboratory.all_objects.filter(deleted__isnull=True),
-        'selected_laboratories': employee.laboratories.all(),
+        'selected_laboratory': employee.laboratory,
         'selected_roles': employee.roles.all(),
         'roles': Role.all_objects.filter(deleted__isnull=True),
         'form': form,

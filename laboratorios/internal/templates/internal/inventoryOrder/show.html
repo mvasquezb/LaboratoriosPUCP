@@ -95,7 +95,7 @@
                       <div class="col-lg-6">
                         <div class="form-group">
                           <label>Metodos de Ensayo</label>
-                          <select name="laboratories" class="form-control" multiple disabled="True">
+                          <select name="laboratory" class="form-control" multiple disabled="True">
                             {% for actual_essay_methods in inventoryOrder.essay.essay.essay_methods.all() %}
                             <option value="{{ actual_essay_methods.id }}">{{ actual_essay_methods.name }}</option>
                             {% endfor %}

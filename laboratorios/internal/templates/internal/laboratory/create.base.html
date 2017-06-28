@@ -37,7 +37,7 @@
               {% else %}
               <div class="col-md-12">
                 <label>Seleccione al personal para el nuevo laboratorio</label><br>
-                
+
                 <div class="table-responsive">
                   <table class="table table-striped table-bordered">
                     <thead>
@@ -64,7 +64,7 @@
                       {% endfor %}
                     </tbody>
                   </table>
-                  
+
                   <div class="form-group">
                     <label>Responsable del laboratorio</label>
                     <span class="help-block">El responsable es un empleado perteneciente al laboratorio</span>
@@ -72,13 +72,13 @@
                       <option selected>Ningún responsable seleccionado</option>
                       {% for selected_user in selected_users %}
                         <option data-id="{{ selected_user.pk }}"
-                        {% if laboratory and selected_user.pk == laboratory.supervisor.pk %}selected{% endif %}>
+                        {% if laboratory and selected_user == laboratory.supervisor %}selected{% endif %}>
                           {{ selected_user }}
                         </option>
                       {% endfor %}
                     </select>
                   </div>
-                  
+
                 </div>
 
               </div>
@@ -194,11 +194,11 @@
             </tr>
           </thead>
           <tbody class="roles_content">
-            
+
           </tbody>
         </table>
         <div class="empty_message">
-          
+
         </div>
       </div>
       <div class="modal-footer">
@@ -246,17 +246,17 @@
                 </tr>
               </tbody>
             </table>
-            
+
             <table class="table inventory_table">
               <thead class="header_table">
-                
+
               </thead>
               <tbody class="content_table">
-                
+
               </tbody>
             </table>
             <div class="inventory_empty">
-              
+
             </div>
           </div>
         </div>
