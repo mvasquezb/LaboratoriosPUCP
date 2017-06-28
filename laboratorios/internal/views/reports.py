@@ -68,21 +68,23 @@ def report_parameters(request,
     # 2.- Dictionary of selected filter
     # 3.- Expected type of report and chart -- to be seen lmao
     # 4.- filter selection structure, as context itself is immutable
+    json_form = JSONField(request.POST or None)
 
     context = {
         'filter':filter_selection,
         'filter_string':filter_selection_string,
         'data_list':data_list,
         'criteria_string':criteria_selection_string,
+        'json_form': json_form,
         }
     if request.method == 'POST':
-        ## processing of shit right here
-        print('hola?')
-        print(request.body)
-        js_data = json.loads(request.body.decode('utf-8'))['js_data']
+        print('hello?')
+        js_data = json.loads(json_form['js_data'].value())
         if js_data is not None:
-            print(js_data)
-            return redirect(reverse('internal:reports.results',kwargs={'settings_string': js_data}))
+            request.session['report_settings']=js_data
+            print(request.session['report_settings'])
+            request.session.modified = True
+            return redirect(reverse('internal:reports.results'))
         else:
             print("que fuentes tmr?")
     return render(request,template,context)
@@ -91,10 +93,14 @@ def report_parameters(request,
 
 def processing_parameters(
     request,
-    settings_string,
     template='internal/reports/results.html'
     ):
-    print(settings_string)
+    try:
+        settings=request.session.get('report_settings',[])
+        print(settings)
+        del request.session['report_settings']
+    except KeyError:
+        print('not there yet')
     context={}
 
     return render(request,template,context)
