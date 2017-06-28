@@ -58,7 +58,7 @@
                 <label class="custom-filter-label">{{ filter_string[single_filter] }}</label>
                 <select class="custom-multiselect" id="l_{{ loop.index0 }}" multiple="multiple">
                   {% for data in data_list[single_filter] %}
-                  <option value="{{ data }}">{{ data }}</option>
+                  <option value="{{ data.str }}">{{ data.str }}</option>
                   {% endfor %}
                 </select>
               </div>
@@ -91,7 +91,13 @@
 <script type="text/javascript" src="{{static('js/moment.js')}}"></script>
 <script type="text/javascript" src="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.js"></script>
 <script>
-$(function () {
+
+
+
+
+$(document).ready(function () {
+  $('.custom-multiselect').multiselect();
+  $(function () {
   var start = moment().subtract(29, 'days');
   var end = moment();
 
@@ -114,11 +120,32 @@ $(function () {
 
   cb(start, end);
 
-});
-</script>
-<script>
-$(document).ready(function () {
-  $('.custom-multiselect').multiselect();
+    });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   function getCookie(name) {
     var cookieValue = null;
@@ -141,24 +168,6 @@ $(document).ready(function () {
 
   var filter = {{ filter | safe }};
   var filter_string = {{ filter_string | safe }};
-  var data_list = {{ data_list | safe }};
-
-  $('input.checkbox_filters:checkbox').on('ifChanged',function(){
-    console.log($(this).is(':checked'));
-    if ($(this).is(':checked')){
-        var i = 0;
-        var id = parseInt($(this).attr('id').replace('p_', ''));
-        console.log(id);
-        for (var i=0; i<filter.length;i++){
-            if (i != id){
-                console.log(i);
-                console.log($('#p_'+i.toString()).is(':checked'));
-                console.log($('#p_'+i.toString()).prop(':checked',false));
-            }
-        }
-    }
-   });
-
   
 
   $('#submit_button').click(function(){
@@ -166,7 +175,7 @@ $(document).ready(function () {
     var criteria_index = 0;
     var selected_filters=[];
     for (var i = 0; i < criteria_string.length; i++) {
-      if ($('p_' + i.toString()).is('checked')){
+      if ($('#p_' + i.toString()).is(':checked')){
         break;
       } else {
         criteria_index++;
@@ -187,8 +196,12 @@ $(document).ready(function () {
             selected_filters.push([]);
         }
       }
+    var startDate = $('#reportrange').data('daterangepicker').startDate._d;
+    var endDate = $('#reportrange').data('daterangepicker').endDate._d;
     var sending_dict = {
         criteria: criteria_index,
+        start_date:startDate,
+        end_date:endDate,
         filters_data:selected_filters,
     }
     console.log(sending_dict);
