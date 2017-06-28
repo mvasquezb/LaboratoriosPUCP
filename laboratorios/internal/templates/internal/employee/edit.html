@@ -16,7 +16,6 @@
         <div class="ibox float-e-margins">
             <div class="ibox-content">
             {{ form.errors }}
-            {{ form.as_p() }}
                 <form id="myForm" action="{{ url('internal:employee.edit', custom_employee.id) }}" method="post" data-toggle="validator">
                     {% csrf_token %}
 
