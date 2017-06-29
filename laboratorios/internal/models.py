@@ -516,6 +516,7 @@ class Quotation(SafeDeleteModel):
 
     audit_log = AuditlogHistoryField()
     request = models.ForeignKey(ServiceRequest, on_delete=models.CASCADE)
+    observations = models.TextField(max_length=500, null=True, blank=True)
     registered_date = models.DateTimeField(
         auto_now_add=True,
         auto_now=False,
