@@ -82,6 +82,13 @@ class SampleForm(ModelForm):
     class Meta:
         model = Sample
         fields = ['name', 'sample_type', 'inventory', 'request', 'essay_field']
+        labels = {
+            'name': 'Nombre',
+            'sample_type': 'Tipo de Muestra',
+            'inventory': 'Inventario',
+            'request': 'Orden de Servicio',
+            'essay_field': 'Método de Ensayo',
+        }
 
     def save(self, commit=True):
         sample = super(SampleForm, self).save(commit=commit)
@@ -168,12 +175,22 @@ class SampleEditForm(ModelForm):
     class Meta:
         model = Sample
         fields = ['name', 'sample_type', 'inventory']
+        labels = {
+            'name': 'Nombre',
+            'sample_type': 'Tipo de Muestra',
+            'inventory': 'Inventario',
+            # 'request': 'Orden de Servicio',
+            # 'essay_field': 'Método de Ensayo',
+        }
 
 
 class EssayFillSelectionForm(ModelForm):
     class Meta:
         model = EssayFill
         fields = ['essay']
+        labels = {
+            'essay': 'Ensayo',
+        }
 
     def save(self, commit=True):
         # verify that methods belong to particular essay
@@ -182,11 +199,11 @@ class EssayFillSelectionForm(ModelForm):
             deleted__isnull=True,
             pk=self.data['essay']
         )
-        EssayFill.all_objects.filter(
+        essay_fills = EssayFill.all_objects.filter(
             deleted__isnull=True,
             essay=myself.essay
         )
-        methods_count = essay_fills
+        methods_count = essay_fills.count()
         essay_methods = EssayMethod.all_objects.filter(
             deleted__isnull=True,
             essays=essay
