@@ -697,7 +697,7 @@ class ExtraRequestConcept(SafeDeleteModel):
 
     auditlog = AuditlogHistoryField()
     request = models.ForeignKey(
-        ServiceRequest,
+        Quotation,
         on_delete=models.CASCADE,
         related_name='extra_concepts'
     )
