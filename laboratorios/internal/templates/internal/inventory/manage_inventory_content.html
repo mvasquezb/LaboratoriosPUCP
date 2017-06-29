@@ -107,7 +107,7 @@
                       <th>{{ article.servicelife }} {{ article.servicelife_unit }}</th>
                       {% set get_out = {'value': False} %}
                       {% for match in matches %}
-                        {% if article == match.article.supply %}
+                        {% if article == match.article.equipment %}
                           {% if get_out.update({'value': True}) %}{% endif %}
                           <th>{{ match.quantity }}</th>
                           {% break %}
