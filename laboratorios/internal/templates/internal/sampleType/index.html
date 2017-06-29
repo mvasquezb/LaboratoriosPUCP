@@ -26,12 +26,14 @@
                 </span>
               </div>
           </div>
+          {% if perms.internal.add_sampletype %}
           <div class="col-md-2 col-md-offset-7">
             <a class="btn btn-primary pull-right" href="{{ url('internal:sampleType.create') }}">
               <i class="fa fa-plus"></i>
               Crear Tipo de Muestra
             </a>
           </div>
+          {% endif %}
         </div>
         <div class="table-responsive">
             <table class="table table-striped table-bordered" id="sample-table">
@@ -67,10 +69,14 @@
                     </td>
                     <td class="text-left footable-visible footable-last-column">
                       <div class="btn-group">
-                        {% if not sampleType.deleted %}
+                      {% if not sampleType.deleted %}
+                        {% if perms.internal.change_sampletype %}
                         <a  href="{{ url('internal:sampleType.edit', sampleType.id) }}" class="btn-white btn"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+                        {% endif %}
+                        {% if perms.internal.delete_sampletype %}
                         <a class="myBtn1 btn-white btn" data-toggle="modal" data-target="#myModal1" data-url="{{ url('internal:sampleType.delete', sampleType.id) }}"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
                         {% endif %}
+                      {% endif %}
                       </div>
                     </td>
                   </tr>

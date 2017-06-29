@@ -25,12 +25,13 @@
                 </span>
               </div>
           </div>
+          {% if perms.internal.index_inventoryorder %}
           <div class="col-md-2 col-md-offset-7">
-
             <a class="btn btn-primary pull-right" href="{{ url('internal:inventoryOrder.index') }}">
               Solicitudes de Almacenamiento
             </a>
           </div>
+          {% endif %}
         </div>
         <div class="table-responsive">
             <table class="table table-striped table-bordered" id="inventoryOrder_table">
@@ -65,9 +66,15 @@
 
                     <td class="text-left footable-visible footable-last-column">
                       <div class="btn-group">
+                        {% if perms.internal.show_inventoryitem %}
                         <a href="{{ url('internal:inventoryItem.show', inventoryItem.id) }}" class="btn-white btn"><i class="fa fa-eye" aria-hidden="true"></i></a>
+                        {% endif %}
+                        {% if perms.internal.change_inventoryitem %}
                         <a href="{{ url('internal:inventoryItem.edit', inventoryItem.id) }}" class="btn-white btn"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+                        {% endif %}
+                        {% if perms.internal.delete_inventoryitem %}
                         <a class="myBtn1 btn-white btn" data-toggle="modal1" data-target="#myModal1" data-url="{{ url('internal:inventoryItem.delete', inventoryItem.id) }}"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+                        {% endif %}
                       </div>
                     </td>
                   </tr>
