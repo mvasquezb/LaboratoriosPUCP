@@ -216,7 +216,7 @@ def client_group(request,context,settings):
     return context
 
 
-def sample_group(context,settings):
+def sample_group(request, context,settings):
     # Columnas
     table_label=['Tipo de muestra', 'Número de Muestras','Promedio de Métodos por Muestra','Costo acumulado de Métodos','Costo promedio por Método']
     table_matrix=[]
