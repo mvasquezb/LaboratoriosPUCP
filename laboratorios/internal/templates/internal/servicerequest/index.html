@@ -19,23 +19,25 @@
       <div class="ibox-content">
         <div class="row">
           <div class="col-md-3">
-          <div class="input-group">
-                 <input type="text" class="form-control input-sm m-b-xs" id="mysearch" placeholder="Buscar">
-                <span class="input-group-addon">
-                    <i class="fa fa-search"></i>
-                </span>
-              </div>
+            <div class="input-group">
+              <input type="text" class="form-control input-sm m-b-xs" id="mysearch" placeholder="Buscar">
+              <span class="input-group-addon">
+                <i class="fa fa-search"></i>
+              </span>
             </div>
-              <div class="col-md-4 col-md-offset-5 text-right">
-                <a class="btn btn-primary" href="{{ url('internal:servicerequest.select_client') }}">
-            <i class="fa fa-plus"></i>
+          </div>
+          <div class="col-md-4 col-md-offset-5 text-right">
+          {% if perms.internal.add_servicerequest %}
+            <a class="btn btn-primary" href="{{ url('internal:servicerequest.select_client') }}">
+              <i class="fa fa-plus"></i>
               Crear Solicitud
             </a>
+            {% endif %}
             <a class="btn btn-primary" href="{{ url('internal:servicerequest.workload_view_per_request') }}">
               <i class="fa fa-search"></i>
               Ver Carga Laboral
             </a>
-              </div>
+          </div>
         </div>
         <div class="table-responsive">
             <table class="table table-striped table-bordered" id="request-table">
@@ -73,16 +75,22 @@
                     </td>
                     <td class="text-left">
                       <div class="btn-group">
+                        {% if perms.internal.show_servicerequest %}
                         <a  href="{{ url('internal:servicerequest.show', servicerequest.id) }}" class="btn-white btn" title="Visualizar">
                           <i class="fa fa-eye" aria-hidden="true"></i>
                         </a>
+                        {% endif %}
                         {% if not servicerequest.deleted %}
+                          {% if perms.internal.change_servicerequest %}
                           <a  href="{{ url('internal:servicerequest.edit', servicerequest.id) }}" class="btn-white btn" title="Editar">
                             <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
                           </a>
+                          {% endif %}
+                          {% if perms.internal.delete_servicerequest %}
                           <a class="myBtn1 btn-white btn" data-toggle="modal" data-target="#myModal1" data-url="{{ url('internal:servicerequest.delete', servicerequest.id) }}" title="Eliminar">
                             <i class="fa fa-trash-o" aria-hidden="true"></i>
                           </a>
+                          {% endif %}
                           <a class="btn-white btn" href="{{ url('internal:servicerequest.approve', servicerequest.id) }}">
                             Aprobar
                           </a>

@@ -25,13 +25,14 @@
                 </span>
               </div>
           </div>
+          {% if perms.internal.add_laboratory %}
           <div class="col-md-2 col-md-offset-7">
             <a class="btn btn-primary pull-right" href="{{ url('internal:laboratory.create') }}">
             <i class="fa fa-plus"></i>
             Crear laboratorio
           </a>
           </div>
-
+          {% endif %}
         </div>
         <div class="table-responsive">
             <table class="table table-striped table-bordered" id="lab-table">
@@ -72,16 +73,22 @@
                     </td>
                     <td class="text-left footable-visible footable-last-column">
                       <div class="btn-group">
+                        {% if perms.internal.show_laboratory %}
                         <a  href="{{ url('internal:laboratory.show', laboratory.id) }}" class="btn-white btn">
                           <i class="fa fa-eye" aria-hidden="true"></i>
                         </a>
+                        {% endif %}
                         {% if not laboratory.deleted %}
-                        <a  href="{{ url('internal:laboratory.edit', laboratory.id) }}" class="btn-white btn">
-                          <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
-                        </a>
-                        <a class="myBtn1 btn-white btn" data-toggle="modal" data-target="#myModal1" data-url="{{ url('internal:laboratory.delete', laboratory.id) }}">
-                          <i class="fa fa-trash-o" aria-hidden="true"></i>
-                        </a>
+                          {% if perms.internal.change_laboratory %}
+                          <a  href="{{ url('internal:laboratory.edit', laboratory.id) }}" class="btn-white btn">
+                            <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                          </a>
+                          {% endif %}
+                          {% if perms.internal.delete_laboratory %}
+                          <a class="myBtn1 btn-white btn" data-toggle="modal" data-target="#myModal1" data-url="{{ url('internal:laboratory.delete', laboratory.id) }}">
+                            <i class="fa fa-trash-o" aria-hidden="true"></i>
+                          </a>
+                          {% endif %}
                         {% endif %}
                       </div>
                     </td>
