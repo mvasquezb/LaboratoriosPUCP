@@ -17,6 +17,7 @@ from internal.permissions.inventoryOrder import *
 def index(request,
           template='internal/inventoryOrder/index.html',
           extra_context=None):
+    #inventoryOrders = InventoryOrder.all_objects.order_by('essay__sample__name')
     inventoryOrders = InventoryOrder.all_objects.filter(
         deleted__isnull=True,
         unsettled=True
@@ -128,41 +129,38 @@ def edit(request, pk1, pk,
     return render(request, template, context)
 
 
-def approve(request, pk):
+def approve(request, pk, pk2):
     inventoryOrder = get_object_or_404(
         InventoryOrder.all_objects.filter(deleted__isnull=True),
         pk=pk
     )
-    inventoryOrder.unsettled = False
-    # Falta crear añadir inventory item
-    # stored = InventoryItem.__new__()
 
-    # newInventoryItem = InventoryItem( sample = inventoryOrder.essay.sample , quantity = inventoryOrder.essay.quantity)
+    inventoryOrder.unsettled = False
+    # Creo inventory Item
     newInventoryItem = InventoryItem(
         sample=inventoryOrder.essay.sample,
         quantity=inventoryOrder.essay.quantity
     )
-    # newInventoryItem = InventoryItem( inventoryOrder.essay.sample._get_pk_val , inventoryOrder.essay.quantity)
-
     newInventoryItem.save()
+
+    #Busco el estado de revisando muestras
+    newState = get_object_or_404(
+        ServiceRequestState.all_objects.filter(slug='review_sample'),
+    )
+
+    #Modifico el estado del la solicitud
+    changeRequest = get_object_or_404(
+        ServiceRequest.all_objects.filter(deleted__isnull=True),
+        pk=pk2
+    )
+    changeRequest.state = newState
+
+    #Guardo los cambios
+    changeRequest.save()
     inventoryOrder.save()
+
     messages.success(request, 'Se almaceno la muestra con exito!')
     return redirect('internal:inventoryOrder.index')
-
-# def create(request,
-#           template='internal/employee/create.html'):
-#    form = EmployeeForm(request.POST or None)
-#    context = {
-#        'laboratories': Laboratory.all_objects.filter(deleted__isnull=True),
-#        'roles': Role.all_objects.filter(deleted__isnull=True),
-#        'form': form
-#    }
-#    if request.method == 'POST':
-#        if form.is_valid():
-#            form.save()
-#            messages.success(request, 'Se ha creado el empleado exitosamante!')
-#            return redirect('internal:employee.index')
-#    return render(request, template, context)
 
 
 def reject(request, pk):
