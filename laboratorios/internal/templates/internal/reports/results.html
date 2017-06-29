@@ -9,10 +9,11 @@
 {% block page_content %}
 <div class="row border-bottom white-bg dashboard-header">
     <div class="col-md-6">
-        <h2><strong>Reporte Generado por {{group_type}}</strong></h2>
-        <h2><strong>desde {{start_date}} hasta {{end_date}} </strong></h2>
+        <h2><strong>Reporte Generado por {{group_type}} </strong></h2>
+        <h2><strong>desde {{start_date}} hasta {{end_date}}</strong></h2>
     </div>
 </div>
+{% csrf_token %}
 <div class="wrapper wrapper-content animated fadeInRight" >
   <div class="row">
     <div class="col-lg-12">
@@ -41,16 +42,20 @@
                     {{ label }}
                   </th>
                 {% endfor %}
+                  <th>Detalle de servicios</th>
                 </tr>
               </thead>
               <tbody>
-                {% for data_row in results %}
-                  <tr>
-                    {% for data_element in data_row %}
+              {% for data_row in results %}
+                 <tr>
+                  {% for data_element in data_row %}
                     <td>{{ data_element }}</td>
-                    {% endfor %}
-                  </tr>
-                {% endfor %}
+                  {% endfor %}
+	                <td>
+	                	 <a  href="#" class="btn-white btn myBtn1" data-attribute="{{ loop.index0 }}"><i class="fa fa-eye" aria-hidden="true"></i></a>	
+	                </td>
+                </tr>
+              {% endfor %}
               </tbody>
             </table>
           </div>
@@ -60,6 +65,9 @@
     </div>
   </div>
   </div>
+</div>
+<div id="myModal1" class="modal1">
+    {% include 'internal/reports/modal.html' %}
 </div>
 {% endblock page_content %}
 
@@ -93,21 +101,25 @@ $(document).ready(function() {
 $( document ).ready(function() {
   $(".myBtn1").click(function() {
     $("#myModal1").show();
-    var delete_url = $(this).attr("data-url");
-    $(".delete-laboratory").click(function() {
-      window.location.href = delete_url;
-    });
-  });
-
-  $(".span-close").click(function() {
-    $("#myModal1").hide();
+    var index = $(this).attr("data-attribute");
+    $.ajax({
+    	type: 'get',
+      url: '/internal/reports/get_index/'+index,
+    }).done(function (response) {
+    	$(".modal1").html(response);
+  	});
   });
 });
+$(document).click(function (e) {
+    if ($(e.target).is('#myModal1')) {
+        $('#myModal1').fadeOut(500);
+    }
+});
+
 $(".myBtn1").click(function(event) {
   event.preventDefault();
   return false;
 });
 </script>
-
 
 {% endblock custom_js %}
