@@ -56,6 +56,7 @@ urlpatterns = [
     url('^servicerequest/editAttachedFile/(?P<id>\d+)$',
         views.servicerequest.editAttachedFile,
         name='serviceRequest.editAttachedFile'),
+
     #
     # Employee
     #
@@ -341,6 +342,8 @@ urlpatterns = [
     url('^reports/results/$',
         views.reports.processing_parameters,
         name='reports.results'),
+    url('^reports/get_index/(?P<pk>\d+)$',
+        views.reports.get_index),
     #
     # External Provider
     #

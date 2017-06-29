@@ -13,6 +13,7 @@ from django.db.models import (
     Value,
     F,
 )
+from pprint import pprint
 from django.urls import *
 import json
 from datetime import *
@@ -43,10 +44,10 @@ def report_parameters(request,
     # lets use a dictionary
     #squared = list(map(lambda x: x**2, items))
     data_list={
-        'client': list(map((lambda x: {'id':x.id,'str':x.user}),Client.all_objects.filter(deleted__isnull=True).order_by('user','id')[::1])),
-        'sample_type': list(map(lambda x: {'id':x.id,'str':x.name},SampleType.all_objects.filter(deleted__isnull=True).order_by('name','id')[::1])),
-        'laboratory':list(map(lambda x: {'id':x.id,'str':x.name},Laboratory.all_objects.filter(deleted__isnull=True).order_by('name','id')[::1])),
-        'essay':list(map(lambda x: {'id':x.id,'str':x.name},Essay.all_objects.filter(deleted__isnull=True).order_by('name','id')[::1]))
+        'client': list(map((lambda x: {'id':x.id,'str':x.user}),Client.all_objects.filter(deleted__isnull=True)[::1])),
+        'sample_type': list(map(lambda x: {'id':x.id,'str':x.name},SampleType.all_objects.filter(deleted__isnull=True)[::1])),
+        'laboratory':list(map(lambda x: {'id':x.id,'str':x.name},Laboratory.all_objects.filter(deleted__isnull=True)[::1])),
+        'essay':list(map(lambda x: {'id':x.id,'str':x.name},Essay.all_objects.filter(deleted__isnull=True)[::1]))
     }
 
     # Because we wont always check for all filters, we should have a
@@ -126,7 +127,7 @@ def quotation_price(essay_list):
     ])
     return total_price
 
-def client_group(context,settings):
+def client_group(request,context,settings):
     # Filas        
     # Num servicios en rango de fechas
     table_label=['Nombre de Cliente', 'Número de Servicios','Promedio de Muestras por Servicio','Costo acumulado de Servicios','Costo promedio por Servicio','Duración promedio de servicios']
@@ -144,7 +145,7 @@ def client_group(context,settings):
     # date filtering
     start_date=datetime.date(int(settings['start_date'][0:4]),int(settings['start_date'][5:7]),int(settings['start_date'][8:10]))
     end_date=datetime.date(int(settings['end_date'][0:4]),int(settings['end_date'][5:7]),int(settings['end_date'][8:10]))
-    service_matrix=list(map(lambda x: ServiceRequest.all_objects.filter(deleted__isnull=True,client=x).order_by('id')[::1],client_list))
+    service_matrix=list(map(lambda x: ServiceRequest.all_objects.filter(deleted__isnull=True,client=x)[::1],client_list))
     service_matrix=list(map(lambda x: [y for y in x if start_date<=y.registered_date.date()<=end_date],service_matrix))
     print(service_matrix)
     # end date filtering
@@ -169,9 +170,13 @@ def client_group(context,settings):
     if(len(settings['filters_data'][3])>0):
         essay_list=list(map(lambda x:Essay.all_objects.filter(deleted__isnull=True,pk=x).first(),list(map(lambda x: settings['data_list']['essay'][x],settings['filters_data'][3]))))
         service_matrix=list(map(lambda x: [y for y in x if len(EssayFill.all_objects.filter(deleted__isnull=True,essay__in=essay_list,sample=y.sample))>0],service_matrix))
+
     print(service_matrix)
     # end essay filtering    
     
+    service_matrix = list(map(lambda x :[[y.client.user.first_name, y.client.user.last_name,  y.supervisor.user.first_name, y.supervisor.user.last_name, y.state.description ,y.observations] for y in x], service_matrix))
+    request.session['service_matrix'] = service_matrix
+
     # data processing
     results =[]
     for i in range(0,len(client_list)):
@@ -196,21 +201,22 @@ def client_group(context,settings):
             aux_list.append(0)
             aux_list.append(0)
         results.append(aux_list)
-    print(service_matrix)
-    print(results)
+
     context={
         'group_type':'Cliente',
         'start_date':start_date,
         'end_date':end_date,
         'data_labels':table_label,
         'results':results,
+        'service_index' : -1
         }
+
+
     # end data processing
     return context
 
 
-
-def sample_group(context,settings):
+def sample_group(request, context,settings):
     # Columnas
     table_label=['Tipo de muestra', 'Número de Muestras','Promedio de Métodos por Muestra','Costo acumulado de Métodos','Costo promedio por Método']
     table_matrix=[]
@@ -254,7 +260,8 @@ def sample_group(context,settings):
         sample_matrix=list(map(lambda x:[y for y in x if EssayFill.all_objects.filter(deleted__isnull=True,sample=y,essay__in=essay_list) ],sample_matrix))
     print(sample_matrix)
     # end essay filtering
-
+    service_matrix = list(map(lambda x :[[y.client.user.first_name, y.client.user.last_name,  y.supervisor.user.first_name, y.supervisor.user.last_name, y.state.description ,y.observations] for y in x], service_matrix))
+    request.session['service_matrix'] = service_matrix
     # data processing
     results=[]
     for i in range(0,len(sample_list)):
@@ -282,14 +289,16 @@ def sample_group(context,settings):
         'end_date':end_date,
         'data_labels':table_label,
         'results':results,
+        'service_index' : -1
         }
+
     return context
 
-def laboratory_group(context,settings):
+def laboratory_group(request,context,settings):
     # Filas         Num Empleados, Num Servicios dentro de fechas, Num 
     return context
 
-def essay_group(context,settings):
+def essay_group(request,context,settings):
     return context
 
 def processing_parameters(
@@ -308,13 +317,25 @@ def processing_parameters(
     # we only recieve id as those are what we need to reconstruct our list
     if len(settings['criteria_list'])==settings['criteria']:
         return render(request,template,context)
+
     mycase = {
         'client': client_group, #do not use ()
         'sample_type': sample_group, #do not use ()
         'laboratory': laboratory_group, #do not use ()
         'essay': essay_group,
     }
+    ##request.session['service_matrix'] = mycase[settings['criteria_list'][settings['criteria']]](context,settings)
 
-    return render(request,template,mycase[settings['criteria_list'][settings['criteria']]](context,settings))
+    ##pprint(mycase[settings['criteria_list'][settings['criteria']]](context,settings))
+    ##return False
+    return render(request,template,mycase[settings['criteria_list'][settings['criteria']]](request,context,settings))
 
-    
+@ensure_csrf_cookie
+def get_index(request, pk):
+    ##index = request.GET['index']
+    data = {
+        'service_index' : int(pk),
+        'service_matrix' : request.session.get('service_matrix')
+    }
+
+    return render(request, 'internal/reports/modal.html', data)
