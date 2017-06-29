@@ -360,7 +360,7 @@ urlpatterns = [
         name='inventory.delete'),
     url('^inventory/(?P<pk>\d+)/manage_content/?$',
         views.inventory.manage_content,
-        name='inventory.manage_content')
+        name='inventory.manage_content'),
 
     #
     # External Provider

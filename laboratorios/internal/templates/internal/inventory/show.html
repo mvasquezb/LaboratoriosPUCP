@@ -62,23 +62,24 @@
                                   <th>
                                     Descripción
                                   </th>
-                                  <th>
+                                  <!--<th>
                                     Añadir
-                                  </th>
-                                  <th>cantidad</th>
+                                  </th>-->
+                                  <th>Cantidad</th>
                                 </tr>
                               </thead>
                               <tbody>
-                                {% for supply in supply_list %}
+                                {% for article_inventory in inventory_articles %}
                                   <tr role="row">
                                     <td>{{ loop.index }}</td>
-                                    <td>{{ supply.name }}</td>
-                                    <td>{{ supply.description }}</td>
-                                    <td>
-                                      <input type="checkbox" class="i-checks checkbox_supplies" data-id="{{ supply.pk }}" {% if suply in selected_supply %} checked {% endif %}>     
-                                    </td>
+                                    <td>{{ article_inventory.article.name }}</td>
+                                    <td>{{ article_inventory.article.description }}</td>
+                                    <!--<td>
+                                      <input type="checkbox" class="i-checks checkbox_supplies" data-id="{{ article_inventory.article.pk }}" {% if suply in selected_supply %} checked {% endif %}>
+                                    </td>-->
                                     <td class="text-left footable-visible footable-last-column">
-                                      <input id="stock_field" type="number" min="0" class="form-control" name="stock" value="0" data-error="Ingrese un valor válido">
+                                      <!--<input id="stock_field" type="number" min="0" class="form-control" name="stock" value="0" data-error="Ingrese un valor válido">-->
+                                      {{ article_inventory.quantity}}
                                     </td>
                                   </tr>
                                 {% endfor %}
@@ -102,23 +103,24 @@
                                 <th>
                                   Descripción
                                 </th>
-                                <th>
+                                <!--<th>
                                   Añadir
-                                </th>
+                                </th>-->
                                 <th>Cantidad</th>
                               </tr>
                             </thead>
                             <tbody>
-                              {% for equipment in equipments %}
+                              {% for article_inventory in inventory_articles %}
                                 <tr role="row">
                                   <td>{{ loop.index }}</td>
-                                  <td>{{ equipment.name }}</td>
-                                  <td>{{ equipment.description }}</td>
-                                  <td>
-                                    <input type="checkbox" class="i-checks checkbox_supplies" data-id="{{ equipment.pk }}" {% if suply in selected_supply %} checked {% endif %}>   
-                                  </td>
+                                  <td>{{ article_inventory.article.name }}</td>
+                                  <td>{{ article_inventory.article.description }}</td>
+                                  <!--<td>
+                                    <input type="checkbox" class="i-checks checkbox_supplies" data-id="{{ article_inventory.article.pk }}" {% if suply in selected_supply %} checked {% endif %}>
+                                  </td>-->
                                   <td class="text-left footable-visible footable-last-column">
-                                    <input id="stock_field" type="number" width="10" min="0" class="form-control" name="stock" data-error="Ingrese un valor válido">
+                                    <!--<input id="stock_field" type="number" width="10" min="0" class="form-control" name="stock" data-error="Ingrese un valor válido">-->
+                                    {{article_inventory.quantity}}
                                   </td>
                                 </tr>
                               {% endfor %}
@@ -134,7 +136,7 @@
                         <a href="{{ url('internal:inventory.index') }}" class="btn btn-white">Cancelar</a>
                       </div>
                     </div>
-                
+
             </div>
         </div>
     </div>
@@ -170,7 +172,7 @@ $(document).ready(function() {
     //   }else{
     //     $('#equipments_div').hide();
     //     $('#supplies_div').hide();
-    //   } 
+    //   }
     // });
 
     $('#mysearch').keyup(function(){

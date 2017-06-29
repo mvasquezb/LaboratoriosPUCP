@@ -79,7 +79,7 @@ def edit(request,
          pk):
     suplies = Supply.all_objects.filter(deleted__isnull=True)
     equipments=Equipment.all_objects.filter(deleted__isnull=True)
-    
+
     if request.method == 'POST':
         instance = Inventory.all_objects.get(
             deleted__isnull=True,
@@ -125,10 +125,12 @@ def show(request,
         deleted__isnull=True,
         pk=pk
     )
-    # inventory_articles= ArticleInventory.all_objects.get(
-    #     deleted__isnull=True,
-    #     inventory=instance
-    # )
+
+    #get my articles
+    inventory_articles= ArticleInventory.all_objects.filter(
+        deleted__isnull=True,
+        inventory=instance,
+    )
     inventories = Inventory.all_objects.filter(deleted__isnull=True)
     inventory_types= Inventory.TYPE_CHOICES
     types=[]
@@ -139,6 +141,7 @@ def show(request,
 
     context = { 'inventories': inventories,
                 'inventory_types':inventory_types,
+                'inventory_articles':inventory_articles,
                 'supply_list':suplies,'equipments':equipments,
                 'inventory':instance,'types':types}
     template = 'internal/inventory/show.html'
