@@ -1,4 +1,4 @@
-
+//For Create
 $('#inventoryform').on('submit', function (evt) {
   //evt.preventDefault();
   var $form = $(this);

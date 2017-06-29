@@ -30,7 +30,7 @@ def manage_content(request,
     inventory = Inventory.all_objects.get(pk=pk)
     matches = ArticleInventory.all_objects.filter(inventory=inventory, deleted__isnull=True)
     inventory_types= Inventory.TYPE_CHOICES
-    if (inventory.inventory_type == inventory_types[0]): #Insumos
+    if (inventory.get_inventory_type_display() == inventory_types[0][1]): #Insumos
         articles = Supply.all_objects.filter(deleted__isnull=True)
     else :                                               #Equipos
         articles = Equipment.all_objects.filter(deleted__isnull=True)

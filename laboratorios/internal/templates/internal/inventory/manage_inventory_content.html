@@ -48,7 +48,7 @@
                     <th>Descripción</th>
                     <th>Unidad Métrica</th>
                     <th>Cantidad Actual</th>
-                    <th>Añadir/Disminuir</th>
+                    <th>Añadir|Disminuir</th>
                     <th>Acciones</th>
                   </tr>
                 </thead>
@@ -61,7 +61,7 @@
                       <th>{{ article.metric_unit }}</th>
                       {% set get_out = {'value': False} %}
                       {% for match in matches %}
-                        {% if article.pk == match.article.supply.pk %}
+                        {% if article == match.article.supply %}
                           {% if get_out.update({'value': True}) %}{% endif %}
                           <th>{{ match.quantity }}</th>
                           {% break %}
@@ -70,11 +70,13 @@
                       {% if not get_out['value'] %}
                         <th>0</th>
                       {% endif %}
-                      <th>0</th>
+                      <th class="display_item" id="{{ article.pk }}">0</th>
                       <th>
-                        <input type="number" min="0" name=""><div class="btn-group">
-                          <a class="btn-white btn"><i class="fa fa-plus" aria-hidden="true"></i></a>
-                          <a class="btn-white btn"><i class="fa fa-minus" aria-hidden="true"></i></a>
+                        <input type="number" style="width: 40px" min="0" id="{{ article.pk }}" onkeydown="return FilterNmberInput(event)" onpaste="handlePaste(event)" value="0">
+                        <div class="btn-group">
+                          <a class="btn-white btn plus_button" data-pk ="{{ article.pk }}"><i class="fa fa-plus" aria-hidden="true"></i></a>
+                          <a class="btn-white btn minus_button" data-pk ="{{ article.pk }}"><i class="fa fa-minus" aria-hidden="true"></i></a>
+                          <a class="btn-white btn undo_button" data-pk ="{{ article.pk }}"><i class="fa fa-undo" aria-hidden="true"></i></a>
                         </div>
                       </th>
                     </tr>
@@ -91,16 +93,58 @@
                     <th>Rango de Error</th>
                     <th>Tiempo de Vida</th>
                     <th>Cantidad Actual</th>
-                    <th>Añadir/Disminuir</th>
+                    <th>Añadir|Disminuir</th>
                     <th>Acciones</th>
                   </tr>
                 </thead>
                 <tbody>
-                  
+                  {% for article in articles %}
+                    <tr>
+                      <th>{{ loop.index }}</th>
+                      <th>{{ article.name }}</th>
+                      <th>{{ article.description }}</th>
+                      <th>{{ article.error_range }}</th>
+                      <th>{{ article.servicelife }} {{ article.servicelife_unit }}</th>
+                      {% set get_out = {'value': False} %}
+                      {% for match in matches %}
+                        {% if article == match.article.supply %}
+                          {% if get_out.update({'value': True}) %}{% endif %}
+                          <th>{{ match.quantity }}</th>
+                          {% break %}
+                        {% endif %}
+                      {% endfor %}
+                      {% if not get_out['value'] %}
+                        <th>0</th>
+                      {% endif %}
+                      <th class="display_item" id="{{ article.pk }}">0</th>
+                      <th>
+                        <input type="number" style="width: 40px" min="0" id="{{ article.pk }}" onkeydown="return FilterNmberInput(event)" onpaste="handlePaste(event)" value="0">
+                        <div class="btn-group">
+                          <a class="btn-white btn plus_button" data-pk ="{{ article.pk }}"><i class="fa fa-plus" aria-hidden="true"></i></a>
+                          <a class="btn-white btn minus_button" data-pk ="{{ article.pk }}"><i class="fa fa-minus" aria-hidden="true"></i></a>
+                          <a class="btn-white btn undo_button" data-pk ="{{ article.pk }}"><i class="fa fa-undo" aria-hidden="true"></i></a>
+                        </div>
+                      </th>
+                    </tr>
+                  {% endfor %}
                 </tbody>
               </table>
             {% endif %}
           </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-lg-12">
+            {% if inventory.get_inventory_type_display() == inventory_types[0][1] %}
+              <a href="{{ url('internal:supply.create') }}" class="btn btn-primary">Crear Nuevo Insumo</a>
+            {% else %}
+              <a href="{{ url('internal:equipment.create') }}" class="btn btn-primary">Crear Nuevo Equipo</a>
+            {% endif %}
+          </div>
+          <div class="col-lg-12">
+            <input type="submit" class="btn btn-primary" name="registrar"
+              id="register_button" value="Guardar Cambios">
+            <a href="{{ url('internal:inventory.index') }}" class="btn btn-white">Cancelar</a>
           </div>
         </div>
       </div>
@@ -110,7 +154,57 @@
 
 {% endblock page_content %}
 
-
 {% block custom_js %}
+
+<script type="text/javascript">
+  function handlePaste(e) {
+  var clipboardData, pastedData;
+
+  // Get pasted data via clipboard API
+  clipboardData = e.clipboardData || window.clipboardData;
+  pastedData = clipboardData.getData('Text').toUpperCase();
+
+  if (pastedData.indexOf('E') > -1) {
+    //alert('found an E');
+    e.stopPropagation();
+    e.preventDefault();
+  }
+};
+
+function FilterNmberInput(event) {
+  var keyCode = ('which' in event) ? event.which : event.keyCode;
+
+  isNotWanted = (keyCode == 69 || keyCode == 101);
+  return !isNotWanted;
+};
+
+$('.plus_button').on('click', function(){
+  var id = $(this).data('pk');
+  var input_value = parseInt($("input[type=number][id=" + id + "]").val());
+  if (input_value > 0){
+    //alert(input_value);
+    var initial_value = parseInt($(".display_item#" + id + "").text());
+    var result = initial_value + input_value;
+    $(".display_item#" + id + "").text(result);
+  }
+});
+
+$('.minus_button').on('click', function(){
+  var id = $(this).data('pk');
+  var input_value = parseInt($("input[type=number][id=" + id + "]").val());
+  if (input_value > 0){
+    //alert(input_value);
+    var initial_value = parseInt($(".display_item#" + id + "").text());
+    var result = initial_value - input_value;
+    $(".display_item#" + id + "").text(result);
+  }
+});
+
+$('.undo_button').on('click', function(){
+  var id = $(this).data('pk');
+  $(".display_item#" + id + "").text("0");
+});
+
+</script>
 
 {% endblock custom_js %}
