@@ -689,3 +689,22 @@ class InventoryOrderDefault(SafeDeleteModel):
         auto_now=False,
         blank=True
     )
+
+
+@auditlog.register()
+class ExtraRequestConcept(SafeDeleteModel):
+    _safedelete_policy = SOFT_DELETE_CASCADE
+
+    auditlog = AuditlogHistoryField()
+    request = models.ForeignKey(
+        ServiceRequest,
+        on_delete=models.CASCADE,
+        related_name='extra_concepts'
+    )
+    description = models.CharField(max_length=200)
+    amount = models.FloatField()
+    registered_date = models.DateTimeField(
+        auto_now_add=True,
+        auto_now=False,
+        blank=True
+    )
