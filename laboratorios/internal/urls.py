@@ -114,7 +114,7 @@ urlpatterns = [
     url('^inventoryOrder/check/?$',
         views.inventoryOrder.check,
         name='inventoryOrder.check'),
-    url('^inventoryOrder/(?P<pk>\d+)/approve/?$',
+    url('^inventoryOrder/(?P<pk>\d+)/approve/(?P<pk2>\d+)$',
         views.inventoryOrder.approve,
         name='inventoryOrder.approve'),
     url('^inventoryOrder/(?P<pk>\d+)/reject/?$',
