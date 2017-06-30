@@ -1,27 +1,23 @@
 <div class="modal-content modal-report">
 	<div class="modeal-center-content">
-	{% if not service_index == -1 %}
+	{% if not modal_index == -1 %}
 	    <div class="table-responsive">
 		    <table class="table table-striped table-bordered table-hover dataTables-example">
 		      <thead>
+		      
 		        <tr>
-		          <th class="first-table-column">Cliente</th>
-		          <th class="first-table-column">Supervisor</th>
-		          <th class="first-table-column">Estado</th>
-		          <th class="first-table-column">Observaciones</th>
+		        {% for field_label in modal_labels %}
+		          <th class="first-table-column">{{ field_label}}</th>
+		          {% endfor %}
 		        </tr>
+		       
 		      </thead>
 		      <tbody>
-		      {% for item in service_matrix[service_index] %}
+		      {% for item in modal_matrix[modal_index] %}
 		          <tr>
-		            <td>{{ item[0] }} {{ item[1] }}</td>
-		            <td>{{ item[2] }} {{ item[3] }}</td>
-		            <td>{{ item[4] }}</td>
-		            <td>
-		            	{% if not item[5] == 'None' %}
-		            	{{ item[5] }}
-		            	{% endif %}
-		            </td>
+		          	{% for field in item %}
+		            <td>{{ field }}</td>
+		            {% endfor %}
 		          </tr>
 		      {% endfor %}
 		      </tbody>

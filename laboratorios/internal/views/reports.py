@@ -44,10 +44,10 @@ def report_parameters(request,
     # lets use a dictionary
     #squared = list(map(lambda x: x**2, items))
     data_list={
-        'client': list(map((lambda x: {'id':x.id,'str':x.user}),Client.all_objects.filter(deleted__isnull=True)[::1])),
-        'sample_type': list(map(lambda x: {'id':x.id,'str':x.name},SampleType.all_objects.filter(deleted__isnull=True)[::1])),
-        'laboratory':list(map(lambda x: {'id':x.id,'str':x.name},Laboratory.all_objects.filter(deleted__isnull=True)[::1])),
-        'essay':list(map(lambda x: {'id':x.id,'str':x.name},Essay.all_objects.filter(deleted__isnull=True)[::1]))
+        'client': list(map((lambda x: {'id':x.id,'str':x.user}),Client.all_objects.filter(deleted__isnull=True).order_by('user','id')[::1])),
+        'sample_type': list(map(lambda x: {'id':x.id,'str':x.name},SampleType.all_objects.filter(deleted__isnull=True).order_by('name','id')[::1])),
+        'laboratory':list(map(lambda x: {'id':x.id,'str':x.name},Laboratory.all_objects.filter(deleted__isnull=True).order_by('name','id')[::1])),
+        'essay':list(map(lambda x: {'id':x.id,'str':x.name},Essay.all_objects.filter(deleted__isnull=True).order_by('name','id')[::1]))
     }
 
     # Because we wont always check for all filters, we should have a
@@ -136,7 +136,7 @@ def client_group(request,context,settings):
 
     # client filtering
     if (len(settings['filters_data'][0]) >0):
-        client_list=list(map(lambda x:Client.all_objects.filter(deleted__isnull=True,pk=x).first(),list(map(lambda x: settings['data_list']['client'][x],settings['filters_data'][0]))))
+        client_list=list(map(lambda x:Client.all_objects.filter(deleted__isnull=True,pk=x).first(), list(map(lambda x: settings['data_list']['client'][x],settings['filters_data'][0]))))
     else:
         client_list=Client.all_objects.filter(deleted__isnull=True)[::1]
     print(client_list)
@@ -146,6 +146,7 @@ def client_group(request,context,settings):
     start_date=datetime.date(int(settings['start_date'][0:4]),int(settings['start_date'][5:7]),int(settings['start_date'][8:10]))
     end_date=datetime.date(int(settings['end_date'][0:4]),int(settings['end_date'][5:7]),int(settings['end_date'][8:10]))
     service_matrix=list(map(lambda x: ServiceRequest.all_objects.filter(deleted__isnull=True,client=x)[::1],client_list))
+    print(service_matrix)
     service_matrix=list(map(lambda x: [y for y in x if start_date<=y.registered_date.date()<=end_date],service_matrix))
     print(service_matrix)
     # end date filtering
@@ -173,9 +174,6 @@ def client_group(request,context,settings):
 
     print(service_matrix)
     # end essay filtering    
-    
-    service_matrix = list(map(lambda x :[[y.client.user.first_name, y.client.user.last_name,  y.supervisor.user.first_name, y.supervisor.user.last_name, y.state.description ,y.observations] for y in x], service_matrix))
-    request.session['service_matrix'] = service_matrix
 
     # data processing
     results =[]
@@ -183,12 +181,13 @@ def client_group(request,context,settings):
         aux_list=[]
         aux_list.append(client_list[i])
         aux_list.append(len(service_matrix[i]))
+        print(i)
         try:
-            aux_list.append(reduce((lambda x,y:len(x)+len(y)),[Sample.all_objects.filter(deleted__isnull=True,request=z) for z in service_matrix[i]])/aux_list[1])
+            aux_list.append(sum([len(x) for x in [Sample.all_objects.filter(deleted__isnull=True,request=z) for z in service_matrix[i]]])/aux_list[1])
         except:
             aux_list.append(0)
         try:
-            aux_list.append(reduce((lambda x,y:x[0]+y[0]),list(map(lambda z: [quotation_price(EssayFill.all_objects.filter(deleted__isnull=True,sample=y)) for y in Sample.all_objects.filter(deleted__isnull=True,request=z)] ,service_matrix[i]))))
+            aux_list.append(sum([x[0] for x in list(map(lambda z: [quotation_price(EssayFill.all_objects.filter(deleted__isnull=True,sample=y)) for y in Sample.all_objects.filter(deleted__isnull=True,request=z)] ,service_matrix[i]))]))
         except:
             aux_list.append(0)
         if not (aux_list[2]):
@@ -196,11 +195,15 @@ def client_group(request,context,settings):
         if aux_list[1]>0 and aux_list[2]:
             print(aux_list[2])
             aux_list.append(aux_list[2]/aux_list[1])
-            aux_list.append(reduce((lambda x,y:x.expected_duration+y.expected_duration),service_matrix[i])/aux_list[1])
+            aux_list.append(sum([x.expected_duration for x in service_matrix[i]])/aux_list[1])
         else:
             aux_list.append(0)
             aux_list.append(0)
         results.append(aux_list)
+    print(results)
+    modal_matrix = list(map(lambda x :[[y.client.user.first_name+' '+y.client.user.last_name,  y.supervisor.user.first_name+' '+y.supervisor.user.last_name, y.state.description ,y.observations] for y in x], service_matrix))
+    request.session['modal_matrix'] = modal_matrix
+    request.session['modal_labels'] = ['Cliente','Supervisor','Estado','Observaciones']
 
     context={
         'group_type':'Cliente',
@@ -208,8 +211,8 @@ def client_group(request,context,settings):
         'end_date':end_date,
         'data_labels':table_label,
         'results':results,
-        'service_index' : -1,
-        'service_matrix' : service_matrix
+        'modal_index' : -1,
+        'modal_matrix' : modal_matrix
         }
 
 
@@ -261,8 +264,7 @@ def sample_group(request, context,settings):
         sample_matrix=list(map(lambda x:[y for y in x if EssayFill.all_objects.filter(deleted__isnull=True,sample=y,essay__in=essay_list) ],sample_matrix))
     print(sample_matrix)
     # end essay filtering
-    service_matrix = list(map(lambda x :[[y.client.user.first_name, y.client.user.last_name,  y.supervisor.user.first_name, y.supervisor.user.last_name, y.state.description ,y.observations] for y in x], service_matrix))
-    request.session['service_matrix'] = service_matrix
+    
     # data processing
     results=[]
     for i in range(0,len(sample_list)):
@@ -275,7 +277,7 @@ def sample_group(request, context,settings):
         except:
             aux_list.append(0)
         try:
-            aux_list.append(reduce((lambda x,y:x.essay_method.price+y.essay_method.price),aux_method_list))
+            aux_list.append(sum([x.essay_method.price for x in aux_method_list]))
         except:
             aux_list.append(0)
         try:
@@ -284,14 +286,18 @@ def sample_group(request, context,settings):
             aux_list.append(0)
         results.append(aux_list)
 
+    modal_matrix = list(map(lambda x :[[y.code,  y.name,y.description, y.registered_date.strftime("%Y-%m-%d %H:%M:%S")] for y in x], sample_matrix))
+    request.session['modal_matrix'] = modal_matrix
+    request.session['modal_labels']=['Código','Nombre','Descripción','Fecha de registro']
+
     context={
         'group_type':'Tipo de Muestra',
         'start_date':start_date,
         'end_date':end_date,
         'data_labels':table_label,
         'results':results,
-        'service_index' : -1,
-        'service_matrix' : service_matrix
+        'modal_index' : -1,
+        'modal_matrix' : modal_matrix
         }
 
     return context
@@ -336,8 +342,9 @@ def processing_parameters(
 def get_index(request, pk):
     ##index = request.GET['index']
     data = {
-        'service_index' : int(pk),
-        'service_matrix' : request.session.get('service_matrix')
+        'modal_index' : int(pk),
+        'modal_matrix' : request.session.get('modal_matrix'),
+        'modal_labels' : request.session.get('modal_labels')
     }
 
     return render(request, 'internal/reports/modal.html', data)
