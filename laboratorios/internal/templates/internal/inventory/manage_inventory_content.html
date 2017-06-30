@@ -82,9 +82,9 @@
                       <td>
                         <input type="number" style="width: 40px" min="0" id="{{ article.pk }}" name="{{article.pk}}" onkeydown="return FilterNmberInput(event)" onpaste="handlePaste(event)" value="0">
                         <div class="btn-group">
-                          <a class="btn-white btn plus_button" data-pk ="{{ article.pk }}"><i class="fa fa-plus" aria-hidden="true"></i></a>
-                          <a class="btn-white btn minus_button" data-pk ="{{ article.pk }}"><i class="fa fa-minus" aria-hidden="true"></i></a>
-                          <a class="btn-white btn undo_button" data-pk ="{{ article.pk }}"><i class="fa fa-undo" aria-hidden="true"></i></a>
+                          <a class="btn-white btn plus_button" data-pk ="{{ article.pk }}"><i class="fa fa-plus" aria-hidden="true" data-placement="top" title="Añadir"></i></a>
+                          <a class="btn-white btn minus_button" data-pk ="{{ article.pk }}"><i class="fa fa-minus" aria-hidden="true" data-placement="top" title="Quitar"></i></a>
+                          <a class="btn-white btn undo_button" data-pk ="{{ article.pk }}"><i class="fa fa-undo" aria-hidden="true" data-placement="top" title="Reset"></i></a>
                         </div>
                       </td>
                     </tr>
@@ -128,9 +128,9 @@
                       <td>
                         <input type="number" style="width: 40px" min="0" id="{{ article.pk }}" name="{{article.pk}}" onkeydown="return FilterNmberInput(event)" onpaste="handlePaste(event)" value="0">
                         <div class="btn-group">
-                          <a class="btn-white btn plus_button" data-pk ="{{ article.pk }}"><i class="fa fa-plus" aria-hidden="true"></i></a>
-                          <a class="btn-white btn minus_button" data-pk ="{{ article.pk }}"><i class="fa fa-minus" aria-hidden="true"></i></a>
-                          <a class="btn-white btn undo_button" data-pk ="{{ article.pk }}"><i class="fa fa-undo" aria-hidden="true"></i></a>
+                          <a class="btn-white btn plus_button" data-pk ="{{ article.pk }}"><i class="fa fa-plus" aria-hidden="true" data-placement="top" title="Añadir"></i></a>
+                          <a class="btn-white btn minus_button" data-pk ="{{ article.pk }}"><i class="fa fa-minus" aria-hidden="true" data-placement="top" title="Quitar"></i></a>
+                          <a class="btn-white btn undo_button" data-pk ="{{ article.pk }}"><i class="fa fa-undo" aria-hidden="true" data-placement="top" title="Reset"></i></a>
                         </div>
                       </td>
                     </tr>
@@ -139,6 +139,7 @@
               </table>
             {% endif %}
           </div>
+            {% include 'internal/layouts/inventory_manage_content.legend.html' %}
           </div>
         </div>
         <div class="row">
@@ -234,6 +235,12 @@ $('.undo_button').on('click', function(){
   $(".display_item#" + id + "").text("0");
 });
 
+</script>
+
+<script>
+$(function () {
+  $('[data-toggle="tooltip"]').tooltip()
+})
 </script>
 <script src="{{ static('js/manage_inventory.js') }}"></script>
 {% endblock custom_js %}

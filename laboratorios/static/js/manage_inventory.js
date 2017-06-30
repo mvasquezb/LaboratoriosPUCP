@@ -19,7 +19,7 @@ $(document).ready(function() {
       //window.location.replace(show_url);
       //window.location.reload(true);
       $(location).attr("href", show_url);
-      $(location).reload();
+      $(location).reload(true);
     });
 
 } );
