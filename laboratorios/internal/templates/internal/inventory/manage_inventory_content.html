@@ -63,30 +63,30 @@
                 <tbody>
                   {% for article in articles %}
                     <tr>
-                      <th>{{ loop.index }}</th>
-                      <th>{{ article.name }}</th>
-                      <th>{{ article.description }}</th>
-                      <th>{{ article.metric_unit }}</th>
+                      <td>{{ loop.index }}</td>
+                      <td>{{ article.name }}</td>
+                      <td>{{ article.description }}</td>
+                      <td>{{ article.metric_unit }}</td>
                       {% set get_out = {'value': False} %}
                       {% for match in matches %}
                         {% if article == match.article.supply %}
                           {% if get_out.update({'value': True}) %}{% endif %}
-                          <th>{{ match.quantity }}</th>
+                          <td>{{ match.quantity }}</td>
                           {% break %}
                         {% endif %}
                       {% endfor %}
                       {% if not get_out['value'] %}
-                        <th>0</th>
+                        <td>0</td>
                       {% endif %}
-                      <th class="display_item" id="{{ article.pk }}">0</th>
-                      <th>
+                      <td class="display_item" id="{{ article.pk }}">0</td>
+                      <td>
                         <input type="number" style="width: 40px" min="0" id="{{ article.pk }}" onkeydown="return FilterNmberInput(event)" onpaste="handlePaste(event)" value="0">
                         <div class="btn-group">
                           <a class="btn-white btn plus_button" data-pk ="{{ article.pk }}"><i class="fa fa-plus" aria-hidden="true"></i></a>
                           <a class="btn-white btn minus_button" data-pk ="{{ article.pk }}"><i class="fa fa-minus" aria-hidden="true"></i></a>
                           <a class="btn-white btn undo_button" data-pk ="{{ article.pk }}"><i class="fa fa-undo" aria-hidden="true"></i></a>
                         </div>
-                      </th>
+                      </td>
                     </tr>
                   {% endfor %}
                 </tbody>
@@ -108,31 +108,31 @@
                 <tbody>
                   {% for article in articles %}
                     <tr>
-                      <th>{{ loop.index }}</th>
-                      <th>{{ article.name }}</th>
-                      <th>{{ article.description }}</th>
-                      <th>{{ article.error_range }}</th>
-                      <th>{{ article.servicelife }} {{ article.servicelife_unit }}</th>
+                      <td>{{ loop.index }}</td>
+                      <td>{{ article.name }}</td>
+                      <td>{{ article.description }}</td>
+                      <td>{{ article.error_range }}</td>
+                      <td>{{ article.servicelife }} {{ article.servicelife_unit }}</td>
                       {% set get_out = {'value': False} %}
                       {% for match in matches %}
                         {% if article == match.article.equipment %}
                           {% if get_out.update({'value': True}) %}{% endif %}
-                          <th>{{ match.quantity }}</th>
+                          <td>{{ match.quantity }}</td>
                           {% break %}
                         {% endif %}
                       {% endfor %}
                       {% if not get_out['value'] %}
-                        <th>0</th>
+                        <td>0</td>
                       {% endif %}
-                      <th class="display_item" id="{{ article.pk }}">0</th>
-                      <th>
+                      <td class="display_item" id="{{ article.pk }}">0</td>
+                      <td>
                         <input type="number" style="width: 40px" min="0" id="{{ article.pk }}" onkeydown="return FilterNmberInput(event)" onpaste="handlePaste(event)" value="0">
                         <div class="btn-group">
                           <a class="btn-white btn plus_button" data-pk ="{{ article.pk }}"><i class="fa fa-plus" aria-hidden="true"></i></a>
                           <a class="btn-white btn minus_button" data-pk ="{{ article.pk }}"><i class="fa fa-minus" aria-hidden="true"></i></a>
                           <a class="btn-white btn undo_button" data-pk ="{{ article.pk }}"><i class="fa fa-undo" aria-hidden="true"></i></a>
                         </div>
-                      </th>
+                      </td>
                     </tr>
                   {% endfor %}
                 </tbody>
@@ -150,7 +150,7 @@
             {% endif %}
           </div>
           <div class="col-lg-12">
-            <input type="submit" class="btn btn-primary" name="registrar"
+            <input type="submit" onclick="SaveData()" class="btn btn-primary" name="registrar"
               id="register_button" value="Guardar Cambios">
             <a href="{{ url('internal:inventory.index') }}" class="btn btn-white">Cancelar</a>
           </div>
@@ -233,6 +233,16 @@ $('.undo_button').on('click', function(){
   var id = $(this).data('pk');
   $(".display_item#" + id + "").text("0");
 });
+
+function SaveData(){
+  var nuevo = [];
+  var actualizar = [];
+  var eliminar = [];
+  //nuevos a añadir
+  //a actualizar
+  //a eliminar
+  $.post("{{ url('internal:inventory.manage_content', pk=inventory.pk)}}", {'nuevo': nuevo, 'actualizar': actualizar, 'eliminar': eliminar});
+}
 
 </script>
 

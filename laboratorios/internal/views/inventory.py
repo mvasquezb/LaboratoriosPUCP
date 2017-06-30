@@ -26,21 +26,25 @@ def index(request,
 
 def manage_content(request,
                    pk):
-    template='internal/inventory/manage_inventory_content.html'
-    inventory = Inventory.all_objects.get(pk=pk)
-    matches = ArticleInventory.all_objects.filter(inventory=inventory, deleted__isnull=True)
-    inventory_types= Inventory.TYPE_CHOICES
-    if (inventory.get_inventory_type_display() == inventory_types[0][1]): #Insumos
-        articles = Supply.all_objects.filter(deleted__isnull=True)
-    else :                                               #Equipos
-        articles = Equipment.all_objects.filter(deleted__isnull=True)
-    context = {
-        'inventory': inventory,
-        'inventory_types': inventory_types,
-        'articles': articles,
-        'matches': matches
-    }
-    return render(request, template, context)
+    if request.method == 'POST' and request.is_ajax():
+        print("ajax")
+        return HttpResponse("GG")
+    else:
+        template='internal/inventory/manage_inventory_content.html'
+        inventory = Inventory.all_objects.get(pk=pk)
+        matches = ArticleInventory.all_objects.filter(inventory=inventory, deleted__isnull=True)
+        inventory_types= Inventory.TYPE_CHOICES
+        if (inventory.get_inventory_type_display() == inventory_types[0][1]): #Insumos
+            articles = Supply.all_objects.filter(deleted__isnull=True)
+        else :                                               #Equipos
+            articles = Equipment.all_objects.filter(deleted__isnull=True)
+        context = {
+            'inventory': inventory,
+            'inventory_types': inventory_types,
+            'articles': articles,
+            'matches': matches
+        }
+        return render(request, template, context)
 
 def create(request,
            template='internal/inventory/create.html',
