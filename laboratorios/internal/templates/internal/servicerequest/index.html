@@ -11,7 +11,14 @@
     function printId(IdValue,requestState){
       console.log("prueba")
       var pgrbar = document.getElementById("pgrBar_" + IdValue);
+    
       switch (requestState) {
+        case "review_samples":
+              {
+              prgbar.style.width="20%";
+               pgrbar.innerHTML="20%";
+               pgrbar.style.backgroundColor="yellow";              
+              }
         case "in_preparation":
               {pgrbar.style.width="100%";
                pgrbar.innerHTML="0%";
