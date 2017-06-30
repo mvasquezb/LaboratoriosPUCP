@@ -147,3 +147,31 @@ def show(request,
     template = 'internal/inventory/show.html'
     return render(request, template, context)
 
+
+def save_article(request, pk):
+    if request.is_ajax():
+        if request.method == 'POST':
+            #get values
+            current_value = request.POST.get('current_value')
+            change_value = request.POST.get('change_value')
+            id = request.POST.get('id')
+
+            #get inventory and article
+            inventory= Inventory.all_objects.get(pk=pk)
+            article_type= inventory.get_inventory_type_display()
+
+            if (article_type == "Supply"):
+                article = Supply.all_objects.get(pk=id)
+            else:
+                article = Equipment.all_objects.get(pk=id)
+
+            #update o create?
+            if(current_value!=0): #create
+                newArticleInventory=ArticleInventory(article=article, inventory=inventory, quantity=current_value+change_value)
+                newArticleInventory.save()
+            else: #update
+                oldArticleInventory=ArticleInventory.all_objects.get(inventory=inventory, article=article ,deleted__isnull=True)
+                oldArticleInventory.quantity=current_value+change_value
+                oldArticleInventory.save()
+
+            #return HttpResponse("%s" % id)

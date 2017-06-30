@@ -62,37 +62,37 @@
                 </thead>
                 <tbody>
                   {% for article in articles %}
-                    <tr>
-                      <th>{{ loop.index }}</th>
-                      <th>{{ article.name }}</th>
-                      <th>{{ article.description }}</th>
-                      <th>{{ article.metric_unit }}</th>
+                    <tr class="data_row">
+                      <td>{{ loop.index }}</td>
+                      <td>{{ article.name }}</td>
+                      <td>{{ article.description }}</td>
+                      <td>{{ article.metric_unit }}</td>
                       {% set get_out = {'value': False} %}
                       {% for match in matches %}
                         {% if article == match.article.supply %}
                           {% if get_out.update({'value': True}) %}{% endif %}
-                          <th>{{ match.quantity }}</th>
+                          <td class="current_value" id="{{ article.pk }}" name="{{article.pk}}">{{ match.quantity }}</td>
                           {% break %}
                         {% endif %}
                       {% endfor %}
                       {% if not get_out['value'] %}
-                        <th>0</th>
+                        <td class="current_value" id="{{ article.pk }}" name="{{article.pk}}">0</td>
                       {% endif %}
-                      <th class="display_item" id="{{ article.pk }}">0</th>
-                      <th>
-                        <input type="number" style="width: 40px" min="0" id="{{ article.pk }}" onkeydown="return FilterNmberInput(event)" onpaste="handlePaste(event)" value="0">
+                      <td class="display_item">0</td>
+                      <td>
+                        <input type="number" style="width: 40px" min="0" id="{{ article.pk }}" name="{{article.pk}}" onkeydown="return FilterNmberInput(event)" onpaste="handlePaste(event)" value="0">
                         <div class="btn-group">
                           <a class="btn-white btn plus_button" data-pk ="{{ article.pk }}"><i class="fa fa-plus" aria-hidden="true"></i></a>
                           <a class="btn-white btn minus_button" data-pk ="{{ article.pk }}"><i class="fa fa-minus" aria-hidden="true"></i></a>
                           <a class="btn-white btn undo_button" data-pk ="{{ article.pk }}"><i class="fa fa-undo" aria-hidden="true"></i></a>
                         </div>
-                      </th>
+                      </td>
                     </tr>
                   {% endfor %}
                 </tbody>
               </table>
             {% elif inventory.get_inventory_type_display() == inventory_types[1][1] %}
-              <table class="table table-striped table-bordered">
+              <table  class="table table-striped table-bordered" >
                 <thead>
                   <tr>
                     <th>N°</th>
@@ -107,32 +107,32 @@
                 </thead>
                 <tbody>
                   {% for article in articles %}
-                    <tr>
-                      <th>{{ loop.index }}</th>
-                      <th>{{ article.name }}</th>
-                      <th>{{ article.description }}</th>
-                      <th>{{ article.error_range }}</th>
-                      <th>{{ article.servicelife }} {{ article.servicelife_unit }}</th>
+                    <tr class="data_row">
+                      <td>{{ loop.index }}</td>
+                      <td>{{ article.name }}</td>
+                      <td>{{ article.description }}</td>
+                      <td>{{ article.error_range }}</td>
+                      <td>{{ article.servicelife }} {{ article.servicelife_unit }}</td>
                       {% set get_out = {'value': False} %}
                       {% for match in matches %}
                         {% if article == match.article.equipment %}
                           {% if get_out.update({'value': True}) %}{% endif %}
-                          <th>{{ match.quantity }}</th>
+                          <td class="current_value" id="{{ article.pk }}" name="{{article.pk}}">{{ match.quantity }}</td>
                           {% break %}
                         {% endif %}
                       {% endfor %}
                       {% if not get_out['value'] %}
-                        <th>0</th>
+                        <td class="current_value" id="{{ article.pk }}" name="{{article.pk}}">0</td>
                       {% endif %}
-                      <th class="display_item" id="{{ article.pk }}">0</th>
-                      <th>
-                        <input type="number" style="width: 40px" min="0" id="{{ article.pk }}" onkeydown="return FilterNmberInput(event)" onpaste="handlePaste(event)" value="0">
+                      <td class="display_item">0</td>
+                      <td>
+                        <input type="number" style="width: 40px" min="0" id="{{ article.pk }}" name="{{article.pk}}" onkeydown="return FilterNmberInput(event)" onpaste="handlePaste(event)" value="0">
                         <div class="btn-group">
                           <a class="btn-white btn plus_button" data-pk ="{{ article.pk }}"><i class="fa fa-plus" aria-hidden="true"></i></a>
                           <a class="btn-white btn minus_button" data-pk ="{{ article.pk }}"><i class="fa fa-minus" aria-hidden="true"></i></a>
                           <a class="btn-white btn undo_button" data-pk ="{{ article.pk }}"><i class="fa fa-undo" aria-hidden="true"></i></a>
                         </div>
-                      </th>
+                      </td>
                     </tr>
                   {% endfor %}
                 </tbody>
@@ -153,6 +153,7 @@
             <input type="submit" class="btn btn-primary" name="registrar"
               id="register_button" value="Guardar Cambios">
             <a href="{{ url('internal:inventory.index') }}" class="btn btn-white">Cancelar</a>
+            <button>LeerTabla</button>
           </div>
         </div>
       </div>
@@ -235,5 +236,5 @@ $('.undo_button').on('click', function(){
 });
 
 </script>
-
+<script src="{{ static('js/manage_inventory.js') }}"></script>
 {% endblock custom_js %}

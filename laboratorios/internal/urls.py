@@ -361,6 +361,10 @@ urlpatterns = [
     url('^inventory/(?P<pk>\d+)/manage_content/?$',
         views.inventory.manage_content,
         name='inventory.manage_content'),
+    url('^inventory/(?P<pk>\d+)/save_article/$',
+        views.inventory.save_article,
+        name='inventory.save_article'),
+
 
     #
     # External Provider
