@@ -48,7 +48,7 @@
           </div>
             <div class="table-responsive">
             {% if  inventory.get_inventory_type_display() == inventory_types[0][1] %}
-              <table class="table table-striped table-bordered" id="inv-table">
+              <table class="table table-striped table-bordered" id="{{'inv-table'}}">
                 <thead>
                   <tr>
                     <th>N°</th>
@@ -92,7 +92,7 @@
                 </tbody>
               </table>
             {% elif inventory.get_inventory_type_display() == inventory_types[1][1] %}
-              <table  class="table table-striped table-bordered" >
+              <table  class="table table-striped table-bordered" id="{{'inv-table'}}">
                 <thead>
                   <tr>
                     <th>N°</th>

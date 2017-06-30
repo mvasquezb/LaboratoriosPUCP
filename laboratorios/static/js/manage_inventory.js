@@ -16,7 +16,10 @@ $(document).ready(function() {
       });
       //delete last part of url to get show_url
       var show_url= window.location.href.substring(0, window.location.href.lastIndexOf('/'));
-      window.location.replace(show_url);
+      //window.location.replace(show_url);
+      //window.location.reload(true);
+      $(location).attr("href", show_url);
+      $(location).reload();
     });
 
 } );
