@@ -7,8 +7,8 @@ from django.shortcuts import (
 )
 from ..models import *
 from ..views.forms import *
-from internal.permissions import user_passes_test
-from internal.permissions.serviceContract import *
+from ..permissions import user_passes_test
+from ..permissions.serviceContract import *
 
 
 @user_passes_test(index_service_contract_check, login_url='internal:index')
@@ -16,8 +16,10 @@ def index(request,
           template='internal/servicecontract/index.html',
           extra_context=None):
     contracts = ServiceContract.all_objects.filter(deleted__isnull=True)
+    states = ServiceContract.all_objects.filter(deleted__isnull=True)
     context = {
         'servicecontract_list': contracts,
+        'state_list': states,
     }
     if extra_context is not None:
         context.update(extra_context)
@@ -66,28 +68,41 @@ def delete(request, pk):
 def edit(request,
          pk,
          template='internal/servicecontract/edit.html'):
-
     service_contract = get_object_or_404(
         ServiceContract,
         pk=pk
     )
+
     request_id_mod = service_contract.request.pk
     service_request_mod = get_object_or_404(
         ServiceRequest.all_objects,
         pk=request_id_mod
     )
 
-    state = get_object_or_404(
-        ServiceRequestState.all_objects.filter(deleted__isnull=True),
-        description="Modificado"
-    )
-
-    service_request_mod.state = state  # Le asignamos el estado de "Modificado"
-    service_request_mod.save()
-
-    # Creamos el original, pero aun no lo guardamos
+    ## Creamos el original, pero aun no lo guardamos (pues puede darse el salir sin terminar de editar)
     service_request_ori = ServiceRequest.objects.get(pk=request_id_mod)
     service_request_ori.pk = None
+    # El original tendrá el estado original y ello me permitirá ver a que estado se pasará en caso se acepte o rechace
+
+
+    state_ori = get_object_or_404(
+        ServiceRequestState.all_objects.filter(deleted__isnull=True),
+        slug=service_request_mod.state.slug
+    )
+
+    # Definimos el estado de salida, según el estado de entrada
+    if service_request_mod.state.slug == "waiting_for_client_approval":
+        state_fin = get_object_or_404(
+            ServiceRequestState.all_objects.filter(deleted__isnull=True),
+            slug="wait_for_client_modification_approval"
+        )
+    else:
+        state_fin = get_object_or_404(
+            ServiceRequestState.all_objects.filter(deleted__isnull=True),
+            slug="wait_for_modification_approval"
+        )
+
+    service_request_mod.state = state_fin  # Le asignamos el estado de "Espera aprobación de modificación"
 
     #####################################################################
     service_request_form = ServiceRequestForm(
@@ -142,7 +157,7 @@ def edit(request,
             deleted__isnull=True
         )
     }
-
+    ###########################################################################
     # verificacion
     forms_verified = 0  # Means true lol
 
@@ -172,7 +187,8 @@ def edit(request,
             )
             service_request_mod.save()
 
-        service_request_ori.save()      # Guardamos el original
+        service_request_ori.state = state_ori
+        service_request_ori.save()  # Guardamos el original
         service_contract_modification = ServiceContractModification(
             contract=service_contract,
             description=service_request_ori.pk
@@ -210,15 +226,71 @@ def approve(request,
     service_request_Ori = get_object_or_404(
         ServiceRequest.all_objects, pk=idrequestOri)
 
-    # Se va a aprobar la modificacion por lo cual, el estado de dicho servicio
-    # será aprobado y el otro será borrado
+    if service_request_Ori.state.slug == "customer_review":
+        slug_fin = "approved"
+    # elif service_request_Ori.state.description == "Aprobada":
+    #    estado_fin = "Aprobada"
+    elif service_request_Ori.state.slug == "review_samples":
+        slug_fin = "in_process"
+    # elif service_request_Ori.state.description == "En espera de muestras":
+    #    estado_fin = "En espera de muestras"
+    elif service_request_Ori.state.slug == "waiting_for_client_approval":
+        slug_fin = "in_process"
+
     state = get_object_or_404(
         ServiceRequestState.all_objects.filter(deleted__isnull=True),
-        description="Aprobado"
+        slug=slug_fin
     )
-    service_request_Mod.state = state  # Le asignamos el estado de "Aprobado"
+    service_request_Mod.state = state  # Le asignamos el estado de "estado_fin"
     service_request_Mod.save()
-    service_request_Ori.delete()              # Borramos el servicio original
+    service_request_Ori.delete()  # Borramos el servicio original
+
+    # Borramos el registro de modificacion de contrato
+    service_contract_mod[0].delete()
+    # El modificado ya estaba asociado al contrato asi que no habrá más cambios
+
+    return redirect("internal:servicecontract.index")
+
+
+def approve_client_modification(request,
+                                pk, template='internal/servicecontract/index.html'):
+    # obtenemos todos las modificaciones que no han sido eliminados
+    all_contract_mods = ServiceContractModification.all_objects.filter(
+        deleted__isnull=True
+    )
+    # obtenemos el contrato modificado
+    service_contract_mod = get_list_or_404(
+        all_contract_mods,
+        contract=pk
+    )
+
+    idrequestMod = service_contract_mod[0].contract.request.pk
+    # Obtenemos el id del servicio original asociado al contrato
+    idrequestOri = int(service_contract_mod[0].description)
+
+    service_request_Mod = get_object_or_404(
+        ServiceRequest.all_objects, pk=idrequestMod)
+    service_request_Ori = get_object_or_404(
+        ServiceRequest.all_objects, pk=idrequestOri)
+
+    if service_request_Ori.state.slug == "customer_review":
+        slug_fin = "approved"
+    # elif service_request_Ori.state.description == "Aprobada":
+    #    estado_fin = "Aprobada"
+    elif service_request_Ori.state.slug == "review_samples":
+        slug_fin = "in_process"
+    # elif service_request_Ori.state.description == "En espera de muestras":
+    #    estado_fin = "En espera de muestras"
+    elif service_request_Ori.state.slug == "waiting_for_client_approval":
+        slug_fin = "in_process"
+
+    state = get_object_or_404(
+        ServiceRequestState.all_objects.filter(deleted__isnull=True),
+        slug=slug_fin
+    )
+    service_request_Mod.state = state  # Le asignamos el estado de "estado_fin"
+    service_request_Mod.save()
+    service_request_Ori.delete()  # Borramos el servicio original
 
     # Borramos el registro de modificacion de contrato
     service_contract_mod[0].delete()
@@ -246,12 +318,24 @@ def refuse(request,
     # Se va a rechazar la modificacion por lo cual, pasaremos todos los datos
     # del original al modificado
 
+    # Le asignamos un estado de salida de acuerdo a como ingreso
+    if service_request_Ori.state.slug == "customer_review":  # "Revisión del cliente"
+        slug_fin = "customer_review"  # "Revisión del cliente"
+    # elif service_request_Ori.state.description == "Aprobada":
+    #    estado_fin =                                   # "En espera de muestras"
+    elif service_request_Ori.state.slug == "review_samples":
+        slug_fin = "wait_for_samples"
+    # elif service_request_Ori.state.description == "En espera de muestras":
+    #    estado_fin = "En espera de muestras"
+    elif service_request_Ori.state.slug == "waiting_for_client_approval":
+        slug_fin = "completed"
+
     state = get_object_or_404(
         ServiceRequestState.all_objects.filter(deleted__isnull=True),
-        description="Aprobado"
+        slug=slug_fin
     )
 
-    service_request_Ori.state = state  # Le asignamos el estado de "Aprobado"
+    service_request_Ori.state = state  # Le asignamos el estado de "estado_fin"
     service_request_Mod.client = Client.objects.get(
         pk=service_request_Ori.client.pk)
     service_request_Mod.supervisor = Employee.objects.get(
@@ -264,13 +348,26 @@ def refuse(request,
         service_request_Mod.external_provider = get_object_or_404(ExternalProvider.all_objects,
                                                                   pk=service_request_Ori.external_provider.pk)
 
-    service_request_Mod.observations = service_request_Ori.observations                 # cadena
-    service_request_Mod.expected_duration = service_request_Ori.expected_duration       # integer
+    service_request_Mod.observations = service_request_Ori.observations  # cadena
+    service_request_Mod.expected_duration = service_request_Ori.expected_duration  # integer
 
-    service_request_Mod.save()      # Guardamos los cambios
+    service_request_Mod.save()  # Guardamos los cambios
 
     service_request_Ori.delete()
     # Borramos el registro de modificacion de contrato
     service_contract_mod[0].delete()
 
     return redirect("internal:servicecontract.index")
+
+
+def cancel(request, pk):
+    servicecontract = get_object_or_404(ServiceContract.all_objects, pk=pk)
+    servicerequest = get_object_or_404(
+        ServiceRequest.all_objects,
+        pk=servicecontract.request.pk
+    )
+    state_fin = get_object_or_404(ServiceRequestState.all_objects, slug="canceled")
+    servicerequest.state = state_fin
+    servicerequest.save()
+
+    return redirect('internal:servicecontract.index')
