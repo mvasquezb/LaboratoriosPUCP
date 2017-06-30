@@ -8512,3 +8512,8 @@ body.md-skin {
 }
 
 .provider-service-table { max-height: 350px; }
+
+.legend-icons.list-inline li:not(:last-child):after {
+  content: "|";
+  margin-left: 5px;
+}
