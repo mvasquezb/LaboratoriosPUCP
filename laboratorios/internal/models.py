@@ -182,6 +182,7 @@ class EssayMethod(SafeDeleteModel):
     audit_log = AuditlogHistoryField()
     name = models.CharField(max_length=100)
     description = models.CharField(max_length=100, null=True, blank=True)
+    acreditado = models.NullBooleanField(null=True, blank=True,default=False)
     price = models.FloatField()
     parameters = models.ManyToManyField(
         'EssayMethodParameter',
@@ -241,6 +242,7 @@ class EssayFill(SafeDeleteModel):
     essay = models.ForeignKey(Essay)
     sample = models.ForeignKey('Sample')
     quantity = models.PositiveIntegerField(default=0)
+    observations = models.CharField(max_length=500, null=True, blank=True,default="")
     quotation = models.ForeignKey(
         'Quotation',
         related_name='essay_fills',
@@ -299,6 +301,7 @@ class EssayMethodFill(SafeDeleteModel):
         related_name='essay_methods'
     )
     essay = models.ForeignKey(EssayFill)
+    observations = models.CharField(max_length=500, null=True, blank=True,default="")
     external_provider = models.ForeignKey(
         'ExternalProvider',
         null=True,
@@ -415,6 +418,7 @@ class ServiceRequest(SafeDeleteModel):
     state = models.ForeignKey('ServiceRequestState')
     external_provider = models.ForeignKey(
         'ExternalProvider', null=True, blank=True)
+    description = models.CharField(max_length=100, null=True, blank=True,default="")
     observations = models.CharField(max_length=500, null=True, blank=True)
     expected_duration = models.IntegerField(default=10)
     registered_date = models.DateTimeField(
@@ -549,6 +553,8 @@ class Sample(SafeDeleteModel):
     code = models.CharField(max_length=10)
     name = models.CharField(max_length=50, default="default")
     sample_type = models.ForeignKey(SampleType)
+    description = models.CharField(max_length=100, null=True, blank=True,default="")
+    observations = models.CharField(max_length=500, null=True, blank=True,default="")
     request = models.ForeignKey(ServiceRequest, on_delete=models.CASCADE)
     inventory = models.ForeignKey('Inventory', on_delete=models.CASCADE)
     registered_date = models.DateTimeField(
