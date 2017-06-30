@@ -265,7 +265,8 @@ def approve(request,
 
 
 def approve_client_modification(request,
-                                pk, template='internal/servicecontract/index.html'):
+                                pk, slug_state):
+
     # obtenemos todos las modificaciones que no han sido eliminados
     all_contract_mods = ServiceContractModification.all_objects.filter(
         deleted__isnull=True
@@ -285,20 +286,9 @@ def approve_client_modification(request,
     service_request_Ori = get_object_or_404(
         ServiceRequest.all_objects, pk=idrequestOri)
 
-    if service_request_Ori.state.slug == "customer_review":
-        slug_fin = "approved"
-    # elif service_request_Ori.state.description == "Aprobada":
-    #    estado_fin = "Aprobada"
-    elif service_request_Ori.state.slug == "review_samples":
-        slug_fin = "in_process"
-    # elif service_request_Ori.state.description == "En espera de muestras":
-    #    estado_fin = "En espera de muestras"
-    elif service_request_Ori.state.slug == "waiting_for_client_approval":
-        slug_fin = "in_process"
-
     state = get_object_or_404(
-        ServiceRequestState.all_objects.filter(deleted__isnull=True),
-        slug=slug_fin
+        ServiceRequestState,
+        slug = slug_state
     )
     service_request_Mod.state = state  # Le asignamos el estado de "estado_fin"
     service_request_Mod.save()
