@@ -15,7 +15,6 @@
     <div class="col-lg-12">
       <div class="ibox float-e-margins">
         <div class="ibox-content">
-          {% csrf_token %}
           <h3><strong>Criterios y Filtros</strong></h3>
           <div class="row custom-row-report">
             <label class="col-sm-2 control-label">Rango de Fechas</label>
@@ -37,7 +36,7 @@
               {% for criteria in criteria_string %}
               <div class="col-sm-12 col-md-3 group-filter-conteiner">
                 <label>{{ criteria }}</label>
-                <input type="checkbox" class="i-checks" id="p_{{ loop.index0 }}" name="input" value="check" onclick="checkMe(this.id)">
+                <input type="radio" class="i-checks checkbox_filters" id="p_{{ loop.index0 }}" data-index="{{ loop.index0 }}" name="radio" >
               </div>
               {% endfor %}
             </div>
@@ -53,23 +52,24 @@
               {% for single_filter in filter %}
               <div class="col-md-3 group-filter-conteiner">
                 <label class="custom-filter-label">{{ filter_string[single_filter] }}</label>
-                <select class="custom-multiselect" name="l_{{ loop.index0 }}" multiple="multiple">
+                <select class="custom-multiselect" id="l_{{ loop.index0 }}" multiple="multiple">
                   {% for data in data_list[single_filter] %}
-                  <option value="{{ data }}">{{ data }}</option>
+                  <option value="{{ data.str }}">{{ data.str }}</option>
                   {% endfor %}
                 </select>
               </div>
               {% endfor %}
             </div>
           </div>
-          <div class="row">
-            <div id=submitInfo class="col-md-6">
-              <a class="btn btn-primary pull-right" onclick=sendMe() >
-              <i class="fa fa-plus"></i>
-              Generar Reporte
-              </a>
-            </div>
+          <form id="json_form" novalidate action="{{ url('internal:reports.start') }}" method="post">
+    {% csrf_token %}
+          <div id="json_div" style="display: none;">
+            <p><label for="id_js_data">js_data:</label> <input type="text" name="js_data" maxlength="1024" id="id_js_data"/></p>
           </div>
+          <div class="row">
+            <input type="submit" id="submit_button" value="Generar Reporte" class="btn btn-primary">
+          </div>
+        </form>
         </div>
       </div>
     </div>
@@ -83,7 +83,16 @@
 <script type="text/javascript" src="{{static('js/moment.js')}}"></script>
 <script type="text/javascript" src="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.js"></script>
 <script>
-$(function () {
+
+
+
+
+$(document).ready(function () {
+  $('.custom-multiselect').multiselect({
+    nonSelectedText: 'Seleccione una opción'
+  });
+
+  $(function () {
   var start = moment().subtract(29, 'days');
   var end = moment();
 
@@ -106,11 +115,7 @@ $(function () {
 
   cb(start, end);
 
-});
-</script>
-<script>
-$(document).ready(function () {
-  $('.custom-multiselect').multiselect();
+    });
 
   function getCookie(name) {
     var cookieValue = null;
@@ -127,120 +132,56 @@ $(document).ready(function () {
     }
     return cookieValue;
   }
+
   var csrftoken = getCookie('csrftoken');
   var criteria_string = {{ criteria_string | safe }};
-  for (var k = 0; k < criteria_string.length; k++) {
-    tag = '';
-    tag = tag + '<div class="col-md-3 group-filter-conteiner">'
-    tag = tag + '<label>' + criteria_string[k] + '</label>';
-    tag = tag + '<input type="checkbox" class="i-checks" id=p_' + k + ' name="input" value="check" onclick=checkMe(this.id) >';
-    tag = tag + '</div>';
-    $('#criteriaInsertion').append(tag);
-  }
-
   var filter = {{ filter | safe }};
   var filter_string = {{ filter_string | safe }};
-  var data_list = {{ data_list | safe }};
-  for (var i = 0; i < filter.length; i++) {
-    console.log(data_list[filter[i]]);
-    // For the css to actually work, we need to append html with all the sections closed beforehand
-    tag = '';
-    tag = tag + '<label class="col-sm-1 control-label">' + filter_string[filter[i]] + '</label>';
-    tag = tag + '<div class="col-md-1">'
-    tag = tag + '<input id=s_' + i + ' type="checkbox" name="input" value="check" onclick=checkMe(this.id) > Seleccionar Filtro ';
-    tag = tag + '</div>';
-    tag = tag + '<div class="col-md-4">';
-    tag = tag + '<div id=list_' + i.toString() + ' class="form-group hidden">';
-    tag = tag + '<label>Seleccione l@s ' + filter_string[filter[i]] + 's: </label>';
-    tag = tag + '<div class="table-responsive">';
-    tag = tag + '<table class="table table-striped table-bordered permission_table">';
-    tag = tag + '<thead>';
-    tag = tag + '<tr>';
-    tag = tag + '<th>Nombre de ' + filter_string[filter[i]] + '</th>';
-    tag = tag + '<th>Selección</th>';
-    tag = tag + '</tr>';
-    tag = tag + '</thead>';
-    tag = tag + '<tbody id=body_' + i.toString() + ' >';
-    for (var j = 0; j < data_list[filter[i]].length; j++) {
-      tag = tag + '<tr>';
-      tag = tag + '<td>' + data_list[filter[i]][j] + '</td>';
-      tag = tag + '<td><input id=s_input_' + i.toString() + '_' + j.toString() + ' type="checkbox" name="value" class="i-checks checkbox_role"></td>';
-      tag = tag + '</tr>';
+  
 
-    }
-    tag = tag + '</tbody>';
-    tag = tag + '</table>';
-
-    tag = tag + '</div>';
-    tag = tag + '</div>';
-    tag = tag + '</div>';
-    tag = tag + '<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>';
-
-    $('#filterInsertion').append(tag);
-  }
-
-  checkMe = function (id) {
-    console.log(document.getElementById(id).checked);
-    // Check the other one for same filter
-    console.log(id[0]);
-    if (id[0] == 'p') {
-      //document.getElementById(id.replace('p','s')).checked=false;
-
-      // Check if another filter is checked as main one
-      for (var i = 0; i < filter.length; i++) {
-        if (i != parseInt(id.replace('p_', ''))) {
-          document.getElementById('p_' + i.toString()).checked = false;
-        }
-      }
-    } else {
-      //document.getElementById(id.replace('s','p')).checked=false;
-      if (document.getElementById(id).checked == false) {
-        $('#list_' + id[2]).addClass('hidden');
-      } else {
-        $('#list_' + id[2]).removeClass('hidden');
-      }
-    }
-  }
-
-  sendMe = function () {
+  $('#submit_button').click(function() {
     var sending_string = '';
     var criteria_index = 0;
-    for (var i = 0; i < criteria_string.length; i++) {
-      if (document.getElementById('p_' + i.toString()).checked) {
+    var selected_filters=[];
 
-        break;
-      } else {
-        criteria_index++;
-      }
+    criteria_index = $('input[type=radio]:checked').attr('data-index');
+    if (criteria_index) {
+      criteria_index = parseInt(criteria_index);
+    } else {
+      toastr.options = {
+          closeButton: true,
+          progressBar: true,
+          showMethod: 'slideDown',
+          timeOut: 4000
+      };
+      toastr.error('Debe selecionar un criterio de agrupación');
+
+      return false;
     }
-    sending_string = sending_string + criteria_index.toString() + '_'
 
     for (var i = 0; i < filter.length; i++) {
-      if (document.getElementById('s_' + i.toString()).checked) {
-        sending_string = sending_string + 'es_1_';
-        for (var j = 0; j < data_list[filter[i]].length; j++) {
-          if (document.getElementById('s_input_' + i.toString() + '_' + j.toString()).checked) {
-            sending_string = sending_string + 'e_' + i.toString() + '_' + j.toString() + '_';
-          }
+      if ($('#l_'+i.toString()+' option:selected').length > 0) {
+        var aux_list=$('#l_'+i.toString()+' option:selected').map(function(a,item){return item.index; });
+        var ready_list=[];
+        for (var j=0; j<aux_list.length;j++) {
+          ready_list.push(aux_list[j]);
         }
-        sending_string = sending_string + 'ef_';
+        selected_filters.push(ready_list);
       } else {
-        sending_string = sending_string + 'es_0_';
+        selected_filters.push([]);
       }
     }
-    console.log(sending_string);
-    //uploadData(sending_string);
-  }
 
-  function uploadData(insert_data) {
-    var data = {
-      js_data: insert_data,
-      csrfmiddlewaretoken: csrftoken
-    };
-    $.post('/internal/reports/start', JSON.stringify(data), function (response) {
-      console.log(data['csrfmiddlewaretoken'])
-    });
-  }
+    var startDate = $('#reportrange').data('daterangepicker').startDate._d;
+    var endDate = $('#reportrange').data('daterangepicker').endDate._d;
+    var sending_dict = {
+        criteria: criteria_index,
+        start_date:startDate,
+        end_date:endDate,
+        filters_data:selected_filters,
+    }
+    document.getElementById('id_js_data').value=JSON.stringify(sending_dict);
+  });
 });
 </script>
 {% endblock custom_js %}

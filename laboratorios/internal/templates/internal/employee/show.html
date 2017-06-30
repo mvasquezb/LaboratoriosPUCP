@@ -37,7 +37,7 @@
                         </div>
                         <div class="col-lg-6">
                             <div class="form-group">
-                                <label>Seleccione los roles: </label>
+                                <label>Roles: </label>
                                 <div class="table-responsive">
                                     <table class="table table-striped table-bordered table-hover dataTables-example permission_table">
                                       <thead>
@@ -48,31 +48,20 @@
                                       <tbody>
                                         {% for role in selected_roles %}
                                           <tr>
-                                            <td>{{ role.name }}</td>                                            
+                                            <td>{{ role.name }}</td>
                                           </tr>
                                         {% endfor %}
                                       </tbody>
                                     </table>
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <label>Laboratorios: </label>
-                                <div class="table-responsive">
-                                    <table class="table table-striped table-bordered permission_table">
-                                      <thead>
-                                        <tr>
-                                          <th class="first-table-column">Nombre</th>
-                                        </tr>
-                                      </thead>
-                                      <tbody>
-                                        {% for laboratory in selected_laboratories %}
-                                          <tr>
-                                            <td>{{ laboratory.name }}</td>
-                                          </tr>
-                                        {% endfor %}
-                                      </tbody>
-                                    </table>
+                            <div class="row">
+                              <div class="col-md-5">
+                                <div class="form-group">
+                                  <label>Laboratorio: </label>
+                                  <input class="form-control" type="text" value="{% if custom_employee.laboratory %}{{ custom_employee.laboratory.name }}{% else %}-{% endif %}" disabled="">
                                 </div>
+                              </div>
                             </div>
                         </div>
                     </div>

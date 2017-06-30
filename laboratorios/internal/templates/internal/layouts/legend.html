@@ -6,18 +6,18 @@
     <div class="ibox-content">
       <nav>
         <label>Leyenda</label>
-        <div class="legend-icons">
+        <ul class="legend-icons list-inline">
           {% if show_eye %}
-            <i class="fa fa-eye" aria-hidden="true"></i> Visualizar |
+            <li><i class="fa fa-eye" aria-hidden="true"></i> Visualizar</li>
           {% endif %}
           {% if show_edit %}
-            <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Editar |
+            <li><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Editar</li>
           {% endif %}
           {% if show_delete %}
-            <i class="fa fa-trash-o" aria-hidden="true"></i> Eliminar
+            <li><i class="fa fa-trash-o" aria-hidden="true"></i> Eliminar</li>
           {% endif %}
           {% block extra_legend %}{% endblock extra_legend %}
-        </div>
+        </ul>
       </nav>
     </div>
   </div>

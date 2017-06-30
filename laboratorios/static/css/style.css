@@ -8354,10 +8354,19 @@ body.md-skin {
     width: 300px; /* Could be more or less, depending on screen size */
 }
 
+.modal1 .modal-content.modal-report {
+    width: 500px;
+}
+
 .modeal-center-content {
   width: 200px;
   margin: 0 auto;
 }
+
+.modal-report .modeal-center-content {
+  width: 400px;
+}
+
 /* The Close Button */
 .close {
     color: #aaa;
@@ -8503,3 +8512,8 @@ body.md-skin {
 }
 
 .provider-service-table { max-height: 350px; }
+
+.legend-icons.list-inline li:not(:last-child):after {
+  content: "|";
+  margin-left: 5px;
+}

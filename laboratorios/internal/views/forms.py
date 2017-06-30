@@ -3,7 +3,10 @@ from django.utils.translation import ugettext_lazy as _
 from django.forms import (
     ModelForm,
 )
-from django.forms import inlineformset_factory
+from django.forms import (
+    inlineformset_factory,
+    modelformset_factory,
+)
 # from django.forms.models import BaseInlineFormSet
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
@@ -15,22 +18,22 @@ import copy
 
 
 class EmployeeForm(ModelForm):
-    laboratories = forms.ModelMultipleChoiceField(
+    laboratory = forms.ModelChoiceField(
         queryset=Laboratory.all_objects.filter(deleted__isnull=True)
     )
 
     def __init__(self, *args, **kwargs):
         super(EmployeeForm, self).__init__(*args, **kwargs)
         self.fields['roles'].required = False
-        self.fields['laboratories'].required = False
+        self.fields['laboratory'].required = False
 
     class Meta:
         model = Employee
-        fields = ['roles', 'laboratories']
+        fields = ['roles', 'laboratory']
 
-    def _save_m2m(self, *args, **kwargs):
-        super(EmployeeForm, self)._save_m2m(*args, **kwargs)
-        self.instance.laboratories.set(self.cleaned_data['laboratories'])
+    # def _save_m2m(self, *args, **kwargs):
+    #     super(EmployeeForm, self)._save_m2m(*args, **kwargs)
+    #     self.instance.laboratories.set(self.cleaned_data['laboratories'])
 
 
 class UserCreationForm(auth_forms.UserCreationForm):
@@ -82,6 +85,13 @@ class SampleForm(ModelForm):
     class Meta:
         model = Sample
         fields = ['name', 'sample_type', 'inventory', 'request', 'essay_field']
+        labels = {
+            'name': 'Nombre',
+            'sample_type': 'Tipo de Muestra',
+            'inventory': 'Inventario',
+            'request': 'Orden de Servicio',
+            'essay_field': 'Método de Ensayo',
+        }
 
     def save(self, commit=True):
         sample = super(SampleForm, self).save(commit=commit)
@@ -168,12 +178,22 @@ class SampleEditForm(ModelForm):
     class Meta:
         model = Sample
         fields = ['name', 'sample_type', 'inventory']
+        labels = {
+            'name': 'Nombre',
+            'sample_type': 'Tipo de Muestra',
+            'inventory': 'Inventario',
+            # 'request': 'Orden de Servicio',
+            'Essay_field': 'Método de Ensayo',
+        }
 
 
 class EssayFillSelectionForm(ModelForm):
     class Meta:
         model = EssayFill
         fields = ['essay']
+        labels = {
+            'essay': 'Ensayo',
+        }
 
     def save(self, commit=True):
         # verify that methods belong to particular essay
@@ -182,11 +202,11 @@ class EssayFillSelectionForm(ModelForm):
             deleted__isnull=True,
             pk=self.data['essay']
         )
-        EssayFill.all_objects.filter(
+        essay_fills = EssayFill.all_objects.filter(
             deleted__isnull=True,
             essay=myself.essay
         )
-        methods_count = essay_fills
+        methods_count = essay_fills.count()
         essay_methods = EssayMethod.all_objects.filter(
             deleted__isnull=True,
             essays=essay
@@ -225,9 +245,17 @@ class ServiceAssignEmployeeForm(forms.Form):
 
 
 class LaboratoryForm(ModelForm):
+    employees = forms.ModelMultipleChoiceField(
+        queryset=Employee.all_objects.filter(deleted__isnull=True)
+    )
+
     class Meta:
         model = Laboratory
         exclude = []
+
+    def _save_m2m(self, *args, **kwargs):
+        super(LaboratoryForm, self)._save_m2m(*args, **kwargs)
+        self.instance.employees.set(self.cleaned_data['employees'])
 
 
 class SampleTypeForm(ModelForm):
@@ -297,3 +325,24 @@ class ExternalProviderForm(ModelForm):
             'name': 'Nombre',
             'description': 'Descripción',
         }
+
+
+class ExtraRequestConceptForm(ModelForm):
+    class Meta:
+        model = ExtraRequestConcept
+        fields = ('description', 'amount', 'quantity')
+        labels = {
+            'description': 'Descripción',
+            'amount': 'Monto',
+            'quantity': 'Cantidad',
+            'quotation': 'Cotización',
+        }
+
+
+ExtraRequestConceptFormset = inlineformset_factory(
+    Quotation,
+    ExtraRequestConcept,
+    form=ExtraRequestConceptForm,
+    extra=1,
+    can_delete=True
+)

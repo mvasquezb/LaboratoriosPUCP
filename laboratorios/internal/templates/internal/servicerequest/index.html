@@ -26,10 +26,12 @@
               </div>
             </div>
             <div class="col-md-4 col-md-offset-5 text-right">
+              {% if perms.internal.add_servicerequest %}
               <a class="btn btn-primary" href="{{ url('internal:servicerequest.select_client') }}">
                 <i class="fa fa-plus"></i>
                 Crear Solicitud
               </a>
+              {% endif %}
               <a class="btn btn-primary" href="{{ url('internal:servicerequest.workload_view_per_request') }}">
                 <i class="fa fa-search"></i>
                 Ver Carga Laboral
@@ -64,48 +66,50 @@
                 <td>{{ servicerequest.supervisor }}</td>
                 <td>
                   {% if servicerequest.deleted %}
-                  Eliminado
-
-
+                    Eliminado
                   {% else %}
-                  {{ servicerequest.state.description }}
+                    {{ servicerequest.state.description }}
                   {% endif %}
                 </td>
-                <td class="text-left">
-                  <div class="btn-group">
-                    <a href="{{ url('internal:servicerequest.show', servicerequest.id) }}" class="btn-white btn"
-                       title="Visualizar">
-                      <i class="fa fa-eye" aria-hidden="true"></i>
-                    </a>
-                    {% if not servicerequest.deleted %}
-                    <a href="{{ url('internal:servicerequest.edit', servicerequest.id) }}" class="btn-white btn"
-                       title="Editar">
-                      <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
-                    </a>
-                    <a class="myBtn1 btn-white btn" data-toggle="modal" data-target="#myModal1"
-                       data-url="{{ url('internal:servicerequest.delete', servicerequest.id) }}" title="Eliminar">
-                      <i class="fa fa-trash-o" aria-hidden="true"></i>
-                    </a>
-                    <a class="btn-white btn" href="{{ url('internal:servicerequest.approve', servicerequest.id) }}">
-                      Aprobar
-                    </a>
-                    <a href="{{ url('internal:serviceRequest.attachmentList', servicerequest.id) }}"
-                       class="btn-white btn" title="Archivos Adjuntos">
-                      <i class="fa fa-paperclip" aria-hidden="true"></i>
-                    </a>
-                    <a href="{{ url('internal:servicerequest.reportGenerator', servicerequest.id) }}"
-                       class="btn-white btn" title="Reporte Interno">
-                      <i class="fa fa-table" aria-hidden="true"></i>
-                    </a>
-                    <a href="{{ url('internal:servicerequest.finalReport', servicerequest.id) }}" class="btn-white btn"
-                       title="Reporte Final">
-                      <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
-                    </a>
-                    {# {% endif %} ####################################################}
-                  </div>
-                </td>
-              </tr>
-              {% endif %}
+                    <td class="text-left">
+                      <div class="btn-group">
+                        {% if perms.internal.show_servicerequest %}
+                        <a href="{{ url('internal:servicerequest.show', servicerequest.id) }}" class="btn-white btn" title="Visualizar">
+                          <i class="fa fa-eye" aria-hidden="true"></i>
+                        </a>
+                        {% endif %}
+                        {% if not servicerequest.deleted %}
+                          {% if perms.internal.change_servicerequest %}
+                          <a href="{{ url('internal:servicerequest.edit', servicerequest.id) }}" class="btn-white btn" title="Editar">
+                            <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                          </a>
+                          {% endif %}
+                          {% if perms.internal.delete_servicerequest %}
+                          <a class="myBtn1 btn-white btn" data-toggle="modal" data-target="#myModal1" data-url="{{ url('internal:servicerequest.delete', servicerequest.id) }}" title="Eliminar">
+                            <i class="fa fa-trash-o" aria-hidden="true"></i>
+                          </a>
+                          {% endif %}
+                          <a class="btn-white btn" href="{{ url('internal:servicerequest.approve', servicerequest.id) }}">
+                            Aprobar
+                          </a>
+                        {% endif %}
+                        <a href="{{ url('internal:serviceRequest.attachmentList', servicerequest.id) }}" class="btn-white btn" title="Archivos Adjuntos">
+                          <i class="fa fa-paperclip" aria-hidden="true"></i>
+                        </a>
+                        <a href="{{ url('internal:servicerequest.reportGenerator', servicerequest.id) }}" class="btn-white btn" title="Reporte Interno">
+                          <i class="fa fa-table" aria-hidden="true"></i>
+                        </a>
+                        <a href="{{ url('internal:servicerequest.finalReport', servicerequest.id) }}" class="btn-white btn" title="Reporte Final">
+                          <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
+                        </a>
+                        {% if servicerequest.state.slug == "review_samples" %}
+                          <a class="btn-white btn" href="{{ url('internal:inventoryItem.showRequest', servicerequest.id) }}">
+                            Aprobar Muestras
+                          </a>
+                        {% endif %}
+                      </div>
+                    </td>
+                  </tr>
               {% endfor %}
               </tbody>
             </table>

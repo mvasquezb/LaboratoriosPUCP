@@ -63,7 +63,7 @@
 
 {% block custom_js %}
 <script>
-var user_name = '{{ user }}';
+var user_name = '{{ user.basicuser }}';
 
 if (!$('.message-container .messages li').length) {
   showToastr('Bienvenido ' + user_name, 'success', 'Sistema de Gestión de Laboratorios IC-PUCP');
