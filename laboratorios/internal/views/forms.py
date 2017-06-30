@@ -174,6 +174,9 @@ class EssayMethodFillChosenForm(ModelForm):
     class Meta:
         model = EssayMethodFill
         fields = ['chosen', ]
+        labels={
+        'chosen':'Escoger'
+        }
 
 
 class SampleEditForm(ModelForm):
