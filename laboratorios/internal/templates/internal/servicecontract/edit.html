@@ -6,6 +6,7 @@
 <style>
 .alert { display: none; }
 
+
 </style>
 {% endblock custom_css %}
 
@@ -40,7 +41,7 @@
                   <select name="client" data-error="Este campo es obligatorio" required="" id="id_client"
                           class="form-control">
                     {% for client in clients %}
-                    <option value="{{ client.id }}">{{ client }}</option>
+                    <option {% if service_request.client.id == client.id %}selected{% endif %} value="{{ client.id }}">{{ client }}</option>
                     {% endfor %}
                   </select>
                   <div class="help-block with-errors"></div>

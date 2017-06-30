@@ -26,12 +26,14 @@
                 </span>
               </div>
             </div>
+            {% if perms.internal.add_supply %}
             <div class="col-md-2 col-md-offset-7 text-right">
               <a class="btn btn-primary " href="{{ url('internal:supply.create') }}">
                 <i class="fa fa-plus"></i>
                 Crear Suministro
               </a>
             </div>
+            {% endif %}
           </div>
         <div class="table-responsive">
             <table class="table table-striped table-bordered" id="supply-table">
@@ -71,10 +73,16 @@
                     </td>
                     <td class="text-left footable-visible footable-last-column">
                       <div class="btn-group">
+                        {% if perms.internal.show_supply %}
                         <a  href="{{ url('internal:supply.show', supply.id) }}" class="btn-white btn"><i class="fa fa-eye" aria-hidden="true"></i></a>
+                        {% endif %}
                         {% if not supply.deleted %}
-                        <a  href="{{ url('internal:supply.edit', supply.id) }}" class="btn-white btn"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
-                        <a class="myBtn1 btn-white btn" data-toggle="modal" data-target="#myModal1" data-url="{{ url('internal:supply.delete', supply.id) }}"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+                          {% if perms.internal.change_supply %}
+                          <a  href="{{ url('internal:supply.edit', supply.id) }}" class="btn-white btn"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+                          {% endif %}
+                          {% if perms.internal.delete_supply %}
+                          <a class="myBtn1 btn-white btn" data-toggle="modal" data-target="#myModal1" data-url="{{ url('internal:supply.delete', supply.id) }}"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+                          {% endif %}
                         {% endif %}
                       </div>
                     </td>

@@ -208,7 +208,8 @@ def client_group(request,context,settings):
         'end_date':end_date,
         'data_labels':table_label,
         'results':results,
-        'service_index' : -1
+        'service_index' : -1,
+        'service_matrix' : service_matrix
         }
 
 
@@ -289,7 +290,8 @@ def sample_group(request, context,settings):
         'end_date':end_date,
         'data_labels':table_label,
         'results':results,
-        'service_index' : -1
+        'service_index' : -1,
+        'service_matrix' : service_matrix
         }
 
     return context
