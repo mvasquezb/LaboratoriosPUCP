@@ -186,7 +186,7 @@ urlpatterns = [
     url('^servicecontract/approve/(?P<pk>\d+)$',
         views.servicecontract.approve,
         name='servicecontract.approve'),
-    url('^servicecontract/approve_client_modification/(?P<pk>\d+)$',
+    url('^servicecontract/approve_client_modification/(?P<pk>\d+)/(?P<slug_state>\w+)/?$',
         views.servicecontract.approve_client_modification,
         name='servicecontract.approve_client_modification'),
     url('^servicecontract/refuse/(?P<pk>\d+)$',

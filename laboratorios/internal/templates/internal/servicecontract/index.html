@@ -81,8 +81,16 @@
                       class="fa fa-eye" aria-hidden="true"></i></a>
 
                       {##### AQUI ####}
-                      <a class="btn-white btn"
-                       href="{{ url('internal:servicecontract.approve', servicecontract.id) }}">Aprobar</a>
+
+                      <a class="myBtnApprove btn-white btn" data-toggle="modal"  id="Approve1"
+                       data-url1="{{ url('internal:servicecontract.approve_client_modification', servicecontract.id, "in_process") }}"
+                       >Aprobar</a>
+
+                    <a class="myBtnApprove btn-white btn" data-toggle="modal"  id="Approve2"  style="display: none;"
+                       data-url2="{{ url('internal:servicecontract.approve_client_modification', servicecontract.id, "wait_for_samples") }}"
+                       >Aprobar2222</a>
+
+
                       {##### AQUI ####}
 
                       <a class="btn-white btn"
@@ -91,6 +99,7 @@
                     {% elif servicecontract.request.state.slug == "canceled" %}
                       <a href="{{ url('internal:servicecontract.show', servicecontract.id) }}" class="btn-white btn"><i
                       class="fa fa-eye" aria-hidden="true"></i></a>
+
                     {% else %}  {# Para cualquier otro estado #}
                       <a href="{{ url('internal:servicecontract.show', servicecontract.id) }}" class="btn-white btn"><i
                       class="fa fa-eye" aria-hidden="true"></i></a>
@@ -125,6 +134,19 @@
   </div>
 </div>
 
+<div id="myModalApproveCuadro" class="modal1">
+  <!-- Modal content -->
+  <div class="modal-content">
+    <span class="span-close close">&times;</span>
+    <div class="modeal-center-content">
+      <p>Escoja el estado deseado: </p>
+      <button type="button" onClick="slug('in_process')" class="slug-in_process btn btn-primary">En proceso</button>
+      <button type="button" onClick="slug('wait_for_samples')" class="slug-wait_for_samples btn btn-primary">En espera de muestras</button>
+      <button type="button" class="span-close btn btn-danger">Cancelar</button>
+
+    </div>
+  </div>
+</div>
 
 {% endblock page_content %}
 
@@ -150,6 +172,8 @@ $(document).ready(function() {
 
 </script>
 <script>
+
+
 $( document ).ready(function() {
   $(".myBtn1").click(function() {
     $("#myModal1").show();
@@ -162,6 +186,25 @@ $( document ).ready(function() {
   $(".span-close").click(function() {
     $("#myModal1").hide();
   });
+
+
+
+$(".myBtnApprove").click(function() {
+    $("#myModalApproveCuadro").show();
+    var in_process = $("#Approve1").attr("data-url1");
+    var wait_for_samples = $("#Approve2").attr("data-url2");
+    $(".slug-in_process").click(function() {
+      window.location.href = in_process;
+    });
+    $(".slug-wait_for_samples").click(function() {
+      window.location.href = wait_for_samples;
+    });
+  });
+
+  $(".span-close").click(function() {
+    $("#myModalApproveCuadro").hide();
+  });
+
 
 
 });
