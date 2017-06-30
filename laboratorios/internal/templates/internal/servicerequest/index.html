@@ -7,6 +7,16 @@
 {% endblock custom_css %}
 
 {% block page_content %}
+{% block custom_js1 %}
+<script type="text/javascript">  
+    function printId(IdValue){
+      console.log("prueba")
+      console.log(IdValue);
+      document.getElementById("btnEdit_" + IdValue).style.display="none";
+      return IdValue;
+      }
+  </script>
+{% endblock custom_js1 %}
 <div class="row border-bottom white-bg dashboard-header">
     <div class="col-md-6">
         <h2><strong>Lista de Solicitudes Existentes</strong></h2>
@@ -93,26 +103,26 @@
                         {% endif %}
                         {% if not servicerequest.deleted %}
                           {% if perms.internal.change_servicerequest %}
-                          <a  href="{{ url('internal:servicerequest.edit', servicerequest.id) }}" class="btn-white btn" title="Editar">
-                            <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                          <a id = "btnEdit_{{servicerequest.id}}" href="{{ url('internal:servicerequest.edit', servicerequest.id) }}" class="btn-white btn" title="Editar">
+                            <i  class="fa fa-pencil-square-o" aria-hidden="true"></i>
                           </a>
                           {% endif %}
                           {% if perms.internal.delete_servicerequest %}
-                          <a class="myBtn1 btn-white btn" data-toggle="modal" data-target="#myModal1" data-url="{{ url('internal:servicerequest.delete', servicerequest.id) }}" title="Eliminar">
-                            <i class="fa fa-trash-o" aria-hidden="true"></i>
+                          <a id = "btnDelete_{{servicerequest.id}}" class="myBtn1 btn-white btn" data-toggle="modal" data-target="#myModal1" data-url="{{ url('internal:servicerequest.delete', servicerequest.id) }}" title="Eliminar">
+                            <i  class="fa fa-trash-o" aria-hidden="true"></i>
                           </a>
                           {% endif %}
-                          <a class="btn-white btn" href="{{ url('internal:servicerequest.approve', servicerequest.id) }}">
+                          <a id = "btnApprove_{{servicerequest.id}}" class="btn-white btn" href="{{ url('internal:servicerequest.approve', servicerequest.id) }}">
                             Aprobar
                           </a>
                         {% endif %}
-                        <a  href="{{ url('internal:serviceRequest.attachmentList', servicerequest.id) }}" class="btn-white btn" title="Archivos Adjuntos">
+                        <a  id="btnAttach_{{servicerequest.id}}"  href="{{ url('internal:serviceRequest.attachmentList', servicerequest.id) }}" class="btn-white btn" title="Archivos Adjuntos">
                           <i class="fa fa-paperclip" aria-hidden="true"></i>
                         </a>
-                        <a  href="{{ url('internal:servicerequest.reportGenerator', servicerequest.id) }}" class="btn-white btn" title="Reporte Interno">
-                          <i class="fa fa-table" aria-hidden="true"></i>
+                        <a  id ="btnReport_{{servicerequest.id}}"  href="{{ url('internal:servicerequest.reportGenerator', servicerequest.id) }}" class="btn-white btn" title="Reporte Interno">
+                          <i  class="fa fa-table" aria-hidden="true"></i>
                         </a>
-                        <a  href="{{ url('internal:servicerequest.finalReport', servicerequest.id) }}" class="btn-white btn" title="Reporte Final">
+                        <a  id = "btnPdf_{{servicerequest.id}}" href="{{ url('internal:servicerequest.finalReport', servicerequest.id) }}" class="btn-white btn" title="Reporte Final">
                           <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
                         </a>
                       </div>
@@ -120,6 +130,9 @@
                   </tr>
                   {% endif %}
                   {% endif %}
+                  <script>
+                      printId("{{servicerequest.id}}");
+                  </script>
                 {% endfor %}
               </tbody>
             </table>
@@ -160,7 +173,10 @@ $(document).ready(function() {
 </script>
 
 <script>
+
 $( document ).ready(function() {
+  var id = 1
+  console.log(id)
   $(".myBtn1").click(function() {
     $("#myModal1").show();
     var delete_url = $(this).attr("data-url");
@@ -178,6 +194,5 @@ $(".myBtn1").click(function(event) {
   return false;
 });
 </script>
-
 
 {% endblock custom_js %}
