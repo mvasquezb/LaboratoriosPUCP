@@ -438,8 +438,8 @@ class ServiceRequestState(SafeDeleteModel):
     _safedelete_policy = SOFT_DELETE_CASCADE
 
     audit_log = AuditlogHistoryField()
-    slug = models.CharField(max_length=20)
-    description = models.CharField(max_length=20)
+    slug = models.CharField(max_length=100)
+    description = models.CharField(max_length=100)
     registered_date = models.DateTimeField(
         auto_now_add=True,
         auto_now=False,
