@@ -3,7 +3,10 @@ from django.utils.translation import ugettext_lazy as _
 from django.forms import (
     ModelForm,
 )
-from django.forms import inlineformset_factory
+from django.forms import (
+    inlineformset_factory,
+    modelformset_factory,
+)
 # from django.forms.models import BaseInlineFormSet
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
@@ -322,3 +325,24 @@ class ExternalProviderForm(ModelForm):
             'name': 'Nombre',
             'description': 'Descripción',
         }
+
+
+class ExtraRequestConceptForm(ModelForm):
+    class Meta:
+        model = ExtraRequestConcept
+        fields = ('description', 'amount', 'quantity')
+        labels = {
+            'description': 'Descripción',
+            'amount': 'Monto',
+            'quantity': 'Cantidad',
+            'quotation': 'Cotización',
+        }
+
+
+ExtraRequestConceptFormset = inlineformset_factory(
+    Quotation,
+    ExtraRequestConcept,
+    form=ExtraRequestConceptForm,
+    extra=1,
+    can_delete=True
+)

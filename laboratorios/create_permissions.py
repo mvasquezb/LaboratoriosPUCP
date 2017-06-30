@@ -41,6 +41,23 @@ def main():
             )
         except IntegrityError:
             pass
+        if model_name == 'ServiceContract':
+            try:
+                Permission.objects.create(
+                    content_type=ctype,
+                    codename='approve_servicecontract',
+                    name='Can approve servicecontract'
+                )
+            except IntegrityError:
+                pass
+            try:
+                Permission.objects.create(
+                    content_type=ctype,
+                    codename='refuse_servicecontract',
+                    name='Can refuse servicecontract'
+                )
+            except IntegrityError:
+                pass
 
 
 if __name__ == '__main__':
