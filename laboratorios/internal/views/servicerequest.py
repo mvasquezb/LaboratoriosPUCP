@@ -83,7 +83,8 @@ def create(request,
                 init_state.save()
             created_service_request.state = init_state
             created_service_request.save()
-            return redirect(reverse('internal:servicerequest.index'))
+            create_quotation(created_service_request)
+            return redirect('internal:servicerequest.index')
     return render(request, template, context)
 
 
@@ -130,6 +131,7 @@ def edit(request,
         deleted__isnull=True,
         request=service_request
     )
+
     extra_concept_formset = ExtraRequestConceptFormset(
         request.POST or None,
         instance=service_request.quotation
@@ -162,12 +164,6 @@ def edit(request,
                 )
             )
         essay_methods_chosen_forms.append(aux_essay_methods_forms)
-
-    if request.method == 'POST':
-        if extra_concept_formset.is_valid():
-            extra_concept_formset.save()
-        else:
-            print('error', extra_concept_formset.errors)
 
     context = {
         'form': service_request_form,
@@ -204,6 +200,11 @@ def edit(request,
 
     if forms_verified == 0:
         service_request_form.save()
+        if request.method == 'POST':
+            if extra_concept_formset.is_valid():
+                extra_concept_formset.save()
+            else:
+                print('error', extra_concept_formset.errors)
         # add save for each form
         for i in range(0, len(essay_methods_chosen_forms)):
             for j in range(0, len(essay_methods_chosen_forms[i])):
@@ -367,7 +368,9 @@ def quotation(request,
               template='internal/servicerequest/quotation.html',
               extra_context=None):
     service_request = get_object_or_404(
-        ServiceRequest.all_objects, pk=request_id)
+        ServiceRequest.all_objects,
+        pk=request_id
+    )
     quotation_data = get_quotation_for_request(service_request)
     context = {
         'service_request': service_request,
@@ -911,10 +914,11 @@ def reportDetailPDF(request):
     return
 
 
-def get_quotation_for_request(service_request):
+def create_quotation(service_request):
     quotation, created = Quotation.all_objects.get_or_create(
         request=service_request
     )
+
     essay_list = EssayFill.all_objects.annotate(
         chosen_ems=Sum(
             Case(
@@ -933,6 +937,11 @@ def get_quotation_for_request(service_request):
     )
 
     quotation.essay_fills.set(essay_list)
+    return quotation, essay_list
+
+
+def get_quotation_for_request(service_request):
+    quotation, essay_list = create_quotation(service_request)
 
     essay_types = Essay.all_objects.filter(
         deleted__isnull=True,
