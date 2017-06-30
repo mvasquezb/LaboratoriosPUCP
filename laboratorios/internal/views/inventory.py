@@ -152,26 +152,32 @@ def save_article(request, pk):
     if request.is_ajax():
         if request.method == 'POST':
             #get values
-            current_value = request.POST.get('current_value')
-            change_value = request.POST.get('change_value')
-            id = request.POST.get('id')
+            current_value = int(request.POST.get('current_value'))
+            change_value = int(request.POST.get('change_value'))
+            id = int(request.POST.get('id'))
 
             #get inventory and article
+            inventory_types = Inventory.TYPE_CHOICES
+
             inventory= Inventory.all_objects.get(pk=pk)
             article_type= inventory.get_inventory_type_display()
 
-            if (article_type == "Supply"):
+            if (article_type == inventory_types[0][1]): #insumos
                 article = Supply.all_objects.get(pk=id)
             else:
                 article = Equipment.all_objects.get(pk=id)
 
-            #update o create?
-            if(current_value!=0): #create
-                newArticleInventory=ArticleInventory(article=article, inventory=inventory, quantity=current_value+change_value)
+            #delete / update / create?
+            if (current_value==0): #create
+                newArticleInventory=ArticleInventory(article=article, inventory=inventory, quantity=change_value)
                 newArticleInventory.save()
+            elif (current_value+change_value<=0): # delete
+                oldArticleInventory = ArticleInventory.all_objects.get(inventory=inventory, article=article,
+                                                                       deleted__isnull=True)
+                oldArticleInventory.delete()
             else: #update
                 oldArticleInventory=ArticleInventory.all_objects.get(inventory=inventory, article=article ,deleted__isnull=True)
                 oldArticleInventory.quantity=current_value+change_value
                 oldArticleInventory.save()
+            return HttpResponse(200)
 
-            #return HttpResponse("%s" % id)

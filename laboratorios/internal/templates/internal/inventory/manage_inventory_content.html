@@ -71,14 +71,14 @@
                       {% for match in matches %}
                         {% if article == match.article.supply %}
                           {% if get_out.update({'value': True}) %}{% endif %}
-                          <td class="current_value" id="{{ article.pk }}" name="{{article.pk}}">{{ match.quantity }}</td>
+                          <td class="current_value">{{ match.quantity }}</td>
                           {% break %}
                         {% endif %}
                       {% endfor %}
                       {% if not get_out['value'] %}
-                        <td class="current_value" id="{{ article.pk }}" name="{{article.pk}}">0</td>
+                        <td class="current_value">0</td>
                       {% endif %}
-                      <td class="display_item">0</td>
+                      <td class="display_item" id="{{ article.pk }}">0</td>
                       <td>
                         <input type="number" style="width: 40px" min="0" id="{{ article.pk }}" name="{{article.pk}}" onkeydown="return FilterNmberInput(event)" onpaste="handlePaste(event)" value="0">
                         <div class="btn-group">
@@ -117,14 +117,14 @@
                       {% for match in matches %}
                         {% if article == match.article.equipment %}
                           {% if get_out.update({'value': True}) %}{% endif %}
-                          <td class="current_value" id="{{ article.pk }}" name="{{article.pk}}">{{ match.quantity }}</td>
+                          <td class="current_value">{{ match.quantity }}</td>
                           {% break %}
                         {% endif %}
                       {% endfor %}
                       {% if not get_out['value'] %}
-                        <td class="current_value" id="{{ article.pk }}" name="{{article.pk}}">0</td>
+                        <td class="current_value" >0</td>
                       {% endif %}
-                      <td class="display_item">0</td>
+                      <td class="display_item" id="{{ article.pk }}">0</td>
                       <td>
                         <input type="number" style="width: 40px" min="0" id="{{ article.pk }}" name="{{article.pk}}" onkeydown="return FilterNmberInput(event)" onpaste="handlePaste(event)" value="0">
                         <div class="btn-group">
@@ -153,7 +153,6 @@
             <input type="submit" class="btn btn-primary" name="registrar"
               id="register_button" value="Guardar Cambios">
             <a href="{{ url('internal:inventory.index') }}" class="btn btn-white">Cancelar</a>
-            <button>LeerTabla</button>
           </div>
         </div>
       </div>
