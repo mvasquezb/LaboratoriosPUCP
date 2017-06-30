@@ -142,6 +142,11 @@ def edit(request,
             )
         essay_methods_chosen_forms.append(aux_essay_methods_forms)
 
+    extra_concept_formset = ExtraRequestConceptFormset(
+        request.POST or None,
+        instance=service_request_mod.quotation
+    )
+
     context = {
         'form': service_request_form,
         'service_request': service_request_mod,
@@ -155,7 +160,8 @@ def edit(request,
         'states': ServiceRequestState.all_objects.filter(deleted__isnull=True),
         'external_providers': ExternalProvider.all_objects.filter(
             deleted__isnull=True
-        )
+        ),
+        'extra_concept_formset': extra_concept_formset,
     }
     ###########################################################################
     # verificacion
@@ -186,6 +192,12 @@ def edit(request,
                 pk=service_request_ori.priority.pk
             )
             service_request_mod.save()
+
+        if request.method == 'POST':
+            if extra_concept_formset.is_valid():
+                extra_concept_formset.save()
+            else:
+                print('error', extra_concept_formset.errors)
 
         service_request_ori.state = state_ori
         service_request_ori.save()  # Guardamos el original

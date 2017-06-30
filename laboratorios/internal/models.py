@@ -56,10 +56,10 @@ class BasicUser(SafeDeleteModel):
         return set(self.permissions.values_list('full_name', flat=True))
 
     def has_perm(self, perm_name):
-        return perm_name in self.get_all_permissions()
+        return self.user.is_superuser or perm_name in self.get_all_permissions()
 
     def has_module_perms(self, app_label):
-        return self.permissions.filter(
+        return self.user.is_superuser or self.permissions.filter(
             content_type__app_label=app_label
         ).exists()
 
