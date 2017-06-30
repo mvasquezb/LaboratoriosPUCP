@@ -171,7 +171,6 @@ def client_group(request,context,settings):
     if(len(settings['filters_data'][3])>0):
         essay_list=list(map(lambda x:Essay.all_objects.filter(deleted__isnull=True,pk=x).first(),list(map(lambda x: settings['data_list']['essay'][x],settings['filters_data'][3]))))
         service_matrix=list(map(lambda x: [y for y in x if len(EssayFill.all_objects.filter(deleted__isnull=True,essay__in=essay_list,sample=y.sample))>0],service_matrix))
-
     print(service_matrix)
     # end essay filtering    
 
@@ -187,14 +186,12 @@ def client_group(request,context,settings):
         except:
             aux_list.append(0)
         try:
-            aux_list.append(sum([x[0] for x in list(map(lambda z: [quotation_price(EssayFill.all_objects.filter(deleted__isnull=True,sample=y)) for y in Sample.all_objects.filter(deleted__isnull=True,request=z)] ,service_matrix[i]))]))
+            aux_list.append(sum([x[0] for x in list(map(lambda z: [quotation_price(EssayFill.all_objects.filter(deleted__isnull=True,sample=y)) for y in Sample.all_objects.filter(deleted__isnull=True,request=z)] ,service_matrix[i])) if len(x)>0]))
         except:
             aux_list.append(0)
-        if not (aux_list[2]):
-            aux_list[2]=0
-        if aux_list[1]>0 and aux_list[2]:
-            print(aux_list[2])
-            aux_list.append(aux_list[2]/aux_list[1])
+        if aux_list[1]>0 and aux_list[3]:
+            print(aux_list[3])
+            aux_list.append(aux_list[3]/aux_list[1])
             aux_list.append(sum([x.expected_duration for x in service_matrix[i]])/aux_list[1])
         else:
             aux_list.append(0)
@@ -304,9 +301,182 @@ def sample_group(request, context,settings):
 
 def laboratory_group(request,context,settings):
     # Filas         Num Empleados, Num Servicios dentro de fechas, Num 
+    # Columnas
+    table_label=['Laboratorio', 'Número de Servicios','Promedio de Muestras por Servicio','Costo acumulado de Servicios','Costo promedio por Servicio','Duración promedio de servicios']
+    table_matrix=[]
+
+    # Filtro por Laboratorio
+    if (len(settings['filters_data'][2])>0):
+        laboratory_list=list(map(lambda x:Laboratory.all_objects.filter(deleted__isnull=True,pk=x).first(),list(map(lambda x: settings['data_list']['laboratory'][x],settings['filters_data'][2]))))
+    else:
+        laboratory_list=Laboratory.all_objects.filter(deleted__isnull=True)[::1]
+    print(laboratory_list)
+
+    # Filtro por Fechas
+    start_date=datetime.date(int(settings['start_date'][0:4]),int(settings['start_date'][5:7]),int(settings['start_date'][8:10]))
+    end_date=datetime.date(int(settings['end_date'][0:4]),int(settings['end_date'][5:7]),int(settings['end_date'][8:10]))
+    service_matrix=[[x for x in ServiceRequest.all_objects.filter(deleted__isnull=True) if x.supervisor.laboratory == y] for y in laboratory_list]    
+    print(service_matrix)
+    service_matrix=list(map(lambda x: [y for y in x if start_date<=y.registered_date.date()<=end_date],service_matrix))
+    print(service_matrix)
+    # Fin filtro por Fechas
+
+    # Filtro por cliente
+    # client filtering
+    if (len(settings['filters_data'][0])>0):
+        client_list=list(map(lambda x:Client.all_objects.filter(deleted__isnull=True,pk=x).first(),list(map(lambda x: settings['data_list']['client'][x],settings['filters_data'][0]))))
+        print(client_list)
+        service_matrix=list(map(lambda x:[y for y in x if y.client in client_list],service_matrix))
+    print(service_matrix)
+    # End client filtering
+
+    # Sample Type filtering
+    if(len(settings['filters_data'][1]) >0):
+        sample_list=list(map(lambda x:SampleType.all_objects.filter(deleted__isnull=True,pk=x).first(),list(map(lambda x: settings['data_list']['sample_type'][x],settings['filters_data'][1]))))
+        print(sample_list)
+        service_matrix=list(map(lambda x: [y for y in x if len(Sample.all_objects.filter(deleted__isnull=True,request=y,sample_type__in=sample_list))>0],service_matrix))
+    print(service_matrix)
+    #end sample filtering
+
+    # essay filtering
+    if(len(settings['filters_data'][3])>0):
+        essay_list=list(map(lambda x:Essay.all_objects.filter(deleted__isnull=True,pk=x).first(),list(map(lambda x: settings['data_list']['essay'][x],settings['filters_data'][3]))))
+        service_matrix=list(map(lambda x: [y for y in x if len(EssayFill.all_objects.filter(deleted__isnull=True,essay__in=essay_list,sample=y.sample))>0],service_matrix))
+    print(service_matrix)
+    # end essay filtering    
+
+
+    # data processing
+    results =[]
+    for i in range(0,len(laboratory_list)):
+        aux_list=[]
+        aux_list.append(laboratory_list[i])
+        aux_list.append(len(service_matrix[i]))
+        print(i)
+        try:
+            aux_list.append(sum([len(x) for x in [Sample.all_objects.filter(deleted__isnull=True,request=z) for z in service_matrix[i]]])/aux_list[1])
+        except:
+            aux_list.append(0)
+        try:
+            aux_list.append(sum([x[0] for x in list(map(lambda z: [quotation_price(EssayFill.all_objects.filter(deleted__isnull=True,sample=y)) for y in Sample.all_objects.filter(deleted__isnull=True,request=z)] ,service_matrix[i])) if len(x)>0]))
+        except:
+            aux_list.append(0)
+        if aux_list[1]>0 and aux_list[3]:
+            print(aux_list[3])
+            aux_list.append(aux_list[3]/aux_list[1])
+            aux_list.append(sum([x.expected_duration for x in service_matrix[i]])/aux_list[1])
+        else:
+            aux_list.append(0)
+            aux_list.append(0)
+        results.append(aux_list)
+    print(results)
+
+
+    modal_matrix = list(map(lambda x :[[y.client.user.first_name+' '+y.client.user.last_name,  y.supervisor.user.first_name+' '+y.supervisor.user.last_name, y.state.description ,y.observations] for y in x], service_matrix))
+    request.session['modal_matrix'] = modal_matrix
+    request.session['modal_labels'] = ['Cliente','Supervisor','Estado','Observaciones']
+
+    context={
+        'group_type':'Laboratorio',
+        'start_date':start_date,
+        'end_date':end_date,
+        'data_labels':table_label,
+        'results':results,
+        'modal_index' : -1,
+        'modal_matrix' : modal_matrix
+        }
+
     return context
 
 def essay_group(request,context,settings):
+    # Columnas
+    table_label=['Tipo de Ensayo', 'Porcentaje de Uso en Servicios','Promedio de Muestras que usan el Ensayo','Costo acumulado en Servicios','Costo promedio por Servicio','Duración promedio de servicios']
+    table_matrix=[]
+
+
+    # Filtros
+
+    # Essay filtering
+    # essay filtering
+    if(len(settings['filters_data'][3])>0):
+        essay_list=list(map(lambda x:Essay.all_objects.filter(deleted__isnull=True,pk=x).first(),list(map(lambda x: settings['data_list']['essay'][x],settings['filters_data'][3]))))
+    else:
+        essay_list=Essay.all_objects.filter(deleted__isnull=True)[::1]
+    print(essay_list)
+
+    # date filtering
+    start_date=datetime.date(int(settings['start_date'][0:4]),int(settings['start_date'][5:7]),int(settings['start_date'][8:10]))
+    end_date=datetime.date(int(settings['end_date'][0:4]),int(settings['end_date'][5:7]),int(settings['end_date'][8:10]))
+    essay_matrix=list(map(lambda x: EssayFill.all_objects.filter(deleted__isnull=True,essay=x),essay_list))
+    essay_matrix=list(map(lambda x: [y for y in x if start_date<=y.registered_date.date()<=end_date],sample_matrix))
+    print(sample_matrix)
+    # end date filtering
+    
+    # Client filtering
+    if (len(settings['filters_data'][0]) >0):
+        client_list=list(map(lambda x:Client.all_objects.filter(deleted__isnull=True,pk=x).first(), list(map(lambda x: settings['data_list']['client'][x],settings['filters_data'][0]))))
+        sample(client_list)
+        essay_matrix = list(map(lambda x : [y for y in x if y.sample.request.client in client_list],essay_matrix))
+    print(essay_matrix)    
+    # End Client filtering
+
+    # Sample Type filtering
+    if(len(settings['filters_data'][1]) >0):
+        sample_list=list(map(lambda x:SampleType.all_objects.filter(deleted__isnull=True,pk=x).first(),list(map(lambda x: settings['data_list']['sample_type'][x],settings['filters_data'][1]))))
+        print(sample_list)
+        essay_matrix=list(map(lambda x: [y for y in x if y.sample.sample_type in sample_list],sample_matrix))
+    print(essay_matrix)
+    # End Sample Type filtering
+
+    # Laboratory filtering
+    if(len(settings['filters_data'][2])>0):
+        laboratory_list=list(map(lambda x:Laboratory.all_objects.filter(deleted__isnull=True,pk=x).first(),list(map(lambda x: settings['data_list']['laboratory'][x],settings['filters_data'][2]))))
+        print(laboratory_list)
+        essay_matrix=list(map(lambda x:[y for y in x if y.sample.request.supervisor.laboratory],essay_matrix))
+    print(essay_matrix)
+    # End Laboratory filtering
+
+    # table_label=['Tipo de Ensayo', 'Porcentaje de Uso en Servicios','Promedio de Muestras que usan el Ensayo','Costo acumulado en Servicios','Costo promedio en un Servicio','Duración promedio de servicios']
+    results=[]
+    for i in range (0,len(essay_list)):
+        aux_list=[]
+        aux_list.append(essay_list[i].name)
+        service_list = distinct([x.sample.request for x in essay_list[i]])
+        if len(service_list)>0:
+            aux_list.append(str((len(essay_matrix[i])*100/len(service_list)))+'%')
+        else:
+            aux_list.append('0%')
+        if (len(sample_list)>0):
+            aux_list.append(len(essay_matrix[i])/len(sample_list))
+        else:
+            aux_list.append(0)
+        if (len(essay_matrix[i])>0):
+            aux_list.append(sum([quotation_price(x) for x in essay_matrix[i]]))
+        else:
+            aux_list.append(0)
+        if len(service_list)>0:
+            aux_list.append((aux_list[4]/len(service_list)))
+        else:
+            aux_list.append(0)
+        if len(service_list)>0:
+            aux_list.append(sum([x.expected_duration for x in service_list])/len(service_list))
+        else:
+            aux_list.append(0)
+        results.append(aux_list)
+    print(results)
+    modal_matrix = list(map(lambda x :[[y.name,y.sample.sample_type.name,y.observations] for y in x], essay_matrix))
+    request.session['modal_matrix'] = modal_matrix
+    request.session['modal_labels'] = ['Ensayo','Tipo de muestra','Observaciones']
+    context={
+        'group_type':'Laboratorio',
+        'start_date':start_date,
+        'end_date':end_date,
+        'data_labels':table_label,
+        'results':results,
+        'modal_index' : -1,
+        'modal_matrix' : modal_matrix
+        }
+
     return context
 
 def processing_parameters(
