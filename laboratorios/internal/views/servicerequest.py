@@ -12,6 +12,7 @@ from django.db.models import (
     Case,
     Value,
     F,
+    IntegerField,
 )
 from django.urls import *
 from django.http import JsonResponse
@@ -20,12 +21,10 @@ from django.utils import timezone
 # from django.conf import settings
 # from django.core.files.storage import FileSystemStorage
 from django.http import HttpResponse
-from django.template.loader import render_to_string
 from django.template.loader import get_template
 
 from internal.models import *
 from internal.views.forms import *
-from internal import utils
 
 from io import BytesIO
 from xhtml2pdf import pisa
@@ -33,6 +32,7 @@ import json as simplejson
 from datetime import datetime, timedelta
 from internal.permissions import user_passes_test
 from functools import reduce
+import operator
 from internal.permissions.serviceRequest import *
 
 
@@ -356,39 +356,11 @@ def quotation(request,
               extra_context=None):
     service_request = get_object_or_404(
         ServiceRequest.all_objects, pk=request_id)
-    quotation, created = Quotation.all_objects.get_or_create(
-        request=service_request
-    )
-    essay_list = EssayFill.all_objects.filter(
-        sample__in=service_request.sample_set.all(),
-    )
-    quotation_essays = quotation.essay_fills.all()
-    essays_to_add = set(essay_list) - set(quotation_essays)
-    quotation.essay_fills.add(*essays_to_add)
-
-    essay_list = quotation.essay_fills.all()
-    essay_list = essay_list.annotate(
-        price=Sum(
-            Case(
-                When(
-                    essaymethodfill__chosen=True,
-                    then=F('essaymethodfill__essay_method__price')
-                ),
-                default=Value(0)
-            )
-        )
-    )
-
-    total_price = sum([
-        essay.price
-        if essay.price else 0
-        for essay in essay_list
-    ])
+    quotation_data = get_quotation_for_request(service_request)
     context = {
         'service_request': service_request,
-        'essay_list': essay_list,
-        'total_price': total_price,
     }
+    context.update(quotation_data)
     if extra_context is not None:
         context.update(extra_context)
     return render(request, template, context)
@@ -925,3 +897,124 @@ def render_to_pdf(template_src, context_dict={}):
 
 def reportDetailPDF(request):
     return
+
+
+def get_quotation_for_request(service_request):
+    quotation, created = Quotation.all_objects.get_or_create(
+        request=service_request
+    )
+    essay_list = EssayFill.all_objects.annotate(
+        chosen_ems=Sum(
+            Case(
+                When(
+                    essaymethodfill__deleted__isnull=True,
+                    essaymethodfill__chosen=True,
+                    then=1
+                ),
+                default=0,
+                output_field=IntegerField()
+            )
+        )
+    ).filter(
+        ~Q(chosen_ems=0),
+        sample__in=service_request.sample_set.all(),
+    )
+
+    quotation.essay_fills.set(essay_list)
+
+    essay_types = Essay.all_objects.filter(
+        deleted__isnull=True,
+        essayfill__in=essay_list
+    )
+    essay_data = {
+        essay: get_essay_data(essay, quotation)
+        for essay in essay_types
+    }
+    # print(essay_data)
+    extra_concepts = quotation.extra_concepts.all()
+
+    essay_price = sum([
+        e['total_price']
+        for e in essay_data.values()
+    ])
+    extra_sum = sum([
+        concept.amount
+        for concept in extra_concepts
+    ])
+
+    total_price = essay_price + extra_sum
+    # print(essay_data)
+    return {
+        'essay_data': essay_data,
+        'extra_concepts': extra_concepts,
+        'total_price': total_price,
+    }
+
+
+def get_essay_data(essay_type, quotation):
+    essay_method_data = get_essay_methods_for_essay(essay_type, quotation)
+    # print(list(essay_method_data.values()))
+    data = {
+        'essay_methods': essay_method_data,
+        'total_price': reduce(
+            operator.add,
+            map(
+                lambda x: x['total_price'],
+                essay_method_data.values()
+            )
+        )
+    }
+    return data
+
+
+def get_essay_methods_for_essay(essay_type, quotation):
+    full_essay_fills = EssayFill.all_objects.filter(
+        deleted__isnull=True,
+        quotation=quotation
+    )
+    essay_fills = full_essay_fills.filter(
+        essay=essay_type
+    )
+    # print(essay_fills)
+    full_essay_methods = EssayMethodFill.all_objects.filter(
+        deleted__isnull=True,
+        chosen=True,
+        essay__in=full_essay_fills
+    )
+    essay_methods = map(
+        lambda x: x.essay_method,
+        filter(
+            lambda x: x.essay in essay_fills,
+            full_essay_methods
+        )
+    )
+    # print('em', [em for em in essay_methods], [em for em in essay_methods])
+    em_fills = {
+        em: get_essay_method_data(
+            full_essay_methods,
+            em,
+            essay_type
+        )
+        for em in essay_methods
+    }
+    # print('emessay', em_fills)
+    # print([em for em in essay_methods])
+    return em_fills
+
+
+def get_essay_method_data(full_essay_methods, essay_method, essay_type):
+    em_fills = full_essay_methods.filter(
+        essay_method=essay_method,
+        essay__essay=essay_type
+    )
+    # print('emfills', em_fills)
+    if not em_fills:
+        return {}
+
+    em_data = {
+        'methods': em_fills,
+        'quantity': em_fills.count(),
+    }
+    em_data['total_price'] = em_data['quantity'] * essay_method.price
+    # print(em_data)
+    return em_data
