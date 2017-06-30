@@ -190,7 +190,7 @@ urlpatterns = [
     url('^servicecontract/approve/(?P<pk>\d+)$',
         views.servicecontract.approve,
         name='servicecontract.approve'),
-    url('^servicecontract/approve_client_modification/(?P<pk>\d+)$',
+    url('^servicecontract/approve_client_modification/(?P<pk>\d+)/(?P<slug_state>\w+)/?$',
         views.servicecontract.approve_client_modification,
         name='servicecontract.approve_client_modification'),
     url('^servicecontract/refuse/(?P<pk>\d+)$',
@@ -229,7 +229,6 @@ urlpatterns = [
     url('^laboratory/EmployeeModal$',
         views.laboratory.employee_modal,
         name='laboratory.employee_modal'),
-
     #
     # sampleType
     #
@@ -247,7 +246,7 @@ urlpatterns = [
         name='sampleType.delete'),
 
     #
-    #Supply
+    # Supply
     #
     url('^supply/create$',
         views.supply.create,
@@ -266,7 +265,7 @@ urlpatterns = [
         name='supply.delete'),
 
     #
-    #Equipment
+    # Equipment
     #
     url('^equipment/create$',
         views.equipment.create,
@@ -361,6 +360,32 @@ urlpatterns = [
         name='reports.results'),
     url('^reports/get_index/(?P<pk>\d+)$',
         views.reports.get_index),
+    #
+    # Inventory
+    #
+    url('^inventory/create/?$',
+        views.inventory.create,
+        name='inventory.create'),
+    url('^inventory/(?P<pk>\d+)/?$',
+        views.inventory.show,
+        name='inventory.show'),
+    url('^inventory/(?P<pk>\d+)/edit/?$',
+        views.inventory.edit,
+        name='inventory.edit'),
+    url('^inventory/?$',
+        views.inventory.index,
+        name='inventory.index'),
+    url('^inventory/(?P<pk>\d+)/delete/?$',
+        views.inventory.delete,
+        name='inventory.delete'),
+    url('^inventory/(?P<pk>\d+)/manage_content/?$',
+        views.inventory.manage_content,
+        name='inventory.manage_content'),
+    url('^inventory/(?P<pk>\d+)/save_article/$',
+        views.inventory.save_article,
+        name='inventory.save_article'),
+
+
     #
     # External Provider
     #
