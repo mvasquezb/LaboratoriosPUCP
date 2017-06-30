@@ -81,13 +81,14 @@ class SampleForm(ModelForm):
 
     class Meta:
         model = Sample
-        fields = ['name', 'sample_type', 'inventory', 'request', 'essay_field']
+        fields = ['code','name', 'sample_type', 'inventory', 'request', 'essay_field']
         labels = {
+            'code':'Código',
             'name': 'Nombre',
             'sample_type': 'Tipo de Muestra',
             'inventory': 'Inventario',
             'request': 'Orden de Servicio',
-            'essay_field': 'Método de Ensayo',
+            'essay_field': 'Ensayo a realizar',
         }
 
     def save(self, commit=True):
@@ -174,8 +175,9 @@ class EssayMethodFillChosenForm(ModelForm):
 class SampleEditForm(ModelForm):
     class Meta:
         model = Sample
-        fields = ['name', 'sample_type', 'inventory']
+        fields = ['code','name', 'sample_type', 'inventory']
         labels = {
+            'code':'Código',
             'name': 'Nombre',
             'sample_type': 'Tipo de Muestra',
             'inventory': 'Inventario',
