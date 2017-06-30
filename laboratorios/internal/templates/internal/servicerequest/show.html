@@ -123,7 +123,15 @@
                       <tbody>
                         <tr>
                           {% for essay_method_active in essay_methods_chosen_forms[loop.index-1] %}
-                          <td>{{ essay_method_active.as_p() }}</td>
+                            <td>
+                              <div class="form-group">
+                                <label>{{ essay_method_active.chosen.label }}</label>
+                                {{ essay_method_active.chosen.as_widget(attrs={
+                                  'disabled': True,
+                                  'class': 'i-checks'
+                                }) }}
+                              </div>
+                            </td>
                           {% endfor%}
                         </tr>
                       </tbody>
@@ -148,35 +156,35 @@
         </div>
         {% endfor %}
         {% if service_request.quotation.extra_concepts.exists() %}
-        <div class="row">
-          <div class="col-md-12">
-            <div class="form-group">
-              <label>Conceptos Adicionales</label>
-            </div>
-            <div class="table-responsive">
-              <table class="table table-bordered table-hover extra-concept-table">
-                <thead>
-                  <tr>
-                    <th>Descripción</th>
-                    <th>Costo</th>
-                    <th>Cantidad</th>
-                    <th>Acciones</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {% for concept in service_request.quotation.extra_concepts.all() %}
-                    <tr class="extra-concept-formset">
-                      <td>{{ concept.description }}</td>
-                      <td>{{ concept.amount }}</td>
-                      <td>{{ concept.quantity }}</td>
-                      <td></td>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-group">
+                <label>Conceptos Adicionales</label>
+              </div>
+              <div class="table-responsive">
+                <table class="table table-bordered table-hover extra-concept-table">
+                  <thead>
+                    <tr>
+                      <th>Descripción</th>
+                      <th>Costo</th>
+                      <th>Cantidad</th>
+                      <th>Acciones</th>
                     </tr>
-                  {% endfor %}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {% for concept in service_request.quotation.extra_concepts.all() %}
+                      <tr class="extra-concept-formset">
+                        <td>{{ concept.description }}</td>
+                        <td>{{ concept.amount }}</td>
+                        <td>{{ concept.quantity }}</td>
+                        <td></td>
+                      </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
-        </div>
         {% endif %}
         <div class="row">
           <div class="col-lg-6 col-lg-offset-3">

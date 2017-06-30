@@ -58,7 +58,7 @@
                   <tr role="row">
                     <td>{{ loop.index }}</td>
                     <td>{{ essay.name }}</td>
-                    <td>{{ essay.description }}</td>
+                    <td>{{ essay.description or '-' }}</td>
                     <td>
                       {% if essay.deleted %}
                         Eliminado

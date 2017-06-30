@@ -131,7 +131,10 @@
                         <tr>
                           {% for essay_method_active in essay_methods_chosen_forms[loop.index-1] %}
                             <td data-id="{{ essay_method_active.instance.id }}">
-                              {{ essay_method_active.as_p() }}
+                              <div class="form-group">
+                                <label>{{ essay_method_active.chosen.label }}</label>
+                                {{ essay_method_active.chosen.as_widget() }}
+                              </div>
                             </td>
                           {% endfor%}
                         </tr>
