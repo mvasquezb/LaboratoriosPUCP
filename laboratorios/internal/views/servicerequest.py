@@ -43,11 +43,11 @@ def index(request,
 
     state_in_preparation = get_object_or_404(
         ServiceRequestState.all_objects,
-        slug="in_preparation"
+        slug="in_preparation"   
     )
     context = {
         'requests': ServiceRequest.all_objects.filter(
-            state=state_in_preparation
+            deleted__isnull=True
         )
     }
     if extra_context is not None:
