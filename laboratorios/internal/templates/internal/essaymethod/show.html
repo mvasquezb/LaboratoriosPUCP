@@ -28,7 +28,7 @@
                         </div>
                         <div class="form-group">
                             <label>Descripción</label>
-                            <textarea value="{{ essaymethod.description }}" type="text" class="form-control" name="description"  disabled>{{ essaymethod.description }}</textarea>
+                            <textarea value="{{ essaymethod.description }}" type="text" class="form-control" name="description"  disabled>{{ essaymethod.description or '-' }}</textarea>
                             <div class="help-block with-errors"></div>
                         </div>
                     </div>
@@ -39,7 +39,7 @@
                               <thead>
                                 <tr>
                                   <th class="first-table-column">Descripción</th>
-                                  <th>Precio</th>
+                                  <th>Unidad</th>
                                 </tr>
                               </thead>
                               <tbody>
