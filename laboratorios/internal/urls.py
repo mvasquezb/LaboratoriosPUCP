@@ -11,7 +11,10 @@ urlpatterns = [
     #
     url(r'^login/?$',
         login,
-        {'template_name': 'internal/login.html'},
+        {
+            'template_name': 'internal/login.html',
+            'redirect_authenticated_user': True,
+        },
         name='login'),
 
     url(r'^logout/?$',
