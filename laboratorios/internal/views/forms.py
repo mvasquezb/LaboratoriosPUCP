@@ -79,18 +79,21 @@ class SampleForm(ModelForm):
     # iquery_choices = [('', 'None')] + [(name,name) for name in iquery]
     # essay_field = forms.ChoiceField(iquery_choices,required=False, widget=forms.Select())
     essay_field = forms.ModelChoiceField(
-        queryset=Essay.all_objects.filter(deleted__isnull=True)
+        queryset=Essay.all_objects.filter(deleted__isnull=True),
+        label='Ensayo',
     )
 
     class Meta:
         model = Sample
-        fields = ['name', 'sample_type', 'inventory', 'request', 'essay_field']
+        fields = ['code', 'name', 'sample_type',
+                  'inventory', 'request', 'essay_field']
         labels = {
+            'code': 'Código',
             'name': 'Nombre',
             'sample_type': 'Tipo de Muestra',
             'inventory': 'Inventario',
             'request': 'Orden de Servicio',
-            'essay_field': 'Método de Ensayo',
+            'essay_field': 'Ensayo a realizar',
         }
 
     def save(self, commit=True):
@@ -126,12 +129,12 @@ class ServiceRequestCreateForm(ModelForm):
         # we will automatically set it to the first state
         exclude = ('state',)
         labels = {
-            'client':'Cliente',
-            'supervisor':'Supervisor',
-            'priority':'Prioridad',
-            'external_provider':'Proveedor Externo',
-            'expected_duration':'Duración esperada',
-            'observations':'Observaciones'
+            'client': 'Cliente',
+            'supervisor': 'Supervisor',
+            'priority': 'Prioridad',
+            'external_provider': 'Proveedor Externo',
+            'expected_duration': 'Duración esperada',
+            'observations': 'Observaciones'
         }
 
 
@@ -149,12 +152,12 @@ class ServiceRequestForm(ModelForm):
         model = ServiceRequest
         exclude = ()
         labels = {
-            'client':'Cliente',
-            'supervisor':'Supervisor',
-            'priority':'Prioridad',
-            'external_provider':'Proveedor Externo',
-            'expected_duration':'Duración esperada',
-            'observations':'Observaciones'
+            'client': 'Cliente',
+            'supervisor': 'Supervisor',
+            'priority': 'Prioridad',
+            'external_provider': 'Proveedor Externo',
+            'expected_duration': 'Duración esperada',
+            'observations': 'Observaciones'
         }
 
 
@@ -173,20 +176,21 @@ class EssayMethodFillChosenForm(ModelForm):
         model = EssayMethodFill
         fields = ['chosen', ]
         labels = {
-            'chosen': 'Selección',
+            'chosen': 'Escoger'
         }
 
 
 class SampleEditForm(ModelForm):
     class Meta:
         model = Sample
-        fields = ['name', 'sample_type', 'inventory']
+        fields = ['code', 'name', 'sample_type', 'inventory']
         labels = {
+            'code': 'Código',
             'name': 'Nombre',
             'sample_type': 'Tipo de Muestra',
             'inventory': 'Inventario',
             # 'request': 'Orden de Servicio',
-            'Essay_field': 'Método de Ensayo',
+            'Essay field': 'Método de Ensayo',
         }
 
 
@@ -328,6 +332,12 @@ class ExternalProviderForm(ModelForm):
             'name': 'Nombre',
             'description': 'Descripción',
         }
+
+
+class InventoryForm(ModelForm):
+    class Meta:
+        model = Inventory
+        exclude = ()
 
 
 class ExtraRequestConceptForm(ModelForm):

@@ -1,0 +1,185 @@
+{% extends 'internal/base_internal.html' %}
+
+
+{% block page_content %}
+<div class="row border-bottom white-bg dashboard-header">
+    <div class="col-md-6">
+        <h2><strong>Editar Inventario</strong></h2>
+    </div>
+</div>
+<div class="wrapper wrapper-content animated fadeInRight">
+  <div class="row">
+    <div class="col-lg-12">
+        <div class="ibox float-e-margins">
+            <div class="ibox-content">
+              {{ form.errors }}
+                <form data-toggle="validator" id="inventoryform" action="{{ url('internal:inventory.edit', pk=inventory.pk) }}" method="post">
+                {% csrf_token %}
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label>Nombre (*)</label>
+                                <input type="text" id="inventory_name" class="form-control" name="name" required data-error="El Nombre es obligatorio"  value="{{ inventory.name }}">
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label>Tipo (*)</label>
+                                 <select class="form-control m-b" id="comboBox" name="type">
+                                    <option  selected value="{{ inventory.inventory_type }}">
+                                        {{ inventory.get_inventory_type_display()}}</option>
+                                    {% for type in inventory_types %}
+                                        {% if inventory.inventory_type !=type[0] %}
+                                        <option value="{{ type[0] }}">{{ type[1]}}</option>
+                                        {% endif %}
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label>Localización</label>
+                                <textarea class="form-control" id="inventory_location" name="location" placeholder="Localización">{{inventory.location}}</textarea>
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- <div class="row">
+                      <div id="supplies_div"class="col-md-12">
+                        <label>Agregar Insumos </label>
+                        <div class="table-responsive">
+                            <table class="table table-striped table-bordered" id="supply-table">
+                              <thead>
+                                <tr>
+                                  <th>
+                                    N°
+                                  </th>
+                                  <th>
+                                    Nombre
+                                  </th>
+                                  <th>
+                                    Descripción
+                                  </th>
+                                  <th>
+                                    Añadir
+                                  </th>
+                                  <th>cantidad</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {% for supply in supply_list %}
+                                  <tr role="row">
+                                    <td>{{ loop.index }}</td>
+                                    <td>{{ supply.name }}</td>
+                                    <td>{{ supply.description }}</td>
+                                    <td>
+                                      <input type="checkbox" class="i-checks checkbox_supplies" data-id="{{ supply.pk }}" {% if suply in selected_supply %} checked {% endif %}>     
+                                    </td>
+                                    <td class="text-left footable-visible footable-last-column">
+                                      <input id="stock_field" type="number" min="0" class="form-control" name="stock" value="0" data-error="Ingrese un valor válido">
+                                    </td>
+                                  </tr>
+                                {% endfor %}
+                              </tbody>
+                            </table>
+                        </div>
+                      </div>
+                      <div id="equipments_div" class="col-md-12" >
+                        <label>Agregar Equipos </label>
+                        <div class="table-responsive">
+                          <table class="table table-striped table-bordered" id="equipment-table">
+                            <thead>
+                              <tr>
+                                <th>
+                                  N°
+                                </th>
+                                <th>
+                                  Nombre
+                                </th>
+                                <th>
+                                  Descripción
+                                </th>
+                                <th>
+                                  Añadir
+                                </th>
+                                <th>Cantidad</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {% for equipment in equipments %}
+                                <tr role="row">
+                                  <td>{{ loop.index }}</td>
+                                  <td>{{ equipment.name }}</td>
+                                  <td>{{ equipment.description }}</td>
+                                  <td>
+                                    <input type="checkbox" class="i-checks checkbox_supplies" data-id="{{ equipment.pk }}" {% if suply in selected_supply %} checked {% endif %}>   
+                                  </td>
+                                  <td class="text-left footable-visible footable-last-column">
+                                    <input id="stock_field" type="number" width="10" min="0" class="form-control" name="stock" data-error="Ingrese un valor válido">
+                                  </td>
+                                </tr>
+                              {% endfor %}
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </div> -->
+                    <p><strong>(*) Campos obligatorios</strong></p>
+                    <div class="row">
+                      <div class="col-lg-12">
+                        <input type="submit" class="myBtn1 btn btn-primary" name="editar"
+                          id="register_button" value="Editar">
+                        <a href="{{ url('internal:inventory.index') }}" class="btn btn-white">Cancelar</a>
+                      </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+  </div>
+</div>
+{% endblock page_content %}
+
+
+{% block custom_js %}
+<script src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.15/js/dataTables.bootstrap.min.js"></script>
+<script src="{{ static('js/datatable-config.js') }}"></script>
+<script type="text/javascript">
+
+$(document).ready(function() {
+
+    // DataTable
+    var table = $('#lab-table').DataTable({
+      "columnDefs": [
+        { "orderable": false, "targets": 4 },
+        { "searchable": false, "targets": 0 }
+      ],
+    });
+    // var list= {{types|safe}};
+    // $('#comboBox').change(function(){
+    //   var option= $('#comboBox option:selected').text();
+    //   if(option==list[0]){
+    //     $('#equipments_div').hide();
+    //     $('#supplies_div').toggle();
+    //   }else if(option==list[1]){
+    //     $('#supplies_div').hide();
+    //     $('#equipments_div').show();
+    //   }else{
+    //     $('#equipments_div').hide();
+    //     $('#supplies_div').hide();
+    //   } 
+    // });
+
+    $('#mysearch').keyup(function(){
+      table.search($(this).val()).draw() ;
+    });
+});
+
+</script>
+<script src="{{ static('js/inventory.form.js') }}"></script>
+
+{% endblock custom_js %}

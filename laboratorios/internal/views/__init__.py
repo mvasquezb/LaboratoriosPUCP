@@ -15,3 +15,4 @@ from .reports import *
 from .supply import *
 from .equipment import *
 from .externalprovider import *
+from .inventory import *

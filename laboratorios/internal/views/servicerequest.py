@@ -43,11 +43,11 @@ def index(request,
 
     state_in_preparation = get_object_or_404(
         ServiceRequestState.all_objects,
-        slug="in_preparation"
+        slug="in_preparation"   
     )
     context = {
         'requests': ServiceRequest.all_objects.filter(
-            state=state_in_preparation
+            deleted__isnull=True
         )
     }
     if extra_context is not None:
@@ -504,17 +504,26 @@ def assign_employee(request,
 def approve(request,
             pk, template='internal/servicerequest/index.html'):
     service_request = ServiceRequest.all_objects.get(pk=pk)
-    state = ServiceRequestState.all_objects.get(slug="ready")
-    service_request.state = state  # Le asignamos el estado "Preparada"
-    service_request.save()
-    client = Client.all_objects.get(pk=service_request.client.id)
+    if service_request.state.slug == 'in_preparation':
+        state = ServiceRequestState.all_objects.get(slug="customer_review")
+        service_request.state = state  # Le asignamos el estado "Revision de cliente"
+        service_request.save()
+        client = Client.all_objects.get(pk=service_request.client.id)
 
-    service_contract = ServiceContract(
-        client=client,
-        request=service_request
-    )
+        service_contract = ServiceContract(
+            client=client,
+            request=service_request
+        )
+        messages.success(request, 'Se ha aprobado la solicitud exitosamante!')
+    elif service_request.state.slug == "customer_review":
+        slug_fin = "wait_for_samples"
+    elif service_request.state.slug == "review_samples":
+        slug_fin = "in_process"
+    elif service_request.state.slug == "waiting_for_client_approval":
+        slug_fin = "in_process"
+
     service_contract.save()
-    messages.success(request, 'Se ha aprobado la solicitud exitosamante!')
+    
     return redirect('internal:servicerequest.index')
 
 

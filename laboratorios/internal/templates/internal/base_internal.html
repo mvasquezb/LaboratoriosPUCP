@@ -126,6 +126,12 @@
         {% endif %}
         {% if perms.internal.index_equipment %}
         <li>
+          <a href="{{ url('internal:inventory.index') }}">
+            <i class="fa fa-file"></i>
+            <span class="nav-label">Inventarios</span>
+          </a>
+        </li>
+        <li>
           <a href="{{ url('internal:equipment.index') }}">
             <i class="fa fa-th-large"></i>
             <span class="nav-label">Equipos</span>
