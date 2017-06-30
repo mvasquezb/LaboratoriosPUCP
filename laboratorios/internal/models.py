@@ -704,8 +704,12 @@ class ExtraRequestConcept(SafeDeleteModel):
     )
     description = models.CharField(max_length=200)
     amount = models.FloatField()
+    quantity = models.PositiveIntegerField(default=1)
     registered_date = models.DateTimeField(
         auto_now_add=True,
         auto_now=False,
         blank=True
     )
+
+    def __str__(self):
+        return self.description
