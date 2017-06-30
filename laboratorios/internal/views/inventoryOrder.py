@@ -145,7 +145,7 @@ def approve(request, pk, pk2):
 
     #Busco el estado de revisando muestras
     newState = get_object_or_404(
-        ServiceRequestState.all_objects.filter(slug='review_sample'),
+        ServiceRequestState.all_objects.filter(slug='review_samples'),
     )
 
     #Modifico el estado del la solicitud

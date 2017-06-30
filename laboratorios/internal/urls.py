@@ -327,7 +327,15 @@ urlpatterns = [
     url('^inventoryItem/(?P<pk>\d+)/edit/?$',
         views.inventoryItem.edit,
         name='inventoryItem.edit'),
-
+    url('^inventoryItem/(?P<pk>\d+)/request/?$',
+        views.inventoryItem.showRequest,
+        name='inventoryItem.showRequest'),
+    url('^inventoryItem/approveAll/(?P<pk>\d+)/?$',
+        views.inventoryItem.approveAll,
+        name='inventoryItem.approveAll'),
+    url('^inventoryItem/changeContract/(?P<pk>\d+)/?$',
+        views.inventoryItem.changeContract,
+        name='inventoryItem.changeContract'),
     # Parameter Fill
     #
     url('^fill_parameters/(?P<pk>\d+)$',

@@ -104,6 +104,11 @@
                         <a  href="{{ url('internal:servicerequest.finalReport', servicerequest.id) }}" class="btn-white btn" title="Reporte Final">
                           <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
                         </a>
+                        {% if servicerequest.state.slug == "review_samples" %}
+                          <a class="btn-white btn" href="{{ url('internal:inventoryItem.showRequest', servicerequest.id) }}">
+                            Aprobar Muestras
+                          </a>
+                        {% endif %}
                       </div>
                     </td>
                   </tr>
