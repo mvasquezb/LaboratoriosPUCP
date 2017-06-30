@@ -20,7 +20,7 @@ class Role(SafeDeleteModel):
     audit_log = AuditlogHistoryField()
     permissions = models.ManyToManyField(Permission, blank=True)
     name = models.CharField(max_length=100)
-    description = models.CharField(max_length=100)
+    description = models.CharField(max_length=100, null=True, blank=True)
     registered_date = models.DateTimeField(
         auto_now_add=True,
         auto_now=False,
@@ -145,7 +145,7 @@ class Essay(SafeDeleteModel):
 
     audit_log = AuditlogHistoryField()
     name = models.CharField(max_length=100)
-    description = models.CharField(max_length=100)
+    description = models.CharField(max_length=100, null=True, blank=True)
     registered_date = models.DateTimeField(auto_now_add=True, auto_now=False)
     essay_methods = models.ManyToManyField(
         'EssayMethod',
@@ -604,7 +604,7 @@ class InventoryArticle(SafeDeleteModel):
 
     audit_log = AuditlogHistoryField()
     name = models.CharField(max_length=100)
-    description = models.CharField(max_length=150)
+    description = models.CharField(max_length=150, null=True, blank=True)
 
     def __str__(self):
         return self.name
