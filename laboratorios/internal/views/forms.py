@@ -180,7 +180,7 @@ class SampleEditForm(ModelForm):
             'sample_type': 'Tipo de Muestra',
             'inventory': 'Inventario',
             # 'request': 'Orden de Servicio',
-            # 'essay_field': 'Método de Ensayo',
+            'Essay_field': 'Método de Ensayo',
         }
 
 
