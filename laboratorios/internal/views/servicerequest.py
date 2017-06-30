@@ -12,6 +12,7 @@ from django.db.models import (
     Case,
     Value,
     F,
+    IntegerField,
 )
 from django.urls import *
 from django.http import JsonResponse
@@ -20,12 +21,10 @@ from django.utils import timezone
 # from django.conf import settings
 # from django.core.files.storage import FileSystemStorage
 from django.http import HttpResponse
-from django.template.loader import render_to_string
 from django.template.loader import get_template
 
 from internal.models import *
 from internal.views.forms import *
-from internal import utils
 
 from io import BytesIO
 from xhtml2pdf import pisa
@@ -33,6 +32,7 @@ import json as simplejson
 from datetime import datetime, timedelta
 from internal.permissions import user_passes_test
 from functools import reduce
+import operator
 from internal.permissions.serviceRequest import *
 
 
@@ -40,8 +40,15 @@ from internal.permissions.serviceRequest import *
 def index(request,
           template='internal/servicerequest/index.html',
           extra_context=None):
+
+    state_in_preparation = get_object_or_404(
+        ServiceRequestState.all_objects,
+        slug="in_preparation"
+    )
     context = {
-        'requests': ServiceRequest.all_objects.filter(deleted__isnull=True)
+        'requests': ServiceRequest.all_objects.filter(
+            state=state_in_preparation
+        )
     }
     if extra_context is not None:
         context.update(extra_context)
@@ -70,20 +77,21 @@ def create(request,
                 request,
                 'Se ha creado la solicitud exitosamante!'
             )
-            # creating an initial state if not existing yet
+            # creating an initial state ("in_preparation") if not existing yet
             init_state = ServiceRequestState.all_objects.filter(
                 deleted__isnull=True,
-                slug='initial'
+                slug='in_preparation'
             ).first()
             if init_state is None:
                 init_state = ServiceRequestState(
-                    slug='initial',
-                    description='Estado Inicial'
+                    slug='in_preparation',
+                    description='En preparación'
                 )
                 init_state.save()
             created_service_request.state = init_state
             created_service_request.save()
-            return redirect(reverse('internal:servicerequest.index'))
+            create_quotation(created_service_request)
+            return redirect('internal:servicerequest.index')
     return render(request, template, context)
 
 
@@ -130,6 +138,11 @@ def edit(request,
         deleted__isnull=True,
         request=service_request
     )
+
+    extra_concept_formset = ExtraRequestConceptFormset(
+        request.POST or None,
+        instance=service_request.quotation
+    )
     essay_fill_list = []
     essay_methods_list = []  # To get all essay_methods for every sample
     essay_methods_chosen_forms = []  # To get whether each essay_method is chosen or not
@@ -172,7 +185,8 @@ def edit(request,
         'states': ServiceRequestState.all_objects.filter(deleted__isnull=True),
         'external_providers': ExternalProvider.all_objects.filter(
             deleted__isnull=True
-        )
+        ),
+        'extra_concept_formset': extra_concept_formset,
     }
 
     # verificacion
@@ -193,12 +207,18 @@ def edit(request,
 
     if forms_verified == 0:
         service_request_form.save()
+        if request.method == 'POST':
+            if extra_concept_formset.is_valid():
+                extra_concept_formset.save()
+            else:
+                print('error', extra_concept_formset.errors)
         # add save for each form
         for i in range(0, len(essay_methods_chosen_forms)):
             for j in range(0, len(essay_methods_chosen_forms[i])):
                 print(essay_methods_chosen_forms[i][j].save().chosen)
                 essay_methods_chosen_forms[i][j].save()
-        return redirect(reverse("internal:servicerequest.index"))
+        return redirect("internal:servicerequest.index")
+
     return render(request, template, context)
 
 
@@ -355,40 +375,14 @@ def quotation(request,
               template='internal/servicerequest/quotation.html',
               extra_context=None):
     service_request = get_object_or_404(
-        ServiceRequest.all_objects, pk=request_id)
-    quotation, created = Quotation.all_objects.get_or_create(
-        request=service_request
+        ServiceRequest.all_objects,
+        pk=request_id
     )
-    essay_list = EssayFill.all_objects.filter(
-        sample__in=service_request.sample_set.all(),
-    )
-    quotation_essays = quotation.essay_fills.all()
-    essays_to_add = set(essay_list) - set(quotation_essays)
-    quotation.essay_fills.add(*essays_to_add)
-
-    essay_list = quotation.essay_fills.all()
-    essay_list = essay_list.annotate(
-        price=Sum(
-            Case(
-                When(
-                    essaymethodfill__chosen=True,
-                    then=F('essaymethodfill__essay_method__price')
-                ),
-                default=Value(0)
-            )
-        )
-    )
-
-    total_price = sum([
-        essay.price
-        if essay.price else 0
-        for essay in essay_list
-    ])
+    quotation_data = get_quotation_for_request(service_request)
     context = {
         'service_request': service_request,
-        'essay_list': essay_list,
-        'total_price': total_price,
     }
+    context.update(quotation_data)
     if extra_context is not None:
         context.update(extra_context)
     return render(request, template, context)
@@ -510,8 +504,8 @@ def assign_employee(request,
 def approve(request,
             pk, template='internal/servicerequest/index.html'):
     service_request = ServiceRequest.all_objects.get(pk=pk)
-    state = ServiceRequestState.all_objects.get(description="Aprobado")
-    service_request.state = state  # Le asignamos el estado de aprobado
+    state = ServiceRequestState.all_objects.get(slug="ready")
+    service_request.state = state  # Le asignamos el estado "Preparada"
     service_request.save()
     client = Client.all_objects.get(pk=service_request.client.id)
 
@@ -522,7 +516,6 @@ def approve(request,
     service_contract.save()
     messages.success(request, 'Se ha aprobado la solicitud exitosamante!')
     return redirect('internal:servicerequest.index')
-    # return redirect(reverse("internal:servicerequest.index"))
 
 
 def workload_view_per_request(request,
@@ -577,6 +570,7 @@ def workload_view_per_request(request,
         'actual_month': month_names[now.month - 1] + " " + str(now.year)
     }
     return render(request, template, context)
+
 
 def validate_name(name):
     if (name.upper() in ['.','..','CON','PRN','AUX','CLOCK$','NUL','COM1','COM2','COM3','COM4','COM5','COM6','COM7','COM8','COM9','LPT1','LPT2','LPT3','LPT4','LPT5','LPT6','LPT7','LPT8','LPT9','LST','KEYBD$','SCREEN$','$IDLE$','CONFIG$']):
@@ -925,3 +919,130 @@ def render_to_pdf(template_src, context_dict={}):
 
 def reportDetailPDF(request):
     return
+
+
+def create_quotation(service_request):
+    quotation, created = Quotation.all_objects.get_or_create(
+        request=service_request
+    )
+
+    essay_list = EssayFill.all_objects.annotate(
+        chosen_ems=Sum(
+            Case(
+                When(
+                    essaymethodfill__deleted__isnull=True,
+                    essaymethodfill__chosen=True,
+                    then=1
+                ),
+                default=0,
+                output_field=IntegerField()
+            )
+        )
+    ).filter(
+        ~Q(chosen_ems=0),
+        sample__in=service_request.sample_set.all(),
+    )
+
+    quotation.essay_fills.set(essay_list)
+    return quotation, essay_list
+
+
+def get_quotation_for_request(service_request):
+    quotation, essay_list = create_quotation(service_request)
+
+    essay_types = Essay.all_objects.filter(
+        deleted__isnull=True,
+        essayfill__in=essay_list
+    )
+    essay_data = {
+        essay: get_essay_data(essay, quotation)
+        for essay in essay_types
+    }
+    # print(essay_data)
+    extra_concepts = quotation.extra_concepts.all()
+
+    essay_price = sum([
+        e['total_price']
+        for e in essay_data.values()
+    ])
+    extra_sum = sum([
+        concept.amount
+        for concept in extra_concepts
+    ])
+
+    total_price = essay_price + extra_sum
+    # print(essay_data)
+    return {
+        'essay_data': essay_data,
+        'extra_concepts': extra_concepts,
+        'total_price': total_price,
+    }
+
+
+def get_essay_data(essay_type, quotation):
+    essay_method_data = get_essay_methods_for_essay(essay_type, quotation)
+    # print(list(essay_method_data.values()))
+    data = {
+        'essay_methods': essay_method_data,
+        'total_price': reduce(
+            operator.add,
+            map(
+                lambda x: x['total_price'],
+                essay_method_data.values()
+            )
+        )
+    }
+    return data
+
+
+def get_essay_methods_for_essay(essay_type, quotation):
+    full_essay_fills = EssayFill.all_objects.filter(
+        deleted__isnull=True,
+        quotation=quotation
+    )
+    essay_fills = full_essay_fills.filter(
+        essay=essay_type
+    )
+    # print(essay_fills)
+    full_essay_methods = EssayMethodFill.all_objects.filter(
+        deleted__isnull=True,
+        chosen=True,
+        essay__in=full_essay_fills
+    )
+    essay_methods = map(
+        lambda x: x.essay_method,
+        filter(
+            lambda x: x.essay in essay_fills,
+            full_essay_methods
+        )
+    )
+    # print('em', [em for em in essay_methods], [em for em in essay_methods])
+    em_fills = {
+        em: get_essay_method_data(
+            full_essay_methods,
+            em,
+            essay_type
+        )
+        for em in essay_methods
+    }
+    # print('emessay', em_fills)
+    # print([em for em in essay_methods])
+    return em_fills
+
+
+def get_essay_method_data(full_essay_methods, essay_method, essay_type):
+    em_fills = full_essay_methods.filter(
+        essay_method=essay_method,
+        essay__essay=essay_type
+    )
+    # print('emfills', em_fills)
+    if not em_fills:
+        return {}
+
+    em_data = {
+        'methods': em_fills,
+        'quantity': em_fills.count(),
+    }
+    em_data['total_price'] = em_data['quantity'] * essay_method.price
+    # print(em_data)
+    return em_data

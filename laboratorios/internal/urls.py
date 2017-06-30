@@ -187,9 +187,15 @@ urlpatterns = [
     url('^servicecontract/approve/(?P<pk>\d+)$',
         views.servicecontract.approve,
         name='servicecontract.approve'),
+    url('^servicecontract/approve_client_modification/(?P<pk>\d+)$',
+        views.servicecontract.approve_client_modification,
+        name='servicecontract.approve_client_modification'),
     url('^servicecontract/refuse/(?P<pk>\d+)$',
         views.servicecontract.refuse,
         name='servicecontract.refuse'),
+    url('^servicecontract/cancel/(?P<pk>\d+)$',
+        views.servicecontract.cancel,
+        name='servicecontract.cancel'),
     #
     # Laboratory
     #
@@ -327,7 +333,15 @@ urlpatterns = [
     url('^inventoryItem/(?P<pk>\d+)/edit/?$',
         views.inventoryItem.edit,
         name='inventoryItem.edit'),
-
+    url('^inventoryItem/(?P<pk>\d+)/request/?$',
+        views.inventoryItem.showRequest,
+        name='inventoryItem.showRequest'),
+    url('^inventoryItem/approveAll/(?P<pk>\d+)/?$',
+        views.inventoryItem.approveAll,
+        name='inventoryItem.approveAll'),
+    url('^inventoryItem/changeContract/(?P<pk>\d+)/?$',
+        views.inventoryItem.changeContract,
+        name='inventoryItem.changeContract'),
     # Parameter Fill
     #
     url('^fill_parameters/(?P<pk>\d+)$',

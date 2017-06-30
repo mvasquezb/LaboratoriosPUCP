@@ -1,0 +1,140 @@
+{% extends 'internal/base_internal.html' %}
+
+{% block title %}{{ super() }} | Solicitudes de Almacenamiento de Muestras{% endblock title %}
+
+{% block custom_css %}
+{% endblock custom_css %}
+
+{% block page_content %}
+<div class="row border-bottom white-bg dashboard-header">
+    <div class="col-md-6">
+        <h2><strong>Muestras Almacenadas</strong></h2>
+    </div>
+</div>
+<div class="wrapper wrapper-content animated fadeInRight">
+  <div class="row">
+    <div class="col-lg-12">
+    <div class="ibox float-e-margins">
+      <div class="ibox-content">
+        <div class="row">
+          <div class="col-md-3">
+            <div class="input-group">
+                <input type="text" class="form-control input-sm m-b-xs" id="mysearch" placeholder="Buscar">
+                <span class="input-group-addon">
+                    <i class="fa fa-search"></i>
+                </span>
+              </div>
+          </div>
+          {% if perms.internal.index_inventoryorder %}
+          <div class="col-md-2 col-md-offset-7">
+            {% for data in serviceRequest %}
+            <a class="btn btn-primary pull-right" href="{{ url('internal:inventoryItem.approveAll', data.id ) }}">
+              Aprobar todas las muestras
+            </a>
+
+            <a class="btn btn-primary pull-right" href="{{ url('internal:inventoryItem.changeContract', data.id ) }}">
+              Modificar el contrato
+            </a>
+            {% endfor %}
+          </div>
+          {% endif %}
+        </div>
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered" id="inventoryOrder_table">
+              <thead>
+                <tr>
+                  <th>
+                    N°
+                  </th>
+                  <th>
+                    Muestra
+                  </th>
+                  <th>
+                    Tipo muestra
+                  </th>
+                  <th>
+                    Estado
+                  </th>
+                  <th>Acción</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for inventoryItem in inventoryItem_list %}
+                  <tr role="row">
+                    <td>{{ loop.index }}</td>
+                    <td>{{ inventoryItem.sample.name }}</td>
+                    <td>{{ inventoryItem.sample.sample_type.name }}</td>
+                    <td>{{ inventoryItem.state or 'Recién Registrado' }}</td>
+
+                    <td class="text-left footable-visible footable-last-column">
+                      <div class="btn-group">
+                        {% if perms.internal.show_inventoryitem %}
+                        <a href="{{ url('internal:inventoryItem.show', inventoryItem.id) }}" class="btn-white btn"><i class="fa fa-eye" aria-hidden="true"></i></a>
+                        {% endif %}
+                        {% if perms.internal.change_inventoryitem %}
+                        <a href="{{ url('internal:inventoryItem.edit', inventoryItem.id) }}" class="btn-white btn"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+                        {% endif %}
+                        {% if perms.internal.delete_inventoryitem %}
+                        <a class="myBtn1 btn-white btn" data-toggle="modal1" data-target="#myModal1" data-url="{{ url('internal:inventoryItem.delete', inventoryItem.id) }}"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+                        {% endif %}
+                      </div>
+                    </td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+        </div>
+        {% include 'internal/layouts/legend.html' %}
+      </div>
+    </div>
+  </div>
+  </div>
+</div>
+
+<div id="myModal1" class="modal1">
+  <!-- Modal content -->
+  <div class="modal-content">
+    <span class="span-close close">&times;</span>
+    <div class="modeal-center-content">
+        <p>¿Seguro que quiere eliminarlo?</p>
+        <button type="button" class="delete-inventoryOrder btn btn-danger">Eliminar</button>
+        <button type="button" class="span-close btn btn-primary">Cancelar</button>
+    </div>
+  </div>
+</div>
+{% endblock page_content %}
+
+{% block custom_js %}
+<script>
+$( document ).ready(function() {
+  $(".myBtn1").click(function() {
+    $("#myModal1").show();
+    var delete_url = $(this).attr("data-url");
+
+    $(".delete-inventoryOrder").click(function() {
+      window.location.href = delete_url;
+    });
+  });
+
+  $(".span-close").click(function() {
+    $("#myModal1").hide();
+  });
+});
+$(".myBtn1").click(function(event) {
+  event.preventDefault();
+  return false;
+});
+</script>
+
+<script src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.15/js/dataTables.bootstrap.min.js"></script>
+<script src="{{ static('js/datatable-config.js') }}"></script>
+<script>
+var table = $('#inventoryOrder_table').DataTable({
+  responsive: true,
+});
+$('#mysearch').keyup(function(){
+  table.search($(this).val()).draw() ;
+});
+</script>
+{% endblock custom_js %}
