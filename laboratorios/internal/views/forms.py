@@ -85,9 +85,10 @@ class SampleForm(ModelForm):
 
     class Meta:
         model = Sample
-        fields = ['code','name', 'sample_type', 'inventory', 'request', 'essay_field']
+        fields = ['code', 'name', 'sample_type',
+                  'inventory', 'request', 'essay_field']
         labels = {
-            'code':'Código',
+            'code': 'Código',
             'name': 'Nombre',
             'sample_type': 'Tipo de Muestra',
             'inventory': 'Inventario',
@@ -128,12 +129,12 @@ class ServiceRequestCreateForm(ModelForm):
         # we will automatically set it to the first state
         exclude = ('state',)
         labels = {
-            'client':'Cliente',
-            'supervisor':'Supervisor',
-            'priority':'Prioridad',
-            'external_provider':'Proveedor Externo',
-            'expected_duration':'Duración esperada',
-            'observations':'Observaciones'
+            'client': 'Cliente',
+            'supervisor': 'Supervisor',
+            'priority': 'Prioridad',
+            'external_provider': 'Proveedor Externo',
+            'expected_duration': 'Duración esperada',
+            'observations': 'Observaciones'
         }
 
 
@@ -151,12 +152,12 @@ class ServiceRequestForm(ModelForm):
         model = ServiceRequest
         exclude = ()
         labels = {
-            'client':'Cliente',
-            'supervisor':'Supervisor',
-            'priority':'Prioridad',
-            'external_provider':'Proveedor Externo',
-            'expected_duration':'Duración esperada',
-            'observations':'Observaciones'
+            'client': 'Cliente',
+            'supervisor': 'Supervisor',
+            'priority': 'Prioridad',
+            'external_provider': 'Proveedor Externo',
+            'expected_duration': 'Duración esperada',
+            'observations': 'Observaciones'
         }
 
 
@@ -174,17 +175,17 @@ class EssayMethodFillChosenForm(ModelForm):
     class Meta:
         model = EssayMethodFill
         fields = ['chosen', ]
-        labels={
-        'chosen':'Escoger'
+        labels = {
+            'chosen': 'Escoger'
         }
 
 
 class SampleEditForm(ModelForm):
     class Meta:
         model = Sample
-        fields = ['code','name', 'sample_type', 'inventory']
+        fields = ['code', 'name', 'sample_type', 'inventory']
         labels = {
-            'code':'Código',
+            'code': 'Código',
             'name': 'Nombre',
             'sample_type': 'Tipo de Muestra',
             'inventory': 'Inventario',
@@ -331,6 +332,12 @@ class ExternalProviderForm(ModelForm):
             'name': 'Nombre',
             'description': 'Descripción',
         }
+
+
+class InventoryForm(ModelForm):
+    class Meta:
+        model = Inventory
+        exclude = ()
 
 
 class ExtraRequestConceptForm(ModelForm):

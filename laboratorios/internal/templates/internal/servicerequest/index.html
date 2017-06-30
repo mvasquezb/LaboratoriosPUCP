@@ -9,7 +9,6 @@
 {% block custom_js1 %}
 <script type="text/javascript">  
     function printId(IdValue,requestState){
-      console.log("prueba")
       var pgrbar = document.getElementById("pgrBar_" + IdValue);
     
       switch (requestState) {
@@ -76,12 +75,10 @@
           break;
       }
 
-
-
-      console.log(IdValue);
       document.getElementById("btnEdit_" + IdValue).style.display="none";
+
       return IdValue;
-      }
+    }
   </script>
 {% endblock custom_js1 %}
 <div class="row border-bottom white-bg dashboard-header">
@@ -168,33 +165,39 @@
                         </a>
                         {% endif %}
                         {% if not servicerequest.deleted %}
-                          {% if perms.internal.change_servicerequest %}
-                          <a id = "btnEdit_{{servicerequest.id}}" href="{{ url('internal:servicerequest.edit', servicerequest.id) }}" class="btn-white btn" title="Editar">
-                            <i  class="fa fa-pencil-square-o" aria-hidden="true"></i>
-                          </a>
+                          {% if servicerequest.state.slug == 'in_preparation'%}
+                            {% if perms.internal.change_servicerequest %}
+                            <a id = "btnEdit_{{servicerequest.id}}" href="{{ url('internal:servicerequest.edit', servicerequest.id) }}" class="btn-white btn" title="Editar">
+                              <i  class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                            </a>
+                            {% endif %}
+                            {% if perms.internal.delete_servicerequest %}
+                            <a id = "btnDelete_{{servicerequest.id}}" class="myBtn1 btn-white btn" data-toggle="modal" data-target="#myModal1" data-url="{{ url('internal:servicerequest.delete', servicerequest.id) }}" title="Eliminar">
+                              <i  class="fa fa-trash-o" aria-hidden="true"></i>
+                            </a>
+                            {% endif %}
                           {% endif %}
-                          {% if perms.internal.delete_servicerequest %}
-                          <a id = "btnDelete_{{servicerequest.id}}" class="myBtn1 btn-white btn" data-toggle="modal" data-target="#myModal1" data-url="{{ url('internal:servicerequest.delete', servicerequest.id) }}" title="Eliminar">
-                            <i  class="fa fa-trash-o" aria-hidden="true"></i>
-                          </a>
-                          {% endif %}
+                          {% if servicerequest.state.slug in ["customer_review", 'waiting_for_client_approval', "in_preparation"] %}
                           <a id = "btnApprove_{{servicerequest.id}}" class="btn-white btn" href="{{ url('internal:servicerequest.approve', servicerequest.id) }}">
                             Aprobar
                           </a>
-                        {% endif %}
-                        <a  id="btnAttach_{{servicerequest.id}}"  href="{{ url('internal:serviceRequest.attachmentList', servicerequest.id) }}" class="btn-white btn" title="Archivos Adjuntos">
-                          <i class="fa fa-paperclip" aria-hidden="true"></i>
-                        </a>
-                        <a  id ="btnReport_{{servicerequest.id}}"  href="{{ url('internal:servicerequest.reportGenerator', servicerequest.id) }}" class="btn-white btn" title="Reporte Interno">
-                          <i  class="fa fa-table" aria-hidden="true"></i>
-                        </a>
-                        <a  id = "btnPdf_{{servicerequest.id}}" href="{{ url('internal:servicerequest.finalReport', servicerequest.id) }}" class="btn-white btn" title="Reporte Final">
-                          <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
-                        </a>
-                        {% if servicerequest.state.slug == "review_samples" %}
-                          <a class="btn-white btn" href="{{ url('internal:inventoryItem.showRequest', servicerequest.id) }}">
-                            Aprobar Muestras
+                          {% endif %}
+                          {% if not servicerequest.state.slug == 'in_preparation' %}
+                          <a  id="btnAttach_{{servicerequest.id}}" href="{{ url('internal:serviceRequest.attachmentList', servicerequest.id) }}" class="btn-white btn" title="Archivos Adjuntos">
+                            <i class="fa fa-paperclip" aria-hidden="true"></i>
                           </a>
+                          <a  id ="btnReport_{{servicerequest.id}}"  href="{{ url('internal:servicerequest.reportGenerator', servicerequest.id) }}" class="btn-white btn" title="Reporte Interno">
+                            <i  class="fa fa-table" aria-hidden="true"></i>
+                          </a>
+                          <a  id = "btnPdf_{{servicerequest.id}}" href="{{ url('internal:servicerequest.finalReport', servicerequest.id) }}" class="btn-white btn" title="Reporte Final">
+                            <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
+                          </a>
+                          {% endif %}
+                          {% if servicerequest.state.slug == "review_samples" %}
+                            <a class="btn-white btn" href="{{ url('internal:inventoryItem.showRequest', servicerequest.id) }}">
+                              Aprobar Muestras
+                            </a>
+                          {% endif %}
                         {% endif %}
                       </div>
                     </td>
