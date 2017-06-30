@@ -18,7 +18,7 @@
         {% csrf_token %}
         {% for field in form %}
           <div class="form-group has-feedback">
-            <label for="{{ field.field.widget.attrs.get('name') }}">{{ _(field.label) }}</label>
+            <label for="{{ field.field.widget.attrs.get('name') }}">{{ _(field.label) }} *</label>
             {{ field.as_widget(attrs={
                   'data-error': 'Este campo es obligatorio',
                   'class': 'form-control',
@@ -28,11 +28,11 @@
           </div>
         {% endfor %}
       </form>
+      <div class="form-group">
+        <p><strong>(*) Campos obligatorios</strong></p>
+      </div>
     </div>
     <div class="method-container hidden"></div>
-    <div class="col-md-12 row form-group">
-      <p><strong>(*) Campos obligatorios</strong></p>
-    </div>
     <div class="modal-footer text-center">
       <input type="submit" class="btn btn-primary" value="Aceptar" form="assign-employee-form">
       <a class="btn btn-default" data-dismiss="modal">Cancelar</a>

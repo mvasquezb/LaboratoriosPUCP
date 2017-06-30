@@ -249,6 +249,7 @@ class ServiceAssignEmployeeForm(forms.Form):
         super().__init__(*args, **kwargs)
         if employee is not None:
             self.fields['employee'].queryset = employee
+            self.fields['employee'].label = 'Empleado'
 
 
 class LaboratoryForm(ModelForm):

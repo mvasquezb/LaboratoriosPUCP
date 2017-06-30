@@ -79,7 +79,8 @@
             </div>
             <div class="col-lg-6">
               <div class="form-group">
-                <div class="i-checks"><label class=""> <div class="iradio_square-green" style="position: relative;"><input {{ 'checked' if (service_request.external_provider) }} id="check_service_provider" type="checkbox" value="option1" name="a" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div> <i></i>Tercerizar Servicio</label></div>
+                <input name="a" value="option1" id="check_service_provider" type="checkbox" class="i-checks" {% if service_request.external_provider %}checked{% endif %}>
+                <label>Tercerizar Servicio</label>
               </div>
               <div class="form-group" id="servide_provider_input" style="display: none;">
                 <label>Proveedores</label>
@@ -133,7 +134,7 @@
                             <td data-id="{{ essay_method_active.instance.id }}">
                               <div class="form-group">
                                 <label>{{ essay_method_active.chosen.label }}</label>
-                                {{ essay_method_active.chosen.as_widget() }}
+                                {{ essay_method_active.chosen.as_widget(attrs={'class': 'i-checks'}) }}
                               </div>
                             </td>
                           {% endfor%}
@@ -149,6 +150,7 @@
                        data-target="#assign-employee-modal"
                        data-url="{{ url('internal:servicerequest.assign_employee', request_id=pk, sample_id=sample.id) }}"
                        data-row="{{ loop.index0 }}">
+                      <span title='Debe seleccionar un método de ensayo'></span>
                       Asignar Empleado
                     </a>
                   </td>
@@ -217,15 +219,12 @@
 
 {% block custom_js %}
 <script>
-if($('#check_service_provider')[0].checked)
+if($('#check_service_provider').prop('checked'))
   $('#servide_provider_input').show();
 else
   $('#servide_provider_input').hide();
-$('.iradio_square-green').click(function(){
-  if($('#check_service_provider')[0].checked)
-    $('#servide_provider_input').hide();
-  else
-    $('#servide_provider_input').show();
+$('#check_service_provider').on('ifChanged', function() {
+  $('#servide_provider_input').toggle();
 });
 $('#assign-employee-modal').on('show.bs.modal', function (e) {
   var $btn = $(e.relatedTarget);
@@ -307,7 +306,7 @@ $('.btn-assign-employee').each(function (index, elem) {
   var $btn = $(elem);
   update_assign_btn($btn);
 });
-$('.essaymethod-table [type="checkbox"]').on('change', function () {
+$('.essaymethod-table .i-checks[type="checkbox"]').on('ifChanged', function () {
   var $btn = $(this).parents('.sample-table').find('.btn-assign-employee');
   update_assign_btn($btn);
 });
@@ -316,9 +315,7 @@ function update_assign_btn($btn) {
   var $essayMethodTable = $sampleTable.find('.essaymethod-table');
   var $checkedMethods = $essayMethodTable.find('[type="checkbox"]:checked');
   if ($checkedMethods.length == 0) {
-    $btn.prop('disabled', true).find('span').tooltip({
-      title: 'Debe seleccionar un método de ensayo',
-    });
+    $btn.prop('disabled', true).find('span').tooltip();
   } else {
     $btn.prop('disabled', false).find('span').tooltip('destroy');
   }
