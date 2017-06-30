@@ -56,10 +56,10 @@ class BasicUser(SafeDeleteModel):
         return set(self.permissions.values_list('full_name', flat=True))
 
     def has_perm(self, perm_name):
-        return perm_name in self.get_all_permissions()
+        return self.user.is_superuser or perm_name in self.get_all_permissions()
 
     def has_module_perms(self, app_label):
-        return self.permissions.filter(
+        return self.user.is_superuser or self.permissions.filter(
             content_type__app_label=app_label
         ).exists()
 
@@ -182,6 +182,7 @@ class EssayMethod(SafeDeleteModel):
     audit_log = AuditlogHistoryField()
     name = models.CharField(max_length=100)
     description = models.CharField(max_length=100, null=True, blank=True)
+    acreditado = models.NullBooleanField(null=True, blank=True,default=False)
     price = models.FloatField()
     parameters = models.ManyToManyField(
         'EssayMethodParameter',
@@ -241,6 +242,7 @@ class EssayFill(SafeDeleteModel):
     essay = models.ForeignKey(Essay)
     sample = models.ForeignKey('Sample')
     quantity = models.PositiveIntegerField(default=0)
+    observations = models.CharField(max_length=500, null=True, blank=True,default="")
     quotation = models.ForeignKey(
         'Quotation',
         related_name='essay_fills',
@@ -299,6 +301,7 @@ class EssayMethodFill(SafeDeleteModel):
         related_name='essay_methods'
     )
     essay = models.ForeignKey(EssayFill)
+    observations = models.CharField(max_length=500, null=True, blank=True,default="")
     external_provider = models.ForeignKey(
         'ExternalProvider',
         null=True,
@@ -415,6 +418,7 @@ class ServiceRequest(SafeDeleteModel):
     state = models.ForeignKey('ServiceRequestState')
     external_provider = models.ForeignKey(
         'ExternalProvider', null=True, blank=True)
+    description = models.CharField(max_length=100, null=True, blank=True,default="")
     observations = models.CharField(max_length=500, null=True, blank=True)
     expected_duration = models.IntegerField(default=10)
     registered_date = models.DateTimeField(
@@ -447,8 +451,8 @@ class ServiceRequestState(SafeDeleteModel):
     _safedelete_policy = SOFT_DELETE_CASCADE
 
     audit_log = AuditlogHistoryField()
-    slug = models.CharField(max_length=20)
-    description = models.CharField(max_length=20)
+    slug = models.CharField(max_length=100)
+    description = models.CharField(max_length=100)
     registered_date = models.DateTimeField(
         auto_now_add=True,
         auto_now=False,
@@ -515,7 +519,8 @@ class Quotation(SafeDeleteModel):
     _safedelete_policy = SOFT_DELETE_CASCADE
 
     audit_log = AuditlogHistoryField()
-    request = models.ForeignKey(ServiceRequest, on_delete=models.CASCADE)
+    request = models.OneToOneField(ServiceRequest, on_delete=models.CASCADE)
+    observations = models.TextField(max_length=500, null=True, blank=True)
     registered_date = models.DateTimeField(
         auto_now_add=True,
         auto_now=False,
@@ -549,6 +554,8 @@ class Sample(SafeDeleteModel):
     code = models.CharField(max_length=10)
     name = models.CharField(max_length=50, default="default")
     sample_type = models.ForeignKey(SampleType)
+    description = models.CharField(max_length=100, null=True, blank=True,default="")
+    observations = models.CharField(max_length=500, null=True, blank=True,default="")
     request = models.ForeignKey(ServiceRequest, on_delete=models.CASCADE)
     inventory = models.ForeignKey('Inventory', on_delete=models.CASCADE)
     registered_date = models.DateTimeField(
@@ -689,3 +696,26 @@ class InventoryOrderDefault(SafeDeleteModel):
         auto_now=False,
         blank=True
     )
+
+
+@auditlog.register()
+class ExtraRequestConcept(SafeDeleteModel):
+    _safedelete_policy = SOFT_DELETE_CASCADE
+
+    auditlog = AuditlogHistoryField()
+    quotation = models.ForeignKey(
+        Quotation,
+        on_delete=models.CASCADE,
+        related_name='extra_concepts'
+    )
+    description = models.CharField(max_length=200)
+    amount = models.FloatField()
+    quantity = models.PositiveIntegerField(default=1)
+    registered_date = models.DateTimeField(
+        auto_now_add=True,
+        auto_now=False,
+        blank=True
+    )
+
+    def __str__(self):
+        return self.description

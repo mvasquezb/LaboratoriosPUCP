@@ -5,11 +5,12 @@ from django.shortcuts import (
     reverse,
 )
 from django.contrib import messages
-from internal.models import *
+from django.db.models import Q
 
+from internal.models import *
 from internal.views.forms import EmployeeForm
 from internal.views.forms import RoleForm
-from internal.permissions import user_passes_test
+from internal.permissions import user_passes_test, NON_MODIFIABLE_MODELS
 from internal.permissions.role import *
 
 
@@ -39,8 +40,12 @@ def show(request, pk, template='internal/role/show.html'):
 def create(request,
            template='internal/role/create.html'):
     form = RoleForm(request.POST or None)
+    permissions = Permission.objects.filter(
+        ~Q(content_type__model__in=map(lambda x: x.lower(), NON_MODIFIABLE_MODELS)),
+        content_type__app_label='internal',
+    )
     context = {
-        'permissions': Permission.objects.all(),
+        'permissions': permissions,
         'form': form
     }
     if request.method == 'POST':
@@ -56,8 +61,12 @@ def edit(request, pk,
          template='internal/role/edit.html'):
     role = get_object_or_404(Role, pk=pk)
     form = RoleForm(request.POST or None, instance=role)
+    permissions = Permission.objects.filter(
+        ~Q(content_type__model__in=map(lambda x: x.lower(), NON_MODIFIABLE_MODELS)),
+        content_type__app_label='internal',
+    )
     context = {
-        'permissions': Permission.objects.all(),
+        'permissions': permissions,
         'selected_permissions': role.permissions.all(),
         'form': form,
         'custom_role': role,

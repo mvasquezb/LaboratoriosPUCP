@@ -3,7 +3,10 @@ from django.utils.translation import ugettext_lazy as _
 from django.forms import (
     ModelForm,
 )
-from django.forms import inlineformset_factory
+from django.forms import (
+    inlineformset_factory,
+    modelformset_factory,
+)
 # from django.forms.models import BaseInlineFormSet
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
@@ -76,12 +79,22 @@ class SampleForm(ModelForm):
     # iquery_choices = [('', 'None')] + [(name,name) for name in iquery]
     # essay_field = forms.ChoiceField(iquery_choices,required=False, widget=forms.Select())
     essay_field = forms.ModelChoiceField(
-        queryset=Essay.all_objects.filter(deleted__isnull=True)
+        queryset=Essay.all_objects.filter(deleted__isnull=True),
+        label='Ensayo',
     )
 
     class Meta:
         model = Sample
-        fields = ['name', 'sample_type', 'inventory', 'request', 'essay_field']
+        fields = ['code', 'name', 'sample_type',
+                  'inventory', 'request', 'essay_field']
+        labels = {
+            'code': 'Código',
+            'name': 'Nombre',
+            'sample_type': 'Tipo de Muestra',
+            'inventory': 'Inventario',
+            'request': 'Orden de Servicio',
+            'essay_field': 'Ensayo a realizar',
+        }
 
     def save(self, commit=True):
         sample = super(SampleForm, self).save(commit=commit)
@@ -116,12 +129,12 @@ class ServiceRequestCreateForm(ModelForm):
         # we will automatically set it to the first state
         exclude = ('state',)
         labels = {
-            'client':'Cliente',
-            'supervisor':'Supervisor',
-            'priority':'Prioridad',
-            'external_provider':'Proveedor Externo',
-            'expected_duration':'Duración esperada',
-            'observations':'Observaciones'
+            'client': 'Cliente',
+            'supervisor': 'Supervisor',
+            'priority': 'Prioridad',
+            'external_provider': 'Proveedor Externo',
+            'expected_duration': 'Duración esperada',
+            'observations': 'Observaciones'
         }
 
 
@@ -139,12 +152,12 @@ class ServiceRequestForm(ModelForm):
         model = ServiceRequest
         exclude = ()
         labels = {
-            'client':'Cliente',
-            'supervisor':'Supervisor',
-            'priority':'Prioridad',
-            'external_provider':'Proveedor Externo',
-            'expected_duration':'Duración esperada',
-            'observations':'Observaciones'
+            'client': 'Cliente',
+            'supervisor': 'Supervisor',
+            'priority': 'Prioridad',
+            'external_provider': 'Proveedor Externo',
+            'expected_duration': 'Duración esperada',
+            'observations': 'Observaciones'
         }
 
 
@@ -162,18 +175,32 @@ class EssayMethodFillChosenForm(ModelForm):
     class Meta:
         model = EssayMethodFill
         fields = ['chosen', ]
+        labels = {
+            'chosen': 'Escoger'
+        }
 
 
 class SampleEditForm(ModelForm):
     class Meta:
         model = Sample
-        fields = ['name', 'sample_type', 'inventory']
+        fields = ['code', 'name', 'sample_type', 'inventory']
+        labels = {
+            'code': 'Código',
+            'name': 'Nombre',
+            'sample_type': 'Tipo de Muestra',
+            'inventory': 'Inventario',
+            # 'request': 'Orden de Servicio',
+            'Essay field': 'Método de Ensayo',
+        }
 
 
 class EssayFillSelectionForm(ModelForm):
     class Meta:
         model = EssayFill
         fields = ['essay']
+        labels = {
+            'essay': 'Ensayo',
+        }
 
     def save(self, commit=True):
         # verify that methods belong to particular essay
@@ -182,11 +209,11 @@ class EssayFillSelectionForm(ModelForm):
             deleted__isnull=True,
             pk=self.data['essay']
         )
-        EssayFill.all_objects.filter(
+        essay_fills = EssayFill.all_objects.filter(
             deleted__isnull=True,
             essay=myself.essay
         )
-        methods_count = essay_fills
+        methods_count = essay_fills.count()
         essay_methods = EssayMethod.all_objects.filter(
             deleted__isnull=True,
             essays=essay
@@ -306,7 +333,29 @@ class ExternalProviderForm(ModelForm):
             'description': 'Descripción',
         }
 
+
 class InventoryForm(ModelForm):
     class Meta:
         model = Inventory
         exclude = ()
+
+
+class ExtraRequestConceptForm(ModelForm):
+    class Meta:
+        model = ExtraRequestConcept
+        fields = ('description', 'amount', 'quantity')
+        labels = {
+            'description': 'Descripción',
+            'amount': 'Monto',
+            'quantity': 'Cantidad',
+            'quotation': 'Cotización',
+        }
+
+
+ExtraRequestConceptFormset = inlineformset_factory(
+    Quotation,
+    ExtraRequestConcept,
+    form=ExtraRequestConceptForm,
+    extra=1,
+    can_delete=True
+)

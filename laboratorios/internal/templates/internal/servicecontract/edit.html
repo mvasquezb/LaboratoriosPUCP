@@ -6,6 +6,7 @@
 <style>
 .alert { display: none; }
 
+
 </style>
 {% endblock custom_css %}
 
@@ -21,10 +22,10 @@
     <div class="col-lg-12">
       <div class="ibox float-e-margins">
         <div class="ibox-title">
-          <a href="{{ url('internal:servicerequest.quotation', request_id=pk) }}" class="btn btn-primary">
+          <a href="{{ url('internal:servicerequest.quotation', request_id=service_request.id) }}" class="btn btn-primary">
             Ver Cotización
           </a>
-          <a href="{{ url('internal:serviceRequest.attachmentList', id=pk) }}" class="btn btn-primary">
+          <a href="{{ url('internal:serviceRequest.attachmentList', id=service_request.id) }}" class="btn btn-primary">
             Adjuntar Archivos
           </a>
         </div>
@@ -40,7 +41,7 @@
                   <select name="client" data-error="Este campo es obligatorio" required="" id="id_client"
                           class="form-control">
                     {% for client in clients %}
-                    <option value="{{ client.id }}">{{ client.user.first_name }} {{ client.user.last_name }}</option>
+                    <option {% if service_request.client.id == client.id %}selected{% endif %} value="{{ client.id }}">{{ client }}</option>
                     {% endfor %}
                   </select>
                   <div class="help-block with-errors"></div>
@@ -51,7 +52,7 @@
                           class="form-control">
                     {% for employee in employees %}
                     <option {% if service_request.supervisor == employee %}selected{% endif %}
-                            value="{{ employee.id }}">{{ employee.user.first_name }} {{ employee.user.last_name }}
+                            value="{{ employee.id }}">{{ employee }}
                     </option>
                     {% endfor %}
                   </select>
@@ -109,6 +110,11 @@
                 </div>
               </div>
             </div>
+            {% if samples %}
+              <div class="form-group">
+                <label>Muestras</label>
+              </div>
+            {% endif %}
             {% for sample in samples %}
             <div class="row">
               <div class="col-lg-12">
@@ -165,6 +171,40 @@
               </div>
             </div>
             {% endfor %}
+            <div class="row">
+          <div class="col-md-12">
+            <div class="form-group">
+              <label>Conceptos Adicionales</label>
+            </div>
+            {{ extra_concept_formset.management_form }}
+            <div class="table-responsive">
+              <table class="table table-bordered table-hover extra-concept-table" data-form-prefix="{{ extra_concept_formset.prefix }}">
+                <thead>
+                  <tr>
+                    <th>Descripción</th>
+                    <th>Costo</th>
+                    <th>Cantidad</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for concept in extra_concept_formset.forms %}
+                    <tr class="extra-concept-formset">
+                      {% for field in concept.hidden_fields() %}
+                        {{ field }}
+                      {% endfor %}
+                      {% if form.instance.pk %}{{ concept.DELETE.as_hidden() }}{% endif %}
+                      <td>{{ concept.description }}</td>
+                      <td>{{ concept.amount }}</td>
+                      <td>{{ concept.quantity }}</td>
+                      <td></td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
             <div class="col-md-12 row form-group">
               <p><strong>(*) Campos obligatorios</strong></p>
             </div>
@@ -264,6 +304,12 @@ function update_assign_btn($btn) {
     $btn.prop('disabled', false).find('span').tooltip('destroy');
   }
 }
-
+$('.extra-concept-formset').formset({
+  prefix: $(this).data('form-prefix'),
+  addCssClass: 'btn btn-primary fa fa-plus',
+  addText: '',
+  deleteCssClass: 'btn btn-danger fa fa-minus',
+  deleteText: '',
+});
 </script>
 {% endblock custom_js %}

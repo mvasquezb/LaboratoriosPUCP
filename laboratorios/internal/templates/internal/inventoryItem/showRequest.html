@@ -27,9 +27,15 @@
           </div>
           {% if perms.internal.index_inventoryorder %}
           <div class="col-md-2 col-md-offset-7">
-            <a class="btn btn-primary pull-right" href="{{ url('internal:inventoryOrder.index') }}">
-              Solicitudes de Almacenamiento
+            {% for data in serviceRequest %}
+            <a class="btn btn-primary pull-right" href="{{ url('internal:inventoryItem.approveAll', data.id ) }}">
+              Aprobar todas las muestras
             </a>
+
+            <a class="btn btn-primary pull-right" href="{{ url('internal:inventoryItem.changeContract', data.id ) }}">
+              Modificar el contrato
+            </a>
+            {% endfor %}
           </div>
           {% endif %}
         </div>
@@ -42,9 +48,6 @@
                   </th>
                   <th>
                     Muestra
-                  </th>
-                  <th>
-                    Prioridad
                   </th>
                   <th>
                     Tipo muestra
@@ -60,7 +63,6 @@
                   <tr role="row">
                     <td>{{ loop.index }}</td>
                     <td>{{ inventoryItem.sample.name }}</td>
-                    <td>{{ inventoryItem.sample.request.priority }}</td>
                     <td>{{ inventoryItem.sample.sample_type.name }}</td>
                     <td>{{ inventoryItem.state or 'Recién Registrado' }}</td>
 

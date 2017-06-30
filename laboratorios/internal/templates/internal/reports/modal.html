@@ -1,0 +1,28 @@
+<div class="modal-content modal-report">
+	<div class="modeal-center-content">
+	{% if not modal_index == -1 %}
+	    <div class="table-responsive">
+		    <table class="table table-striped table-bordered table-hover dataTables-example">
+		      <thead>
+		      
+		        <tr>
+		        {% for field_label in modal_labels %}
+		          <th class="first-table-column">{{ field_label}}</th>
+		          {% endfor %}
+		        </tr>
+		       
+		      </thead>
+		      <tbody>
+		      {% for item in modal_matrix[modal_index] %}
+		          <tr>
+		          	{% for field in item %}
+		            <td>{{ field }}</td>
+		            {% endfor %}
+		          </tr>
+		      {% endfor %}
+		      </tbody>
+		    </table>
+		</div>
+	{% endif %}
+	</div>
+</div>
