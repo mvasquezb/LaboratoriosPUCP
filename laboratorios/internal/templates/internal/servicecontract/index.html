@@ -55,35 +55,70 @@
                 <td>{{ servicecontract.client }}</td>
                 <td>{{ servicecontract.request.pk }}</td>
                 <td>{{ servicecontract.request.observations }}</td>
-                <td>
-                  {% if servicecontract.deleted %}
-                  Eliminado
-                  {% else %}
-                  Activo
-                  {% endif %}
-                </td>
+                <td>{{ servicecontract.request.state.description }}</td>
+
                 <td class="text-left footable-visible footable-last-column">
                   <div class="btn-group">
-                    {% if perms.internal.show_servicecontract %}
-                    <a href="{{ url('internal:servicecontract.show', servicecontract.id) }}" class="btn-white btn"><i
-                      class="fa fa-eye" aria-hidden="true"></i></a>
-                    {% endif %}
-                    {% if servicecontract.request.state.description == "Aprobado" %}
+                    {% if servicecontract.request.state.slug == "customer_review" or servicecontract.request.state.slug == 'review_samples' or servicecontract.request.state.slug == 'waiting_for_client_approval' %}
+                      {% if perms.internal.show_servicecontract %}
+                        <a href="{{ url('internal:servicecontract.show', servicecontract.id) }}" class="btn-white btn">
+                          <i class="fa fa-eye" aria-hidden="true"></i>
+                        </a>
+                      {% endif %}
                       {% if perms.internal.change_servicecontract %}
-                      <a href="{{ url('internal:servicecontract.edit', servicecontract.id) }}" class="btn-white btn"><i
+                       <a href="{{ url('internal:servicecontract.edit', servicecontract.id) }}" class="btn-white btn"><i
                         class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
                       {% endif %}
                       {% if perms.internal.delete_servicecontract %}
                       <a class="myBtn1 btn-white btn" data-toggle="modal" data-target="#myModal1"
-                         data-url="{{ url('internal:servicecontract.delete', servicecontract.id) }}"><i
-                        class="fa fa-trash-o" aria-hidden="true"></i></a>
+                       data-url="{{ url('internal:servicecontract.cancel', servicecontract.id) }}"><i
+                      class="fa fa-trash-o" aria-hidden="true"></i></a>
                       {% endif %}
-                    {% else %}
+                    {% elif servicecontract.request.state.slug == "wait_for_modification_approval" %}
+                      {% if perms.internal.show_servicecontract %}
+                      <a href="{{ url('internal:servicecontract.show', servicecontract.id) }}" class="btn-white btn"><i
+                      class="fa fa-eye" aria-hidden="true"></i></a>
+                      {% endif %}
+                      {% perms.internal.approve_servicecontract %}
                       <a class="btn-white btn"
-                         href="{{ url('internal:servicecontract.approve', servicecontract.id) }}">Aprobar</a>
+                       href="{{ url('internal:servicecontract.approve', servicecontract.id) }}">Aprobar</a>
+                      {% endif %}
+                      {% perms.internal.reject_servicecontract %}
                       <a class="btn-white btn"
-                         href="{{ url('internal:servicecontract.refuse', servicecontract.id) }}">Rechazar</a>
-                    {% endif %}
+                       href="{{ url('internal:servicecontract.refuse', servicecontract.id) }}">Rechazar</a>
+                       {% endif %}
+                    {% elif servicecontract.request.state.slug == "wait_for_client_modification_approval" %}
+                      {% if perms.internal.show_servicecontract %}
+                      <a href="{{ url('internal:servicecontract.show', servicecontract.id) }}" class="btn-white btn"><i
+                      class="fa fa-eye" aria-hidden="true"></i></a>
+                      {% endif %}
+                      {##### AQUI ####}
+                      {% if perms.internal.approve_servicecontract %}
+                      <a class="btn-white btn"
+                       href="{{ url('internal:servicecontract.approve', servicecontract.id) }}">Aprobar</a>
+                      {% endif %}
+                      {##### AQUI ####}
+                      {% if perms.internal.refuse_servicecontract %}
+                      <a class="btn-white btn"
+                       href="{{ url('internal:servicecontract.refuse', servicecontract.id) }}">Rechazar</a>
+                       {% endif %}
+                    {% elif servicecontract.request.state.slug == "canceled" %}
+                      {% if perms.internal.show_servicecontract %}
+                      <a href="{{ url('internal:servicecontract.show', servicecontract.id) }}" class="btn-white btn"><i
+                      class="fa fa-eye" aria-hidden="true"></i></a>
+                      {% endif %}
+                    {% else %}  {# Para cualquier otro estado #}
+                     {% if perms.internal.show_servicecontract %}
+                      <a href="{{ url('internal:servicecontract.show', servicecontract.id) }}" class="btn-white btn"><i
+                      class="fa fa-eye" aria-hidden="true"></i></a>
+                      {% endif %}
+                      {% if perms.internal.delete_servicecontract %}
+                      <a class="myBtn1 btn-white btn" data-toggle="modal" data-target="#myModal1"
+                       data-url="{{ url('internal:servicecontract.cancel', servicecontract.id) }}"><i
+                      class="fa fa-trash-o" aria-hidden="true"></i></a>
+                      {% endif %}
+
+                     {% endif %}
                   </div>
                 </td>
               </tr>
@@ -105,9 +140,12 @@
       <p>¿Seguro que quiere eliminarlo?</p>
       <button type="button" class="delete-employee btn btn-danger">Eliminar</button>
       <button type="button" class="span-close btn btn-primary">Cancelar</button>
+
     </div>
   </div>
 </div>
+
+
 {% endblock page_content %}
 
 {% block custom_js %}
@@ -144,6 +182,8 @@ $( document ).ready(function() {
   $(".span-close").click(function() {
     $("#myModal1").hide();
   });
+
+
 });
 $(".myBtn1").click(function(event) {
   event.preventDefault();

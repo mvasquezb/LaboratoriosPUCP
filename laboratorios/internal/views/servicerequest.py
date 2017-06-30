@@ -40,8 +40,10 @@ from internal.permissions.serviceRequest import *
 def index(request,
           template='internal/servicerequest/index.html',
           extra_context=None):
+
+    state_in_preparation = get_object_or_404(ServiceRequestState.all_objects, slug = "in_preparation")
     context = {
-        'requests': ServiceRequest.all_objects.filter(deleted__isnull=True)
+        'requests': ServiceRequest.all_objects.filter(state = state_in_preparation)
     }
     if extra_context is not None:
         context.update(extra_context)
@@ -70,15 +72,15 @@ def create(request,
                 request,
                 'Se ha creado la solicitud exitosamante!'
             )
-            # creating an initial state if not existing yet
+            # creating an initial state ("in_preparation") if not existing yet
             init_state = ServiceRequestState.all_objects.filter(
                 deleted__isnull=True,
-                slug='initial'
+                slug='in_preparation'
             ).first()
             if init_state is None:
                 init_state = ServiceRequestState(
-                    slug='initial',
-                    description='Estado Inicial'
+                    slug='in_preparation',
+                    description='En preparación'
                 )
                 init_state.save()
             created_service_request.state = init_state
@@ -510,8 +512,8 @@ def assign_employee(request,
 def approve(request,
             pk, template='internal/servicerequest/index.html'):
     service_request = ServiceRequest.all_objects.get(pk=pk)
-    state = ServiceRequestState.all_objects.get(description="Aprobado")
-    service_request.state = state  # Le asignamos el estado de aprobado
+    state = ServiceRequestState.all_objects.get(slug = "ready")
+    service_request.state = state  # Le asignamos el estado "Preparada"
     service_request.save()
     client = Client.all_objects.get(pk=service_request.client.id)
 
@@ -522,7 +524,6 @@ def approve(request,
     service_contract.save()
     messages.success(request, 'Se ha aprobado la solicitud exitosamante!')
     return redirect('internal:servicerequest.index')
-    # return redirect(reverse("internal:servicerequest.index"))
 
 
 def workload_view_per_request(request,

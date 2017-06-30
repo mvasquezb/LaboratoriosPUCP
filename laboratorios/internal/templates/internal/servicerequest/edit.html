@@ -59,9 +59,9 @@
                 <label>Estado</label>
                 <select name="state" data-error="Este campo es obligatorio" required="" id="id_state" class="form-control">
                   {% for state in states %}
-                      <option {% if service_request.state.id == state.id %}selected{% endif %} value="{{ state.id }}">
-                        {{ state.description }}
-                      </option>
+                  <option {% if service_request.state.id== state.id %}selected{% endif %} value="{{ state.id }}">
+                    {{ state.description }}
+                  </option>
                   {% endfor %}
                 </select>
                   <div class="help-block with-errors"></div>
