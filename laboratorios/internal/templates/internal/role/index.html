@@ -26,12 +26,14 @@
                 </span>
               </div>
             </div>
+            {% if perms.internal.add_role %}
             <div class="col-md-2 col-md-offset-7 text-right">
               <a class="btn btn-primary " href="{{ url('internal:role.create') }}">
                 <i class="fa fa-plus"></i>
                 Crear Rol
               </a>
             </div>
+            {% endif %}
           </div>
           <div class="table-responsive">
             <table class="table table-striped table-bordered" id="role-table">
@@ -67,10 +69,16 @@
                     </td>
                     <td class="text-left footable-visible footable-last-column">
                       <div class="btn-group">
+                        {% if perms.internal.show_role %}
                         <a  href="{{ url('internal:role.show', role.id) }}" class="btn-white btn"><i class="fa fa-eye" aria-hidden="true"></i></a>
+                        {% endif %}
                         {% if not role.deleted %}
-                        <a  href="{{ url('internal:role.edit', role.id) }}" class="btn-white btn"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
-                        <a class="myBtn1 btn-white btn" data-toggle="modal" data-target="#myModal1" data-url="{{ url('internal:role.delete', role.id) }}"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+                          {% if perms.internal.change_role %}
+                          <a  href="{{ url('internal:role.edit', role.id) }}" class="btn-white btn"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+                          {% endif %}
+                          {% if perms.internal.delete_role %}
+                          <a class="myBtn1 btn-white btn" data-toggle="modal" data-target="#myModal1" data-url="{{ url('internal:role.delete', role.id) }}"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+                          {% endif %}
                         {% endif %}
                       </div>
                     </td>
