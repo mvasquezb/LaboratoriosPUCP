@@ -246,7 +246,7 @@ urlpatterns = [
         name='sampleType.delete'),
 
     #
-    #Supply
+    # Supply
     #
     url('^supply/create$',
         views.supply.create,
@@ -265,7 +265,7 @@ urlpatterns = [
         name='supply.delete'),
 
     #
-    #Equipment
+    # Equipment
     #
     url('^equipment/create$',
         views.equipment.create,
