@@ -515,7 +515,7 @@ class Quotation(SafeDeleteModel):
     _safedelete_policy = SOFT_DELETE_CASCADE
 
     audit_log = AuditlogHistoryField()
-    request = models.ForeignKey(ServiceRequest, on_delete=models.CASCADE)
+    request = models.OneToOneField(ServiceRequest, on_delete=models.CASCADE)
     observations = models.TextField(max_length=500, null=True, blank=True)
     registered_date = models.DateTimeField(
         auto_now_add=True,
@@ -697,7 +697,7 @@ class ExtraRequestConcept(SafeDeleteModel):
     _safedelete_policy = SOFT_DELETE_CASCADE
 
     auditlog = AuditlogHistoryField()
-    request = models.ForeignKey(
+    quotation = models.ForeignKey(
         Quotation,
         on_delete=models.CASCADE,
         related_name='extra_concepts'
