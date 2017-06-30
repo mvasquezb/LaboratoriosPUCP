@@ -130,6 +130,10 @@ def edit(request,
         deleted__isnull=True,
         request=service_request
     )
+    extra_concept_formset = ExtraRequestConceptFormset(
+        request.POST or None,
+        instance=service_request.quotation
+    )
     essay_fill_list = []
     essay_methods_list = []  # To get all essay_methods for every sample
     essay_methods_chosen_forms = []  # To get whether each essay_method is chosen or not
@@ -159,6 +163,12 @@ def edit(request,
             )
         essay_methods_chosen_forms.append(aux_essay_methods_forms)
 
+    if request.method == 'POST':
+        if extra_concept_formset.is_valid():
+            extra_concept_formset.save()
+        else:
+            print('error', extra_concept_formset.errors)
+
     context = {
         'form': service_request_form,
         'service_request': service_request,
@@ -172,7 +182,8 @@ def edit(request,
         'states': ServiceRequestState.all_objects.filter(deleted__isnull=True),
         'external_providers': ExternalProvider.all_objects.filter(
             deleted__isnull=True
-        )
+        ),
+        'extra_concept_formset': extra_concept_formset,
     }
 
     # verificacion
@@ -198,7 +209,8 @@ def edit(request,
             for j in range(0, len(essay_methods_chosen_forms[i])):
                 print(essay_methods_chosen_forms[i][j].save().chosen)
                 essay_methods_chosen_forms[i][j].save()
-        return redirect(reverse("internal:servicerequest.index"))
+        return redirect("internal:servicerequest.index")
+
     return render(request, template, context)
 
 
