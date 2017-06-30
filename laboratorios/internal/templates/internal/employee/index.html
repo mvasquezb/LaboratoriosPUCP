@@ -26,12 +26,14 @@
                 </span>
               </div>
           </div>
+          {% if perms.internal.add_employee %}
           <div class="col-md-2 col-md-offset-7">
             <a class="btn btn-primary pull-right" href="{{ url('internal:employee.create') }}">
                 <i class="fa fa-plus"></i>
                 Crear Empleado
               </a>
           </div>
+          {% endif %}
         </div>
         <div class="table-responsive">
             <table class="table table-striped table-bordered" id="employee-table">
@@ -71,10 +73,17 @@
                     </td>
                     <td class="text-left">
                       <div class="btn-group">
+                        {% if perms.internal.show_employee %}
                         <a  href="{{ url('internal:employee.show', employee.id) }}" class="btn-white btn"><i class="fa fa-eye" aria-hidden="true"></i></a>
+                        {% endif %}
                         {% if not employee.deleted %}
-                        <a  href="{{ url('internal:employee.edit', employee.id) }}" class="btn-white btn"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
-                        <a class="myBtn1 btn-white btn" data-toggle="modal" data-target="#myModal1" data-url="{{ url('internal:employee.delete', employee.id) }}"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+                          {% if perms.internal.change_employee %}
+                          <a  href="{{ url('internal:employee.edit', employee.id) }}" class="btn-white btn"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+                          {% endif %}
+                          {% if perms.internal.delete_employee %}
+                          <a class="myBtn1 btn-white btn" data-toggle="modal" data-target="#myModal1" data-url="{{ url('internal:employee.delete', employee.id) }}"><i class="fa fa-trash-o" aria-hidden="true"></i>
+                          </a>
+                          {% endif %}
                         {% endif %}
                       </div>
                     </td>

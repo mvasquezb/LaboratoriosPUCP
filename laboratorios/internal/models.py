@@ -99,6 +99,12 @@ class Employee(BasicUser):
         auto_now=False,
         blank=True
     )
+    laboratory = models.ForeignKey(
+        'Laboratory',
+        related_name='employees',
+        null=True,
+        blank=True
+    )
 
 
 @auditlog.register()
@@ -107,12 +113,12 @@ class Laboratory(SafeDeleteModel):
 
     audit_log = AuditlogHistoryField()
     name = models.CharField(max_length=50, unique=True)
-    employees = models.ManyToManyField(
+    supervisor = models.ForeignKey(
         'Employee',
-        related_name='laboratories',
+        related_name='supervised_lab',
+        null=True,
         blank=True
     )
-    supervisor = models.ForeignKey('Employee', null=True, blank=True)
     essay_methods = models.ManyToManyField(
         'EssayMethod',
         related_name='laboratories',
@@ -128,6 +134,9 @@ class Laboratory(SafeDeleteModel):
         auto_now=False,
         blank=True
     )
+
+    def __str__(self):
+        return self.name
 
 
 @auditlog.register()

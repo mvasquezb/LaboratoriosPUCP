@@ -56,6 +56,7 @@ urlpatterns = [
     url('^servicerequest/editAttachedFile/(?P<id>\d+)$',
         views.servicerequest.editAttachedFile,
         name='serviceRequest.editAttachedFile'),
+
     #
     # Employee
     #
@@ -113,7 +114,7 @@ urlpatterns = [
     url('^inventoryOrder/check/?$',
         views.inventoryOrder.check,
         name='inventoryOrder.check'),
-    url('^inventoryOrder/(?P<pk>\d+)/approve/?$',
+    url('^inventoryOrder/(?P<pk>\d+)/approve/(?P<pk2>\d+)$',
         views.inventoryOrder.approve,
         name='inventoryOrder.approve'),
     url('^inventoryOrder/(?P<pk>\d+)/reject/?$',
@@ -332,7 +333,15 @@ urlpatterns = [
     url('^inventoryItem/(?P<pk>\d+)/edit/?$',
         views.inventoryItem.edit,
         name='inventoryItem.edit'),
-
+    url('^inventoryItem/(?P<pk>\d+)/request/?$',
+        views.inventoryItem.showRequest,
+        name='inventoryItem.showRequest'),
+    url('^inventoryItem/approveAll/(?P<pk>\d+)/?$',
+        views.inventoryItem.approveAll,
+        name='inventoryItem.approveAll'),
+    url('^inventoryItem/changeContract/(?P<pk>\d+)/?$',
+        views.inventoryItem.changeContract,
+        name='inventoryItem.changeContract'),
     # Parameter Fill
     #
     url('^fill_parameters/(?P<pk>\d+)$',
@@ -344,9 +353,11 @@ urlpatterns = [
     url('^reports/start$',
         views.reports.report_parameters,
         name='reports.start'),
-    url('^reports/results/(?P<criteria_string>[\w\-]+)$',
+    url('^reports/results/$',
         views.reports.processing_parameters,
         name='reports.results'),
+    url('^reports/get_index/(?P<pk>\d+)$',
+        views.reports.get_index),
     #
     # External Provider
     #

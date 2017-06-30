@@ -55,7 +55,7 @@
                   <select name="supervisor" data-error="Este campo es obligatorio" required="" id="id_supervisor"
                           class="form-control">
                     {% for employee in employees %}
-                    <option {% if service_request.supervisor.id== employee.id %}selected{% endif %}
+                    <option {% if service_request.supervisor == employee %}selected{% endif %}
                             value="{{ employee.id }}">{{ employee.user.first_name }} {{ employee.user.last_name }}
                     </option>
                     {% endfor %}
