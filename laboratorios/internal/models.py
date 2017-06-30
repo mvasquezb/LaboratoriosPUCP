@@ -535,7 +535,7 @@ class SampleType(SafeDeleteModel):
     audit_log = AuditlogHistoryField()
     slug = models.CharField(max_length=50)
     name = models.CharField(max_length=100)
-    description = models.CharField(max_length=200)
+    description = models.CharField(max_length=200, null=True, blank=True)
     registered_date = models.DateTimeField(
         auto_now_add=True,
         auto_now=False,
