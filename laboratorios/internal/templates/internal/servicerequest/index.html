@@ -66,20 +66,21 @@
                 <td>{{ servicerequest.supervisor }}</td>
                 <td>
                   {% if servicerequest.deleted %}
-                  Eliminado
+                    Eliminado
                   {% else %}
-                  {{ servicerequest.state.description }}
-                    </td>
+                    {{ servicerequest.state.description }}
+                  {% endif %}
+                </td>
                     <td class="text-left">
                       <div class="btn-group">
                         {% if perms.internal.show_servicerequest %}
-                        <a  href="{{ url('internal:servicerequest.show', servicerequest.id) }}" class="btn-white btn" title="Visualizar">
+                        <a href="{{ url('internal:servicerequest.show', servicerequest.id) }}" class="btn-white btn" title="Visualizar">
                           <i class="fa fa-eye" aria-hidden="true"></i>
                         </a>
                         {% endif %}
                         {% if not servicerequest.deleted %}
                           {% if perms.internal.change_servicerequest %}
-                          <a  href="{{ url('internal:servicerequest.edit', servicerequest.id) }}" class="btn-white btn" title="Editar">
+                          <a href="{{ url('internal:servicerequest.edit', servicerequest.id) }}" class="btn-white btn" title="Editar">
                             <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
                           </a>
                           {% endif %}
@@ -92,13 +93,13 @@
                             Aprobar
                           </a>
                         {% endif %}
-                        <a  href="{{ url('internal:serviceRequest.attachmentList', servicerequest.id) }}" class="btn-white btn" title="Archivos Adjuntos">
+                        <a href="{{ url('internal:serviceRequest.attachmentList', servicerequest.id) }}" class="btn-white btn" title="Archivos Adjuntos">
                           <i class="fa fa-paperclip" aria-hidden="true"></i>
                         </a>
-                        <a  href="{{ url('internal:servicerequest.reportGenerator', servicerequest.id) }}" class="btn-white btn" title="Reporte Interno">
+                        <a href="{{ url('internal:servicerequest.reportGenerator', servicerequest.id) }}" class="btn-white btn" title="Reporte Interno">
                           <i class="fa fa-table" aria-hidden="true"></i>
                         </a>
-                        <a  href="{{ url('internal:servicerequest.finalReport', servicerequest.id) }}" class="btn-white btn" title="Reporte Final">
+                        <a href="{{ url('internal:servicerequest.finalReport', servicerequest.id) }}" class="btn-white btn" title="Reporte Final">
                           <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
                         </a>
                         {% if servicerequest.state.slug == "review_samples" %}
@@ -109,7 +110,6 @@
                       </div>
                     </td>
                   </tr>
-                  {% endif %}
               {% endfor %}
               </tbody>
             </table>

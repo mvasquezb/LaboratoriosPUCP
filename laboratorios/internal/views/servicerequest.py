@@ -41,9 +41,14 @@ def index(request,
           template='internal/servicerequest/index.html',
           extra_context=None):
 
-    state_in_preparation = get_object_or_404(ServiceRequestState.all_objects, slug = "in_preparation")
+    state_in_preparation = get_object_or_404(
+        ServiceRequestState.all_objects,
+        slug="in_preparation"
+    )
     context = {
-        'requests': ServiceRequest.all_objects.filter(state = state_in_preparation)
+        'requests': ServiceRequest.all_objects.filter(
+            state=state_in_preparation
+        )
     }
     if extra_context is not None:
         context.update(extra_context)
@@ -499,7 +504,7 @@ def assign_employee(request,
 def approve(request,
             pk, template='internal/servicerequest/index.html'):
     service_request = ServiceRequest.all_objects.get(pk=pk)
-    state = ServiceRequestState.all_objects.get(slug = "ready")
+    state = ServiceRequestState.all_objects.get(slug="ready")
     service_request.state = state  # Le asignamos el estado "Preparada"
     service_request.save()
     client = Client.all_objects.get(pk=service_request.client.id)
@@ -565,6 +570,7 @@ def workload_view_per_request(request,
         'actual_month': month_names[now.month - 1] + " " + str(now.year)
     }
     return render(request, template, context)
+
 
 def validate_name(name):
     if (name.upper() in ['.','..','CON','PRN','AUX','CLOCK$','NUL','COM1','COM2','COM3','COM4','COM5','COM6','COM7','COM8','COM9','LPT1','LPT2','LPT3','LPT4','LPT5','LPT6','LPT7','LPT8','LPT9','LST','KEYBD$','SCREEN$','$IDLE$','CONFIG$']):
