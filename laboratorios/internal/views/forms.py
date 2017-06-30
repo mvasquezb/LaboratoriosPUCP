@@ -76,7 +76,8 @@ class SampleForm(ModelForm):
     # iquery_choices = [('', 'None')] + [(name,name) for name in iquery]
     # essay_field = forms.ChoiceField(iquery_choices,required=False, widget=forms.Select())
     essay_field = forms.ModelChoiceField(
-        queryset=Essay.all_objects.filter(deleted__isnull=True)
+        queryset=Essay.all_objects.filter(deleted__isnull=True),
+        label='Ensayo',
     )
 
     class Meta:
