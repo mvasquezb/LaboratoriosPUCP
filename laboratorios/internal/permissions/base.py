@@ -7,6 +7,13 @@ from functools import wraps, partial
 from django.contrib import messages
 
 
+NON_MODIFIABLE_MODELS = (
+    'BasicUser',
+    'ServiceRequestState',
+    'ServiceRequestPriority',
+)
+
+
 def permission_check(user, permissions):
     if user.is_superuser:
         return True

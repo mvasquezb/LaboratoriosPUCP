@@ -10,15 +10,11 @@
     <h2><strong>Reportes</strong></h2>
   </div>
 </div>
-
 <div class="wrapper wrapper-content animated fadeInRight" >
   <div class="row">
     <div class="col-lg-12">
       <div class="ibox float-e-margins">
         <div class="ibox-content">
-
-
-      
           <h3><strong>Criterios y Filtros</strong></h3>
           <div class="row custom-row-report">
             <label class="col-sm-2 control-label">Rango de Fechas</label>
@@ -40,7 +36,7 @@
               {% for criteria in criteria_string %}
               <div class="col-sm-12 col-md-3 group-filter-conteiner">
                 <label>{{ criteria }}</label>
-                <input type="radio" class="i-checks checkbox_filters" id="p_{{ loop.index0 }}" name="radio" >
+                <input type="radio" class="i-checks checkbox_filters" id="p_{{ loop.index0 }}" data-index="{{ loop.index0 }}" name="radio" >
               </div>
               {% endfor %}
             </div>
@@ -68,21 +64,17 @@
           <form id="json_form" novalidate action="{{ url('internal:reports.start') }}" method="post">
     {% csrf_token %}
           <div id="json_div" style="display: none;">
-    
             <p><label for="id_js_data">js_data:</label> <input type="text" name="js_data" maxlength="1024" id="id_js_data"/></p>
-    
-</div>
+          </div>
           <div class="row">
             <input type="submit" id="submit_button" value="Generar Reporte" class="btn btn-primary">
           </div>
         </form>
-          
         </div>
       </div>
     </div>
   </div>
 </div>
-
 {% endblock page_content %}
 
 {% block custom_js %}
@@ -96,7 +88,10 @@
 
 
 $(document).ready(function () {
-  $('.custom-multiselect').multiselect();
+  $('.custom-multiselect').multiselect({
+    nonSelectedText: 'Seleccione una opción'
+  });
+
   $(function () {
   var start = moment().subtract(29, 'days');
   var end = moment();
@@ -122,31 +117,6 @@ $(document).ready(function () {
 
     });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   function getCookie(name) {
     var cookieValue = null;
     if (document.cookie && document.cookie !== '') {
@@ -165,37 +135,43 @@ $(document).ready(function () {
 
   var csrftoken = getCookie('csrftoken');
   var criteria_string = {{ criteria_string | safe }};
-
   var filter = {{ filter | safe }};
   var filter_string = {{ filter_string | safe }};
   
 
-  $('#submit_button').click(function(){
+  $('#submit_button').click(function() {
     var sending_string = '';
     var criteria_index = 0;
     var selected_filters=[];
-    for (var i = 0; i < criteria_string.length; i++) {
-      if ($('#p_' + i.toString()).is(':checked')){
-        break;
-      } else {
-        criteria_index++;
-      }
+
+    criteria_index = $('input[type=radio]:checked').attr('data-index');
+    if (criteria_index) {
+      criteria_index = parseInt(criteria_index);
+    } else {
+      toastr.options = {
+          closeButton: true,
+          progressBar: true,
+          showMethod: 'slideDown',
+          timeOut: 4000
+      };
+      toastr.error('Debe selecionar un criterio de agrupación');
+
+      return false;
     }
 
     for (var i = 0; i < filter.length; i++) {
-        console.log(i);
-        if ($('#l_'+i.toString()+' option:selected').length > 0){
-            var aux_list=$('#l_'+i.toString()+' option:selected').map(function(a,item){return item.index; });
-            var ready_list=[];
-            for (var j=0; j<aux_list.length;j++){
-                ready_list.push(aux_list[j]);
-            }
-          selected_filters.push(ready_list);
-          console.log(selected_filters);           
-        }else{
-            selected_filters.push([]);
+      if ($('#l_'+i.toString()+' option:selected').length > 0) {
+        var aux_list=$('#l_'+i.toString()+' option:selected').map(function(a,item){return item.index; });
+        var ready_list=[];
+        for (var j=0; j<aux_list.length;j++) {
+          ready_list.push(aux_list[j]);
         }
+        selected_filters.push(ready_list);
+      } else {
+        selected_filters.push([]);
       }
+    }
+
     var startDate = $('#reportrange').data('daterangepicker').startDate._d;
     var endDate = $('#reportrange').data('daterangepicker').endDate._d;
     var sending_dict = {
@@ -204,11 +180,8 @@ $(document).ready(function () {
         end_date:endDate,
         filters_data:selected_filters,
     }
-    console.log(sending_dict);
     document.getElementById('id_js_data').value=JSON.stringify(sending_dict);
-    console.log(document.getElementById('id_js_data').value);
   });
-
 });
 </script>
 {% endblock custom_js %}

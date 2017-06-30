@@ -44,96 +44,124 @@
             <span class="nav-label">Inicio</span>
           </a>
         </li>
+        {% if perms.internal.index_role %}
         <li>
           <a href="{{ url('internal:role.index') }}">
             <i class="fa fa-th-large"></i>
             <span class="nav-label">Roles</span>
           </a>
         </li>
+        {% endif %}
+        {% if perms.internal.index_employee %}
         <li>
           <a href="{{ url('internal:employee.index') }}">
             <i class="fa fa-th-large"></i>
             <span class="nav-label">Empleados</span>
           </a>
         </li>
+        {% endif %}
+        {% if perms.internal.index_servicerequest %}
         <li>
           <a href="{{ url('internal:servicerequest.index') }}">
             <i class="fa fa-th-large"></i>
             <span class="nav-label">Solicitudes</span>
           </a>
         </li>
+        {% endif %}
+        {% if perms.internal.index_inventoryOrder %}
         <li>
           <a href="{{ url('internal:inventoryOrder.index') }}">
             <i class="fa fa-th-large"></i>
             <span class="nav-label">Solicitudes de Almacenamiento</span>
           </a>
         </li>
+        {% endif %}
+        {% if perms.internal.index_laboratory %}
         <li>
           <a href="{{ url('internal:laboratory.index') }}">
             <i class="fa fa-th-large"></i>
             <span class="nav-label">Laboratorios</span>
           </a>
         </li>
+        {% endif %}
+        {% if perms.internal.index_sampleType %}
         <li>
           <a href="{{ url('internal:sampleType.index') }}">
             <i class="fa fa-flask"></i>
             <span class="nav-label">Tipos de Muestra</span>
           </a>
         </li>
+        {% endif %}
+        {% if perms.internal.index_essay %}
         <li>
           <a href="{{ url('internal:essay.index') }}">
             <i class="fa fa-flask"></i>
             <span class="nav-label">Plantillas de Ensayo</span>
           </a>
         </li>
+        {% endif %}
+        {% if perms.internal.index_essaymethod %}
         <li>
           <a href="{{ url('internal:essaymethod.index') }}">
             <i class="fa fa-flask"></i>
             <span class="nav-label">Métodos de Ensayo</span>
           </a>
         </li>
+        {% endif %}
+        {% if perms.internal.index_servicecontract %}
         <li>
           <a href="{{ url('internal:servicecontract.index') }}">
             <i class="fa fa-th-large"></i>
             <span class="nav-label">Contratos</span>
           </a>
         </li>
+        {% endif %}
+        {% if perms.internal.index_inventoryItem %}
         <li>
           <a href="{{ url('internal:inventoryItem.index') }}">
             <i class="fa fa-th-large"></i>
             <span class="nav-label">Muestras Almacenadas</span>
           </a>
         </li>
+        {% endif %}
+        {% if perms.internal.index_equipment %}
         <li>
           <a href="{{ url('internal:equipment.index') }}">
             <i class="fa fa-th-large"></i>
             <span class="nav-label">Equipos</span>
           </a>
         </li>
+        {% endif %}
+        {% if perms.internal.index_supply %}
         <li>
           <a href="{{ url('internal:supply.index') }}">
             <i class="fa fa-flask"></i>
             <span class="nav-label">Suministros</span>
           </a>
         </li>
+        {% endif %}
         <li>
           <a href="{{ url('internal:reports.start') }}">
             <i class="fa fa-file-pdf-o"></i>
             <span class="nav-label">Reportes Consolidados</span>
           </a>
         </li>
+        {% if perms.internal.index_externalprovider %}
         <li>
           <a href="{{ url('internal:externalprovider.index') }}">
             <i class="fa fa-wrench"></i>
             <span class="nav-label">Proveedores Externos</span>
           </a>
         </li>
+        {% endif %}
+        {% if perms.internal.index_client %}
         <li>
           <a href="{{ url('internal:client.index') }}">
             <i class="fa fa-file-pdf-o"></i>
             <span class="nav-label">Clientes</span>
           </a>
         </li>
+        {% endif %}
       </ul>
     </div>
   </nav>
@@ -208,8 +236,9 @@
 <script src="{{ static('vendors/validator.js') }}"></script>
 <script src="{{ static('vendors/url-search-params.js') }}"></script>
 <script src="{{ static('vendors/cookies.js') }}"></script>
+<script src="{{ static('js/bootstrap-multiselect.js') }}"></script>
+<script src="{{ static('vendors/jquery.formset.js') }}"></script>
 
 <!-- Theme script -->
 <script src="{{ static('js/inspinia.js') }}"></script>
-<script src="{{ static('js/bootstrap-multiselect.js') }}"></script>
 {% endblock base_js %}

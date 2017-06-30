@@ -76,3 +76,50 @@ def edit(request, pk,
             messages.warning(request, 'Datos invalidos')
     return render(request, template, context)
 
+
+def showRequest(request,
+        pk,
+        template='internal/inventoryItem/showRequest.html',
+        extra_context=None):
+    inventoryItems = InventoryItem.all_objects.filter(
+        deleted__isnull=True,
+        sample__request_id = pk
+    ).order_by('sample__name')
+
+    serviceRequest = ServiceRequest.all_objects.filter(
+        pk = pk
+    ).order_by('client')
+
+    context = {
+        'inventoryItem_list': inventoryItems,
+        'serviceRequest': serviceRequest
+    }
+    if extra_context is not None:
+        context.update(extra_context)
+    return render(request, template, context)
+
+def approveAll(request, pk):
+    # Busco el estado de revisando muestras
+    newState = get_object_or_404(
+        ServiceRequestState.all_objects.filter(slug='in_process'),
+    )
+    # Modifico el estado del la solicitud
+    changeRequest = get_object_or_404(
+        ServiceRequest.all_objects.filter(deleted__isnull=True),
+        pk=pk
+    )
+    changeRequest.state = newState
+
+    # Guardo los cambios
+    changeRequest.save()
+
+    messages.success(request, 'Se aprobaron las muestras con exito!')
+    return redirect('internal:servicerequest.index')
+
+def changeContract(request, pk):
+    #Busco el contrato
+    contract = get_object_or_404(
+        ServiceContract.all_objects.filter(deleted__isnull=True),
+        request_id =pk
+    )
+    return redirect('internal:servicecontract.edit', contract.id )
