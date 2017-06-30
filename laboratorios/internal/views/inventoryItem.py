@@ -101,7 +101,7 @@ def showRequest(request,
 def approveAll(request, pk):
     # Busco el estado de revisando muestras
     newState = get_object_or_404(
-        ServiceRequestState.all_objects.filter(slug='in_proccess'),
+        ServiceRequestState.all_objects.filter(slug='in_process'),
     )
     # Modifico el estado del la solicitud
     changeRequest = get_object_or_404(
