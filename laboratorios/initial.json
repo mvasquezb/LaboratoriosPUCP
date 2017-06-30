@@ -108,5 +108,35 @@
     "description": "En proceso",
     "registered_date": "2017-06-30T09:38:59.273Z"
   }
+},
+{
+  "model": "internal.servicerequestpriority",
+  "pk": 1,
+  "fields": {
+    "deleted": null,
+    "slug": "Alta",
+    "value": 1,
+    "registered_date": "2017-06-30T15:49:42.487Z"
+  }
+},
+{
+  "model": "internal.servicerequestpriority",
+  "pk": 2,
+  "fields": {
+    "deleted": null,
+    "slug": "Media",
+    "value": 2,
+    "registered_date": "2017-06-30T15:49:46.344Z"
+  }
+},
+{
+  "model": "internal.servicerequestpriority",
+  "pk": 3,
+  "fields": {
+    "deleted": null,
+    "slug": "Baja",
+    "value": 3,
+    "registered_date": "2017-06-30T15:49:50.440Z"
+  }
 }
 ]

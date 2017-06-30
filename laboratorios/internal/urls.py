@@ -11,7 +11,10 @@ urlpatterns = [
     #
     url(r'^login/?$',
         login,
-        {'template_name': 'internal/login.html'},
+        {
+            'template_name': 'internal/login.html',
+            'redirect_authenticated_user': True,
+        },
         name='login'),
 
     url(r'^logout/?$',
@@ -187,7 +190,7 @@ urlpatterns = [
     url('^servicecontract/approve/(?P<pk>\d+)$',
         views.servicecontract.approve,
         name='servicecontract.approve'),
-    url('^servicecontract/approve_client_modification/(?P<pk>\d+)$',
+    url('^servicecontract/approve_client_modification/(?P<pk>\d+)/(?P<slug_state>\w+)/?$',
         views.servicecontract.approve_client_modification,
         name='servicecontract.approve_client_modification'),
     url('^servicecontract/refuse/(?P<pk>\d+)$',

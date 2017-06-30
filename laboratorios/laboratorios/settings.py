@@ -194,7 +194,9 @@ LOGIN_EXEMPT_URLS = (
 SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = []
 
 SOCIAL_AUTH_GOOGLE_PLUS_AUTH_EXTRA_ARGUMENTS = {
-    'access_type': 'offline'
+    'access_type': 'offline',
+    'include_granted_scopes': 'true',   # incremental auth
+    'prompt': 'select_account',
 }
 
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = os.environ.get('SOCIAL_AUTH_GOOGLE_OAUTH2_KEY', '')
