@@ -8,14 +8,6 @@ from django.contrib import messages
 from django.urls import *
 import json
 from datetime import *
-from django.http import JsonResponse
-from django.views.decorators.csrf import ensure_csrf_cookie
-from django.utils import timezone
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger    
-from django.conf import settings
-from django.core.files.storage import FileSystemStorage
-from django.http import HttpResponse, HttpResponseRedirect
-from django.contrib import messages
 
 
 from internal.models import *
@@ -78,8 +70,15 @@ def create(request,
                     print(method_id)
                     if method_id > 0:  # it wasnt created
                         EssayMethod.objects.get(
-                            pk=method_id).essays.add(essay_saved)
-        return redirect('internal:essay.index')
+                            pk=method_id
+                        ).essays.add(essay_saved)
+
+            return redirect('internal:essay.index')
+        else:
+            for field in form:
+                if field.errors:
+                    msg = field.label + ': ' + str(field.errors)
+                    messages.error(request, msg)
     return render(request, template, context)
 
 
@@ -100,7 +99,9 @@ def show(request,
     print(epl)
     context = {
         'selected_methods': methods_list,
-        'parameters_list': EssayMethodParameter.all_objects.filter(deleted__isnull=True).order_by('id'),
+        'parameters_list': EssayMethodParameter.all_objects.filter(
+            deleted__isnull=True
+        ).order_by('id'),
         'method_parameters_list': epl,
         'essay': essay
     }
@@ -182,7 +183,12 @@ def edit(request,
                     if not(obj_id in entry_id_list):
                         essay.essay_methods.remove(
                             EssayMethod.objects.get(pk=obj_id))
-        return redirect('internal:essay.index')
+            return redirect('internal:essay.index')
+        else:
+            for field in form:
+                if field.errors:
+                    msg = field.label + ': ' + str(field.errors)
+                    messages.error(request, msg)
     return render(request, template, context)
 
 
