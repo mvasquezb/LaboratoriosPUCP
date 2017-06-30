@@ -11,11 +11,29 @@
       <label><b>1. <u>INFORMACIÓN DE LA SOLICITUD</u></b></label>
       <div style="padding-left: 1.7em;">
         <label>Fecha de Registro: {{SampleCompleteList[0].request.registered_date.strftime('%d/%m/%Y')}}</label> <br>
-        <label>Nombre del Cliente: {{SampleCompleteList[0].request.client or 'No registrado' }}</label>
+        {% if SampleCompleteList[0].request.client != None %}
+        <label>Nombre del Cliente: {{SampleCompleteList[0].request.client}}</label>
+        {% else %}
+        <label>Nombre del Cliente: No Registrado </label>
+        {% endif %}
         <br>
-        <label>Nombre del Supervisor: {{SampleCompleteList[0].request.supervisor or 'No registrado'}}</label>
+        {% if SampleCompleteList[0].request.supervisor != None %}
+        <label>Nombre del Supervisor: {{SampleCompleteList[0].request.supervisor}}</label>
+        {% else %}
+        <label>Nombre del Supervisor: No registrado</label>
+        {% endif %}
         <br>
-        <label>Observaciones: {{ SampleCompleteList[0].request.observations or 'Sin observaciones' }}</label>
+        {% if SampleCompleteList[0].request.description != None %}
+        <label>Descripción de la solicitud: {{SampleCompleteList[0].request.description}}</label>
+        {% else %}
+        <label>Descripción de la solicitud: Sin Descripción</label>
+        {% endif %}
+        <br>
+        {% if SampleCompleteList[0].request.observations != None %}
+        <label>Observaciones: {{SampleCompleteList[0].request.observations}}</label>
+        {% else %}
+        <label>Observaciones: Sin Observaciones</label>
+        {% endif %}
         <br>
         </div>
         <br>
@@ -39,7 +57,11 @@
                 <tr role="row">
                   <td align="center">{{sample.name}}</td>
                   <td align="center">{{sample.code}}</td>
-                  <td align="center">{{ sample.description }}</td>
+                  {% if sample.description == None %}
+                    <td align="center">Sin descripción</td>
+                  {% else %}
+                    <td align="center">{{sample.description}}</td>
+                  {% endif %}
                 </tr>
             {% endfor %}
             </tbody>
@@ -52,21 +74,32 @@
                         <div class="col-lg-6">
                           <label><b>2.{{i+1}}. <u>Muestra "{{SampleCompleteList[i].code}}"</u></b></label>
                           <br>
-                           <div style="padding-left: 1.7em;"><label><b>Observaciones: </b> {{ SampleCompleteList[i].observations or '-' }}</label></div>
+                            {% if SampleCompleteList[i].observations == None %}
+                              <div style="padding-left: 1.7em;"><label><b>Observaciones: </b> Sin observaciones </label></div>
+                            {% else%}
+                              <div style="padding-left: 1.7em;"><label><b>Observaciones: </b> {{SampleCompleteList[i].observations}}</label></div>
+                            {% endif %}
                           {% for j in range(EssayFillCompleteList[i]|length) %}
                             <br>
                             <label><b>2.{{i+1}}.{{j+1}}. <u>Ensayo "{{EssayFillCompleteList[i][j].essay.name}}"</u></b></label>
                             <br>
                            <div style="padding-left: 1.7em;"><label><b>Descripción del Ensayo:</b> {{EssayFillCompleteList[i][j].essay.description}}</label>
                             <br>
-                             <label><b>Observaciones del Ensayo: </b> {{ EssayFillCompleteList[i][j].observations or '-' }}</label></div>
+                            {% if EssayFillCompleteList[i][j].observations == None %}
+                              <div style="padding-left: 1.7em;"><label><b>Observaciones: </b> Sin observaciones </label></div>
+                            {% else%}
+                             <label><b>Observaciones del Ensayo: </b> {{EssayFillCompleteList[i][j].observations}}</label></div>
+                            {% endif %}
                             {% for h in range(MethodFillCompleteList[i][j]|length)%}
                           <br>
                           <label><b>2.{{i+1}}.{{j+1}}.{{h+1}}. <u>Método de Ensayo "{{MethodFillCompleteList[i][j][h].essay_method.name}}"</u></b></label>
-                            <br>
+                            {% if MethodFillCompleteList[i][j][h].essay_method.acreditado %}
+                              <center><img src="media/pictures/inacal.png" style="width:170px;height:50px;"></center><br>
+                            {% else %}
+                              <br>
+                            {% endif %}
                             <div style="padding-left: 1.7em;"><label><b>Descripción del Método: </b>{{MethodFillCompleteList[i][j][h].essay_method.description}}</label>
-                            <br><br>
-                              <label><b>Resultados del Método:</b></label></div>
+                              <br><br><label><b>Resultados del Método:</b></label></div>
                               <table border=1 cellpadding= 6>
                                 <thead>
                                   <tr role="row">
@@ -92,7 +125,11 @@
                                   </tbody>
                               </table>
                           <br>
-                              <div style="padding-left: 1.7em;"><label><b>Observaciones:</b> {{ MethodFillCompleteList[i][j][h].observations or '-' }}</label></div>
+                            {% if MethodFillCompleteList[i][j][h].observations == None %}
+                              <div style="padding-left: 1.7em;"><label><b>Observaciones: </b> Sin observaciones </label></div>
+                            {% else%}
+                              <div style="padding-left: 1.7em;"><label><b>Observaciones:</b> {{MethodFillCompleteList[i][j][h].observations}} </label></div>
+                            {% endif %}
                             {% endfor %}
                           {% endfor %}
                     </div>

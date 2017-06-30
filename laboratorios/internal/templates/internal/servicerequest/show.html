@@ -88,6 +88,11 @@
               </div>
             </div>
           </div>
+        {% if samples %}
+          <div class="form-group">
+            <label>Muestras</label>
+          </div>
+        {% endif %}
         {% for sample in samples %}
         <div class="row">
           <div class="col-lg-12">
@@ -142,6 +147,37 @@
           </div>
         </div>
         {% endfor %}
+        {% if service_request.quotation.extra_concepts.exists() %}
+        <div class="row">
+          <div class="col-md-12">
+            <div class="form-group">
+              <label>Conceptos Adicionales</label>
+            </div>
+            <div class="table-responsive">
+              <table class="table table-bordered table-hover extra-concept-table">
+                <thead>
+                  <tr>
+                    <th>Descripción</th>
+                    <th>Costo</th>
+                    <th>Cantidad</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for concept in service_request.quotation.extra_concepts.all() %}
+                    <tr class="extra-concept-formset">
+                      <td>{{ concept.description }}</td>
+                      <td>{{ concept.amount }}</td>
+                      <td>{{ concept.quantity }}</td>
+                      <td></td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        {% endif %}
         <div class="row">
           <div class="col-lg-6 col-lg-offset-3">
             <div class="text-center">
