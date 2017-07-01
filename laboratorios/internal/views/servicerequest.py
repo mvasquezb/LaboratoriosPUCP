@@ -507,22 +507,24 @@ def approve(request,
     if service_request.state.slug == 'in_preparation':
         state = ServiceRequestState.all_objects.get(slug="customer_review")
         service_request.state = state  # Le asignamos el estado "Revision de cliente"
-        service_request.save()
         client = Client.all_objects.get(pk=service_request.client.id)
-
+        service_request.save()
         service_contract = ServiceContract(
             client=client,
             request=service_request
         )
         messages.success(request, 'Se ha aprobado la solicitud exitosamante!')
-    elif service_request.state.slug == "customer_review":
-        slug_fin = "wait_for_samples"
-    elif service_request.state.slug == "review_samples":
-        slug_fin = "in_process"
-    elif service_request.state.slug == "waiting_for_client_approval":
-        slug_fin = "in_process"
+        service_contract.save()
+    else:
+        if service_request.state.slug == "customer_review":
+            state = ServiceRequestState.all_objects.get(slug="wait_for_samples")
+        elif service_request.state.slug == "review_samples":
+            state = ServiceRequestState.all_objects.get(slug="in_process")
+        elif service_request.state.slug == "waiting_for_client_approval":
+            state = ServiceRequestState.all_objects.get(slug="in_process")
 
-    service_contract.save()
+        service_request.state = state
+        service_request.save()
     
     return redirect('internal:servicerequest.index')
 
