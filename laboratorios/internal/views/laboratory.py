@@ -10,6 +10,8 @@ from django.http import JsonResponse
 from django.http import HttpResponse
 
 from internal.models import *
+
+#from laboratorios.internal.models import Inventory
 from .forms import LaboratoryForm
 
 import json as simplejson
@@ -176,12 +178,21 @@ def create(request,
     form = LaboratoryForm(request.POST or None)
     if request.method == 'POST':
         if form.is_valid():
+
             # here we add essay_methods to every employee of the new laboratory
             for employee in form.cleaned_data['employees']:
                 for essay_method in form.cleaned_data['essay_methods']:
                     employee.essay_methods.add(essay_method)
                 employee.save()
-            form.save()
+
+            laboratory_instance=form.save()
+
+            # create default sample inventory
+            newInventory = Inventory(name="Inv. de muestras", location="PUCP", inventory_type="Muestras")
+            newInventory.save()
+            newInventory.laboratories.add(laboratory_instance)
+            newInventory.save()
+
             messages.success(
                 request, 'Se ha creado un nuevo laboratorio exitosamante!')
             return redirect('internal:laboratory.index')

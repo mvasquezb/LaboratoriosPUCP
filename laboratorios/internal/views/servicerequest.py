@@ -226,10 +226,15 @@ def add_sample(request,
                pk,
                template='internal/servicerequest/add_sample.html'):
     service_request = ServiceRequest.all_objects.get(pk=pk)
+    #get default sample inventory
+    current_lab = Laboratory.all_objects.get(supervisor=service_request.supervisor)
+    #inventory= current_lab.inventory.get(tipo="Muestra").first()
+
     sample_form = SampleForm(
         request.POST or None,
         initial={
             'request': service_request,
+            #'inventory': inventory,
         }
     )
     context = {
