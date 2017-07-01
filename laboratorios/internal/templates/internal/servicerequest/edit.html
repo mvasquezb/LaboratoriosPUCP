@@ -37,7 +37,7 @@
                 <label>Cliente</label>
                 <select name="client" data-error="Este campo es obligatorio" required="" id="id_client" class="form-control">
                   {% for client in clients %}
-                      <option value="{{ client.id }}">
+                      <option value="{{ client.id }}" {% if service_request.client == client %}selected{% endif %} >
                         {{ client }}
                       </option>
                   {% endfor %}

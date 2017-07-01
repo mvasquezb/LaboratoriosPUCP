@@ -337,6 +337,7 @@ def show(request,
         'essay_methods_chosen_forms': essay_methods_chosen_forms,
         'pk': pk,
         'clients': Client.all_objects.filter(deleted__isnull=True),
+        'client': service_request.client,
         'employees': Employee.all_objects.filter(deleted__isnull=True),
         'states': ServiceRequestState.all_objects.filter(deleted__isnull=True),
         'external_providers': ExternalProvider.all_objects.filter(
