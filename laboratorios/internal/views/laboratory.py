@@ -176,6 +176,7 @@ def create(request,
     form = LaboratoryForm(request.POST or None)
     if request.method == 'POST':
         if form.is_valid():
+            print("Form is valid")
             # here we add essay_methods to every employee of the new laboratory
             for employee in form.cleaned_data['employees']:
                 for essay_method in form.cleaned_data['essay_methods']:
@@ -192,8 +193,7 @@ def create(request,
                     messages.error(
                         request, 'Este nombre de laboratorio ya existe, pruebe otro')
                     return redirect('internal:laboratory.create')
-
-            # return HttpResponse(form.errors)
+            #return HttpResponse(form.errors)
     else:
         # users =
         # Employee.all_objects.filter(deleted__isnull=True,laboratory__isnull=True)
