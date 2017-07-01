@@ -24,7 +24,7 @@
                             <div class="form-group">
                                 <label>{{field.label}} {% if field.field.required %}(*){% endif %}</label>
                                 <div data-error="El {{field.label}} es obligatorio" placeholder="------">
-                                  {{ field.as_widget(attrs={'data-error': "Este campo es obligatorio",'class':"form-control"}) }}
+                                  {{ field.as_widget(attrs={'data-error': "Ingrese un valor válido",'class':"form-control", 'min' : "0"}) }}
                                 </div>
                                 <div class="help-block with-errors"></div>
                             </div>

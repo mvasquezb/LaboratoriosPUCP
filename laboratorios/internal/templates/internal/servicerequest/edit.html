@@ -73,7 +73,7 @@
               </div>
               <div class="form-group">
                 <label>Duracion Esperada</label>
-                <input value="{{ service_request.expected_duration }}" type="number" name="expected_duration" data-error="Este campo es obligatorio" required="" id="id_expected_duration" class="form-control">
+                <input value="{{ service_request.expected_duration }}" min="0" type="number" name="expected_duration" data-error="Este campo es obligatorio" required="" id="id_expected_duration" class="form-control">
                   <div class="help-block with-errors"></div>
               </div>
             </div>
