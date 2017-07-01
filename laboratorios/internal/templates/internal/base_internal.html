@@ -68,7 +68,7 @@
           </a>
         </li>
         {% endif %}
-        {% if perms.internal.index_inventoryOrder %}
+        {% if perms.internal.index_inventoryorder %}
         <li>
           <a href="{{ url('internal:inventoryOrder.index') }}">
             <i class="fa fa-th-large"></i>
@@ -84,7 +84,7 @@
           </a>
         </li>
         {% endif %}
-        {% if perms.internal.index_sampleType %}
+        {% if perms.internal.index_sampletype %}
         <li>
           <a href="{{ url('internal:sampleType.index') }}">
             <i class="fa fa-flask"></i>
@@ -116,7 +116,7 @@
           </a>
         </li>
         {% endif %}
-        {% if perms.internal.index_inventoryItem %}
+        {% if perms.internal.index_inventoryitem %}
         <li>
           <a href="{{ url('internal:inventoryItem.index') }}">
             <i class="fa fa-th-large"></i>
@@ -124,13 +124,13 @@
           </a>
         </li>
         {% endif %}
-        {% if perms.internal.index_equipment %}
         <li>
           <a href="{{ url('internal:inventory.index') }}">
             <i class="fa fa-file"></i>
             <span class="nav-label">Inventarios</span>
           </a>
         </li>
+        {% if perms.internal.index_equipment %}
         <li>
           <a href="{{ url('internal:equipment.index') }}">
             <i class="fa fa-th-large"></i>
