@@ -6,7 +6,7 @@ from django.shortcuts import (
     HttpResponseRedirect
 )
 from django.contrib import messages
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
 from internal.models import *
 from internal.views.forms import (
     EmployeeForm,
@@ -14,8 +14,8 @@ from internal.views.forms import (
     UserEditForm
 )
 from internal.permissions import user_passes_test
-
 from internal.permissions.employee import *
+import itertools
 
 
 @user_passes_test(index_employee_check, login_url='internal:index')
@@ -67,8 +67,10 @@ def create(request,
             )
             return redirect('internal:employee.index')
         else:
-            # Show errors
-            pass
+            for field in itertools.chain(user_form, form):
+                if field.errors:
+                    msg = field.label + ': ' + str(field.errors)
+                    messages.error(request, msg)
     return render(request, template, context)
 
 
@@ -94,8 +96,10 @@ def edit(request, pk,
             messages.success(request, 'Se ha editado el empleado exitosamante!')
             return redirect('internal:employee.index')
         else:
-            print(user_form.errors, form.errors)
-            messages.warning(request, 'Please correct the error below.')
+            for field in itertools.chain(user_form, form):
+                if field.errors:
+                    msg = field.label + ': ' + str(field.errors)
+                    messages.error(request, msg)
     return render(request, template, context)
 
 

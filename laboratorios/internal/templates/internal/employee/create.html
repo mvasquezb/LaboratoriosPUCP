@@ -63,7 +63,7 @@
                                         {% for role in roles %}
                                           <tr>
                                             <td>{{ role.name }}</td>
-                                            <td><input type="checkbox" name="{{ role.pk }}" class="i-checks checkbox_role"></td>
+                                            <td><input type="checkbox" name="roles" value="{{ role.pk }}" class="i-checks checkbox_role"></td>
                                           </tr>
                                         {% endfor %}
                                       </tbody>

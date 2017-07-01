@@ -57,7 +57,7 @@
                                         {% for role in roles %}
                                           <tr>
                                             <td>{{ role.name }}</td>
-                                            <td><input {% if role in selected_roles %}checked{% endif %} type="checkbox" name="{{ role.pk }}" class="i-checks checkbox_role"></td>
+                                            <td><input {% if role in selected_roles %}checked{% endif %} type="checkbox" name="roles" value="{{ role.pk }}" class="i-checks checkbox_role"></td>
                                           </tr>
                                         {% endfor %}
                                       </tbody>

@@ -31,10 +31,6 @@ class EmployeeForm(ModelForm):
         model = Employee
         fields = ['roles', 'laboratory']
 
-    # def _save_m2m(self, *args, **kwargs):
-    #     super(EmployeeForm, self)._save_m2m(*args, **kwargs)
-    #     self.instance.laboratories.set(self.cleaned_data['laboratories'])
-
 
 class UserCreationForm(auth_forms.UserCreationForm):
     def __init__(self, *args, **kwargs):
