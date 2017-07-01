@@ -507,8 +507,8 @@ def approve(request,
     if service_request.state.slug == 'in_preparation':
         state = ServiceRequestState.all_objects.get(slug="customer_review")
         service_request.state = state  # Le asignamos el estado "Revision de cliente"
-        client = Client.all_objects.get(pk=service_request.client.id)
         service_request.save()
+        client = Client.all_objects.get(pk=service_request.client.id)
         service_contract = ServiceContract(
             client=client,
             request=service_request
