@@ -75,8 +75,6 @@
           break;
       }
 
-      document.getElementById("btnEdit_" + IdValue).style.display="none";
-
       return IdValue;
     }
   </script>
@@ -165,7 +163,7 @@
                         </a>
                         {% endif %}
                         {% if not servicerequest.deleted %}
-                          {% if servicerequest.state.slug == 'in_preparation'%}
+                          {% if servicerequest.state.slug == "in_preparation" %}
                             {% if perms.internal.change_servicerequest %}
                             <a id = "btnEdit_{{servicerequest.id}}" href="{{ url('internal:servicerequest.edit', servicerequest.id) }}" class="btn-white btn" title="Editar">
                               <i  class="fa fa-pencil-square-o" aria-hidden="true"></i>
