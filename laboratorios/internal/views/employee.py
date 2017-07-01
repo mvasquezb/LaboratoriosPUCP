@@ -36,7 +36,7 @@ def index(request,
 def show(request,
          pk,
          template='internal/employee/show.html'):
-    employee = get_object_or_404(Employee, pk=pk)
+    employee = get_object_or_404(Employee.all_objects, pk=pk)
     context = {
         'selected_laboratory': employee.laboratory,
         'selected_roles': employee.roles.all(),

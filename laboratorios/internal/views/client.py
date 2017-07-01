@@ -29,7 +29,7 @@ def index(request,
 def show(request,
          pk,
          template='internal/client/show.html'):
-    client = get_object_or_404(Client, pk=pk)
+    client = get_object_or_404(Client.all_objects, pk=pk)
     user_form = UserEditForm(request.POST or None, instance=client.user)
     form = ClientForm(request.POST or None, instance=client)
     context = {
