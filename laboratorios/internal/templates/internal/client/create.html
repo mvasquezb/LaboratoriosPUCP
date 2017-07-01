@@ -19,20 +19,21 @@
             {% csrf_token %}
             {% for field in user_form|list + form|list if field.name != 'password2' %}
             <div class="form-group">
-              <label>
                 {% if field.label == 'Doc number' %}
-                  Nro de Documento
+                  <label>Nro de Documento</label>
                 {% elif field.label == 'Phone number' %}
-                  Telefono
+                  <label>Telefono</label>
                 {% else %}
-                  {{field.label}}
+                  {% if field.label== "Apellidos" %}<label id="lbllast_name">Apellidos *</label>{% else %}
+                  <label>{{field.label}}</label>
+                  {% if field.field.required %}*{% endif %}
+                  {% endif %}
                 {% endif %}
-                {% if field.field.required %}*{% endif %}
-              </label>
                 {% if field.label == 'Doc number' %}
                 <div class="form-inline">
                   <div class = "form-group">
-                    <select class="form-control">
+                    <select id ="targetSelect" class="form-control">
+                      <option> - </option>
                       <option> RUC </option>
                       <option> DNI </option>
                     </select>
@@ -61,3 +62,30 @@
   </div>
 </div>
 {% endblock page_content %}
+{% block custom_js %}
+<script>
+    $(document).ready(function(){
+      var selection  = $("#targetSelect").val();
+      if(selection == "RUC"){
+        $("#id_last_name").hide();
+        $("#lbllast_name").hide();
+      }else{
+       $("#lbllast_name").show();
+       $("#id_last_name").show();
+      }
+    });
+    $('#targetSelect').change(function(){
+    var selection = $(this).val();
+      switch(selection){
+        case "RUC":
+        console.log("RUC");
+        $("#id_last_name").hide();
+        $("#lbllast_name").hide();
+        break;
+      default:
+       $("#lbllast_name").show();
+       $("#id_last_name").show();
+    }
+    });
+</script>
+{% endblock custom_js %}
