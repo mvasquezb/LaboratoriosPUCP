@@ -72,11 +72,13 @@
                       {% if perms.internal.show_essaymethod %}
                         <a  href="{{ url('internal:essaymethod.show', essaymethod.id) }}" class="btn-white btn"><i class="fa fa-eye" aria-hidden="true"></i></a>
                         {% endif %}
-                        {% if perms.internal.change_essaymethod %}
-                        <a  href="{{ url('internal:essaymethod.edit', essaymethod.id) }}" class="btn-white btn"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
-                        {% endif %}
-                        {% if perms.internal.delete_essaymethod %}
-                        <a class="myBtn1 btn-white btn" data-toggle="modal" data-target="#myModal1" data-url="{{ url('internal:essaymethod.delete', essaymethod.id) }}"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+                        {% if not essaymethod.deleted %}
+                          {% if perms.internal.change_essaymethod %}
+                          <a  href="{{ url('internal:essaymethod.edit', essaymethod.id) }}" class="btn-white btn"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+                          {% endif %}
+                          {% if perms.internal.delete_essaymethod %}
+                          <a class="myBtn1 btn-white btn" data-toggle="modal" data-target="#myModal1" data-url="{{ url('internal:essaymethod.delete', essaymethod.id) }}"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+                          {% endif %}
                         {% endif %}
                       </div>
                     </td>

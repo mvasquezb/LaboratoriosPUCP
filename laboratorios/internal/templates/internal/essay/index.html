@@ -71,11 +71,13 @@
                         {% if perms.internal.show_essay %}
                         <a  href="{{ url('internal:essay.show', essay.id) }}" class="btn-white btn"><i class="fa fa-eye" aria-hidden="true"></i></a>
                         {% endif %}
-                        {% if perms.internal.change_essay %}
-                        <a  href="{{ url('internal:essay.edit', essay.id) }}" class="btn-white btn"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
-                        {% endif %}
-                        {% if perms.internal.delete_essay %}
-                        <a class="myBtn1 btn-white btn" data-toggle="modal" data-target="#myModal1" data-url="{{ url('internal:essay.delete', essay.id) }}"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+                        {% if not essay.deleted %}
+                          {% if perms.internal.change_essay %}
+                          <a  href="{{ url('internal:essay.edit', essay.id) }}" class="btn-white btn"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+                          {% endif %}
+                          {% if perms.internal.delete_essay %}
+                          <a class="myBtn1 btn-white btn" data-toggle="modal" data-target="#myModal1" data-url="{{ url('internal:essay.delete', essay.id) }}"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+                          {% endif %}
                         {% endif %}
                       </div>
                     </td>
