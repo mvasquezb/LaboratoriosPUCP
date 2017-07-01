@@ -43,7 +43,7 @@ def index(request,
 
     state_in_preparation = get_object_or_404(
         ServiceRequestState.all_objects,
-        slug="in_preparation"   
+        slug="in_preparation"
     )
     context = {
         'requests': ServiceRequest.all_objects.filter(
@@ -398,7 +398,7 @@ def assign_employee(request,
         essay_methods = request.GET.get('methods', '')
     elif request.method == 'POST':
         essay_methods = request.POST.get('methods', '')
-
+    print(essay_methods)
     try:
         essay_methods = simplejson.loads(essay_methods)
     except simplejson.decoder.JSONDecodeError:
@@ -475,7 +475,7 @@ def assign_employee(request,
                     'success': True,
                     'message': 'Se asignó la muestra correctamente',
                     'redirect': reverse(
-                        'internal:servicerequest.edit',
+                        'internal:servicerequest.show',
                         args=(service_request.id,)
                     ),
                 }, json_dumps_params={
@@ -523,7 +523,7 @@ def approve(request,
         slug_fin = "in_process"
 
     service_contract.save()
-    
+
     return redirect('internal:servicerequest.index')
 
 
