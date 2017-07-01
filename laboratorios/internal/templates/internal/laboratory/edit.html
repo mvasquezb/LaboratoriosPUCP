@@ -52,6 +52,7 @@
                   <table class="table table-striped table-bordered">
                     <thead>
                       <tr>
+                        <th>N°</th>
                         <th>Nombre del Empleado</th>
                         <th>Nombre de Usuario</th>
                         <th>Correo</th>
@@ -62,6 +63,7 @@
                     <tbody>
                       {% for user in users %}
                         <tr>
+                          <td>{{ loop.index }}</td>
                           <td>{{ user }}</td>
                           <td>{{ user.user.username }}</td>
                           <td>{{ user.user.email }}</td>
@@ -106,6 +108,7 @@
                   <table class="table table-striped table-bordered">
                     <thead>
                       <tr>
+                        <th>N°</th>
                         <th>Nombre de inventario</th>
                         <th>Ubicación</th>
                         <th>Tipo de Inventario</th>
@@ -116,6 +119,7 @@
                     <tbody>
                       {% for inventory in inventories %}
                         <tr>
+                          <td>{{ loop.index }}</td>
                           <td>{{ inventory.name }}</td>
                           <td>{{ inventory.location }}</td>
                           <td>Inventario de {{ inventory.get_inventory_type_display() }}</td>
@@ -144,6 +148,7 @@
                   <table class="table table-striped table-bordered">
                     <thead>
                       <tr>
+                        <th>N°</th>
                         <th>Nombre de Prueba</th>
                         <th>Descripción</th>
                         <th>Precio (S/.)</th>
@@ -153,6 +158,7 @@
                     <tbody>
                       {% for essaymethod in essaymethods %}
                         <tr>
+                          <td>{{ loop.index }}</td>
                           <td>{{ essaymethod.name }}</td>
                           <td>{{ essaymethod.description }}</td>
                           <td>{{ essaymethod.price }}</td>

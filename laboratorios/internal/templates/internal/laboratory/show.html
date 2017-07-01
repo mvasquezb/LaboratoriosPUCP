@@ -14,13 +14,15 @@
     </div>
 </div>
 
+<div class="page_title" data-url="{{ url('internal:laboratory.inventory_modal')}}" data-emp="{{ url('internal:laboratory.employee_modal')}}"></div>
+
   <div class="wrapper wrapper-content animated fadeInRight" >
     <div class="row">
       <div class="col-lg-12">
       <div class="ibox float-e-margins">
         <div class="ibox-content">
           {{ form.errors }}
-          <form action="{{ url('internal:laboratory.edit', pk=laboratory.pk) }}" data-toggle="validator" id="form" method="POST">
+          <form id="form" method="POST">
             <div class="row">
               {% csrf_token %}
               <div class="col-md-12 form-group">
@@ -45,15 +47,21 @@
                     <table class="table table-striped table-bordered table-hover dataTables-example" >
                       <thead>
                         <tr>
+                          <th>N°</th>
                           <th>Nombre del empleado</th>
+                          <th>Nombre de Usuario</th>
                           <th>Correo</th>
+                          <th>Ver Roles</th>
                         </tr>
                       </thead>
                       <tbody>
                         {% for selected_user in selected_users %}
                           <tr class="gradeX">
+                            <td>{{ loop.index }}</td>
                             <td>{{ selected_user }}</td>
+                            <td>{{ selected_user.user.username }}</td>
                             <td>{{ selected_user.user.email }}</td>
+                            <td><a data-toggle="modal" data-target="#myModal2" class="employee_modal btn btn-white" data-pk="{{ selected_user.pk }}" ><i class="fa fa-eye" aria-hidden="true"></i></a></td>
                           </tr>
                         {% endfor %}
                       </tbody>
@@ -102,15 +110,21 @@
                   <table class="table table-striped table-bordered table-hover dataTables-example" >
                     <thead>
                       <tr>
+                        <th>N°</th>
                         <th>Nombre de Inventario</th>
                         <th>Ubicación</th>
+                        <th>Tipo de Inventario</th>
+                        <th>Vista Rápida</th>
                       </tr>
                     </thead>
                     <tbody>
                       {% for inventory in selected_inventories %}
                         <tr class="gradeX">
+                          <td>{{ loop.index }}</td>
                           <td>{{ inventory.name }}</td>
                           <td>{{ inventory.location }}</td>
+                          <td>Inventario de {{ inventory.get_inventory_type_display() }}</td>
+                          <td><a data-toggle="modal" data-target="#myModal1" class="inventory_modal btn btn-white" data-pk="{{ inventory.pk }}" ><i class="fa fa-eye" aria-hidden="true"></i></a></td>
                         </tr>
                       {% endfor %}
                     </tbody>
@@ -168,6 +182,101 @@
     </div>
   </div>
 
+<div class="modal fade" role="dialog" id="myModal2" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="col-md-offset-4 col-md-4 text-center">
+          <label class="modal-title">Roles de Empleado</label>
+        </div>
+      </div>
+      <div class="modal-body">
+        <table class="table roles_table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Rol</th>
+              <th>Descripción</th>
+            </tr>
+          </thead>
+          <tbody class="roles_content">
+
+          </tbody>
+        </table>
+        <div class="empty_message">
+
+        </div>
+      </div>
+      <div class="modal-footer">
+        <div class="col-md-offset-4 col-md-4 text-center">
+          <a class="btn btn-white" data-dismiss="modal">Aceptar</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" role="dialog" id="myModal1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="col-md-offset-4 col-md-4 text-center">
+          <label class="modal-title">Detalle de Inventario</label>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div class="ibox">
+          <div class="ibox-title">
+            <h5>Datos Generales y Contenido</h5>
+          </div>
+          <div class="ibox-content">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Nombre</th>
+                  <th>Ubicación</th>
+                  <th>Tipo de Inventario</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th>
+                    <div class="inner inventory_name"></div>
+                  </th>
+                  <th>
+                    <div class="inner inventory_location"></div>
+                  </th>
+                  <th>
+                    <div class="inner inventory_type"></div>
+                  </th>
+                </tr>
+              </tbody>
+            </table>
+
+            <table class="table inventory_table">
+              <thead class="header_table">
+
+              </thead>
+              <tbody class="content_table">
+
+              </tbody>
+            </table>
+            <div class="inventory_empty">
+
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <div class="col-md-offset-4 col-md-4 text-center">
+          <a class="btn btn-white" data-dismiss="modal">Cancelar</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 {% endblock page_content %}
 
 {% block custom_js %}
@@ -199,6 +308,7 @@
 };
 
   //cuando se invalida data
+  /*
   $('#capacity').on('invalid.bs.validator', function(){
     //$('#users_selection').hide();
     $('input:checkbox[id^="checkbox_users"]').prop('checked', false);
@@ -211,14 +321,18 @@
           text: "-- Ningún Responsable Seleccionado --"
         }));
   });
+  */
 
   //cuando se valida la data
+  /*
   $('#form').on('valid.bs.validator', function(){
     //$('#users_selection').show();
     $('input:checkbox[id^="checkbox_users"]').removeAttr('disabled');
     capacity_users = document.getElementById("capacity").value;
   });
+  */
 
+  /*
   var value = $('#capacity').val();
   $('#capacity').bind('keyup change click',function(){
     if (this.value < value){
@@ -231,8 +345,10 @@
       capacity_users = document.getElementById("capacity").value;
       }
   });
+  */
 
   //cuando se clickea en los checkboxes de usuarios de laboratorio
+  /*
   $('input:checkbox[id^="checkbox_users"]').click(function() {
     if($(this).is(':checked')) {
       //selected_users.push(String(this.id));
@@ -257,8 +373,11 @@
       });
     }
   });
+  */
 
   //cuando se clickea en el boton registrar
+
+  /*
   $('#form').on('submit', function(evt){
     //evt.preventDefault();
     var $form = $(this);
@@ -323,11 +442,87 @@
     //$form.submit();
     //console.log($form.serialize());
   });
+  */
 
+  /*
   $('#djform').on('submit', function(e) {
-    //e.preventDefault();
-    //console.log($(this).serialize());
-    //$(this).submit();
+    e.preventDefault();
+    console.log($(this).serialize());
+    $(this).submit();
   });
+  */
+
+  $('.employee_modal').on('click',function(){
+    var employee_pk = $(this).data('pk');
+    var url = $('.page_title').data('emp');
+    $('.roles_content').empty();
+    $('.empty_message').empty();
+    $('.roles_table').show();
+    $.get(url, {'employee_pk': employee_pk}, function(data){
+      var element_list = data['roles_data'];
+      var element;
+      var i;
+      if (element_list.length == 0){
+        $('.empty_message').append("<h4>No hay roles asociados a este empleado</h4>");
+        $('.roles_table').hide();
+      }
+      else {
+        for (i=0;i<element_list.length;i++){
+          element = element_list[i];
+          $('.roles_content').append("<tr>" + "<th>" + (i+1) + "</th>" + "<th>" + element[0] + "</th>" + "<th>" + element[1] + "</th>" + "</tr>");
+        }
+      }
+    });
+  });
+
+  $('.inventory_modal').on('click',function(){
+    var inventory_pk = $(this).data('pk');
+    var url = $(".page_title").data("url");
+    $('.content_table').empty();
+    $('.header_table').empty();
+    $('.inventory_empty').empty();
+    $('.inventory_table').show();
+    $.get(url, {'inventory_pk': inventory_pk},function(data){
+      //General Data
+      $('div.inventory_name').replaceWith("<div class='inner inventory_name'>" + data['inventory_name'] +"</div>");
+      $('div.inventory_location').replaceWith("<div class='inner inventory_location'>" + data['inventory_location'] + "</div>");
+      $('div.inventory_type').replaceWith("<div class='inner inventory_type'>" + data['inventory_type'] + "</div>");
+      //Inventory Content Data
+      var element_list = data['inventory_matches'];
+      var element;
+      var i;
+      
+      if (element_list.length == 0){
+        $('.inventory_empty').append("<h4>No hay contenido en este inventario</h4>");
+        $('.inventory_table').hide();
+      }
+      else {
+        if (data['inventory_type'] == 'Equipos') {
+          $('.header_table').append("<tr>" + "<th>#</th>" + "<th>Nombre</th>" + "<th>Unidad de tiempo</th>" + "<th>Tiempo de vida</th>" + "<th>Rango de error</th>" + "<th>Cantidad</th>" + "</tr>");
+        }
+        else if (data['inventory_type'] == 'Insumos'){
+          $('.header_table').append("<tr>" + "<th>#</th>" + "<th>Nombre</th>" + "<th>Unidad métrica</th>" + "<th>Cantidad</th>" + "</tr>");
+        }
+        else{
+        //$('.header_table').append("<thead><tr>" + "<th>#</th>" + "<th>Nombre</th>" + "<th>Unidad de tiempo vida</th>" + "<th>Tiempo de vida</th>" + "<th>Rango de error</th>" + "</tr></thead>");
+        }
+
+        for (i=0;i<element_list.length;i++){
+          element = element_list[i];
+          if (data['inventory_type'] == 'Equipos'){
+            $('.content_table').append("<tr>" + "<th>" + (i+1) + "</th>" + "<th>" + element[0] + "</th>" +"<th>" + element[1] + "</th>" + "<th>" + element[2] + "</th>" + "<th>" + element[3] + "</th>" + "<th>" + element[4] + "</th>" + "</tr>");
+          }
+          else if (data['inventory_type'] == 'Insumos'){
+            $('.content_table').append("<tr>" + "<th>" + (i+1) + "</th>" + "<th>" + element[0] + "</th>" +"<th>" + element[1] + "</th>" + "<th>" + element[2] + "</th>" + "</tr>");
+          }
+          else {
+            //
+          }
+        }
+      }
+      
+    });
+  });
+
   </script>
 {% endblock custom_js %}

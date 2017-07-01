@@ -258,7 +258,8 @@ class ServiceAssignEmployeeForm(forms.Form):
 
 class LaboratoryForm(ModelForm):
     employees = forms.ModelMultipleChoiceField(
-        queryset=Employee.all_objects.filter(deleted__isnull=True)
+        queryset=Employee.all_objects.filter(deleted__isnull=True),
+        required=False
     )
 
     class Meta:
