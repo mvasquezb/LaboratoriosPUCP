@@ -28,7 +28,7 @@ def index(request, template='internal/role/index.html', extra_context=None):
 
 @user_passes_test(show_role_check, login_url='internal:index')
 def show(request, pk, template='internal/role/show.html'):
-    role = get_object_or_404(Role, pk=pk)
+    role = get_object_or_404(Role.all_objects, pk=pk)
     context = {
         'selected_permissions': role.permissions.all(),
         'custom_role': role

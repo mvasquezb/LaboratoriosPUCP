@@ -31,7 +31,7 @@ def show(request,
          pk,
          template='internal/inventoryItem/show.html'):
     inventoryItems = get_object_or_404(
-        InventoryItem,
+        InventoryItem.all_objects,
         pk=pk
     )
     context = {

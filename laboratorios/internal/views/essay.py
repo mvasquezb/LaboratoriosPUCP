@@ -86,7 +86,7 @@ def create(request,
 def show(request,
          pk,
          template='internal/essay/show.html'):
-    essay = get_object_or_404(Essay, pk=pk)
+    essay = get_object_or_404(Essay.all_objects, pk=pk)
     epl = []
     methods_list = essay.essay_methods.all().order_by('id')
     for method in methods_list:

@@ -128,7 +128,7 @@ def edit(request,
 def show(request,
          pk,
          template='internal/essaymethod/show.html'):
-    essaymethod = get_object_or_404(EssayMethod, pk=pk)
+    essaymethod = get_object_or_404(EssayMethod.all_objects, pk=pk)
     parameters_list = essaymethod.parameters.all().order_by('id')
     context = {
         'selected_parameters': parameters_list,

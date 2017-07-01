@@ -30,7 +30,7 @@ def index(request,
 def show(request,
          pk,
          template='internal/supply/show.html'):
-    supply = get_object_or_404(Supply, pk=pk)
+    supply = get_object_or_404(Supply.all_objects, pk=pk)
     form = SupplyForm(request.POST or None)
     context = {
         'form': form,
