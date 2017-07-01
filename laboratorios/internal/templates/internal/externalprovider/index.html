@@ -45,9 +45,6 @@
                     Nombre
                   </th>
                   <th>
-                    Nro Documento
-                  </th>
-                  <th>
                     Descripción
                   </th>
                   <th>
@@ -61,7 +58,6 @@
                   <tr role="row">
                     <td>{{ loop.index }}</td>
                     <td>{{ provider.name }}</td>
-                    <td>{{ provider.doc_number or '' }}</td>
                     <td>{{ provider.description }}</td>
                     <td>
                       {% if provider.deleted %}
