@@ -32,7 +32,7 @@ def index(request,
 def show(request,
          pk,
          template='internal/equipment/show.html'):
-    equipment = get_object_or_404(Equipment, pk=pk)
+    equipment = get_object_or_404(Equipment.all_objects, pk=pk)
     form = EquipmentForm(request.POST or None)
     context = {
         'form': form,
