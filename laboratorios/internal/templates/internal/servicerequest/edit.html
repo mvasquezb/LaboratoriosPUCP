@@ -215,5 +215,12 @@ else
 $('#check_service_provider').on('ifChanged', function() {
   $('#servide_provider_input').toggle();
 });
+$('.extra-concept-formset').formset({
+  prefix: $(this).data('form-prefix'),
+  addCssClass: 'btn btn-primary fa fa-plus',
+  addText: '',
+  deleteCssClass: 'btn btn-danger fa fa-minus',
+  deleteText: '',
+});
 </script>
 {% endblock custom_js %}
