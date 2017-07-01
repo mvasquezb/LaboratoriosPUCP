@@ -119,6 +119,9 @@ class ServiceRequestCreateForm(ModelForm):
         self.fields['supervisor'].queryset = Employee.all_objects.filter(
             deleted__isnull=True
         )
+        self.fields['client'].queryset = Client.all_objects.filter(
+            deleted__isnull=True
+        )
 
     class Meta:
         model = ServiceRequest
@@ -130,7 +133,8 @@ class ServiceRequestCreateForm(ModelForm):
             'priority': 'Prioridad',
             'external_provider': 'Proveedor Externo',
             'expected_duration': 'Duración esperada',
-            'observations': 'Observaciones'
+            'observations': 'Observaciones',
+            'description' : 'Descripción'
         }
 
 
@@ -143,6 +147,9 @@ class ServiceRequestForm(ModelForm):
         self.fields['supervisor'].queryset = Employee.all_objects.filter(
             deleted__isnull=True
         )
+        self.fields['client'].queryset = Client.all_objects.filter(
+            deleted__isnull=True
+        )
 
     class Meta:
         model = ServiceRequest
@@ -153,7 +160,8 @@ class ServiceRequestForm(ModelForm):
             'priority': 'Prioridad',
             'external_provider': 'Proveedor Externo',
             'expected_duration': 'Duración esperada',
-            'observations': 'Observaciones'
+            'observations': 'Observaciones',
+            'description' : 'Descripción'
         }
 
 
