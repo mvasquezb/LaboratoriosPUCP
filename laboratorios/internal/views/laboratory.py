@@ -192,7 +192,7 @@ def create(request,
                 if (field == "name") and list(errors) == ['Ya existe Laboratory con este Name.']:
                     messages.error(
                         request, 'Este nombre de laboratorio ya existe, pruebe otro')
-                    return redirect('internal:laboratory.create')
+            return redirect('internal:laboratory.create')
             #return HttpResponse(form.errors)
     else:
         # users =
