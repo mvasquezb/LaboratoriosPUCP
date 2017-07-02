@@ -110,6 +110,16 @@
   }
 },
 {
+  "model": "internal.servicerequeststate",
+  "pk": 12,
+  "fields": {
+    "deleted": null,
+    "slug": "waiting_for_client_approval",
+    "description": "Esperando visto bueno del cliente",
+    "registered_date": "2017-07-01T02:33:59.914Z"
+  }
+},
+{
   "model": "internal.servicerequestpriority",
   "pk": 1,
   "fields": {
