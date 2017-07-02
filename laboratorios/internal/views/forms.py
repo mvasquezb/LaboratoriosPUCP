@@ -36,14 +36,13 @@ class UserCreationForm(auth_forms.UserCreationForm):
     def __init__(self, *args, **kwargs):
         super(UserCreationForm, self).__init__(*args, **kwargs)
         self.fields['first_name'].required = True
-        self.fields['last_name'].required = True
         self.fields['email'].required = True
         if self.data and self.data.get('password1'):
             self.data = copy.copy(self.data)
             self.data['password2'] = self.data['password1']
 
     class Meta(auth_forms.UserCreationForm.Meta):
-        fields = ('username', 'first_name', 'last_name', 'email')
+        fields = ('username', 'first_name', 'email')
 
 
 class UserEditForm(auth_forms.UserChangeForm):
@@ -51,7 +50,7 @@ class UserEditForm(auth_forms.UserChangeForm):
     password = None
 
     class Meta(auth_forms.UserChangeForm.Meta):
-        fields = ('username', 'first_name', 'last_name', 'email')
+        fields = ('username', 'first_name', 'email')
 
 
 class EssayFillForm(ModelForm):

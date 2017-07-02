@@ -41,8 +41,9 @@ def show(request,
 
 
 def create(request,
-                  template='internal/client/create.html'):
+           template='internal/client/create.html'):
     user_form = UserCreationForm(request.POST or None)
+    user_form.fields['first_name'].label = 'Razón Social'
     form = ClientForm(request.POST or None)
     context = {
         'form': form,
