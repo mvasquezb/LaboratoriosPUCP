@@ -16,3 +16,13 @@ from .supply import *
 from .equipment import *
 from .externalprovider import *
 from .inventory import *
+
+from django.shortcuts import render
+
+
+def not_found_handler(request):
+    return render(request, '404.html')
+
+
+def server_error_handler(request):
+    return render(request, '500.html')
