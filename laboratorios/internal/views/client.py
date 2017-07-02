@@ -35,7 +35,7 @@ def show(request,
     form = ClientForm(request.POST or None, instance=client)
     context = {
         'custom_client': client,
-        'form' : form,
+        'form': form,
         'user_form': user_form
     }
     return render(request, template, context)
@@ -74,6 +74,7 @@ def edit(request,
 
     client = get_object_or_404(Client, pk=pk)
     user_form = UserEditForm(request.POST or None, instance=client.user)
+    user_form.fields['first_name'].label = 'Razón Social'
     form = ClientForm(request.POST or None, instance=client)
     context = {
         'form': form,
