@@ -21,7 +21,7 @@
                       <div class="form-group">
                         <label>{% if field.label == 'Doc number' %} Nro de Documento {% elif field.label == 'Phone number' %} Telefono {% else %}{{field.label}} {% endif %} {% if field.field.required %}*{% endif %}</label>
                         <div data-error="El {{field.label}} es obligatorio" aria-placeholder="-----">
-                            {% if field.label == 'Doc number' %} 
+                            {% if field.label == 'Doc number' %}
                             <div class="form-inline">
                                 <div class = "form-group">
                                     <select class="form-control">
@@ -29,11 +29,13 @@
                                         <option> DNI </option>
                                     </select>
                                     {{ field.as_widget(attrs={'data-error':"Este campo es obligatorio",'class':"form-control",'min':"0",'step':"1"})}}
+                                    <div class="help-block with-errors"></div>
                                 </div>
                             </div>
-                             {% else %}
-                          {{ field.as_widget(attrs={'data-error':"Este campo es obligatorio",'class':"form-control"})}}
-                            {% endif %}
+                          {% else %}
+                            {{ field.as_widget(attrs={'data-error':"Este campo es obligatorio",'class':"form-control"})}}
+                            <div class="help-block with-errors"></div>
+                          {% endif %}
                         </div>
                       </div>
                     {% endfor %}

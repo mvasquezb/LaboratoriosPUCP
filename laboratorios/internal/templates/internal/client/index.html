@@ -43,7 +43,7 @@
                     N°
                   </th>
                   <th>
-                    Nombre
+                    Razón Social
                   </th>
                   <th>
                     Usuario
@@ -61,7 +61,7 @@
                 {% for client in clients_list %}
                   <tr role="row">
                     <td>{{ loop.index }}</td>
-                    <td>{{ client.user.first_name }} {{ client.user.last_name }}</td>
+                    <td>{{ client }}</td>
                     <td>{{ client.user.username }}</td>
                     <td>{{ client.user.email }}</td>
                     <td>

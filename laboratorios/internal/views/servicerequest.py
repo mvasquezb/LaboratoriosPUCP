@@ -107,6 +107,7 @@ def select_client(request,
 def create_client(request,
                   template='internal/servicerequest/create_client.html'):
     user_form = UserCreationForm(request.POST or None)
+    user_form.fields['first_name'].label = 'Razón Social'
     form = ClientForm(request.POST or None)
     context = {
         'form': form,

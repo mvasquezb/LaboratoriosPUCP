@@ -31,18 +31,20 @@ def show(request,
          template='internal/client/show.html'):
     client = get_object_or_404(Client.all_objects, pk=pk)
     user_form = UserEditForm(request.POST or None, instance=client.user)
+    user_form.fields['first_name'].label = 'Razón Social'
     form = ClientForm(request.POST or None, instance=client)
     context = {
         'custom_client': client,
-        'form' : form,
+        'form': form,
         'user_form': user_form
     }
     return render(request, template, context)
 
 
 def create(request,
-                  template='internal/client/create.html'):
+           template='internal/client/create.html'):
     user_form = UserCreationForm(request.POST or None)
+    user_form.fields['first_name'].label = 'Razón Social'
     form = ClientForm(request.POST or None)
     context = {
         'form': form,
@@ -72,6 +74,7 @@ def edit(request,
 
     client = get_object_or_404(Client, pk=pk)
     user_form = UserEditForm(request.POST or None, instance=client.user)
+    user_form.fields['first_name'].label = 'Razón Social'
     form = ClientForm(request.POST or None, instance=client)
     context = {
         'form': form,
