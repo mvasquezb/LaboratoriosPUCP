@@ -29,11 +29,22 @@
         {% endfor %}
       </div>
     {% endif %}
+    {% if auth_message %}
+      <div class="alert alert-danger form-errors">
+        {{ auth_message }}
+      </div>
+    {% endif %}
+    {% set message = messages.__iter__().__next__() %}
+    {% if message %}
+      <div class="alert alert-danger form-errors">
+        {{ message }}
+      </div>
+    {% endif %}
     <form method="post" data-toggle="validator">
       {% csrf_token %}
       <input type="hidden" name="next" value="{{ next or '/internal' }}">
       <div class="form-group">
-        <input type="text" name="username" class="form-control" placeholder="Username" required="">
+        <input type="text" name="username" class="form-control" placeholder="Username" autofocus="" required="">
       </div>
       <div class="form-group">
         <input type="password" name="password" class="form-control" placeholder="Password" required="">

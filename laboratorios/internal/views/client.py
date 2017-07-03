@@ -94,7 +94,12 @@ def edit(request,
 
 
 def delete(request, pk):
-    client = get_object_or_404(Client, pk=pk)
-    client.delete()
+    try:
+        client = Client.all_objects.get(pk=pk)
+        client.user.is_active = False
+        client.user.save()
+        client.delete()
+    except Client.DoesNotExist:
+        pass
 
     return redirect('internal:client.index')
