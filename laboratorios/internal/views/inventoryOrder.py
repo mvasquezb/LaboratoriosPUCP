@@ -66,10 +66,16 @@ def check(request,
 def create(request,
            template='internal/inventoryOrder/create.html'):
     form = InventoryOrderForm(request.POST or None)
+    #Solo puedo crear solicitud de muestras en solicitudes en estado espera de muestras
+    #esta revisando muestras
     context = {
         'essayies': EssayFill.all_objects.filter(
             deleted__isnull=True,
+            sample__request__state__slug = 'wait_for_samples') | EssayFill.all_objects.filter(
+            deleted__isnull=True,
+            sample__request__state__slug = 'review_samples'
         ),
+
     }
     if request.method == 'POST':
         if form.is_valid():
@@ -86,9 +92,14 @@ def createPK(request,
         pk=pk
     )
     form = InventoryOrderForm(request.POST or None)
+    # Solo puedo crear solicitud de muestras en solicitudes en estado espera de muestras
+    # o esta revisando muestras
     context = {
         'essayies': EssayFill.all_objects.filter(
             deleted__isnull=True,
+            sample__request__state__slug = 'wait_for_samples') | EssayFill.all_objects.filter(
+            deleted__isnull=True,
+            sample__request__state__slug = 'review_samples'
         ),
         'actualInventoryOrder': actualInventoryOrder,
     }
@@ -145,7 +156,8 @@ def approve(request, pk, pk2):
 
     #Busco el estado de revisando muestras
     newState = get_object_or_404(
-        ServiceRequestState.all_objects.filter(slug='review_samples'),
+        ServiceRequestState.all_objects.filter(deleted__isnull=True,
+            slug='review_samples'),
     )
 
     #Modifico el estado del la solicitud

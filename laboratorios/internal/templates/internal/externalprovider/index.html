@@ -69,20 +69,20 @@
                     <td class="text-left">
                       <div class="btn-group">
                         {% if perms.internal.show_externalprovider %}
-                        <a  href="{{ url('internal:externalprovider.show', provider.id) }}" class="btn-white btn">
-                          <i class="fa fa-eye" aria-hidden="true"></i>
-                        </a>
+                          <a  href="{{ url('internal:externalprovider.show', provider.id) }}" class="btn-white btn">
+                            <i class="fa fa-eye" aria-hidden="true"></i>
+                          </a>
                         {% endif %}
                         {% if not provider.deleted %}
                           {% if perms.internal.change_externalprovider %}
-                          <a  href="{{ url('internal:externalprovider.edit', provider.id) }}" class="btn-white btn">
-                            <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
-                          </a>
+                            <a  href="{{ url('internal:externalprovider.edit', provider.id) }}" class="btn-white btn">
+                              <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                            </a>
                           {% endif %}
                           {% if perms.internal.delete_externalprovider %}
-                          <a class="myBtn1 btn-white btn" data-url="{{ url('internal:externalprovider.delete', provider.id) }}">
-                            <i class="fa fa-trash-o" aria-hidden="true"></i>
-                          </a>
+                            <a class="myBtn1 btn-white btn" data-url="{{ url('internal:externalprovider.delete', provider.id) }}">
+                              <i class="fa fa-trash-o" aria-hidden="true"></i>
+                            </a>
                           {% endif %}
                         {% endif %}
                       </div>
@@ -117,12 +117,7 @@
 <script src="https://cdn.datatables.net/1.10.15/js/dataTables.bootstrap.min.js"></script>
 <script src="{{ static('js/datatable-config.js') }}"></script>
 <script>
-var table = $('#externalprovider-table').DataTable({
-  "columnDefs": [
-    { "orderable": false, "targets": 5 },
-    { "searchable": false, "targets": 0 }
-  ],
-});
+var table = $('#externalprovider-table').DataTable();
 
 $('#mysearch').keyup(function(){
   table.search($(this).val()).draw() ;

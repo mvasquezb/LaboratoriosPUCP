@@ -27,14 +27,22 @@
           </div>
           {% if perms.internal.index_inventoryorder %}
           <div class="col-md-2 col-md-offset-7">
-            {% for data in serviceRequest %}
-            <a class="btn btn-primary pull-right" href="{{ url('internal:inventoryItem.approveAll', data.id ) }}">
-              Aprobar todas las muestras
-            </a>
 
-            <a class="btn btn-primary pull-right" href="{{ url('internal:inventoryItem.changeContract', data.id ) }}">
-              Modificar el contrato
-            </a>
+            {% for data in serviceRequest %}
+
+              {% if validatorApproveAll %}
+                <a class="btn btn-primary pull-right" href="{{ url('internal:inventoryItem.approveAll', data.id ) }}">
+                  Aprobar todas las muestras
+                </a>
+              {% else %}
+                <a class="btn btn-primary pull-right" disabled="True" href="{{ url('internal:inventoryItem.approveAll', data.id ) }}">
+                  No estan todas las muestras
+                </a>
+              {% endif %}
+                <a class="btn btn-primary pull-right" href="{{ url('internal:inventoryItem.changeContract', data.id ) }}">
+                  Modificar el contrato
+                </a>
+
             {% endfor %}
           </div>
           {% endif %}

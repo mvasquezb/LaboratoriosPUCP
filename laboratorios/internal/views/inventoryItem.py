@@ -85,14 +85,32 @@ def showRequest(request,
         deleted__isnull=True,
         sample__request_id = pk
     ).order_by('sample__name')
+    inventoryItemsIneed = Sample.all_objects.filter(
+        deleted__isnull=True,
+        request_id = pk
+    ).order_by('name')
+
+    validatorApproveAll = True
+    for sampleIneed in inventoryItemsIneed:
+        validatorApproveAll = False
+        for sampleIhave in inventoryItems:
+            if sampleIhave.sample.code == sampleIneed.code:
+                validatorApproveAll = True
+                break
+        if validatorApproveAll == False:
+            break
+
 
     serviceRequest = ServiceRequest.all_objects.filter(
         pk = pk
     ).order_by('client')
 
+
     context = {
         'inventoryItem_list': inventoryItems,
-        'serviceRequest': serviceRequest
+        'SamplesINeed_list': inventoryItemsIneed,
+        'serviceRequest': serviceRequest,
+        'validatorApproveAll': validatorApproveAll
     }
     if extra_context is not None:
         context.update(extra_context)

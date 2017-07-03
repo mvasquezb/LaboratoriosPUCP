@@ -15,7 +15,7 @@
     <div class="col-lg-12">
       <div class="ibox float-e-margins">
         <div class="ibox-content">
-          <form id='clientform' action="{{ url('internal:servicerequest.create_client') }}" method="post" data-toggle="validator">
+          <form id='clientform' action="{{ url('internal:client.create') }}" method="post" data-toggle="validator">
             {% csrf_token %}
             {% for field in user_form|list + form|list if field.name != 'password2' %}
             <div class="form-group">
@@ -24,24 +24,24 @@
                 {% elif field.label == 'Phone number' %}
                   <label>Telefono</label>
                 {% else %}
-                  {% if field.label== "Apellidos" %}<label id="lbllast_name">Apellidos *</label>{% else %}
                   <label>{{field.label}}</label>
-                  {% if field.field.required %}*{% endif %}
-                  {% endif %}
                 {% endif %}
+                {% if field.field.required %}*{% endif %}
                 {% if field.label == 'Doc number' %}
                 <div class="form-inline">
                   <div class = "form-group">
                     <select id ="targetSelect" class="form-control">
                       <option> - </option>
-                      <option> RUC </option>
-                      <option> DNI </option>
+                      <option value="ruc"> RUC </option>
+                      <option value="dni"> DNI </option>
                     </select>
-                    {{ field.as_widget(attrs={'data-error':"Este campo es obligatorio",'class':"form-control",'min':"0",'step':"1"})}}
+                    <input type="text" id="id_doc_number" class="form-control" name="doc_number" data-required-error="Este campo es obligatorio" data-validate-doc-number="" required="">
+                    <div class="help-block with-errors"></div>
                   </div>
                 </div>
                 {% else %}
                   {{ field.as_widget(attrs={'data-error':"Este campo es obligatorio",'class':"form-control"})}}
+                  <div class="help-block with-errors"></div>
                 {% endif %}
             </div>
             {% endfor %}
@@ -52,8 +52,8 @@
           </div>
           <div class="row">
             <div class="col-lg-12">
-              <input type="submit" value="Registrar" class="btn btn-primary" form='clientform' >
-              <a type="submit" class="btn btn-white" href="{{ url('internal:servicerequest.select_client')}}" >Cancelar</a>
+              <input type="submit" value="Registrar" class="btn btn-primary" form='clientform'>
+              <a class="btn btn-white" href="{{ url('internal:client.index')}}">Cancelar</a>
             </div>
           </div>
         </div>
@@ -62,30 +62,17 @@
   </div>
 </div>
 {% endblock page_content %}
+
 {% block custom_js %}
+<script src="{{ static('js/validators.js') }}"></script>
 <script>
-    $(document).ready(function(){
-      var selection  = $("#targetSelect").val();
-      if(selection == "RUC"){
-        $("#id_last_name").hide();
-        $("#lbllast_name").hide();
-      }else{
-       $("#lbllast_name").show();
-       $("#id_last_name").show();
-      }
-    });
-    $('#targetSelect').change(function(){
-    var selection = $(this).val();
-      switch(selection){
-        case "RUC":
-        console.log("RUC");
-        $("#id_last_name").hide();
-        $("#lbllast_name").hide();
-        break;
-      default:
-       $("#lbllast_name").show();
-       $("#id_last_name").show();
-    }
-    });
+$('#targetSelect').on('change', function () {
+  $("#id_doc_number").data('type', $(this).val());
+})
+$('#clientform').validator({
+  custom: {
+    'validate-doc-number': docNumberValidator,
+  },
+});
 </script>
 {% endblock custom_js %}

@@ -10,16 +10,21 @@ $(document).ready(function() {
           $.ajax({
             url: 'save_article/',
             type: "POST",
-            data: {current_value: current_value, change_value:change_value, id:id}
+            data: {current_value: current_value, change_value:change_value, id:id},
+            success: function(data_returned){
+              var show_url= window.location.href.substring(0, window.location.href.lastIndexOf('/'));
+              $(location).attr("href", show_url);
+              $(location).reload(true);
+            }
           })
         }
       });
       //delete last part of url to get show_url
-      var show_url= window.location.href.substring(0, window.location.href.lastIndexOf('/'));
+      //var show_url= window.location.href.substring(0, window.location.href.lastIndexOf('/'));
       //window.location.replace(show_url);
       //window.location.reload(true);
-      $(location).attr("href", show_url);
-      $(location).reload(true);
+      //$(location).attr("href", show_url);
+      //$(location).reload(true);
     });
 
 } );

@@ -7,6 +7,7 @@ from django.utils.functional import cached_property
 
 from safedelete.models import (
     SOFT_DELETE_CASCADE,
+    SOFT_DELETE,
     SafeDeleteModel
 )
 from auditlog.registry import auditlog
@@ -70,7 +71,7 @@ class Client(BasicUser):
 
     # audit_log = AuditlogHistoryField()
     code = models.CharField(max_length=10)
-    doc_number = models.IntegerField()
+    doc_number = models.CharField(max_length=20)
     phone_number = models.CharField(max_length=20)
     registered_date = models.DateTimeField(
         auto_now_add=True,
@@ -408,7 +409,7 @@ class ExternalProviderService(SafeDeleteModel):
 
 @auditlog.register()
 class ServiceRequest(SafeDeleteModel):
-    _safedelete_policy = SOFT_DELETE_CASCADE
+    _safedelete_policy = SOFT_DELETE
 
     audit_log = AuditlogHistoryField()
     client = models.ForeignKey(Client, on_delete=models.CASCADE)
