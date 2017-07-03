@@ -135,14 +135,17 @@
                   <td>
                     {# <a class="btn-white btn btn-xs" href="{{ url('internal:servicerequest.edit_sample',pk,sample.id) }}">Editar</a>
                     <a class="btn-white btn btn-xs" href="{{ url('internal:servicerequest.delete_sample',pk,sample.id) }}">Eliminar</a> #}
-                    <a class="btn btn-white btn-xs btn-assign-employee"
-                       data-toggle="modal"
-                       data-target="#assign-employee-modal"
-                       data-url="{{ url('internal:servicerequest.assign_employee', request_id=pk, sample_id=sample.id) }}">
-                       <span>
-                        Asignar Empleado
-                       </span>
-                    </a>
+                    {% if service_request.state.slug not in ['in_preparation', 'completed'] %}
+                      <a class="btn btn-white btn-xs btn-assign-employee"
+                         data-toggle="modal"
+                         data-target="#assign-employee-modal"
+                         data-url="{{ url('internal:servicerequest.assign_employee', request_id=pk, sample_id=sample.id) }}"
+                         data-row="{{ loop.index0 }}">
+                        <span>
+                          Asignar Empleado
+                        </span>
+                      </a>
+                    {% endif %}
                   </td>
                 </tr>
               </tbody>
@@ -249,9 +252,9 @@ $(document).on('submit', '#assign-employee-form', function (e) {
   e.preventDefault();
   var $form = $(e.target);
   var $modal = $('#assign-employee-modal');
-  console.log($form.get().data);
   var $methodContainer = $modal.find('.method-container');
   var $table = $($('.essaymethod-table')[$methodContainer.data('row')]);
+  console.log($table.get());
   var allMethods = $table.find('td');
   var methods = allMethods.map(function (index, elem) {
     console.log(elem);
@@ -267,6 +270,7 @@ $(document).on('submit', '#assign-employee-form', function (e) {
     name: 'methods',
     value: methodStr,
   }));
+  console.log(methodStr);
   $.ajax({
     url: $form.get(0).action,
     method: $form.get(0).method,

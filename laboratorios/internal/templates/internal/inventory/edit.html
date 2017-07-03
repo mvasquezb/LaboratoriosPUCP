@@ -12,7 +12,6 @@
     <div class="col-lg-12">
         <div class="ibox float-e-margins">
             <div class="ibox-content">
-              {{ form.errors }}
                 <form data-toggle="validator" id="inventoryform" action="{{ url('internal:inventory.edit', pk=inventory.pk) }}" method="post">
                 {% csrf_token %}
                     <div class="row">
@@ -41,8 +40,10 @@
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="form-group">
-                                <label>Localización</label>
-                                <textarea class="form-control" id="inventory_location" name="location" placeholder="Localización">{{inventory.location}}</textarea>
+                                <label>Localización (*)</label>
+                                <textarea class="form-control" id="inventory_location" name="location" placeholder="Localización" required data-error="Este campo es obligatorio">
+                                  {{inventory.location or '' }}
+                                </textarea>
                                 <div class="help-block with-errors"></div>
                             </div>
                         </div>
@@ -76,7 +77,7 @@
                                     <td>{{ supply.name }}</td>
                                     <td>{{ supply.description }}</td>
                                     <td>
-                                      <input type="checkbox" class="i-checks checkbox_supplies" data-id="{{ supply.pk }}" {% if suply in selected_supply %} checked {% endif %}>     
+                                      <input type="checkbox" class="i-checks checkbox_supplies" data-id="{{ supply.pk }}" {% if suply in selected_supply %} checked {% endif %}>
                                     </td>
                                     <td class="text-left footable-visible footable-last-column">
                                       <input id="stock_field" type="number" min="0" class="form-control" name="stock" value="0" data-error="Ingrese un valor válido">
@@ -115,7 +116,7 @@
                                   <td>{{ equipment.name }}</td>
                                   <td>{{ equipment.description }}</td>
                                   <td>
-                                    <input type="checkbox" class="i-checks checkbox_supplies" data-id="{{ equipment.pk }}" {% if suply in selected_supply %} checked {% endif %}>   
+                                    <input type="checkbox" class="i-checks checkbox_supplies" data-id="{{ equipment.pk }}" {% if suply in selected_supply %} checked {% endif %}>
                                   </td>
                                   <td class="text-left footable-visible footable-last-column">
                                     <input id="stock_field" type="number" width="10" min="0" class="form-control" name="stock" data-error="Ingrese un valor válido">
@@ -171,7 +172,7 @@ $(document).ready(function() {
     //   }else{
     //     $('#equipments_div').hide();
     //     $('#supplies_div').hide();
-    //   } 
+    //   }
     // });
 
     $('#mysearch').keyup(function(){
