@@ -292,14 +292,19 @@ def delete_sample(request,
 def show(request,
          pk,
          template='internal/servicerequest/show.html'):
-    service_request = ServiceRequest.all_objects.get(pk=pk)
+    service_request = get_object_or_404(ServiceRequest.all_objects, pk=pk)
     service_request_form = ServiceRequestForm(
-        request.POST or None, instance=service_request)
+        request.POST or None,
+        instance=service_request
+    )
     # For all samples and their selected essayFills in list
     sample_list = Sample.all_objects.filter(
         deleted__isnull=True,
         request=service_request
     )
+    selected_provider = ExternalProvider.all_objects.filter(
+        servicerequest=service_request
+    ).first()
     essay_fill_list = []
     essay_methods_list = []  # To get all essay_methods for every sample
     essay_methods_chosen_forms = []  # To get whether each essay_method is chosen or not
@@ -341,9 +346,8 @@ def show(request,
         'client': service_request.client,
         'employees': Employee.all_objects.filter(deleted__isnull=True),
         'states': ServiceRequestState.all_objects.filter(deleted__isnull=True),
-        'external_providers': ExternalProvider.all_objects.filter(
-            deleted__isnull=True
-        )
+        'external_providers': ExternalProvider.all_objects.all(),
+        'selected_provider': selected_provider,
     }
     # verificacion
     forms_verified = 0  # Means true lol
