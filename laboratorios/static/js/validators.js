@@ -10,7 +10,6 @@ function validatePositiveInteger(txt) {
   try {
     return $.isNumeric(txt) && parseInt(txt) > 0;
   } catch (e) {
-    console.log(e);
     return false;
   }
 }
@@ -51,7 +50,6 @@ function validateDNI(txt) {
 function docNumberValidator($el) {
   if ($el.data('validate-doc-number') !== 'undefined') {
     var type = $el.data('type');
-    console.log($el.val(), $el.val().length)
     var valid = false;
     if (type == 'ruc') {
       valid = validateRUC($el.val());
