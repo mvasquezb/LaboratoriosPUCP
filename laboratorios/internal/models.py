@@ -50,7 +50,10 @@ class BasicUser(SafeDeleteModel):
             )
         ).filter(
             models.Q(full_name__in=self.user.get_all_permissions()) |
-            models.Q(role__in=self.roles.all())
+            models.Q(
+                role__in=self.roles.all(),
+                role__deleted__isnull=True,
+           )
         )
 
     def get_all_permissions(self):
