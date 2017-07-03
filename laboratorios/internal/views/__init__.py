@@ -18,11 +18,18 @@ from .externalprovider import *
 from .inventory import *
 
 
+from django.shortcuts import render, redirect
 import django.contrib.auth.views as auth_views
-from django.http import HttpResponseRedirect
-from django.shortcuts import redirect
 from internal.models import Client
 from django.contrib import messages
+
+
+def not_found_handler(request):
+    return render(request, '404.html')
+
+
+def server_error_handler(request):
+    return render(request, '500.html')
 
 
 def login(request, extra_context=None):

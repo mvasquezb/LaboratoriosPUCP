@@ -26,3 +26,6 @@ urlpatterns = [
         name='index'),
     url('^oauth/', include('social_django.urls', namespace='social')),
 ]
+
+handler404 = 'internal.views.not_found_handler'
+handler500 = 'internal.views.server_error_handler'

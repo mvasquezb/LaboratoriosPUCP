@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ super() }} - No encontrado{% endblock title %}
+
+{% block base_content %}
+<div class="middle-box text-center animated fadeInDown">
+  <h1>404</h1>
+  <h3 class="font-bold">Página No Encontrada</h3>
+  <div class="error-desc">
+    <p>
+      Lo sentimos, no encontramos la página que estás buscando.
+      Por favor verifique el URL e intente de nuevo o regrese a la página anterior
+    </p>
+    {# <form class="form-inline m-t" role="form">
+      <div class="form-group">
+        <input type="text" class="form-control" placeholder="Search for page">
+      </div>
+      <button type="submit" class="btn btn-primary">Search</button>
+    </form> #}
+    <a href="{{ url('internal:index') }}" class="btn btn-success">
+      <i class="fa fa-home"></i>
+      Volver al Inicio
+    </a>
+  </div>
+</div>
+{% endblock base_content %}
