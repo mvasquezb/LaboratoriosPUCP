@@ -60,58 +60,76 @@ def create(request,
                 request, 'Se ha creado un nuevo inventario exitosamante!')
             return redirect('internal:inventory.index')
         else:
-            for field, errors in form.errors.items():
-                if (field == "name") and list(errors) == ['Ya existe inventory con este Name.']:
-                    messages.error(
-                        request, 'Este nombre de inventario ya existe, pruebe otro')
-                    return redirect('internal:inventory.create')
-    else:
-        inventories = Inventory.all_objects.filter(deleted__isnull=True)
-        inventory_types = Inventory.TYPE_CHOICES
-        types = []
-        for type_aux in inventory_types:
-            types.append(type_aux[1])
-        context = {'inventories': inventories, 'form': form,
-                   'inventory_types': inventory_types,
-                   'supply_list': suplies, 'equipments': equipments,
-                   'types': types}
-        return render(request, template, context)
-    return HttpResponse("GG")
+            for field in form:
+                if field.errors:
+                    if field.name == 'name':
+                        messages.error(
+                            request,
+                            'Ya existe un inventario con este nombre'
+                        )
+                    else:
+                        msg = field.label + ': ' + str(field.errors)
+                        messages.error(request, msg)
+
+    inventories = Inventory.all_objects.filter(deleted__isnull=True)
+    inventory_types = Inventory.TYPE_CHOICES
+    types = []
+    for type_aux in inventory_types:
+        types.append(type_aux[1])
+    context = {
+        'inventories': inventories,
+        'form': form,
+        'inventory_types': inventory_types,
+        'supply_list': suplies,
+        'equipments': equipments,
+        'types': types
+    }
+    return render(request, template, context)
 
 
 def edit(request,
          pk):
     suplies = Supply.all_objects.filter(deleted__isnull=True)
     equipments = Equipment.all_objects.filter(deleted__isnull=True)
-
+    instance = Inventory.all_objects.get(
+        deleted__isnull=True,
+        pk=pk
+    )
+    form = InventoryForm(request.POST or None, instance=instance)
     if request.method == 'POST':
-        instance = Inventory.all_objects.get(
-            deleted__isnull=True,
-            pk=pk
-        )
-        aux_form = InventoryForm(request.POST or None, instance=instance)
-        if aux_form.is_valid():
-            aux_form.save()
+        if form.is_valid():
+            form.save()
             messages.success(
                 request, 'Se ha editado el inventario exitosamente')
             return redirect('internal:inventory.index')
-    else:
-        instance = Inventory.all_objects.get(
-            deleted__isnull=True,
-            pk=pk
-        )
-        form = InventoryForm()
-        inventories = Inventory.all_objects.filter(deleted__isnull=True)
-        inventory_types = Inventory.TYPE_CHOICES
-        types = []
-        for type_aux in inventory_types:
-            types.append(type_aux[1])
-        context = {'inventories': inventories, 'form': form,
-                   'inventory_types': inventory_types,
-                   'supply_list': suplies, 'equipments': equipments,
-                   'inventory': instance, 'types': types}
-        template = 'internal/inventory/edit.html'
-        return render(request, template, context)
+        else:
+            for field in form:
+                if field.errors:
+                    if field.name == 'name':
+                        messages.error(
+                            request,
+                            'Ya existe un inventario con este nombre'
+                        )
+                    else:
+                        msg = field.label + ': ' + str(field.errors)
+                        messages.error(request, msg)
+
+    inventories = Inventory.all_objects.filter(deleted__isnull=True)
+    inventory_types = Inventory.TYPE_CHOICES
+    types = []
+    for type_aux in inventory_types:
+        types.append(type_aux[1])
+    context = {
+        'inventories': inventories,
+        'form': form,
+        'inventory_types': inventory_types,
+        'supply_list': suplies,
+        'equipments': equipments,
+        'inventory': instance,
+        'types': types
+    }
+    template = 'internal/inventory/edit.html'
+    return render(request, template, context)
 
 
 def delete(request, pk):
