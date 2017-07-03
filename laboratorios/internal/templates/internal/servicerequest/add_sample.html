@@ -23,10 +23,18 @@
                     <div class="row">
                         <div class="col-lg-6">
                             <div class="form-group">
-                                <label>{% if field.label == 'Essay field' %} Ensayo {% else %}{{field.label}} {% endif %}*</label>
-                                <div required data-error="El {{ field.label }} es obligatorio" placeholder="------">
-                                   {{ field.as_widget(attrs={'data-error': "Este campo es obligatorio",'class':"form-control",'placeholder':"Arena"}) }}
-                                </div>
+                                <label>
+                                  {% if field.label == 'Essay field' %}
+                                    Ensayo
+                                  {% else %}
+                                    {{field.label}}
+                                  {% endif %}*
+                                </label>
+                                {% if field.label == 'Orden de Servicio' %}
+                                {{ field.as_widget(attrs={'disabled': '', 'data-error': "Este campo es obligatorio",'class':"form-control",'placeholder':"Arena"}) }}
+                                {% else %}
+                                  {{ field.as_widget(attrs={'data-error': "Este campo es obligatorio",'class':"form-control",'placeholder':"Arena"}) }}
+                                {% endif %}
                                 <div class="help-block with-errors"></div>
                             </div>
                         </div>
