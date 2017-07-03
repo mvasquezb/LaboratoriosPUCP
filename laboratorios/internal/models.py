@@ -70,7 +70,7 @@ class Client(BasicUser):
 
     # audit_log = AuditlogHistoryField()
     code = models.CharField(max_length=10)
-    doc_number = models.IntegerField()
+    doc_number = models.CharField(max_length=20)
     phone_number = models.CharField(max_length=20)
     registered_date = models.DateTimeField(
         auto_now_add=True,
