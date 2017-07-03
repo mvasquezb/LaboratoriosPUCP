@@ -33,7 +33,7 @@
               <div id=criteriaInsertion class="criteriaInsertion"></div>
               </div>-->
             <div class="col-sm-12">
-              {% for criteria in criteria_string %}
+              {% for criteria in criteria_string if criteria != 'Ensayo' %}
               <div class="col-sm-12 col-md-3 group-filter-conteiner">
                 <label>{{ criteria }}</label>
                 <input type="radio" class="i-checks checkbox_filters" id="p_{{ loop.index0 }}" data-index="{{ loop.index0 }}" name="radio" >
@@ -49,7 +49,7 @@
               <div id=filterInsertion></div>
               </div>-->
             <div class="col-md-12">
-              {% for single_filter in filter %}
+              {% for single_filter in filter if filter_string[single_filter] != 'Ensayo' %}
               <div class="col-md-3 group-filter-conteiner">
                 <label class="custom-filter-label">{{ filter_string[single_filter] }}</label>
                 <select class="custom-multiselect" id="l_{{ loop.index0 }}" multiple="multiple">
@@ -67,7 +67,11 @@
             <p><label for="id_js_data">js_data:</label> <input type="text" name="js_data" maxlength="1024" id="id_js_data"/></p>
           </div>
           <div class="row">
-            <input type="submit" id="submit_button" value="Generar Reporte" class="btn btn-primary">
+            <div class="col-md-3">
+              <div class="form-group">
+                <input type="submit" id="submit_button" value="Generar Reporte" class="btn btn-primary">
+              </div>
+            </div>
           </div>
         </form>
         </div>
