@@ -111,7 +111,7 @@
         {% if perms.internal.index_servicecontract %}
         <li>
           <a href="{{ url('internal:servicecontract.index') }}">
-            <i class="fa fa-th-large"></i>
+            <i class="fa fa-file-o"></i>
             <span class="nav-label">Contratos</span>
           </a>
         </li>
@@ -119,21 +119,21 @@
         {% if perms.internal.index_inventoryitem %}
         <li>
           <a href="{{ url('internal:inventoryItem.index') }}">
-            <i class="fa fa-th-large"></i>
+            <i class="fa fa-inbox"></i>
             <span class="nav-label">Muestras Almacenadas</span>
           </a>
         </li>
         {% endif %}
         <li>
           <a href="{{ url('internal:inventory.index') }}">
-            <i class="fa fa-file"></i>
+            <i class="fa fa-archive"></i>
             <span class="nav-label">Inventarios</span>
           </a>
         </li>
         {% if perms.internal.index_equipment %}
         <li>
           <a href="{{ url('internal:equipment.index') }}">
-            <i class="fa fa-th-large"></i>
+            <i class="fa fa-wrench"></i>
             <span class="nav-label">Equipos</span>
           </a>
         </li>
