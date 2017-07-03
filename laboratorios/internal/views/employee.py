@@ -105,8 +105,13 @@ def edit(request, pk,
 
 @user_passes_test(delete_employee_check, login_url='internal:index')
 def delete(request, pk):
-    employee = get_object_or_404(Employee, pk=pk)
-    employee.delete()
+    try:
+        employee = Employee.all_objects.get(pk=pk)
+        employee.user.is_active = False
+        employee.user.save()
+        employee.delete()
+    except Employee.DoesNotExist:
+        pass
 
     return redirect('internal:employee.index')
 
