@@ -59,14 +59,14 @@
                   <div class="help-block with-errors"></div>
               </div>
               <div class="form-group">
-                <label>Duracioón Esperada</label>
+                <label>Duración Esperada</label>
                 <input disabled value="{{ service_request.expected_duration }}" type="number" name="expected_duration" data-error="Este campo es obligatorio" required="" id="id_expected_duration" class="form-control">
                   <div class="help-block with-errors"></div>
               </div>
             </div>
             <div class="col-lg-6">
               <div class="form-group">
-                <input name="a" value="option1" id="check_service_provider" type="checkbox" class="i-checks" {% if service_request.external_provider %}checked{% endif %} disabled>
+                <input name="a" value="option1" id="check_service_provider" type="checkbox" class="i-checks" {% if selected_provider %}checked{% endif %} disabled>
                 <label>Tercerizar Servicio</label>
               </div>
               <div class="form-group" id="servide_provider_input" style="display: none;">
@@ -74,7 +74,7 @@
                 <select disabled name="external_provider" data-error="Este campo es obligatorio" id="id_state" class="form-control">
                   <option value="" >---------</option>
                   {% for external_provider in external_providers %}
-                      <option value="{{ external_provider.id }}" {% if service_request.external_provider.id == external_provider.id %}selected{% endif %}>
+                      <option value="{{ external_provider.id }}" {% if selected_provider and selected_provider.id == external_provider.id %}selected{% endif %}>
                         {{ external_provider.name }}
                       </option>
                   {% endfor %}

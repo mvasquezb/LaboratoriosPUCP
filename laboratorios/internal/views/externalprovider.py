@@ -98,6 +98,16 @@ def delete(request, id):
     provider = get_object_or_404(models.ExternalProvider.all_objects.filter(
         deleted__isnull=True,
     ), pk=id)
-    provider.delete()
-    messages.success(request, 'Se eliminó el proveedor exitosamente')
+    can_delete = True
+    for srequest in provider.servicerequest_set.all():
+        if srequest.state.slug not in ['in_preparation', 'completed']:
+            can_delete = False
+    if can_delete:
+        provider.delete()
+        messages.success(request, 'Se eliminó el proveedor exitosamente')
+    else:
+        messages.error(
+            request,
+            'Existen órdenes de servicio en proceso que dependen de este proveedor'
+        )
     return redirect('internal:externalprovider.index')
