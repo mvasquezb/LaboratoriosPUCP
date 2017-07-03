@@ -31,7 +31,7 @@
                                   {% endif %}*
                                 </label>
                                 {% if field.label == 'Orden de Servicio' %}
-                                {{ field.as_widget(attrs={'disabled': '', 'data-error': "Este campo es obligatorio",'class':"form-control",'placeholder':"Arena"}) }}
+                                {{ field.as_widget(attrs={'data-error': "Este campo es obligatorio",'class':"form-control"}) }}
                                 {% else %}
                                   {{ field.as_widget(attrs={'data-error': "Este campo es obligatorio",'class':"form-control",'placeholder':"Arena"}) }}
                                 {% endif %}

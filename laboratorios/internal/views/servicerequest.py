@@ -226,12 +226,15 @@ def edit(request,
 def add_sample(request,
                pk,
                template='internal/servicerequest/add_sample.html'):
-    service_request = ServiceRequest.all_objects.get(pk=pk)
+    service_request = get_object_or_404(ServiceRequest.all_objects, pk=pk)
     sample_form = SampleForm(
         request.POST or None,
         initial={
             'request': service_request,
         }
+    )
+    sample_form.fields['request'].queryset = ServiceRequest.all_objects.filter(
+        pk=pk
     )
     context = {
         'form': sample_form,
