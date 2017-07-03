@@ -89,7 +89,7 @@ $(document).ready(function(){
         if (selected_methods_list.length != 0){
             for(var k =0;k<selected_methods_list.length;k++){
                 if (selected_methods_list[k] == method_id_gen){
-                    alert('No puede agregar un mismo método más de una vez.');
+                    showToastr('No puede agregar un mismo método más de una vez.', 'error');
                     document.getElementById("selectNumber1").selectedIndex = 0;
                     return;
                 }

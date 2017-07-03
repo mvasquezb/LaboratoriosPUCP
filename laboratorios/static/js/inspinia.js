@@ -313,9 +313,11 @@ function showToastr(pMsg, pTypeMsg, pTitle, options) {
     positionClass: "toast-bottom-right",
     timeOut: 4000
   };
+  console.log(toastr.options);
   if (typeof(options) === 'object') {
     toastr.options = $.extend(toastr.options, options);
   }
+  console.log(toastr.options);
 
   switch(pTypeMsg){
     case "success":
